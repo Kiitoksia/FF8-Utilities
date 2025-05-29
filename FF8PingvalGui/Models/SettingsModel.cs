@@ -11,14 +11,20 @@ namespace FF8Utilities.Models
     public class SettingsModel : BaseModel
     {
         private bool _autoLaunchUltimeciaScript = true;
-        private Platform _platform = Platform.PS2;
-
+        private bool _globalHotkeysEnabled;
         private readonly MainModel _mainWindowModel;
+        private Platform _platform = Platform.PS2;
+        private int? _customZellDelayFrame;
+        private int _zellCountdownTimer = 3;
+
 
         public SettingsModel(MainModel model)
         {
             AutoLaunchUltimeciaScript = DataManager.Current.CurrentSettings.AutoLaunchUltimecia;
             Platform = DataManager.Current.CurrentSettings.Platform;
+            AutoLaunchUltimeciaScript = DataManager.Current.CurrentSettings.AutoLaunchUltimecia;
+            CustomZellDelayFrame = DataManager.Current.CurrentSettings.CustomZellDelayFrame;
+            ZellCountdownTimer = DataManager.Current.CurrentSettings.ZellCountdownTimer;
             SaveSettingsCommand = new Command(() => true, SaveSettings);
             _mainWindowModel = model;
         }
@@ -27,6 +33,10 @@ namespace FF8Utilities.Models
         {
             DataManager.Current.CurrentSettings.AutoLaunchUltimecia = AutoLaunchUltimeciaScript;
             DataManager.Current.CurrentSettings.Platform = Platform;
+            //DataManager.Current.CurrentSettings.GlobalHotkeys = GlobalHotkeysEnabled;
+            DataManager.Current.CurrentSettings.GlobalHotkeys = false;
+            DataManager.Current.CurrentSettings.CustomZellDelayFrame = CustomZellDelayFrame;
+            DataManager.Current.CurrentSettings.ZellCountdownTimer = ZellCountdownTimer;
             DataManager.Current.Save();
             _mainWindowModel.FlyoutSettingsOpen = false;
         }
@@ -41,6 +51,20 @@ namespace FF8Utilities.Models
             {
                 if (value == _autoLaunchUltimeciaScript) return;
                 _autoLaunchUltimeciaScript = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool GlobalHotkeysEnabled
+        {
+            get
+            {
+                return _globalHotkeysEnabled;
+            }
+            set
+            {
+                if (_globalHotkeysEnabled == value)
+                    return;
+                _globalHotkeysEnabled = value;
                 OnPropertyChanged();
             }
         }
@@ -59,6 +83,30 @@ namespace FF8Utilities.Models
             }
         }
 
+        public int? CustomZellDelayFrame
+        {
+            get => _customZellDelayFrame; set
+            {
+                if (_customZellDelayFrame == value)
+                    return;
+                _customZellDelayFrame = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ZellCountdownTimer
+        {
+            get => _zellCountdownTimer; set
+            {
+                if (_zellCountdownTimer == value)
+                    return;
+                _zellCountdownTimer = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public Command SaveSettingsCommand { get; }
+
     }
 }

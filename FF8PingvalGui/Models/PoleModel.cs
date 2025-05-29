@@ -23,6 +23,9 @@ namespace FF8Utilities.Models
             {
                 if (value == _count) return;
                 _count = value;
+
+                if (_count < 0) _count = 15;
+                if (_count > 15) _count = 0;
                 OnPropertyChanged();
             }
         }

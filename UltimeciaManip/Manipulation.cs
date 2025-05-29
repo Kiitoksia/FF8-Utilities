@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FF8Utilities.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,37 @@ namespace UltimeciaManip
 {
     public static class Manipulation
     {
-        public static PartyFormation[] GetUltimeciaFormations(Direction[] directions, bool japanese = false)
+        public static PartyFormation[] GetUltimeciaFormations(Direction[] directions, Platform platform, bool hardReset)
         {
-            PartyFormation[] possibleFormations = japanese ? Const.PartyFormationsJP : Const.PartyFormations;
-            possibleFormations = possibleFormations.Where(p => p.IsMatch(directions)).ToArray();
+            PartyFormation[] formations = null;
+            switch (platform)
+            {
+                case Platform.PS2:
+                    formations = Const.PartyFormationsNA;
+                    break;
+                case Platform.PS2JP:
+                    formations = Const.PartyFormationsJP;
+                    break;
+                case Platform.PC:
+                case Platform.PCLite:
+                    formations = Const.PartyFormationsPC;
+                    break;
+            }
 
-            return possibleFormations;
+            int from = hardReset ? 0 : 1800;
+            int to = hardReset ? 1999 : 3799;
+            if (platform == Platform.PCLite && !hardReset)
+            {
+                from = 800;
+                to = 2799;
+            }
+
+            IEnumerable<PartyFormation> queriedFormations = formations;
+            if (from != -1) queriedFormations = queriedFormations.Where(t => t.Index >= from);
+            if (to != -1) queriedFormations = queriedFormations.Where(t => t.Index <= to);
+            queriedFormations = queriedFormations.Where(t => t.IsMatch(directions));
+            
+            return queriedFormations.ToArray();
         }
 
         public static Direction ToDirection(this char key)

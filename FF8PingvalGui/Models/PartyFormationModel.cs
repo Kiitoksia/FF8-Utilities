@@ -11,17 +11,38 @@ namespace FF8Utilities.Models
 {
     public class PartyFormationModel : BaseModel
     {
-        public PartyFormationModel(PartyFormation formation)
+        public PartyFormationModel(PartyFormation formation, bool includeRinoaParties)
         {
             Movements = string.Join(", ", formation.Movements.Select(s => s.ToDirection().ToString()));
             Rng = formation.RngState;
 
-            Lineups = new BindingList<LineupModel>(formation.Lineups.Select(s => new LineupModel(s, false)).ToList());
-            Lineups.OrderBy(l => l.Count).First().IsFastest = true;
+            List<Lineup> lineUps = formation.Lineups;
+            if (!includeRinoaParties) lineUps = lineUps.Where(t => t.FirstCharacter != "Rinoa" && t.SecondCharacter != "Rinoa" && t.ThirdCharacter != "Rinoa").ToList();
+
+            lineUps = lineUps.OrderBy(t => t.Count).ToList();
+            Lineup fastestLineup = lineUps.First();
+
+            LineupsLineOne = new BindingList<LineupModel>(lineUps.Take(3).Select(s => new LineupModel(s, s == fastestLineup)).ToList());
+            LineupsLineTwo = new BindingList<LineupModel>(lineUps.Skip(3).Take(3).Select(s => new LineupModel(s, s == fastestLineup)).ToList());
+            LineupsLineThree = new BindingList<LineupModel>(lineUps.Skip(6).Take(3).Select(s => new LineupModel(s, s == fastestLineup)).ToList());
+
+            LineupTwoVisible = LineupsLineTwo.Count > 0;
+            LineupThreeVisible = LineupsLineThree.Count > 0;
+
+
+            //Lineups = new BindingList<LineupModel>(lineUps.Select(s => new LineupModel(s, false)).ToList());
+            //Lineups.OrderBy(l => l.Count).First().IsFastest = true;
         }
 
         public string Movements { get; }
         public string Rng { get; }
-        public BindingList<LineupModel> Lineups { get; }
+        //public BindingList<LineupModel> Lineups { get; }
+
+        public BindingList<LineupModel> LineupsLineOne { get; }
+        public BindingList<LineupModel> LineupsLineTwo { get; }
+        public BindingList<LineupModel> LineupsLineThree { get; }
+
+        public bool LineupTwoVisible { get; }
+        public bool LineupThreeVisible { get; }
     }
 }

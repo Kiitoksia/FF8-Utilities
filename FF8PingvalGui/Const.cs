@@ -6,10 +6,26 @@ namespace FF8Utilities
     [Flags]
     public enum QuistisPattern
     {
-        Elastoid = 1,
-        Malboro = 2,
-        [Description("Biggs & Wedge")]
-        BiggsWedge = 3
+        [Description("[Frame 1] - Elastoid (Jellyeye)")]
+        Elastoid_JellyEye = 1,
+        [Description("[Frame 2] - Malboro (Anacondaur)")]
+        Malboro_Snek = 2,
+        [Description("[Frame 3] - Biggs & Wedge (Jellyeye)")]
+        BiggsWedge_JellyEye = 3,
+        [Description("[Frame 4] - Elastoid (Grendel)")]
+        Elastoid_Grendel = 4,
+        [Description("[Frame 5] - Malboro (Grand Mantis) *Unwinnable*")]
+        Malboro_GrandMantis = 5,
+        [Description("[Frame 6] - Grand Mantis (Elastoid) *Unwinnable*")]
+        GrandMantis_Elastoid = 6,
+        [Description("[Frame 7] - Glacial Eye (Grand Mantis)")]
+        GlacialEye_GrandMantis = 7,
+        [Description("[Frame 8] - Anacondaur (GIM47N) *Unwinnable*")]
+        Snek_GIM = 8,
+        [Description("[Frame 9] - Jellyeye (Biggs & Wedge)")]
+        JellyEye_BiggsWedge = 9,
+        [Description("[Frame 10] - Chimera (Thrustaevis)")]
+        Chimera_Thrustaevis = 10
     }
 
     [Flags]
@@ -34,7 +50,7 @@ namespace FF8Utilities
 
     public enum WorldMapFormation
     {
-        [Description("Big Bug")]
+        [Description("Bite Bug")]
         BiteBug,
         [Description("2x Bite Bug")]
         BiteBugx2,
@@ -53,16 +69,16 @@ namespace FF8Utilities
     public enum TwoPersonFanfareCamera
     {
         [Description("1 Character")]
-        SingleCharacter,
+        SingleCharacter = 2,
         [Description("2 Characters")]
-        TwoCharacters
+        TwoCharacters = 3
     }
 
     public enum ThreePersonFanfareCamera
     {
         [Description("1 Character")]
         SingleCharacter,
-        [Description("3 characters")]
+        [Description("3 Characters")]
         ThreeCharacters,
         [Description("One to One")]
         OneToOne

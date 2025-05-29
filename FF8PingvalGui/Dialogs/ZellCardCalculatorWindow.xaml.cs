@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using System.Windows.Forms;
 
 namespace FF8Utilities.Dialogs
 {

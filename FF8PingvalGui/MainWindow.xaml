@@ -17,18 +17,61 @@
         x:Name="Window"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
-        Title="FF8 Utilities" Height="500" Width="800"
+        Title="FF8 Utilities" Height="500" Width="700"
     GlowBrush="{DynamicResource AccentColorBrush}"
     WindowStartupLocation="CenterScreen"
-    MinHeight="500"
+    MinHeight="700"
     ShowIconOnTitleBar="True"
     MinWidth="700">
+    <Controls:MetroWindow.Resources>
+        <DataTemplate x:Key="CharacterTemplate">
+            <StackPanel HorizontalAlignment="Center" Margin="10,0,0,0">
+                <Controls:Tile Visibility="{Binding IsFastest, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}" Title="{Binding Display}" Height="100" Width="200" Count="{Binding Count}" VerticalTitleAlignment="Top"/>
+                <Controls:Tile Visibility="{Binding IsFastest, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}" Title="{Binding Display}" Height="100" Width="200" Count="{Binding Count}" VerticalTitleAlignment="Top" Background="#CC06761F"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="LineupTemplate">
+            <GroupBox Margin="2" Header="{Binding Movements}">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding LineupsLineOne}" ItemTemplate="{StaticResource CharacterTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding LineupsLineTwo}" ItemTemplate="{StaticResource CharacterTemplate}" Visibility="{Binding LineupTwoVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding LineupsLineThree}" ItemTemplate="{StaticResource CharacterTemplate}" Visibility="{Binding LineupThreeVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+                
+            </GroupBox>
+        </DataTemplate>
+    </Controls:MetroWindow.Resources>
     <Controls:MetroWindow.DataContext>
-        <models:MainModel Window="{x:Reference Window}" TextBox="{x:Reference InputBox}"/>
+        <models:MainModel Window="{x:Reference Window}" 
+                          UltimeciaTextBox="{x:Reference UltimeciaInputBox}"/>
     </Controls:MetroWindow.DataContext>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <TextBlock Text="{Binding Version}" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.45" Margin="0,0,10,0"/>
+            <Button Command="{Binding UpdateAvailableCommand}" Controls:VisibilityHelper.IsVisible="{Binding UpdateAvailable}">
+                <StackPanel Orientation="Horizontal">
+                    <fa:ImageAwesome Icon="Download" Height="10" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Update Available" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
             <Button Command="{Binding ShowAboutCommand}">
                 <StackPanel Orientation="Horizontal">
                     <fa:ImageAwesome Icon="Info" Height="10" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0" />
@@ -49,6 +92,8 @@
             <TabItem Header="Zell Card">
                 <Grid Margin="0,20,0,0">
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -103,6 +148,14 @@
                     <Button Grid.Row="2" Grid.Column="2" Margin="0,20,20,20" Command="{Binding LaunchZellCalculatorCommand}">
                         <fa:ImageAwesome Icon="Calculator" Height="15" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
+
+                    <Button Style="{StaticResource SquareButtonStyle}" Width="150" Height="50" Grid.Row="3" Grid.Column="0"  Command="{Binding ZellCountdownCommand}">
+                        <StackPanel Orientation="Horizontal" Height="20">
+                            <fa:ImageAwesome Icon="ClockOutline" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding ZellCountdownText}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
                     <Button Style="{StaticResource AccentedSquareButtonStyle}" Width="200" Height="50" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Command="{Binding ZellLaunchCommand}" Margin="38,0,221,0"                                >
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -110,6 +163,167 @@
                         </StackPanel>
                     </Button>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Fish Fins" Controls:VisibilityHelper.IsVisible="{Binding FishFinManipEnabled}">
+                <DockPanel LastChildFill="True" Margin="10">
+                    <GroupBox Header="Filter" DockPanel.Dock="Top" x:Name="FilterGroup">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="Battle Start" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                <Button Style="{StaticResource AccentedDialogSquareButton}" Content="Standard" x:Name="ButtonStandard" Margin="10,0,0,0" Click="ButtonStandard_Click" Width="100"/>
+                                <Button Style="{StaticResource SquareMetroButton}" Content="Back Attack" x:Name="ButtonBackAttack" Margin="10,0,0,0" Click="ButtonBackAttack_Click" Width="100" />
+                                <Button Style="{StaticResource SquareMetroButton}" Content="Struck First" x:Name="ButtonStruckFirst" Margin="10,0,0,0" Click="ButtonStruckFirst_Click" Width="100"/>
+                                <Button Content="Reset" HorizontalContentAlignment="Right" HorizontalAlignment="Right" x:Name="Reset" Click="Reset_Click"/>
+                            </DockPanel>
+                            <Grid Margin="0, 10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox BorderThickness="1,0,0,1" Header="First Attack">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="FirstSquallButton" Content="Squall" HorizontalAlignment="Stretch" Margin="2" />
+                                        <Button Style="{StaticResource SquareMetroButton}"  BorderThickness="1" x:Name="FirstSquallCrossButton" Content="Squall (Cross)"  Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" />
+                                        <Button Style="{StaticResource SquareMetroButton}"  BorderThickness="1" x:Name="FirstQuistisButton" Content="Quistis"  Grid.Row="1" HorizontalAlignment="Stretch" Margin="2"/>
+                                        <Button Style="{StaticResource SquareMetroButton}"  BorderThickness="1" x:Name="FirstQuistisCrossButton" Content="Quistis (Cross)" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2"/>
+                                        <Controls:NumericUpDown Grid.Row="2" Grid.ColumnSpan="2" x:Name="FirstDamageRoll" Minimum="0" Maximum="99"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox BorderThickness="1" Header="Second Attack" Grid.Column="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="SecondSquallButton" Content="Squall" HorizontalAlignment="Stretch" Margin="2" />
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="SecondSquallCrossButton" Content="Squall (Cross)"  Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" />
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="SecondQuistisButton" Content="Quistis"  Grid.Row="1" HorizontalAlignment="Stretch" Margin="2"/>
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="SecondQuistisCrossButton" Content="Quistis (Cross)" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2"/>
+                                        <Controls:NumericUpDown Grid.Row="2" Grid.ColumnSpan="2" x:Name="SecondDamageRoll"  Minimum="0" Maximum="99"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox BorderThickness="0,0,1,1" Header="Third Attack" Grid.Column="2">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="ThirdSquallButton" Content="Squall" HorizontalAlignment="Stretch" Margin="2" />
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="ThirdSquallCrossButton" Content="Squall (Cross)"  Grid.Column="1" HorizontalAlignment="Stretch" Margin="2" />
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="ThirdQuistisButton" Content="Quistis"  Grid.Row="1" HorizontalAlignment="Stretch" Margin="2"/>
+                                        <Button Style="{StaticResource SquareMetroButton}" BorderThickness="1" x:Name="ThirdQuistisCrossButton" Content="Quistis (Cross)" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="2"/>
+                                        <Controls:NumericUpDown Grid.Row="2" Grid.ColumnSpan="2" x:Name="ThirdDamageRoll" Minimum="0" Maximum="99"/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                            
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Pattern" DockPanel.Dock="Top" Margin="0,10,0,10" Height="60">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="UnlockManualEntryBox" Click="UnlockManualEntryBox_Click" Width="30">
+                                <fa:ImageAwesome x:Name="LockIcon" Icon="Unlock" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                            <TextBox x:Name="FishFinTextBox"
+                                      Grid.Column="1"
+                                     IsEnabled="False"
+                                     Text="{Binding FishFinManipPattern, TargetNullValue={x:Static system:String.Empty}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Results" MinHeight="300">
+                        <Grid>
+                            <DataGrid ItemsSource="{Binding FishPatterns}" 
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False"                                  
+                                  CanUserResizeRows="False"      
+                                  IsReadOnly="True"          
+                                  IsHitTestVisible="False"
+                                  AutoGenerateColumns="False"
+                                  VerticalScrollBarVisibility="Auto"
+                                  AlternatingRowBackground="WhiteSmoke"
+                                  RowHeight="100"
+                                  CanUserSortColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Index}" Header="Index" Width="60">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding Pattern}" Header="Pattern" Width="120">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding ATBRefreshes}" Header="ATB Refreshes" Width="120" FontWeight="Bold">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding DropCount}" Header="Drops" Width="80">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTemplateColumn Header="Notes" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="5,0,5,0">
+                                                    <Border Visibility="{Binding GeneralCommentsVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}" Margin="0,0,0,5" CornerRadius="5" Background="Brown" Padding="5" Width="Auto">
+                                                        <TextBlock Text="{Binding GeneralComment}" Foreground="White"/>
+                                                    </Border>
+                                                    <Border Visibility="{Binding Phase1CommentsVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}" Margin="0,0,0,5" CornerRadius="5" Background="Green" Padding="5">
+                                                        <TextBlock Text="{Binding Phase1Comment}" Foreground="White"/>
+                                                    </Border>
+                                                    <Border Visibility="{Binding Phase2CommentsVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}" Margin="0,0,0,5" CornerRadius="5" Background="Blue" Padding="5" Width="Auto">
+                                                        <TextBlock Text="{Binding Phase2Comment}" Foreground="White"/>
+                                                    </Border>
+                                                    <Border Visibility="{Binding Phase3CommentsVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}" Margin="0,0,0,5" CornerRadius="5" Background="DarkOrange" Padding="5" Width="Auto">
+                                                        <TextBlock Text="{Binding Phase3Comment}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <Controls:ProgressRing Controls:VisibilityHelper.IsVisible="{Binding FishPatternsPopulating}"/>
+                        </Grid>
+                    </GroupBox>
+                </DockPanel>
             </TabItem>
             <TabItem Header="Caraway Code">
                 <Grid Margin="0,10,0,0">
@@ -130,7 +344,7 @@
                                                     <ColumnDefinition Width="0.15*"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding Description}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <Controls:NumericUpDown Minimum="0" Maximum="15" Grid.Column="1" Value="{Binding Count}"/>
+                                                <Controls:NumericUpDown Minimum="-1" ValueChanged="NumericUpDown_ValueChanged" Maximum="16" Grid.Column="1" Value="{Binding Count, UpdateSourceTrigger=PropertyChanged}"/>
                                                 <Button Grid.Column="2" Command="{Binding ClearCount}">
                                                     <StackPanel Orientation="Horizontal" Height="20">
                                                         <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -200,12 +414,29 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Ultimecia">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Click in the inputs box to focus, then use WASD/Numpad(2,4,6,8) to input directions" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"/>
-                    <TextBlock Text="Note that this is disabled on PC.  Instead, hard reset outside castle, and draw 3 times before bridge" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <GroupBox Margin="20" Header="Inputs">
+                <DockPanel LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Top" Text="Click in the inputs box to focus, then use WASD/Numpad(2,4,6,8) to input directions" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                    <GroupBox DockPanel.Dock="Top" Margin="20" Header="Inputs">
                         <StackPanel>
-                            <TextBox x:Name="InputBox" Text="{Binding UltimeciaRng, TargetNullValue={x:Static system:String.Empty}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="UltimeciaInputBox" Text="{Binding UltimeciaRng, TargetNullValue={x:Static system:String.Empty}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Grid Width="300px" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Include Rinoa Parties" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 10, 0"/>
+                                <Controls:ToggleSwitch IsChecked="{Binding IncludeRinoaParties}" OnLabel="Yes" OffLabel="No" Grid.Column="1" />
+                                
+                                <TextBlock Text="Hard Reset" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 10, 0" Grid.Row="1"/>
+                                <Controls:ToggleSwitch IsChecked="{Binding UltimeciaHardReset}" OnLabel="Yes" OffLabel="No" Grid.Row="1" Grid.Column="1" />
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                
+                            </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button Style="{StaticResource AccentedSquareButtonStyle}" Width="200" Height="50" Command="{Binding UltimeciaLaunchCommand}" Margin="0"                                >
                                     <StackPanel Orientation="Horizontal" Height="20">
@@ -224,43 +455,27 @@
                             
                         </StackPanel>
                     </GroupBox>
-                    <GroupBox Margin="20" Visibility="{Binding NoFormationsFound, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}"
+                    <GroupBox DockPanel.Dock="Top" Margin="20" Visibility="{Binding NoFormationsFound, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}"
                               Header="No formations found">
                         <TextBlock Text="No formations found for inputs, double check directions and re-submit"/>
                     </GroupBox>
-                    <ScrollViewer Margin="18" Height="200" Visibility="{Binding NoFormationsFound, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}">
-                        <ItemsControl ItemsSource="{Binding UltimeciaFormations}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <GroupBox Margin="2"  Header="{Binding Movements}">
-                                        <ItemsControl ItemsSource="{Binding Lineups}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel>
-                                                        <Controls:Tile Visibility="{Binding IsFastest, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}" Title="{Binding Display}" Height="100" Width="200" Count="{Binding Count}" VerticalTitleAlignment="Top"/>
-                                                        <Controls:Tile Visibility="{Binding IsFastest, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}" Title="{Binding Display}" Height="100" Width="200" Count="{Binding Count}" VerticalTitleAlignment="Top" Background="#CC06761F"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </GroupBox>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                    <ScrollViewer DockPanel.Dock="Bottom">
+                        <ItemsControl ItemsSource="{Binding UltimeciaFormations}" ItemTemplate="{StaticResource LineupTemplate}"/>
+
                     </ScrollViewer>
-                </StackPanel>
+                    
+                    <StackPanel CanVerticallyScroll="True" Margin="18,0,18,0" Visibility="{Binding NoFormationsFound, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}">
+                        
+                    </StackPanel>
+
+                </DockPanel>
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>
     </StackPanel>
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
-            <Controls:Flyout IsOpen="{Binding FlyoutSettingsOpen}" Header="Settings" Position="Bottom" Height="200">
-                <Grid Margin="20">
+            <Controls:Flyout IsOpen="{Binding FlyoutSettingsOpen}" Header="Settings" Position="Bottom" Height="350">
+                <Grid Margin="20" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="0.6*"/>
@@ -269,12 +484,32 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <!--<RowDefinition/>-->
                     </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </Grid.Resources>
+
                     <TextBlock Text="Auto Launch Ultimecia Script" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <Controls:ToggleSwitch VerticalAlignment="Center" OnLabel="Yes" OffLabel="No" Width="100" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" IsChecked="{Binding Settings.AutoLaunchUltimeciaScript}"/>
+                    
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Platform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:Platform}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.Platform}"/>
-                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="2" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
+                    
+                    <!--<TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Global Hotkeys (EXPERIMENTAL)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Controls:ToggleSwitch VerticalAlignment="Center" OnLabel="Yes" OffLabel="No" Width="100" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" IsChecked="{Binding Settings.GlobalHotkeysEnabled}"/>-->
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Custom Delay Frame (Leave blank for default)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Controls:NumericUpDown Minimum="0" Value="{Binding Settings.CustomZellDelayFrame}" Grid.Row="2" Grid.Column="1" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Zell Countdown Timer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Controls:NumericUpDown Minimum="0" Maximum="60" Value="{Binding Settings.ZellCountdownTimer}" Grid.Row="3" Grid.Column="1" />
+                    
+                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="4" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="Save Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>

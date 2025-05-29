@@ -20,9 +20,8 @@ namespace FF8Utilities.Models
             TimerCommand = new Command(() => true, TimerCommandLaunch);
             _timer = new Timer((double) 1000 / 30);
 
-            _timer.Elapsed += async (s, e) =>
+            _timer.Elapsed += (s, e) =>
             {
-
                 Progress++;
                 if (Progress >= 15)
                 {

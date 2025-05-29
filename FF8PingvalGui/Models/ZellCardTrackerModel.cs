@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using FF8Utilities.Entities;
 using FF8Utilities.Entities.Encounters;
+using FF8Utilities.Entities.Encounters.Diablos;
 using FF8Utilities.Entities.Encounters.Dollet;
 using FF8Utilities.Entities.Encounters.Ifrits_Cavern;
 
@@ -13,7 +14,8 @@ namespace FF8Utilities.Models
         private BindingList<WorldMapEncounter> _worldMapEncounters;
         private TwoBatsEncounter _twoBatsEncounter;
         private IfritEncounter _ifritEncounter;
-        private BuelEncounter _buelEncounter;
+        //private BuelEncounter _buelEncounter;
+        private TwoBatsEncounter _secondBatsEncounter;
         private BindingList<FishFinsEncounter> _fishFinEncounters;
         private DoubleSoldierEncounter _firstDolletEncounter;
         private DoubleSoldierEncounter _secondDolletEncounter;
@@ -26,6 +28,13 @@ namespace FF8Utilities.Models
         private SpiderTankEncounter _spiderTankEncounter;
         private FishFinsEncounter _focusedFishFinEncounter;
         private bool _flyoutFishFinEncounterOpen;
+        private DoubleGratEncounter _doubleGratEncounter;
+        private GratEncounter _gratEncounter;
+        private DiablosEncounter _diablosEncounter;
+        private bool _includeDiablos = false;
+        private GranaldoEncounter _granaldoEncounter;
+        private bool _redSoldierEncounter;
+
 
         public ZellCardTrackerModel()
         {
@@ -45,8 +54,10 @@ namespace FF8Utilities.Models
             TwoBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             IfritEncounter = new IfritEncounter();
             IfritEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
-            BuelEncounter = new BuelEncounter();
-            BuelEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            //BuelEncounter = new BuelEncounter();
+            //BuelEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            SecondBatsEncounter = new TwoBatsEncounter();
+            SecondBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             FishFinEncounters = new BindingList<FishFinsEncounter>();
             FishFinEncounters.Add(new FishFinsEncounter());
             FishFinEncounters.Add(new FishFinsEncounter());
@@ -74,6 +85,15 @@ namespace FF8Utilities.Models
             ElvoretEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             SpiderTankEncounter = new SpiderTankEncounter();
             SpiderTankEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+
+            DoubleGratEncounter = new DoubleGratEncounter();
+            DoubleGratEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            GratEncounter = new GratEncounter();
+            GratEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            GranaldoEncounter = new GranaldoEncounter();
+            GranaldoEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            DiablosEncounter = new DiablosEncounter();
+            DiablosEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
 
             AddNewEncounterCommand = new Command(() => true, AddNewEncounter);
             RemoveFishFinEncounterCommand = new Command(() => FocusedFishFinEncounter != null, RemoveFishFinEncounter);
@@ -117,6 +137,8 @@ namespace FF8Utilities.Models
             }
         }
 
+        
+
         public IfritEncounter IfritEncounter
         {
             get => _ifritEncounter;
@@ -129,13 +151,24 @@ namespace FF8Utilities.Models
             }
         }
 
-        public BuelEncounter BuelEncounter
+        //public BuelEncounter BuelEncounter
+        //{
+        //    get => _buelEncounter;
+        //    set
+        //    {
+        //        if (Equals(value, _buelEncounter)) return;
+        //        _buelEncounter = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+
+        public TwoBatsEncounter SecondBatsEncounter
         {
-            get => _buelEncounter;
-            set
+            get => _secondBatsEncounter; set
             {
-                if (Equals(value, _buelEncounter)) return;
-                _buelEncounter = value;
+                if (_secondBatsEncounter == value)
+                    return;
+                _secondBatsEncounter = value;
                 OnPropertyChanged();
             }
         }
@@ -165,7 +198,7 @@ namespace FF8Utilities.Models
 
         #endregion
 
-        #region Dollet
+        #region Dollet^
 
         public DoubleSoldierEncounter FirstDolletEncounter
         {
@@ -278,6 +311,57 @@ namespace FF8Utilities.Models
 
         #endregion
 
+        #region Diablos
+
+        public DoubleGratEncounter DoubleGratEncounter
+        {
+            get => _doubleGratEncounter;
+            set
+            {
+                if (Equals(value, _doubleGratEncounter)) return;
+                _doubleGratEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+        public GratEncounter GratEncounter
+        {
+            get => _gratEncounter;
+            set
+            {
+                if (Equals(value, _gratEncounter)) return;
+                _gratEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        public GranaldoEncounter GranaldoEncounter
+        {
+            get => _granaldoEncounter;
+            set
+            {
+                if (Equals(value, _granaldoEncounter)) return;
+                _granaldoEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        public DiablosEncounter DiablosEncounter
+        {
+            get => _diablosEncounter;
+            set
+            {
+                if (Equals(value, _diablosEncounter)) return;
+                _diablosEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        #endregion
+
         public int Output
         {
             get
@@ -288,7 +372,8 @@ namespace FF8Utilities.Models
                 output += TwoBatsEncounter.RngAddition;
                 output += 23; // 2x bat 2x bomb encounter
                 output += IfritEncounter.RngAddition;
-                output += BuelEncounter.RngAddition;
+                //output += BuelEncounter.RngAddition;
+                output += SecondBatsEncounter.RngAddition;
                 output += 11; // Bomb encounter
                 output += WorldMapEncounters.Sum(s => s.RngAddition);
                 output += FishFinEncounters.Sum(s => s.RngAddition);
@@ -303,7 +388,17 @@ namespace FF8Utilities.Models
                 output += PostAnacondaurEncounter.RngAddition;
                 output += ElvoretEncounter.RngAddition;
                 output += SpiderTankEncounter.RngAddition;
-                //return output + Const.BaseRng;
+
+                if (IncludeDiablos)
+                {
+                    output += DoubleGratEncounter.RngAddition;
+                    output += GratEncounter.RngAddition;
+                    output += GranaldoEncounter.RngAddition;
+                    output += DiablosEncounter.RngAddition;
+                }
+
+                if (RedSoldierEncounter) output += 13;
+                
                 return output;
             }
         }
@@ -322,5 +417,30 @@ namespace FF8Utilities.Models
                 OnPropertyChanged();
             }
         }
+
+        public bool IncludeDiablos
+        {
+            get => _includeDiablos;
+            set
+            {
+                if (value == _includeDiablos) return;
+                _includeDiablos = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        public bool RedSoldierEncounter
+        {
+            get => _redSoldierEncounter; set
+            {
+                if (_redSoldierEncounter == value)
+                    return;
+                _redSoldierEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
     }
 }

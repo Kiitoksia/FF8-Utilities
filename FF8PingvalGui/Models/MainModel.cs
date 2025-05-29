@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CarawayCode.Entities;
@@ -13,6 +18,8 @@ using FF8Utilities.Data;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
 using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UltimeciaManip;
 using UltimeciaManip.Entities;
 using Manipulation = UltimeciaManip.Manipulation;
@@ -21,41 +28,46 @@ namespace FF8Utilities.Models
 {
     public class MainModel : BaseModel
     {
-        private QuistisPattern _pattern = QuistisPattern.Elastoid;
-        private int? _rngPattern;
-        private TextBox _textBox;
-        private string _ultimeciaRng;
-        private BindingList<CarawayCodeOutput> _carawayOutput;
-        private bool _currentlyTalling;
-        private BindingList<PoleModel> _poles;
-        private Timer _tallyTimer;
-        private MainWindow _window;
-        private SettingsModel _settings;
-        private bool _flyoutSettingsOpen;
-        private bool _showNotes;
-        private BindingList<CardNotesModel> _cardNotes;
-        private BindingList<PartyFormationModel> _ultimeciaFormations;
 
-        public MainWindow Window
-        {
-            get
-            {
-                return _window;
-            }
-            set
-            {
-                if (Equals(value, _window)) return;
-                _window = value;
-                if (value != null) ConfigureTally();
-                OnPropertyChanged();
-            }
-        }
+        private const int WM_CHAR = 0x0102;
+        private const int WM_KEYDOWN = 0x0100;
+        private const  int WM_KEYUP = 0x0101;
+
+        private BindingList<CarawayCodeOutput> _carawayOutput;
+        private BindingList<CardNotesModel> _cardNotes;
+        private bool _currentlyTalling;
+        private bool _flyoutSettingsOpen;
+        private bool _includeRinoaParties;
+        private QuistisPattern _pattern = QuistisPattern.Elastoid_JellyEye;
+        private BindingList<PoleModel> _poles;
+        private int? _rngPattern;
+        private SettingsModel _settings;
+        private bool _showNotes;
+        private Timer _tallyTimer;
+        private TextBox _ultimeciaTextBox;
+        private BindingList<PartyFormationModel> _ultimeciaFormations;
+        private string _ultimeciaRng;
+        private MainWindow _window;
+        private string _zellOutput = string.Empty;
+        private bool _zellTrackToDiablos;
+        private Process _zellProcess;
+        private string _zellCountdownText;
+        private List<FishPatternModel> _fishPatterns;
+        private string _fishFinManipPattern = new string(' ', 16);
+        private TimeSpan zellCountdownTimer;
+        private bool _fishPatternsPopulating;
+        private bool _updateAvailable;
+
+
+
+        private PoleModel CurrentlyTalliedPole { get; set; }
 
         public MainModel()
         {
             ZellLaunchCommand = new Command(() => true, ZellLaunch);
-            UltimeciaLaunchCommand = new Command(() => UltimeciaRng?.Length == 12 && Settings.Platform != Platform.PC, UltimeciaLaunch);
-            UltimeciaTimerCommand = new Command(() => Settings.Platform != Platform.PC, UltimeciaTimerLaunch);
+            ZellCountdownCommand = new Command(() => _zellProcess != null && !_zellProcess.HasExited && !_countdownRunning, ZellCountdownLaunch);
+            UltimeciaLaunchCommand = new Command(() => UltimeciaRng?.Length == 12, UltimeciaLaunch);
+            UltimeciaTimerCommand = new Command(() => Settings.Platform != Platform.PC && Settings.Platform != Platform.PCLite, UltimeciaTimerLaunch);
             LaunchZellCalculatorCommand = new Command(() => true, LaunchZellCalculator);
 
             Poles = new BindingList<PoleModel>();
@@ -74,6 +86,7 @@ namespace FF8Utilities.Models
             ResetPolesCommand = new Command(() => true, ResetPoles);
             PoleTallyCommand = new Command(() => !CurrentlyTalling, TallyCommand);
             ShowAboutCommand = new Command(() => true, ShowAbout);
+            this.UpdateAvailableCommand = new Command(() => UpdateAvailable, LaunchUpdate);
             ShowSettingsCommand = new Command(() => true, (s, e) => FlyoutSettingsOpen = !FlyoutSettingsOpen);
 
             CardNotes = new BindingList<CardNotesModel>();
@@ -87,28 +100,80 @@ namespace FF8Utilities.Models
             };
 
             UltimeciaTimer = new UltimeciaTimerModel();
+            ZellCountdownText = "Start Countdown";
+
+            LoadFishPatterns();
+            _ = CheckForUpdates();
         }
 
-
-        private void ShowAbout(object sender, EventArgs eventArgs)
+        private void LoadFishPatterns()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("FF8 Utilities is a program designed to collate all the manipulation used into one easy to use program that doesn't require Ruby or command shell knowledge");
-            sb.AppendLine();
-            sb.AppendLine("Credits:");
-            sb.AppendLine("Kiitoksia: Author of the program");
-            sb.AppendLine();
-            sb.AppendLine("Pingval: The bundled Zell Card & Ultimecia Manipulation scripts");
-            sb.AppendLine();
-            sb.AppendLine("Beuj: Source code for Caraway Mansion Code pole tracking");
-            sb.AppendLine();
-            sb.AppendLine("Luzbelheim: The use of his excel sheet for Zell Tracking made this possible");
-            sb.AppendLine();
-            sb.AppendLine("Tojju: For his feedback and ideas");
+            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Scripts\\fins.json");
+            if (!File.Exists(jsonFilePath))
+            {
+                FishFinManipEnabled = false;
+                MessageBox.Show("No Fish Fins json found, Fish Fin Manip disabled");
+                return;
+            }
+            
+            FishFinManipEnabled = true;
 
+            string json = File.ReadAllText(jsonFilePath);
+            dynamic jObj = JsonConvert.DeserializeObject(json);
 
-            Window.ShowMessageAsync("About FF8 Utilities", sb.ToString());
+            AllFishPatterns = new List<FishPatternModel>();
+            foreach (var pattern in jObj)
+            {
+                AllFishPatterns.Add(new FishPatternModel(pattern));
+            }
         }
+
+        private async Task CheckForUpdates()
+        {
+            HttpClient client = new HttpClient();
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
+                string jsonString = await client.GetStringAsync("https://api.github.com/repos/kiitoksia/FF8-Utilities/releases/latest");
+                JObject json = JObject.Parse(jsonString);
+
+                Version parsedVersion = new Version(json.Value<string>("tag_name"));
+
+                Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
+
+                if (parsedVersion > currentVersion)
+                {
+                    UpdateAvailable = true;
+                }
+            }
+            catch (Exception)
+            {
+                // Can't connect to the internet or something else happened.  Ignore
+            }
+        }
+
+        public bool FishFinManipEnabled { get; private set; } = true;
+
+
+        public bool UpdateAvailable
+        {
+            get => _updateAvailable; private set
+            {
+                if (_updateAvailable == value)
+                    return;
+                _updateAvailable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Delegate for the EnumChildWindows method
+        /// </summary>
+        /// <param name="hWnd">Window handle</param>
+        /// <param name="parameter">Caller-defined variable; we use it for a pointer to our list</param>
+        /// <returns>True to continue enumerating, false to bail.</returns>
+        public delegate bool EnumWindowProc(IntPtr hWnd, IntPtr parameter);
 
         private void ConfigureTally()
         {
@@ -132,7 +197,7 @@ namespace FF8Utilities.Models
                 if (!CurrentlyTalling) return;
                 if (e.Key == Key.Enter)
                 {
-                    CurrentlyTalling = false;         
+                    CurrentlyTalling = false;
                     MessageDialogResult result = await Window.ShowMessageAsync("Pole Count", "Was the final sequence complete?", MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { AffirmativeButtonText = "Yes", NegativeButtonText = "No", DefaultButtonFocus = MessageDialogResult.Affirmative });
 
                     if (result == MessageDialogResult.Negative) CurrentlyTalliedPole.Count = null;
@@ -148,15 +213,91 @@ namespace FF8Utilities.Models
             };
         }
 
-        private async void TallyCommand(object sender, EventArgs eventArgs)
-        {
-            await Window.ShowMessageAsync("Confirm Pole Count Start", "Press enter once you transition into pole counting screen", MessageDialogStyle.Affirmative, new MetroDialogSettings { AffirmativeButtonText = "Start" });
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-            CurrentlyTalling = true;
-            CurrentlyTalliedPole = Poles[0];
-            _tallyTimer.Stop();
-            _tallyTimer.Start();
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
+
+        private void LaunchZellCalculator(object sender, EventArgs eventArgs)
+        {
+            ZellCardCalculatorWindow calculatorWindow = new ZellCardCalculatorWindow();
+            calculatorWindow.Owner = Window;
+            calculatorWindow.Show();
         }
+
+        [DllImport("user32.dll")]
+        private static extern int MapVirtualKey(uint uCode, uint uMapType);
+
+
+        private void PopulateCardNotes()
+        {
+            CardNotes.Clear();
+            switch (Pattern)
+            {
+                case QuistisPattern.Elastoid_JellyEye:
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.TopCentre));
+                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreRight));
+                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomRight));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
+                    break;
+                case QuistisPattern.Malboro_Snek:
+                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomCentre));
+                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
+                    break;
+                case QuistisPattern.BiggsWedge_JellyEye:
+                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.TopRight));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.Centre));
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
+                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreLeft));
+                    break;
+                case QuistisPattern.Elastoid_Grendel:
+                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.TopRight));
+                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
+                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.BottomLeft));
+                    break;
+                case QuistisPattern.Malboro_GrandMantis:
+                case QuistisPattern.GrandMantis_Elastoid:
+                case QuistisPattern.Snek_GIM:
+                    break;
+                case QuistisPattern.GlacialEye_GrandMantis:
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.CentreLeft));
+                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.Centre));
+                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.BottomRight));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopCentre));
+                    break;
+                case QuistisPattern.JellyEye_BiggsWedge:
+                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.Centre));
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomCentre));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomLeft));
+                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
+                    break;
+                case QuistisPattern.Chimera_Thrustaevis:
+                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomCentre));
+                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.CentreRight));
+                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.TopRight));
+                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.CentreLeft));
+                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomLeft));
+                    break;
+            }
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool PostMessage(IntPtr hWnd, [MarshalAs(UnmanagedType.U4)] uint Msg, IntPtr wParam, IntPtr lParam);
+
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool PostMessage(IntPtr hWnd, [MarshalAs(UnmanagedType.U4)] uint Msg, int wParam, int lParam);
 
         private void ResetPoles(object sender, EventArgs eventArgs)
         {
@@ -170,75 +311,264 @@ namespace FF8Utilities.Models
 
         }
 
+
+        private void ShowAbout(object sender, EventArgs eventArgs)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("FF8 Utilities is a program designed to collate all the manipulation used into one easy to use program that doesn't require Ruby or command shell knowledge");
+            sb.AppendLine();
+            sb.AppendLine("Credits:");
+            sb.AppendLine("Kiitoksia: Author of the program");
+            sb.AppendLine();
+            sb.AppendLine("Pingval: The bundled Zell Card & Ultimecia Manipulation scripts");
+            sb.AppendLine();
+            sb.AppendLine("Beuj: Source code for Caraway Mansion Code pole tracking");
+            sb.AppendLine();
+            sb.AppendLine("Luzbelheim: The use of his excel sheet for Zell Tracking made this possible");
+            sb.AppendLine();
+            sb.AppendLine("Tojju: For his feedback and ideas");
+            sb.AppendLine();
+            sb.AppendLine("fhelwanger: For his C# port of pingvals Zell Card Manip <3");
+            sb.AppendLine();
+            sb.AppendLine("awesomeWaves: For the additional Quistis Card frame information");
+
+
+            Window.ShowMessageAsync("About FF8 Utilities", sb.ToString());
+        }
+
         private void SubmitPoles(object sender, EventArgs eventArgs)
-        {            
+        {
             CarawayOutput = new BindingList<CarawayCodeOutput>(CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList())));
         }
 
-        private void LaunchZellCalculator(object sender, EventArgs eventArgs)
+        private async void TallyCommand(object sender, EventArgs eventArgs)
         {
-            ZellCardCalculatorWindow calculatorWindow = new ZellCardCalculatorWindow();
-            calculatorWindow.Owner = Window;
-            calculatorWindow.Show();
+            await Window.ShowMessageAsync("Confirm Pole Count Start", "Press enter once you transition into pole counting screen", MessageDialogStyle.Affirmative, new MetroDialogSettings { AffirmativeButtonText = "Start" });
+
+            CurrentlyTalling = true;
+            CurrentlyTalliedPole = Poles[0];
+            _tallyTimer.Stop();
+            _tallyTimer.Start();
+        }
+
+
+        private void LaunchUpdate(object sender, EventArgs eventArgs)
+        {
+            Process.Start("https://github.com/Kiitoksia/FF8-Utilities/releases/latest");
+        }
+
+        private void UltimeciaLaunch(object sender, EventArgs eventArgs)
+        {
+            Direction[] directions = UltimeciaRng.Select(s => s.ToDirection()).ToArray();
+            //Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts/ultimecia.exe"), UltimeciaRng.ToString());
+            PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform, UltimeciaHardReset);
+            UltimeciaFormations.Clear();
+
+            foreach (PartyFormation formation in formations)
+            {
+                UltimeciaFormations.Add(new PartyFormationModel(formation, IncludeRinoaParties));
+            }
+
+            OnPropertyChanged(nameof(UltimeciaFormations));
         }
 
         private void UltimeciaTimerLaunch(object sender, EventArgs args)
         {
             Direction[] directions = UltimeciaRng.Select(s => s.ToDirection()).ToArray();
-             
+
             if (Settings.Platform == Platform.PC) return;
 
             string path = Settings.Platform == Platform.PS2 ? "ultimeciaNA.exe" : "ultimeciaJP.exe";
             Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts", path), UltimeciaRng.ToString());
         }
 
+        private bool _countdownRunning = false;
 
-        private void UltimeciaLaunch(object sender, EventArgs eventArgs)
+        private async void ZellCountdownLaunch(object sender, EventArgs eventArgs)
         {
-            Direction[] directions = UltimeciaRng.Select(s => s.ToDirection()).ToArray();
-            //Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts/ultimecia.exe"), UltimeciaRng.ToString());
-            PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform == Platform.PS2JP);
-            UltimeciaFormations.Clear();
-            foreach (PartyFormation formation in formations)
+            if (_zellProcess == null || _zellProcess.HasExited || _countdownRunning) return;
+            _countdownRunning = true;
+            DateTime now = DateTime.Now;
+            DateTime timeToWaitTill = now.AddSeconds(Settings.ZellCountdownTimer);
+
+            while (DateTime.Now < timeToWaitTill)
             {
-                UltimeciaFormations.Add(new PartyFormationModel(formation));
+                await Task.Delay(5);
+                
+                TimeSpan span = DateTime.Now - now;
+                double timeLeft = Settings.ZellCountdownTimer - span.TotalSeconds;
+                ZellCountdownText = $"{timeLeft.ToString("##0.00")}";
             }
+            
+            PostMessage(_zellProcess.MainWindowHandle, WM_KEYDOWN, 0x0D , 0);
+            ZellCountdownText = "Launch Countdown";
+            _zellProcess = null;
+            _countdownRunning = false;
         }
 
         private void ZellLaunch(object sender, EventArgs eventArgs)
         {
-            string script = Settings.Platform == Platform.PS2 || Settings.Platform == Platform.PS2JP ? "zell.exe" : "zellpc.exe";
-            Process.Start(Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/{script}"), $"{(int)Pattern} {RngPattern}".Trim());
-        }
+            int delayFrames;
 
-        public void InitialiseTextBox()
-        {
-            TextBox.PreviewKeyDown += (s, e) =>
+            switch (Settings.Platform)
             {
-                if (e.Key == Key.Enter && UltimeciaLaunchCommand.CanExecute(null)) UltimeciaLaunchCommand.Execute(null);
+                case Platform.PS2:
+                case Platform.PS2JP:
+                    delayFrames = 285;
+                    break;
+                case Platform.PC:
+                case Platform.PCLite:
+                    delayFrames = 69; // nice
+                    break;
+                default: throw new ArgumentOutOfRangeException("Contact Kiitoksia because this should not have happened");
+            }
+
+            if (Settings.CustomZellDelayFrame != null) delayFrames = Settings.CustomZellDelayFrame.Value;
+
+            string patternString = null;
+            switch (Pattern)
+            {
+                case QuistisPattern.Elastoid_JellyEye:
+                    patternString = "1";
+                    break;
+                case QuistisPattern.Malboro_Snek:
+                    patternString = "2";
+                    break;
+                case QuistisPattern.BiggsWedge_JellyEye:
+                    patternString = "3";
+                    break;
+                case QuistisPattern.Elastoid_Grendel:
+                    patternString = "0x65c6be07";
+                    break;
+                case QuistisPattern.Malboro_GrandMantis:
+                case QuistisPattern.GrandMantis_Elastoid:
+                case QuistisPattern.Snek_GIM:
+                    //Unwinnable
+                    MessageBox.Show("This is unwinnable and thus you can't continue manip.  If you somehow won, please let us know!");
+                    return;
+                case QuistisPattern.GlacialEye_GrandMantis:
+                    patternString = "0x832b19d2";
+                    break;
+                case QuistisPattern.JellyEye_BiggsWedge:
+                    patternString = "0xad8f1b2f";
+                    break;
+                case QuistisPattern.Chimera_Thrustaevis:
+                    patternString = "0xf99a05ef";
+                    break;
+                default: throw new NotImplementedException();                
+            }
+
+
+            string arguments = $"{patternString} {delayFrames} {RngPattern}".Trim();
+
+            _zellProcess = new Process();
+            _zellProcess.StartInfo.Arguments = arguments;
+            _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/zell.exe");
+            _zellProcess.StartInfo.WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Scripts");
+            _zellProcess.Exited += (s, e) =>
+            {                
+                _zellProcess = null;
+            };
+            _zellProcess.Disposed += (s, e) =>
+            {
+                _zellProcess = null;
             };
 
-            TextBox.TextChanged += (s, e) =>
-            {                
-                if (Settings.AutoLaunchUltimeciaScript && UltimeciaRng?.Length == 12) UltimeciaLaunchCommand.Execute(null);
-            };            
+            try
+            {
+                _zellProcess.Start();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("There was a problem launching script, try run as administrator, or re-download utilities");
+            }
         }
 
-        public Command ZellLaunchCommand { get; }
-        public Command UltimeciaLaunchCommand { get; }
-        public Command UltimeciaTimerCommand { get; }
-        public Command LaunchZellCalculatorCommand { get; }
-
-        public string UltimeciaRng
+        public BindingList<CarawayCodeOutput> CarawayOutput
         {
-            get => _ultimeciaRng;
+            get
+            {
+                return _carawayOutput;
+            }
             set
             {
-                if (value == _ultimeciaRng) return;
-                _ultimeciaRng = value;
+                if (Equals(value, _carawayOutput)) return;
+                _carawayOutput = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(NoSubscriptsDetected));
+            }
+        }
+
+        public BindingList<CardNotesModel> CardNotes
+        {
+            get
+            {
+                return _cardNotes;
+            }
+            set
+            {
+                if (value == _cardNotes) return;
+                _cardNotes = value;
                 OnPropertyChanged();
             }
         }
+
+        public bool CurrentlyTalling
+        {
+            get
+            {
+                return _currentlyTalling;
+            }
+            private set
+            {
+                if (value == _currentlyTalling) return;
+                _currentlyTalling = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool FlyoutSettingsOpen
+        {
+            get
+            {
+                return _flyoutSettingsOpen;
+            }
+            set
+            {
+                if (value == _flyoutSettingsOpen) return;
+                _flyoutSettingsOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IncludeRinoaParties
+        {
+            get => _includeRinoaParties;
+            set
+            {
+                if (value == _includeRinoaParties) return;
+                _includeRinoaParties = value;
+                OnPropertyChanged();
+                if (UltimeciaFormations != null && UltimeciaFormations.Count > 0) UltimeciaLaunch(this, EventArgs.Empty);
+            }
+        }
+
+        private bool ultimeciaHardReset;
+        public bool UltimeciaHardReset
+        {
+            get => ultimeciaHardReset; set
+            {
+                if (ultimeciaHardReset == value)
+                    return;
+                ultimeciaHardReset = value;
+                OnPropertyChanged();
+            }
+        }
+        public Command LaunchZellCalculatorCommand { get; }
+
+        public bool NoFormationsFound => UltimeciaFormations.Count == 0;
+
+        public bool NoSubscriptsDetected => !CarawayOutput?.Any() ?? true;
 
         public QuistisPattern Pattern
         {
@@ -249,28 +579,6 @@ namespace FF8Utilities.Models
                 _pattern = value;
                 OnPropertyChanged();
                 PopulateCardNotes();
-            }
-        }
-
-        public int? RngPattern
-        {
-            get => _rngPattern;
-            set
-            {
-                if (value == _rngPattern) return;
-                _rngPattern = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public TextBox TextBox
-        {
-            get => _textBox;
-            set
-            {
-                _textBox = value;
-                OnPropertyChanged();
-                if (value != null) InitialiseTextBox();
             }
         }
 
@@ -289,8 +597,6 @@ namespace FF8Utilities.Models
             }
         }
 
-        private PoleModel CurrentlyTalliedPole { get; set; }
-
         /// <summary>
         /// Pole counts must be provided in a sequence, i.e. (2,0,12).  If they provide (2, null, 12), return false
         /// </summary>
@@ -299,52 +605,27 @@ namespace FF8Utilities.Models
             get
             {
                 for (int i = 0; i < Poles.Count - 1; i++)
-                {                    
+                {
                     if (Poles[i].Count == null && Poles[i + 1].Count != null) return false;
                 }
 
                 return true;
             }
         }
-
-
-        public Command SubmitPolesCommand { get; }
-
-        public BindingList<CarawayCodeOutput> CarawayOutput
-        {
-            get
-            {
-                return _carawayOutput;
-            }
-            set
-            {
-                if (Equals(value, _carawayOutput)) return;
-                _carawayOutput = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(NoSubscriptsDetected));
-            }
-        }
-
-        public bool NoSubscriptsDetected => !CarawayOutput?.Any() ?? true;
-
-        public Command ResetPolesCommand { get; }
         public Command PoleTallyCommand { get; }
 
-        public bool CurrentlyTalling
+        public Command ResetPolesCommand { get; }
+
+        public int? RngPattern
         {
-            get
+            get => _rngPattern;
+            set
             {
-                return _currentlyTalling;
-            }
-            private set
-            {
-                if (value == _currentlyTalling) return;
-                _currentlyTalling = value;
+                if (value == _rngPattern) return;
+                _rngPattern = value;
                 OnPropertyChanged();
             }
         }
-
-        public Command ShowAboutCommand { get; }
 
         public SettingsModel Settings
         {
@@ -360,23 +641,8 @@ namespace FF8Utilities.Models
             }
         }
 
-        public Command ShowSettingsCommand { get; }
-
-        public bool FlyoutSettingsOpen
-        {
-            get
-            {
-                return _flyoutSettingsOpen;
-            }
-            set
-            {
-                if (value == _flyoutSettingsOpen) return;
-                _flyoutSettingsOpen = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Version => $"Version {Assembly.GetEntryAssembly().GetName().Version}";
+        public Command ShowAboutCommand { get; }
+        public Command UpdateAvailableCommand { get; }
 
         public bool ShowNotes
         {
@@ -392,44 +658,19 @@ namespace FF8Utilities.Models
             }
         }
 
-        public BindingList<CardNotesModel> CardNotes
+        public Command ShowSettingsCommand { get; }
+
+
+        public Command SubmitPolesCommand { get; }
+
+        public TextBox UltimeciaTextBox
         {
-            get
-            {
-                return _cardNotes;
-            }
+            get => _ultimeciaTextBox;
             set
             {
-                if (value == _cardNotes) return;
-                _cardNotes = value;
+                _ultimeciaTextBox = value;
                 OnPropertyChanged();
-            }
-        }
-
-        private void PopulateCardNotes()
-        {
-            CardNotes.Clear();
-            switch (Pattern)
-            {
-                case QuistisPattern.Elastoid:
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.TopCentre));
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreRight));
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
-                    break;
-                case QuistisPattern.Malboro:
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomCentre));
-                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
-                    break;
-                case QuistisPattern.BiggsWedge:
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.TopRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.Centre));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreLeft));
-                    break;
-
+                if (value != null) InitialiseUltimeciaTextBox();
             }
         }
 
@@ -444,10 +685,187 @@ namespace FF8Utilities.Models
                 OnPropertyChanged(nameof(NoFormationsFound));
             }
         }
+        public Command UltimeciaLaunchCommand { get; }
 
-        public bool NoFormationsFound => UltimeciaFormations.Count == 0;
+        public string UltimeciaRng
+        {
+            get => _ultimeciaRng;
+            set
+            {
+                if (value == _ultimeciaRng) return;
+                _ultimeciaRng = value;
+                OnPropertyChanged();
+            }
+        }
 
         public UltimeciaTimerModel UltimeciaTimer { get; }
+        public Command UltimeciaTimerCommand { get; }
 
+        public string Version => $"v{Assembly.GetEntryAssembly().GetName().Version}";
+
+        public MainWindow Window
+        {
+            get
+            {
+                return _window;
+            }
+            set
+            {
+                if (Equals(value, _window)) return;
+                _window = value;
+                if (value != null) ConfigureTally();
+                OnPropertyChanged();
+            }
+        }
+        public TimeSpan ZellCountdownTimer
+        {
+            get => zellCountdownTimer; set
+            {
+                if (zellCountdownTimer == value)
+                    return;
+                zellCountdownTimer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Command ZellLaunchCommand { get; }
+        public Command ZellCountdownCommand { get; }
+
+        public string ZellOutput
+        {
+            get => _zellOutput;
+            set
+            {
+                if (value == _zellOutput) return;
+                _zellOutput = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ZellTrackToDiablos
+        {
+            get => _zellTrackToDiablos;
+            set
+            {
+                if (value == _zellTrackToDiablos) return;
+                _zellTrackToDiablos = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ZellCountdownText
+        {
+            get => _zellCountdownText; set
+            {
+                if (_zellCountdownText == value)
+                    return;
+                _zellCountdownText = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        #region Fish Fin Manip
+
+        public List<FishPatternModel> FishPatterns
+        {
+            get => _fishPatterns; set
+            {
+                if (_fishPatterns == value)
+                    return;
+                _fishPatterns = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<FishPatternModel> AllFishPatterns { get; set; }
+
+        public string FishFinManipPattern
+        {
+            get => _fishFinManipPattern; set
+            {
+                if (_fishFinManipPattern == value)
+                    return;
+                _fishFinManipPattern = value;
+                OnPropertyChanged();
+                FilterFishPatterns();
+            }
+        }
+
+        //public TextBox UltimeciaTextBox
+        //{
+        //    get => _ultimeciaTextBox;
+        //    set
+        //    {
+        //        _ultimeciaTextBox = value;
+        //        OnPropertyChanged();
+        //        if (value != null) InitialiseUltimeciaTextBox();
+        //    }
+        //}
+
+        public bool FishPatternsPopulating
+        {
+            get => _fishPatternsPopulating; set
+            {
+                if (_fishPatternsPopulating == value)
+                    return;
+                _fishPatternsPopulating = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Timer _filterTimer;
+
+        private void FilterFishPatterns()
+        {
+            if (_filterTimer == null || !_filterTimer.Enabled)
+            {
+                _filterTimer = new Timer(180);
+                _filterTimer.AutoReset = false;
+                _filterTimer.Elapsed += (s, e) =>
+                {
+                    string pattern = FishFinManipPattern?.Trim();
+                    if (!string.IsNullOrWhiteSpace(pattern))
+                    {                       
+                        FishPatterns = AllFishPatterns.Where(t => t.Pattern.StartsWith(pattern)).ToList();
+                    }
+                    else
+                    {
+                        FishPatterns = null;
+                    }
+
+                    FishPatternsPopulating = false;
+                };
+                _filterTimer.Start();
+            }
+            else
+            {
+                _filterTimer.Stop();
+                _filterTimer.Start();
+            }
+
+           
+            FishPatternsPopulating = true;         
+        }
+
+        #endregion
+        [DllImport("user32")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumChildWindows(IntPtr window, EnumWindowProc callback, IntPtr i);
+
+        public void InitialiseUltimeciaTextBox()
+        {
+            UltimeciaTextBox.PreviewKeyDown += (s, e) =>
+            {
+                if (e.Key == Key.Enter && UltimeciaLaunchCommand.CanExecute(null)) UltimeciaLaunchCommand.Execute(null);
+            };
+
+            UltimeciaTextBox.TextChanged += (s, e) =>
+            {
+                if (Settings.AutoLaunchUltimeciaScript && UltimeciaRng?.Length == 12) UltimeciaLaunchCommand.Execute(null);
+            };
+        }
     }
+
+
 }

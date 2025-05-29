@@ -13,7 +13,16 @@ namespace FF8Utilities.Data
         PS2,
         [Description("PS2 (JP)")]
         PS2JP,
-        PC
+        [Description("PC")]
+        PC,
+        [Description("PC (Lite)")]
+        PCLite        
+    }
+
+    public enum CSRVersion
+    {
+        English,
+        French
     }
 
     public static class Const

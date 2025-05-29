@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using FF8Utilities.Interfaces;
 using FF8Utilities.Models;
 
@@ -64,5 +65,10 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
         public int Base => 15;
 
         public Command ClearCameraCommand { get; }
+        //public Enum FanfareCamera { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        //public BindingList<IEncounterAbilityModel> Abilities => throw new NotImplementedException();
+
+        //BindingList<EncounterAbilityModel> IEncounter.Abilities => throw new NotImplementedException();
     }
 }

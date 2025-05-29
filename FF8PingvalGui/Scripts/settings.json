@@ -1,0 +1,20 @@
+{
+    "Base": 550,
+    "Width": 400,
+    "RecoveryWidth": 360,
+    "CountingWidth": 100,
+    "CountingFrameWidth": 40,
+    "EarlyQuistis": "pingval",
+    "AutofireSpeed": 12,
+    "DelayFrame": 285,
+    "RanksOrder": "ulrd",
+    "StrongHighlightCards": [ 103, 105 ],
+    "HighlightCards": [ 21, 48, 53 ],
+    "Order": "Reverse",
+    "ConsoleFps": 60,
+    "Player": "zellmama",
+    "Fuzzy": [ ".", "r", "o", "ro" ],
+    "ForcedIncr": 10,
+    "AcceptDelayFrame": 3,
+    "Prompt": "> "
+}
