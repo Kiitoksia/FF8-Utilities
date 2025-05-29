@@ -61,6 +61,7 @@
     <Compile Include="AppSettings.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="DataManager.cs" />
+    <Compile Include="DriveManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

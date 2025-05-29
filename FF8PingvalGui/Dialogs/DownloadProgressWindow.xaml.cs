@@ -24,5 +24,12 @@ namespace FF8Utilities.Dialogs
         {
             InitializeComponent();
         }
+
+        public void Initialise(string contentDownloading, IProgress<int> progress)
+        {
+
+        }
+
+        
     }
 }

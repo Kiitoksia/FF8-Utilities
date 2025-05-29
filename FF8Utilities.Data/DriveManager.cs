@@ -27,7 +27,7 @@ namespace FF8Utilities.Data
             return service;
         }
 
-        public static async Task DownloadCSR(CSRVersion version)
+        public static async Task DownloadCSR(CSRVersion version, IProgress<decimal> progressMethod)
         {
             DriveService service = await GetDriveService();
             var request = service.Files.List();
@@ -40,7 +40,7 @@ namespace FF8Utilities.Data
                 default: throw new NotImplementedException();
             }
 
-            request.Q = $"{CSRFolder}' in parents and trashed = false";
+            request.Q = $"{csr}' in parents and trashed = false";
             request.OrderBy = "modifiedTime desc";
             request.Fields = "files(id, name, modifiedTime)";
             request.PageSize = 1;
@@ -51,6 +51,22 @@ namespace FF8Utilities.Data
             if (file != null)
             {
                 FilesResource.GetRequest downloadRequest = service.Files.Get(file.Id);
+                downloadRequest.MediaDownloader.ProgressChanged += progress =>
+                {
+                    switch (progress.Status)
+                    {
+                        case Google.Apis.Download.DownloadStatus.Downloading:
+                            decimal percentage = progress.BytesDownloaded / file.Size.Value * 100m;
+                            progressMethod.Report(percentage);
+                            break;
+                        case Google.Apis.Download.DownloadStatus.Completed:
+                            progressMethod.Report(100m);
+                            break;
+                        case Google.Apis.Download.DownloadStatus.Failed:
+                            progressMethod.Report(-1m);
+                            break;
+                    }
+                };
                 using (FileStream fs = new FileStream(Path.Combine(AppContext.BaseDirectory, "Packages", file.Name), FileMode.Create, FileAccess.Write))
                 {
                     var test = await downloadRequest.DownloadAsync(fs);

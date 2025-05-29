@@ -92,6 +92,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Dialogs\DownloadProgressWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\ZellCardCalculatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +110,9 @@
     </Compile>
     <Compile Include="Const.cs" />
     <Compile Include="Converters\KiiVisibilityConverter.cs" />
+    <Compile Include="Dialogs\DownloadProgressWindow.xaml.cs">
+      <DependentUpon>DownloadProgressWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ZellCardCalculatorWindow.xaml.cs">
       <DependentUpon>ZellCardCalculatorWindow.xaml</DependentUpon>
     </Compile>
@@ -137,6 +144,7 @@
     <Compile Include="Models\BaseEncounterModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CardNotesModel.cs" />
+    <Compile Include="Models\DownloadModel.cs" />
     <Compile Include="Models\EncounterAbilityModel.cs" />
     <Compile Include="Models\FishPatternModel.cs" />
     <Compile Include="Models\MainModel.cs" />
@@ -174,6 +182,9 @@
     </Content>
     <None Include="Scripts\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="service_account.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

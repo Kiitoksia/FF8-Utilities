@@ -3,12 +3,21 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:models="clr-namespace:FF8Utilities.Models"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FF8Utilities.Dialogs"
                  WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
         Title="Downloading" Height="317" Width="800">
+    <mah:MetroWindow.DataContext>
+        <models:DownloadModel/>
+    </mah:MetroWindow.DataContext>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="{Binding Title}"/>
+        <mah:MetroProgressBar Grid.Row="1"/>
     </Grid>
 </mah:MetroWindow>
