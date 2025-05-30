@@ -167,9 +167,10 @@ namespace FF8Utilities
             ProgressDialogController downloadController = await this.ShowProgressAsync("Downloading CSR files", "This may take awhile").ConfigureAwait(true);
             Progress<decimal> progress = new Progress<decimal>(prog =>
             {
+                if (prog >= 1) return;
                 downloadController.SetProgress((double)prog);
             });
-            await DriveManager.DownloadCSR(Model.Settings.CSRLanguage, progress).ConfigureAwait(false);
+            await Model.DriveManager.DownloadCSR(Model.Settings.CSRLanguage, progress).ConfigureAwait(false);
             await downloadController.CloseAsync().ConfigureAwait(false);
         }
 

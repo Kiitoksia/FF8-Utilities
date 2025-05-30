@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -102,8 +103,12 @@ namespace FF8Utilities.Models
             UltimeciaTimer = new UltimeciaTimerModel();
             ZellCountdownText = "Start Countdown";
 
+            DriveManager = new DriveManager(this);
+
+
             LoadFishPatterns();
             _ = CheckForUpdates();
+
         }
 
         private void LoadFishPatterns()
@@ -865,6 +870,12 @@ namespace FF8Utilities.Models
                 if (Settings.AutoLaunchUltimeciaScript && UltimeciaRng?.Length == 12) UltimeciaLaunchCommand.Execute(null);
             };
         }
+
+
+        #region Google Drive / CSR
+        public DriveManager DriveManager { get; }
+
+        #endregion
     }
 
 

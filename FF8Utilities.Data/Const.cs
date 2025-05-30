@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,6 @@ namespace FF8Utilities.Data
 
     public static class Const
     {
-        public const string SettingsFile = "Settings";
+        public const string SettingsFile = "Settings";        
     }
 }

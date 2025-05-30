@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 
 namespace FF8Utilities
 {
@@ -45,6 +46,11 @@ namespace FF8Utilities
         public const int SeriesInterval = 3000;
 
         public const int LastMapFramerate = 30;
+
+        public const string CSREnglishFile = "CSR-English";
+        public const string CSRFrenchFile = "CSR-French";
+
+        public static string PackagesFolder => Path.Combine(AppContext.BaseDirectory, "Packages");
 
     }
 
@@ -112,6 +118,14 @@ namespace FF8Utilities
         BottomCentre,
         [Description("Bottom Right")]
         BottomRight
+    }
+
+    public enum CSRCheckResult
+    {
+        NewVersionAvailable,
+        UpToDate,
+        Downloaded,
+        Error
     }
 
     public enum Card
