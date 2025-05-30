@@ -38,6 +38,7 @@ namespace FF8Utilities.Models
             SaveSettingsCommand = new Command(() => true, SaveSettings);
 
             InstallCSRCommand = new Command(() => true, InstallCSR);
+            UninstallCSRCommand = new Command(() => true, UninstallCSR);
             GameInstallFolderSelectionCommand = new Command(() => true, ShowGameInstallSelection);
             _mainWindowModel = model;
             DriveManager = new DriveManager(_mainWindowModel, this);
@@ -96,12 +97,21 @@ namespace FF8Utilities.Models
             string backupFilePath = Path.Combine(dataFolderPath, "field_backup.zip");
             if (!File.Exists(backupFilePath))
             {
-                using (ZipArchive zip = ZipFile.Open(Path.Combine(dataFolderPath, "field_backup.zip"), ZipArchiveMode.Create))
+                try
                 {
-                    zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fi"), "field.fi");
-                    zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fl"), "field.fl");
-                    zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fs"), "field.fs");
+                    using (ZipArchive zip = ZipFile.Open(Path.Combine(dataFolderPath, "field_backup.zip"), ZipArchiveMode.Create))
+                    {
+                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fi"), "field.fi");
+                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fl"), "field.fl");
+                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fs"), "field.fs");
+                    }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Could not create backup, ensure file access\r\n{ex.Message}", "Error");
+                    return;
+                }
+                
             }
 
             // Check we have a CSR downloaded
@@ -138,8 +148,58 @@ namespace FF8Utilities.Models
             }
 
             // Overwrite
+            try
+            {
+                using (ZipArchive zip = ZipFile.OpenRead(Path.Combine(Const.PackagesFolder, $"CSR-{CSRLanguage}_v{DriveManager.CurrentCSRVersion}.zip")))
+                {
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        string newFilePath = Path.Combine(dataFolderPath, entry.FullName);
+                        entry.ExtractToFile(newFilePath, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not install CSR, ensure file access\r\n{ex.Message}", "Error");
+                return;
+            }
 
-            using (ZipArchive zip = ZipFile.OpenRead(Path.Combine(Const.PackagesFolder, $"CSR-{CSRLanguage}_v{DriveManager.CurrentCSRVersion}.zip")))
+            _mainWindowModel.Window.Invoke(() =>
+            {
+                _mainWindowModel.Window.ShowMessageAsync("Success", "CSR succesfully installed");
+            });
+        }
+
+        private async void UninstallCSR(object sender, EventArgs args)
+        {
+            CheckInstalledGameLanguage();
+
+            string languageFolder;
+            switch (CSRLanguage)
+            {
+                case CSRLanguage.English: languageFolder = "lang-en"; break;
+                case CSRLanguage.French: languageFolder = "lang-fr"; break;
+                default: throw new NotImplementedException();
+            }
+
+
+            string dataFolderPath = Path.Combine(GameInstallationFolder ?? string.Empty, "Data", languageFolder);
+
+            if (!Directory.Exists(dataFolderPath))
+            {
+                await _mainWindowModel.Window.ShowMessageAsync("Error", "Could not find game install folder");
+                return;
+            }
+
+            string backupFilePath = Path.Combine(dataFolderPath, "field_backup.zip");
+            if (!File.Exists(backupFilePath))
+            {
+                await _mainWindowModel.Window.ShowMessageAsync("Error", "No backup could be found.  Manually restore using Steam (Right click > Properties > Installed Files > Verify Integrity)");
+                return;
+            }
+
+            using (ZipArchive zip = ZipFile.OpenRead(backupFilePath))
             {
                 foreach (ZipArchiveEntry entry in zip.Entries)
                 {
@@ -147,6 +207,11 @@ namespace FF8Utilities.Models
                     entry.ExtractToFile(newFilePath, true);
                 }
             }
+
+            _mainWindowModel.Window.Invoke(() =>
+            {
+                _mainWindowModel.Window.ShowMessageAsync("Success", "CSR succesfully un-installed");
+            });
         }
 
         private async Task<CSRCheckResult> DownloadCSR()

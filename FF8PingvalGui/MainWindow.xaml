@@ -526,7 +526,7 @@
                         <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="35" Grid.Column="0" Command="{Binding Settings.InstallCSRCommand}">
                             <TextBlock Text="Install CSR"/>
                         </Button>
-                        <Button Style="{DynamicResource SquareButtonStyle}" Background="DarkRed" Height="35" Grid.Column="1">
+                        <Button Style="{DynamicResource SquareButtonStyle}" Background="DarkRed" Height="35" Grid.Column="1" Command="{Binding Settings.UninstallCSRCommand}">
                             <TextBlock Text="Uninstall CSR"/>
                         </Button>
                     </Grid>
