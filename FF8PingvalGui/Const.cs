@@ -120,10 +120,8 @@ namespace FF8Utilities
         BottomRight
     }
 
-    public enum CSRCheckResult
+    public enum DownloadResult
     {
-        NewVersionAvailable,
-        UpToDate,
         Downloaded,
         Error
     }

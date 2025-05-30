@@ -530,10 +530,23 @@
                             <TextBlock Text="Uninstall CSR"/>
                         </Button>
                     </Grid>
-                    
+
+                    <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="35" Grid.Column="0" Command="{Binding Settings.InstallPSXMusicFilesCommand}">
+                            <TextBlock Text="Install PSX Music"/>
+                        </Button>
+                        <Button Style="{DynamicResource SquareButtonStyle}" Background="DarkRed" Height="35" Grid.Column="1" Command="{Binding Settings.UninstallPSXMusicFilesCommand}">
+                            <TextBlock Text="Uninstall PSX Music"/>
+                        </Button>
+                    </Grid>
 
 
-                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
+
+                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="8" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="Save Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>

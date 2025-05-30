@@ -24,6 +24,7 @@ namespace FF8Utilities
     {
         private const string CSREnglishFolder = "1R0e4INF4fEgIYKb3o568yGEj1AUtAQwT";
         private const string CSRFrenchFolder = "1Y9l6Iuu3prrRT-VJq--XnTb2HYQa8ttW";
+        private const string PSXMidiFolder = "1giHGMoAOjkjkS_DVFCLKnl5wT9j9p_Yx";
 
         private static DriveService DriveService;
 
@@ -137,10 +138,10 @@ namespace FF8Utilities
             return newVersion > CurrentCSRVersion;
         }
 
-        public async Task<CSRCheckResult> DownloadCSR(IProgress<decimal> progressMethod)
+        public async Task<DownloadResult> DownloadCSR(IProgress<decimal> progressMethod)
         {            
             File file = await GetLatestCSRFile();
-            if (file == null) return CSRCheckResult.Error;
+            if (file == null) return DownloadResult.Error;
             Version newVersion = GetFileVersion(file);
 
             DriveService service = await GetDriveService().ConfigureAwait(false);
@@ -193,7 +194,61 @@ namespace FF8Utilities
                 }
             }
                 
-            return CSRCheckResult.Downloaded;
+            return DownloadResult.Downloaded;
+        }
+
+        public async Task<DownloadResult> DownloadMusic(IProgress<decimal> progressMethod)
+        {
+            DriveService service = await GetDriveService().ConfigureAwait(false);
+            FilesResource.ListRequest request = service.Files.List();
+
+
+            request.Q = $"'{PSXMidiFolder}' in parents and trashed = false and name = 'ff8dm.zip'";
+            request.Fields = "files(id, name, size)";
+            request.PageSize = 1; // Should only ever be one file per folder
+
+            FileList result = await request.ExecuteAsync().ConfigureAwait(false);
+            File file = result.Files.FirstOrDefault();
+            if (file == null)
+            {
+                return DownloadResult.Error;
+            }
+
+            FilesResource.GetRequest downloadRequest = service.Files.Get(file.Id);
+            downloadRequest.MediaDownloader.ProgressChanged += progress =>
+            {
+                switch (progress.Status)
+                {
+                    case DownloadStatus.Downloading:
+                        decimal percentage = (decimal)((float)progress.BytesDownloaded / file.Size.Value);
+                        progressMethod.Report(percentage);
+                        break;
+                    case DownloadStatus.Completed:
+                        progressMethod.Report(100m);
+                        break;
+                    case DownloadStatus.Failed:
+                        progressMethod.Report(-1m);
+                        break;
+                }
+            };
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                IDownloadProgress downloadResult = await downloadRequest.DownloadAsync(ms).ConfigureAwait(false);
+                if (downloadResult.Status == DownloadStatus.Completed)
+                {
+                    // Succesfully downloaded, save to folder
+                    if (!Directory.Exists(Const.PackagesFolder)) Directory.CreateDirectory(Const.PackagesFolder);
+
+                    using (FileStream fs = new FileStream(Path.Combine(Const.PackagesFolder, "ff8dm.zip"), FileMode.Create, FileAccess.Write))
+                    {
+                        ms.Position = 0;
+                        await ms.CopyToAsync(fs).ConfigureAwait(false);
+                    }
+                }
+            }
+
+            return DownloadResult.Downloaded;
         }
     }
 }

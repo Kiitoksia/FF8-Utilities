@@ -39,6 +39,8 @@ namespace FF8Utilities.Models
 
             InstallCSRCommand = new Command(() => true, InstallCSR);
             UninstallCSRCommand = new Command(() => true, UninstallCSR);
+            InstallPSXMusicFilesCommand = new Command(() => true, InstallPSXMusic);
+            UninstallPSXMusicFilesCommand = new Command(() => true, UninstallPSXMusic);
             GameInstallFolderSelectionCommand = new Command(() => true, ShowGameInstallSelection);
             _mainWindowModel = model;
             DriveManager = new DriveManager(_mainWindowModel, this);
@@ -135,9 +137,9 @@ namespace FF8Utilities.Models
 
             if (downloadCsr)
             {
-                CSRCheckResult downloadResult = await DownloadCSR();
+                DownloadResult downloadResult = await DownloadCSR();
 
-                if (downloadResult == CSRCheckResult.Error)
+                if (downloadResult == DownloadResult.Error)
                 {
                     _mainWindowModel.Window.Invoke(() =>
                     {
@@ -199,14 +201,23 @@ namespace FF8Utilities.Models
                 return;
             }
 
-            using (ZipArchive zip = ZipFile.OpenRead(backupFilePath))
+            try
             {
-                foreach (ZipArchiveEntry entry in zip.Entries)
+                using (ZipArchive zip = ZipFile.OpenRead(backupFilePath))
                 {
-                    string newFilePath = Path.Combine(dataFolderPath, entry.FullName);
-                    entry.ExtractToFile(newFilePath, true);
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        string newFilePath = Path.Combine(dataFolderPath, entry.FullName);
+                        entry.ExtractToFile(newFilePath, true);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not overwrite files, ensure file access\r\n{ex.Message}", "Error");
+                return;
+            }
+            
 
             _mainWindowModel.Window.Invoke(() =>
             {
@@ -214,19 +225,142 @@ namespace FF8Utilities.Models
             });
         }
 
-        private async Task<CSRCheckResult> DownloadCSR()
+        private async Task<DownloadResult> DownloadCSR()
         {
-            ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading CSR files", "This may take awhile").ConfigureAwait(true);
+            ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading CSR files", "This may take awhile...").ConfigureAwait(true);
             Progress<decimal> progress = new Progress<decimal>(prog =>
             {
                 if (prog >= 1) return;
                 downloadController.SetProgress((double)prog);
+                downloadController.SetMessage($"{(prog * 100):N2}% complete...");
             });
             
-            CSRCheckResult downloadResult = await DriveManager.DownloadCSR(progress).ConfigureAwait(false);
+            DownloadResult downloadResult = await DriveManager.DownloadCSR(progress).ConfigureAwait(false);
             await downloadController.CloseAsync().ConfigureAwait(false);
 
             DriveManager.CheckAndSetCurrentCSRVersion();            
+            return downloadResult;
+        }
+
+        private async void InstallPSXMusic(object sender, EventArgs args)
+        {
+            string musicFolderPath = Path.Combine(GameInstallationFolder ?? string.Empty, "Data", "Music", "dmusic");
+            if (!Directory.Exists(musicFolderPath))
+            {
+                await _mainWindowModel.Window.ShowMessageAsync("Error", "Could not find game install folder");
+                return;
+            }
+
+            // Backup the music files into their own zip if not already backed up
+            string backupFilePath = Path.Combine(musicFolderPath, "music_backup.zip");
+            if (!File.Exists(backupFilePath))
+            {
+                try
+                {
+                    using (ZipArchive zip = ZipFile.Open(Path.Combine(musicFolderPath, "music_backup.zip"), ZipArchiveMode.Create))
+                    {
+                        foreach (string filePath in Directory.GetFiles(musicFolderPath))
+                        {
+                            string ext = Path.GetExtension(filePath);
+                            if (!new[] { ".sgt", ".dls" }.Contains(Path.GetExtension(filePath)))
+                            {
+                                continue; // Irrelevant file, ignore
+                            }
+
+                            zip.CreateEntryFromFile(filePath, Path.GetFileName(filePath));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Could not create backup, ensure file access\r\n{ex.Message}", "Error");
+                    return;
+                }
+            }
+
+            string musicFilePath = Path.Combine(Const.PackagesFolder, "ff8dm.zip");
+            if (!File.Exists(musicFilePath))
+            {
+                // Need to download
+                DownloadResult downloadResult = await DownloadPSXMusic();
+
+                if (downloadResult == DownloadResult.Error)
+                {
+                    _mainWindowModel.Window.Invoke(() =>
+                    {
+                        _mainWindowModel.Window.ShowMessageAsync("Error", "There was an error downloading Music Files, try again later or manually install");
+                    });
+                    return;
+                }
+            }
+
+            try
+            {
+                using (ZipArchive zip = ZipFile.OpenRead(musicFilePath))
+                {
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        string newFilePath = Path.Combine(musicFolderPath, entry.FullName);
+                        entry.ExtractToFile(newFilePath, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not install PSX Music Files, ensure file access\r\n{ex.Message}", "Error");
+                return;
+            }
+
+            _mainWindowModel.Window.Invoke(() =>
+            {
+                _mainWindowModel.Window.ShowMessageAsync("Success", "PSX Music files succesfully installed");
+            });
+        }
+
+        private async void UninstallPSXMusic(object sender, EventArgs args)
+        {
+            string musicFolderPath = Path.Combine(GameInstallationFolder ?? string.Empty, "Data", "Music", "dmusic");
+            if (!Directory.Exists(musicFolderPath))
+            {
+                await _mainWindowModel.Window.ShowMessageAsync("Error", "Could not find game install folder");
+                return;
+            }
+
+            string backupFilePath = Path.Combine(musicFolderPath, "music_backup.zip");
+            if (!File.Exists(backupFilePath))
+            {
+                await _mainWindowModel.Window.ShowMessageAsync("Error", "No backup could be found.  Manually restore using Steam (Right click > Properties > Installed Files > Verify Integrity)");
+                return;
+            }
+
+            using (ZipArchive zip = ZipFile.OpenRead(backupFilePath))
+            {
+                foreach (ZipArchiveEntry entry in zip.Entries)
+                {
+                    string newFilePath = Path.Combine(musicFolderPath, entry.FullName);
+                    entry.ExtractToFile(newFilePath, true);
+                }
+            }
+
+            _mainWindowModel.Window.Invoke(() =>
+            {
+                _mainWindowModel.Window.ShowMessageAsync("Success", "PSX Music Files succesfully un-installed");
+            });
+        }
+
+        private async Task<DownloadResult> DownloadPSXMusic()
+        {
+            ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading PSX Music files", "This may take awhile...").ConfigureAwait(true);
+            Progress<decimal> progress = new Progress<decimal>(prog =>
+            {
+                if (prog >= 1) return;
+                downloadController.SetProgress((double)prog);
+                downloadController.SetMessage($"{(prog * 100):N2}% complete...");
+            });
+
+            DownloadResult downloadResult = await DriveManager.DownloadMusic(progress).ConfigureAwait(false);
+            await downloadController.CloseAsync().ConfigureAwait(false);
+
             return downloadResult;
         }
 
@@ -335,6 +469,10 @@ namespace FF8Utilities.Models
         public Command InstallCSRCommand { get; }
 
         public Command UninstallCSRCommand { get; }
+
+        public Command InstallPSXMusicFilesCommand { get; }
+
+        public Command UninstallPSXMusicFilesCommand { get; }
 
         public Command GameInstallFolderSelectionCommand { get; set; }
 
