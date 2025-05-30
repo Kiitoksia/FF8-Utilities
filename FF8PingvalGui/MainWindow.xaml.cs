@@ -30,8 +30,8 @@ namespace FF8Utilities
         {
             InitializeComponent();
 
-            _unselectedStyle = (Style)this.FindResource("SquareMetroButton");
-            _selectedStyle = (Style)this.FindResource("AccentedDialogSquareButton");
+            _unselectedStyle = (Style)this.FindResource("MahApps.Styles.Button.MetroSquare");
+            _selectedStyle = (Style)this.FindResource("MahApps.Styles.Button.Dialogs.Accent");
 
             ConfigureAttackButtons(FirstSquallButton, FirstSquallCrossButton, FirstQuistisButton, FirstQuistisCrossButton, FirstDamageRoll, 0);
             ConfigureAttackButtons(SecondSquallButton, SecondSquallCrossButton, SecondQuistisButton, SecondQuistisCrossButton, SecondDamageRoll, 1);

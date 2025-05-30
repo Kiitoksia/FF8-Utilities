@@ -157,7 +157,7 @@
                                             <DataGridTextColumn Binding="{Binding Limits}" Header="Limits"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Button Style="{StaticResource AccentedSquareButtonStyle}" IsTabStop="False" Height="50" Command="{Binding AddNewEncounterCommand}">
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Square.Accent}" IsTabStop="False" Height="50" Command="{Binding AddNewEncounterCommand}">
                                         <StackPanel Orientation="Horizontal" Height="20">
                                             <fa:ImageAwesome Icon="PlusCircle" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                             <TextBlock Text="Add Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -445,12 +445,12 @@
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Include Diablos" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>
-                            <mah:ToggleSwitch IsChecked="{Binding IncludeDiablos}" OffLabel="No" OnLabel="Yes"/>
+                            <mah:ToggleSwitch IsOn="{Binding IncludeDiablos}" OffContent="No" OnContent="Yes"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Include Red Soldier Encounter" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>
-                            <mah:ToggleSwitch IsChecked="{Binding RedSoldierEncounter}" OffLabel="No" OnLabel="Yes"/>
+                            <mah:ToggleSwitch IsOn="{Binding RedSoldierEncounter}" OffContent="No" OnContent="Yes"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -587,7 +587,7 @@
                     <mah:NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.SquallPhysicals}"/>
                     <TextBlock Text="Limits" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <mah:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.Limits}"/>
-                    <Button Style="{DynamicResource SquareButtonStyle}" Height="50" Grid.Row="3" Grid.Column="1" Command="{Binding RemoveFishFinEncounterCommand}">
+                    <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Height="50" Grid.Row="3" Grid.Column="1" Command="{Binding RemoveFishFinEncounterCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <TextBlock Text="Remove Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
