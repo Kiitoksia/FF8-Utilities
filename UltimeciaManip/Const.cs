@@ -16,7 +16,7 @@ namespace UltimeciaManip
         Unknown
     }
 
-    public static class Const
+    internal static class Const
     {
         public static int Movements { get; set; } = 12;
         public static int Base { get; set; } = 2800;
