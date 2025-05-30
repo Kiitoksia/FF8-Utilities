@@ -28,6 +28,6 @@ namespace FF8Utilities.Data
 
     public static class Const
     {
-        public const string SettingsFile = "Settings";        
+        public const string SettingsFile = "Settings.xml";        
     }
 }

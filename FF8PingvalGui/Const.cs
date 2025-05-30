@@ -50,7 +50,7 @@ namespace FF8Utilities
         public const string CSREnglishFile = "CSR-English";
         public const string CSRFrenchFile = "CSR-French";
 
-        public static string PackagesFolder => Path.Combine(AppContext.BaseDirectory, "Packages");
+        public static string PackagesFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities");
 
     }
 

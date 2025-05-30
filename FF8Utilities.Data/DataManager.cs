@@ -31,7 +31,7 @@ namespace FF8Utilities.Data
         public AppSettings CurrentSettings { get; private set; }
 
 
-        private string SettingsPath => Path.Combine(Directory.GetCurrentDirectory(), Const.SettingsFile);
+        private string SettingsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities", Const.SettingsFile);
 
         public void Reload()
         {
