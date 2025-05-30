@@ -16,7 +16,7 @@ namespace FF8Utilities.Data
         PS2JP,
         [Description("PC")]
         PC,
-        [Description("PC (Lite)")]
+        [Description("PC (CSR)")]
         PCLite        
     }
 
