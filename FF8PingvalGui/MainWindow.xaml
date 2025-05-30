@@ -97,29 +97,24 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  Width="0.4*"/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="0.15*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
-                    <Grid Grid.Row="0" Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.9*"/>
-                            <ColumnDefinition Width="0.1*"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        
-                    </Grid>
-                    <ComboBox Grid.Row="0" Grid.Column="1"
+
+                    <GroupBox Grid.ColumnSpan="3" Margin="20,20,20,0" Header="(Quistis Card) Cards to select">
+                        <TextBlock FontSize="14" Text="Geezard, Funguar, Gayla, Fastitocalon-F, Caterchipallar"/>
+                    </GroupBox>
+                    <TextBlock Grid.Row="1" Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1"
                         Margin="20,20,0,20" 
                               ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:QuistisPattern}}}"  
                               SelectedValue="{Binding Pattern}"
                               DisplayMemberPath="Description"
                               SelectedValuePath="Value"/>
-                    <ToggleButton Grid.Row="0" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}">
+                    <ToggleButton Grid.Row="1" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}">
                         <fa:ImageAwesome Icon="ListOl" Margin="5" Height="15"/>
                     </ToggleButton>
                     <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,12">
@@ -162,6 +157,10 @@
                             <TextBlock Text="Submit" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
+
+                    <GroupBox Grid.ColumnSpan="3" Grid.Row="4" Margin="20,20,20,0" Header="(Zell Card) Cards to select">
+                        <TextBlock FontSize="14" Text="Geezard, Red Bat, Gayla, Quistis, Ifrit"/>
+                    </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Fish Fins" Controls:VisibilityHelper.IsVisible="{Binding FishFinManipEnabled}">
