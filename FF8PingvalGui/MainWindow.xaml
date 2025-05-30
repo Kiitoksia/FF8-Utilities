@@ -510,7 +510,7 @@
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="CSR Language" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:CSRLanguage}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.CSRLanguage}"/>
 
-                    <Button Style="{DynamicResource SquareButtonStyle}" Height="35" Grid.Row="5" Grid.Column="0" Click="Button_Click"/>
+                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="35" Grid.Row="5" Grid.Column="0" Click="Button_Click" Content="Download CSR"/>
 
 
                     <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="6" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">

@@ -27,20 +27,12 @@ namespace FF8Utilities.Data
             if (DriveService == null)
             {
                 // Not exactly a secret
-                ClientSecrets secrets = new ClientSecrets
-                {
-                    ClientId = "192012901033-4ubj5aodupffigv7jlm6nffbmp8j9pi7.apps.googleusercontent.com",
-                };
 
-                UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                     secrets,
-                     new[] { DriveService.Scope.DriveReadonly },
-                     "user",
-                     CancellationToken.None
-                     ).ConfigureAwait(false);
+                GoogleCredential credential = await GoogleCredential.FromFileAsync(Path.Combine(AppContext.BaseDirectory, "client_secret.json"), CancellationToken.None).ConfigureAwait(false);
+                    credential = credential.CreateScoped(DriveService.Scope.DriveReadonly);
 
-                DriveService = new DriveService(new BaseClientService.Initializer() { HttpClientInitializer = credential, ApplicationName = "FF8 Utilities" });
-            }
+                    DriveService = new DriveService(new BaseClientService.Initializer() { HttpClientInitializer = credential, ApplicationName = "FF8 Utilities" });
+            }  
                
             return DriveService;
         }
@@ -58,9 +50,9 @@ namespace FF8Utilities.Data
                 default: throw new NotImplementedException();
             }
 
-            request.Q = $"{csr}' in parents and trashed = false";
+            request.Q = $"'{csr}' in parents and trashed = false";
             request.OrderBy = "modifiedTime desc";
-            request.Fields = "files(id, name, modifiedTime)";
+            request.Fields = "files(id, name, modifiedTime, size)";
             request.PageSize = 1; // Should only ever be one file per folder
 
             FileList result = await request.ExecuteAsync().ConfigureAwait(false);
@@ -74,7 +66,7 @@ namespace FF8Utilities.Data
                     switch (progress.Status)
                     {
                         case DownloadStatus.Downloading:
-                            decimal percentage = progress.BytesDownloaded / file.Size.Value * 100m;
+                            decimal percentage = (decimal)((float)progress.BytesDownloaded / file.Size.Value);
                             progressMethod.Report(percentage);
                             break;
                         case DownloadStatus.Completed:
