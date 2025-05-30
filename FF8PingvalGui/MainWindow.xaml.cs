@@ -40,9 +40,9 @@ namespace FF8Utilities
 
         private MainModel Model => (MainModel)DataContext;
 
-        private void NumericUpDown_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double?> e)
+        private void NumericUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            MahApps.Metro.Controls.NumericUpDown input = (MahApps.Metro.Controls.NumericUpDown)sender;
+            NumericUpDown input = (NumericUpDown)sender;
             if (e.NewValue == null) return;
             if (e.NewValue < 0)
             {
@@ -162,21 +162,5 @@ namespace FF8Utilities
             ResetFishFinManip();            
         }
 
-        public async Task DownloadCSR()
-        {
-            ProgressDialogController downloadController = await this.ShowProgressAsync("Downloading CSR files", "This may take awhile").ConfigureAwait(true);
-            Progress<decimal> progress = new Progress<decimal>(prog =>
-            {
-                if (prog >= 1) return;
-                downloadController.SetProgress((double)prog);
-            });
-            await Model.DriveManager.DownloadCSR(Model.Settings.CSRLanguage, progress).ConfigureAwait(false);
-            await downloadController.CloseAsync().ConfigureAwait(false);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            DownloadCSR();
-        }
     }
 }

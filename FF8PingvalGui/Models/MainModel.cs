@@ -87,7 +87,7 @@ namespace FF8Utilities.Models
             ResetPolesCommand = new Command(() => true, ResetPoles);
             PoleTallyCommand = new Command(() => !CurrentlyTalling, TallyCommand);
             ShowAboutCommand = new Command(() => true, ShowAbout);
-            this.UpdateAvailableCommand = new Command(() => UpdateAvailable, LaunchUpdate);
+            UpdateAvailableCommand = new Command(() => UpdateAvailable, LaunchUpdate);
             ShowSettingsCommand = new Command(() => true, (s, e) => FlyoutSettingsOpen = !FlyoutSettingsOpen);
 
             CardNotes = new BindingList<CardNotesModel>();
@@ -103,16 +103,15 @@ namespace FF8Utilities.Models
             UltimeciaTimer = new UltimeciaTimerModel();
             ZellCountdownText = "Start Countdown";
 
-            DriveManager = new DriveManager(this);
 
 
             LoadFishPatterns();
             _ = CheckForUpdates();
-
         }
 
         private void LoadFishPatterns()
         {
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject())) return; // In design mode, dont bother loading
             string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Scripts\\fins.json");
             if (!File.Exists(jsonFilePath))
             {
@@ -335,7 +334,7 @@ namespace FF8Utilities.Models
             sb.AppendLine();
             sb.AppendLine("fhelwanger: For his C# port of pingvals Zell Card Manip <3");
             sb.AppendLine();
-            sb.AppendLine("awesomeWaves: For the additional Quistis Card frame information");
+            sb.AppendLine("awesomeWaves: For the additional Quistis Card frame information and CSR help");
 
 
             Window.ShowMessageAsync("About FF8 Utilities", sb.ToString());
@@ -869,13 +868,7 @@ namespace FF8Utilities.Models
             {
                 if (Settings.AutoLaunchUltimeciaScript && UltimeciaRng?.Length == 12) UltimeciaLaunchCommand.Execute(null);
             };
-        }
-
-
-        #region Google Drive / CSR
-        public DriveManager DriveManager { get; }
-
-        #endregion
+        }        
     }
 
 
