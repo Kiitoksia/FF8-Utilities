@@ -19,7 +19,7 @@ namespace FF8Utilities.Data
         PCLite        
     }
 
-    public enum CSRVersion
+    public enum CSRLanguage
     {
         English,
         French

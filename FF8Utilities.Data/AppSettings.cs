@@ -18,6 +18,8 @@ namespace FF8Utilities.Data
         public int? CustomZellDelayFrame { get; set; }
         public int ZellCountdownTimer { get; set; } = 3;
 
+        public CSRLanguage CSRLanguage { get; set; } = CSRLanguage.English;
+
 
         public AppSettings()
         {
@@ -69,6 +71,12 @@ namespace FF8Utilities.Data
             if (zellCountdownTimerXml != null)
             {
                 if (int.TryParse(zellCountdownTimerXml.Value, out int timer)) ZellCountdownTimer = timer;
+            }
+
+            XElement csrLanguageXml = xml?.Element(nameof(CSRLanguage));
+            if (csrLanguageXml != null)
+            {
+                if (Enum.TryParse(csrLanguageXml.Value, out CSRLanguage csrLanguage)) CSRLanguage = csrLanguage;
             }
         }
 
@@ -133,6 +141,15 @@ namespace FF8Utilities.Data
             }
 
             zellCountdownTimer.Value = ZellCountdownTimer.ToString();
+
+            XElement csrLanguage = xml.Element(nameof(CSRLanguage));
+            if (csrLanguage == null)
+            {
+                csrLanguage = new XElement(nameof(csrLanguage));
+                rootNode.Add(csrLanguage);
+            }
+
+            csrLanguage.Value = CSRLanguage.ToString();
 
             return xml;
         }

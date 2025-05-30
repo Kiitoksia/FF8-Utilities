@@ -486,7 +486,8 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <!--<RowDefinition/>-->
+                        <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.Resources>
                         <Style TargetType="TextBlock">
@@ -499,22 +500,26 @@
                     
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Platform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:Platform}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.Platform}"/>
-                    
-                    <!--<TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Global Hotkeys (EXPERIMENTAL)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Controls:ToggleSwitch VerticalAlignment="Center" OnLabel="Yes" OffLabel="No" Width="100" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" IsChecked="{Binding Settings.GlobalHotkeysEnabled}"/>-->
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Custom Delay Frame (Leave blank for default)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <Controls:NumericUpDown Minimum="0" Value="{Binding Settings.CustomZellDelayFrame}" Grid.Row="2" Grid.Column="1" />
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Zell Countdown Timer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <Controls:NumericUpDown Minimum="0" Maximum="60" Value="{Binding Settings.ZellCountdownTimer}" Grid.Row="3" Grid.Column="1" />
-                    
-                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="4" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="CSR Language" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:CSRLanguage}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.CSRLanguage}"/>
+
+                    <Button Style="{DynamicResource SquareButtonStyle}" Height="35" Grid.Row="5" Grid.Column="0" Click="Button_Click"/>
+
+
+                    <Button Style="{DynamicResource AccentedSquareButtonStyle}" Height="50" Grid.Row="6" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="Save Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
+                    
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>

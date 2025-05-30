@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Download;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
@@ -19,33 +20,50 @@ namespace FF8Utilities.Data
         private const string CSREnglishFolder = "1R0e4INF4fEgIYKb3o568yGEj1AUtAQwT";
         private const string CSRFrenchFolder = "1Y9l6Iuu3prrRT-VJq--XnTb2HYQa8ttW";
 
+        private static DriveService DriveService;
+
         public static async Task<DriveService> GetDriveService()
         {
-            GoogleCredential credential = await GoogleCredential.FromFileAsync(Path.Combine(AppContext.BaseDirectory, "service_account.json"), CancellationToken.None);
+            if (DriveService == null)
+            {
+                // Not exactly a secret
+                ClientSecrets secrets = new ClientSecrets
+                {
+                    ClientId = "192012901033-4ubj5aodupffigv7jlm6nffbmp8j9pi7.apps.googleusercontent.com",
+                };
 
-            DriveService service = new DriveService(new BaseClientService.Initializer() { HttpClientInitializer = credential, ApplicationName = "FF8 Utilities" });
-            return service;
+                UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                     secrets,
+                     new[] { DriveService.Scope.DriveReadonly },
+                     "user",
+                     CancellationToken.None
+                     ).ConfigureAwait(false);
+
+                DriveService = new DriveService(new BaseClientService.Initializer() { HttpClientInitializer = credential, ApplicationName = "FF8 Utilities" });
+            }
+               
+            return DriveService;
         }
 
-        public static async Task DownloadCSR(CSRVersion version, IProgress<decimal> progressMethod)
+        public static async Task DownloadCSR(CSRLanguage version, IProgress<decimal> progressMethod)
         {
-            DriveService service = await GetDriveService();
-            var request = service.Files.List();
+            DriveService service = await GetDriveService().ConfigureAwait(false);
+            FilesResource.ListRequest request = service.Files.List();
 
             string csr;
             switch (version)
             {
-                case CSRVersion.English: csr = CSREnglishFolder; break;
-                case CSRVersion.French: csr = CSRFrenchFolder; break;
+                case CSRLanguage.English: csr = CSREnglishFolder; break;
+                case CSRLanguage.French: csr = CSRFrenchFolder; break;
                 default: throw new NotImplementedException();
             }
 
             request.Q = $"{csr}' in parents and trashed = false";
             request.OrderBy = "modifiedTime desc";
             request.Fields = "files(id, name, modifiedTime)";
-            request.PageSize = 1;
+            request.PageSize = 1; // Should only ever be one file per folder
 
-            FileList result = await request.ExecuteAsync();
+            FileList result = await request.ExecuteAsync().ConfigureAwait(false);
             File file = result.Files.FirstOrDefault();
 
             if (file != null)
@@ -55,23 +73,35 @@ namespace FF8Utilities.Data
                 {
                     switch (progress.Status)
                     {
-                        case Google.Apis.Download.DownloadStatus.Downloading:
+                        case DownloadStatus.Downloading:
                             decimal percentage = progress.BytesDownloaded / file.Size.Value * 100m;
                             progressMethod.Report(percentage);
                             break;
-                        case Google.Apis.Download.DownloadStatus.Completed:
+                        case DownloadStatus.Completed:
                             progressMethod.Report(100m);
                             break;
-                        case Google.Apis.Download.DownloadStatus.Failed:
+                        case DownloadStatus.Failed:
                             progressMethod.Report(-1m);
                             break;
                     }
                 };
-                using (FileStream fs = new FileStream(Path.Combine(AppContext.BaseDirectory, "Packages", file.Name), FileMode.Create, FileAccess.Write))
-                {
-                    var test = await downloadRequest.DownloadAsync(fs);
 
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    IDownloadProgress downloadResult = await downloadRequest.DownloadAsync(ms).ConfigureAwait(false);
+                    if (downloadResult.Status == DownloadStatus.Completed)
+                    {
+                        // Succesfully downloaded, save to folder
+                        string localFolderPath = Path.Combine(AppContext.BaseDirectory, "Packages");
+
+                        if (!Directory.Exists(localFolderPath)) Directory.CreateDirectory(localFolderPath);
+                        using (FileStream fs = new FileStream(Path.Combine(localFolderPath, file.Name), FileMode.Create, FileAccess.Write))
+                        {
+                            await ms.CopyToAsync(fs).ConfigureAwait(false);
+                        }
+                    }
                 }
+                
             }
         }
     }

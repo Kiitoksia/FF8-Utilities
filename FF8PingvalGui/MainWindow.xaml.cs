@@ -1,5 +1,7 @@
-﻿using FF8Utilities.Models;
+﻿using FF8Utilities.Data;
+using FF8Utilities.Models;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using UltimeciaManip;
@@ -156,8 +159,23 @@ namespace FF8Utilities
 
         private void Reset_Click(object sender, RoutedEventArgs e)
         {
-            ResetFishFinManip();
-            
+            ResetFishFinManip();            
+        }
+
+        public async Task DownloadCSR()
+        {
+            ProgressDialogController downloadController = await this.ShowProgressAsync("Downloading CSR files", "This may take awhile").ConfigureAwait(true);
+            Progress<decimal> progress = new Progress<decimal>(prog =>
+            {
+                downloadController.SetProgress((double)prog);
+            });
+            await DriveManager.DownloadCSR(Model.Settings.CSRLanguage, progress).ConfigureAwait(false);
+            await downloadController.CloseAsync().ConfigureAwait(false);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadCSR();
         }
     }
 }

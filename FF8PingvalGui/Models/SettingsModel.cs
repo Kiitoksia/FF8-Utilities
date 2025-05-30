@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace FF8Utilities.Models
         private bool _globalHotkeysEnabled;
         private readonly MainModel _mainWindowModel;
         private Platform _platform = Platform.PS2;
+        private CSRLanguage _csrLanguage;
+
         private int? _customZellDelayFrame;
         private int _zellCountdownTimer = 3;
 
@@ -25,6 +28,7 @@ namespace FF8Utilities.Models
             AutoLaunchUltimeciaScript = DataManager.Current.CurrentSettings.AutoLaunchUltimecia;
             CustomZellDelayFrame = DataManager.Current.CurrentSettings.CustomZellDelayFrame;
             ZellCountdownTimer = DataManager.Current.CurrentSettings.ZellCountdownTimer;
+            CSRLanguage = DataManager.Current.CurrentSettings.CSRLanguage;
             SaveSettingsCommand = new Command(() => true, SaveSettings);
             _mainWindowModel = model;
         }
@@ -33,10 +37,10 @@ namespace FF8Utilities.Models
         {
             DataManager.Current.CurrentSettings.AutoLaunchUltimecia = AutoLaunchUltimeciaScript;
             DataManager.Current.CurrentSettings.Platform = Platform;
-            //DataManager.Current.CurrentSettings.GlobalHotkeys = GlobalHotkeysEnabled;
             DataManager.Current.CurrentSettings.GlobalHotkeys = false;
             DataManager.Current.CurrentSettings.CustomZellDelayFrame = CustomZellDelayFrame;
             DataManager.Current.CurrentSettings.ZellCountdownTimer = ZellCountdownTimer;
+            DataManager.Current.CurrentSettings.CSRLanguage = CSRLanguage;
             DataManager.Current.Save();
             _mainWindowModel.FlyoutSettingsOpen = false;
         }
@@ -105,8 +109,22 @@ namespace FF8Utilities.Models
             }
         }
 
+        public CSRLanguage CSRLanguage
+        {
+            get => _csrLanguage;
+            set
+            {
+                if (_csrLanguage == value)
+                    return;
+                _csrLanguage = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public Command SaveSettingsCommand { get; }
+
+        public Command DownloadCSRCommand { get; }
 
     }
 }
