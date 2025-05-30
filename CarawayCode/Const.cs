@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarawayCode
 {
-    public static class Const
+    internal static class Const
     {
         public static readonly int[] Poles = 
             {
