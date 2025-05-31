@@ -57,7 +57,37 @@ namespace FF8Utilities.Models
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    GameInstallationFolder = dialog.SelectedPath;
+                    // Sanitise folder to ensure its the root
+
+                    string filePath = dialog.SelectedPath;
+                    while (true)
+                    {
+                        if (string.IsNullOrWhiteSpace(filePath))
+                        {
+                            // Invalid path
+                            break;
+                        }
+                        if (Path.GetFileName(filePath) == "FINAL FANTASY VIII")
+                        {
+                            // In root, break out
+                            break;
+                        }
+
+                        // Go into parent
+                        filePath = Path.GetDirectoryName(filePath);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(filePath))
+                    {
+                        _mainWindowModel.Window.Invoke(() =>
+                        {
+                            _mainWindowModel.Window.ShowMessageAsync("Error", "Could not verify FF8 folder, ensure correct path");
+                        });
+                    }
+                    else
+                    {
+                        GameInstallationFolder = filePath;
+                    }
                 }
             }
         }
