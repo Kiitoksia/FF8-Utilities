@@ -14,7 +14,7 @@ namespace FF8Utilities.Models
         private BindingList<WorldMapEncounter> _worldMapEncounters;
         private TwoBatsEncounter _twoBatsEncounter;
         private IfritEncounter _ifritEncounter;
-        //private BuelEncounter _buelEncounter;
+        private BuelEncounter _buelEncounter;
         private TwoBatsEncounter _secondBatsEncounter;
         private BindingList<FishFinsEncounter> _fishFinEncounters;
         private DoubleSoldierEncounter _firstDolletEncounter;
@@ -34,7 +34,9 @@ namespace FF8Utilities.Models
         private bool _includeDiablos = false;
         private GranaldoEncounter _granaldoEncounter;
         private bool _redSoldierEncounter;
-
+        private IfritEncounterType _ifritsCavernEncounterType = IfritEncounterType.Buel;
+        private bool _didGetSecondBridgeEncounter;
+        private TripleSoldierEncounter secondBridgeEncounter;
 
         public ZellCardTrackerModel()
         {
@@ -54,8 +56,8 @@ namespace FF8Utilities.Models
             TwoBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             IfritEncounter = new IfritEncounter();
             IfritEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
-            //BuelEncounter = new BuelEncounter();
-            //BuelEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            BuelEncounter = new BuelEncounter();
+            BuelEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             SecondBatsEncounter = new TwoBatsEncounter();
             SecondBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             FishFinEncounters = new BindingList<FishFinsEncounter>();
@@ -77,6 +79,8 @@ namespace FF8Utilities.Models
             FourthDolletEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             BridgeEncounter = new SingleSoldierEncounter();
             BridgeEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            SecondBridgeEncounter = new TripleSoldierEncounter();
+            SecondBridgeEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             AnacondaurEncounter = new AnacondaurEncounter();
             AnacondaurEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             PostAnacondaurEncounter = new SingleSoldierEncounter();
@@ -151,16 +155,16 @@ namespace FF8Utilities.Models
             }
         }
 
-        //public BuelEncounter BuelEncounter
-        //{
-        //    get => _buelEncounter;
-        //    set
-        //    {
-        //        if (Equals(value, _buelEncounter)) return;
-        //        _buelEncounter = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        public BuelEncounter BuelEncounter
+        {
+            get => _buelEncounter;
+            set
+            {
+                if (Equals(value, _buelEncounter)) return;
+                _buelEncounter = value;
+                OnPropertyChanged();
+            }
+        }
 
         public TwoBatsEncounter SecondBatsEncounter
         {
@@ -261,6 +265,12 @@ namespace FF8Utilities.Models
             }
         }
 
+        public TripleSoldierEncounter SecondBridgeEncounter
+        { 
+            get => secondBridgeEncounter; 
+            set => secondBridgeEncounter = value; 
+        }
+
         public AnacondaurEncounter AnacondaurEncounter
         {
             get => _anacondaurEncounter;
@@ -308,6 +318,7 @@ namespace FF8Utilities.Models
                 OnPropertyChanged(nameof(Output));
             }
         }
+
 
         #endregion
 
@@ -372,8 +383,18 @@ namespace FF8Utilities.Models
                 output += TwoBatsEncounter.RngAddition;
                 output += 23; // 2x bat 2x bomb encounter
                 output += IfritEncounter.RngAddition;
-                //output += BuelEncounter.RngAddition;
-                output += SecondBatsEncounter.RngAddition;
+
+                switch (IfritsCavernEncounterType)
+                {
+                    case IfritEncounterType.Buel:
+                        output += BuelEncounter.RngAddition;
+                        break;
+                    case IfritEncounterType.RedBat:
+                        output += SecondBatsEncounter.RngAddition;
+                        break;
+                    default: throw new NotImplementedException();
+
+                }
                 output += 11; // Bomb encounter
                 output += WorldMapEncounters.Sum(s => s.RngAddition);
                 output += FishFinEncounters.Sum(s => s.RngAddition);
@@ -384,10 +405,23 @@ namespace FF8Utilities.Models
                 output += ThirdDolletEncounter.RngAddition;
                 output += FourthDolletEncounter.RngAddition;
                 output += BridgeEncounter.RngAddition;
+
+                if (DidGetSecondBridgeEncounter)
+                {
+                    output += SecondBridgeEncounter.RngAddition;
+                }
+
                 output += AnacondaurEncounter.RngAddition;
-                output += PostAnacondaurEncounter.RngAddition;
+
+                if (!DidGetSecondBridgeEncounter)
+                {
+                    output += PostAnacondaurEncounter.RngAddition;
+                }
                 output += ElvoretEncounter.RngAddition;
                 output += SpiderTankEncounter.RngAddition;
+
+                if (RedSoldierEncounter) output += 13;
+
 
                 if (IncludeDiablos)
                 {
@@ -397,7 +431,6 @@ namespace FF8Utilities.Models
                     output += DiablosEncounter.RngAddition;
                 }
 
-                if (RedSoldierEncounter) output += 13;
                 
                 return output;
             }
@@ -441,6 +474,33 @@ namespace FF8Utilities.Models
                 OnPropertyChanged(nameof(Output));
             }
         }
+
+        public bool DidGetSecondBridgeEncounter 
+        { 
+            get => _didGetSecondBridgeEncounter; 
+            set
+            { 
+                _didGetSecondBridgeEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        public bool Include2ndATMEncounter { get; set; }
+
+        public IfritEncounterType IfritsCavernEncounterType 
+        { 
+            get => _ifritsCavernEncounterType; 
+            set
+            { 
+                _ifritsCavernEncounterType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(BuelEncounterVisible));
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        public bool BuelEncounterVisible => IfritsCavernEncounterType == IfritEncounterType.Buel;
 
     }
 }

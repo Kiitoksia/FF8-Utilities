@@ -6,6 +6,7 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
     public class BuelEncounter : BaseModel, IEncounter
     {
         private int _buelAttacks;
+        private int _squallAttacks;
 
         public BuelEncounter()
         {
@@ -24,7 +25,19 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
             }
         }
 
-        public int RngAddition => Base + BuelAttacks * 5;
+        public int SquallAttacks 
+        { 
+            get => _squallAttacks; 
+            set
+            { 
+                if (value == _squallAttacks) return;
+                _squallAttacks = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RngAddition));
+            }
+        }
+
+        public int RngAddition => Base + BuelAttacks * 5 + SquallAttacks * 2;
         public string Description => "Buel";
         public int Base => 11;
 

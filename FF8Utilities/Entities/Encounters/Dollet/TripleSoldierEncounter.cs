@@ -1,17 +1,21 @@
 ﻿using FF8Utilities.Interfaces;
 using FF8Utilities.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FF8Utilities.Entities.Encounters.Dollet
 {
-    public class SpiderTankEncounter : BaseModel, IEncounter
+    public class TripleSoldierEncounter : BaseModel, IEncounter
     {
         private int _squallAttacks;
+        private int _seiferAttacks;
         private int _zellAttacks;
-        private int _limits = 1;
-        private int _rayBombs;
-        private int _encounters = 1;
+        private int _soldierAttacks;
 
-        public SpiderTankEncounter()
+        public TripleSoldierEncounter()
         {
 
         }
@@ -23,6 +27,18 @@ namespace FF8Utilities.Entities.Encounters.Dollet
             {
                 if (value == _squallAttacks) return;
                 _squallAttacks = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RngAddition));
+            }
+        }
+
+        public int SeiferAttacks
+        {
+            get => _seiferAttacks;
+            set
+            {
+                if (value == _seiferAttacks) return;
+                _seiferAttacks = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(RngAddition));
             }
@@ -40,55 +56,30 @@ namespace FF8Utilities.Entities.Encounters.Dollet
             }
         }
 
-        public int Limits
+        public int SoldierAttacks
         {
-            get => _limits;
+            get => _soldierAttacks;
             set
             {
-                if (value == _limits) return;
-                _limits = value;
+                if (value == _soldierAttacks) return;
+                _soldierAttacks = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(RngAddition));
             }
         }
 
-        public int RayBombs
-        {
-            get => _rayBombs;
-            set
-            {
-                if (value == _rayBombs) return;
-                _rayBombs = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int Base => 13;
+        public int Base => 22;
         public int RngAddition
         {
             get
             {
                 int output = SquallAttacks * 2;
+                output += SeiferAttacks * 2;
                 output += ZellAttacks * 4;
-                output += Limits;
-                output += RayBombs;
-                return (Base * Encounters) + output;
+                output += SoldierAttacks * 2;
+                return Base + output;
             }
         }
-
-        public int Encounters 
-        { 
-            get => _encounters; 
-            set 
-            {
-                _encounters = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-            
-        }
-
-        public string Description => "Spider Tank";
+        public string Description => "Soldiers x3";
     }
 }

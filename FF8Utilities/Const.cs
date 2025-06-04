@@ -135,4 +135,10 @@ namespace FF8Utilities
         Fastitocalon,
         Geezard
     }
+
+    public enum IfritEncounterType
+    {
+        RedBat,
+        Buel
+    }
 }

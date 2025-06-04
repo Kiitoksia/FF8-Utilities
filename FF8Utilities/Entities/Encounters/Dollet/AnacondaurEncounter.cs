@@ -13,6 +13,7 @@ namespace FF8Utilities.Entities.Encounters.Dollet
         private int _rolls;
         private int _blind;
         private ThreePersonFanfareCamera? _camera;
+        private bool _allCharactersSurvived = true;
 
         public AnacondaurEncounter()
         {
@@ -114,6 +115,7 @@ namespace FF8Utilities.Entities.Encounters.Dollet
                 output += Limits;
                 output += Blind;
 
+
                 switch (Camera)
                 {
                     case null:
@@ -131,10 +133,28 @@ namespace FF8Utilities.Entities.Encounters.Dollet
                         throw new ArgumentOutOfRangeException(nameof(Camera), Camera, "Camera not recognised");
                 }
 
+                if (!AllCharactersSurvived && Camera == ThreePersonFanfareCamera.ThreeCharacters)
+                {
+                    // Special case, subtract one if three character camera and not everyone is alive
+                    output--;
+                }
+  
                 return Base + output;
             }
         }
 
         public string Description => "Anacondaur";
+
+        public bool AllCharactersSurvived 
+        { 
+            get => _allCharactersSurvived;
+            set 
+            {
+                if (_allCharactersSurvived == value) return;
+                _allCharactersSurvived = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RngAddition));
+            }
+        }
     }
 }
