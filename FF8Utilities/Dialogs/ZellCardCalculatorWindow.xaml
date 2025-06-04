@@ -170,7 +170,7 @@
                             <Expander IsExpanded="True" Header="World Map Encounters">
                                 <StackPanel>
                                     <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserSortColumns="False"
-                                          CanUserReorderColumns="False" ItemsSource="{Binding WorldMapEncounters}" AutoGenerateColumns="False">
+                                          CanUserReorderColumns="False" ItemsSource="{Binding WorldMapEncounters}" AutoGenerateColumns="False" >
                                         <DataGrid.Columns>
                                             <DataGridComboBoxColumn ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:WorldMapFormation}}}" 
                                                                 DisplayMemberPath="Description"
@@ -179,7 +179,7 @@
                                                                 SelectedValueBinding="{Binding Formation}"
                                                                 IsReadOnly="True"
                                                                 Width="0.9*"/>
-                                            <mah:DataGridNumericUpDownColumn Header="Quantity" Binding="{Binding Quantity}" Minimum="0"/>
+                                            <mah:DataGridNumericUpDownColumn  Header="Quantity" Binding="{Binding Quantity}" Minimum="0"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </StackPanel>
