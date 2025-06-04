@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace FF8Utilities.Entities.Encounters.Dollet
 {
@@ -14,10 +15,11 @@ namespace FF8Utilities.Entities.Encounters.Dollet
         private int _seiferAttacks;
         private int _zellAttacks;
         private int _soldierAttacks;
+        private ThreePersonFanfareCamera? _camera;
 
         public TripleSoldierEncounter()
         {
-
+            ClearCameraCommand = new Command(() => true, (s, e) => Camera = null);
         }
 
         public int SquallAttacks
@@ -77,9 +79,43 @@ namespace FF8Utilities.Entities.Encounters.Dollet
                 output += SeiferAttacks * 2;
                 output += ZellAttacks * 4;
                 output += SoldierAttacks * 2;
+
+                switch (Camera)
+                {
+                    case null:
+                        break;
+                    case ThreePersonFanfareCamera.OneToOne:
+                        output += 3;
+                        break;
+                    case ThreePersonFanfareCamera.SingleCharacter:
+                        output += 2;
+                        break;
+                    case ThreePersonFanfareCamera.ThreeCharacters:
+                        output += 4;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(Camera), Camera, "Camera not recognised");
+                }
+
                 return Base + output;
             }
         }
+
+        public ThreePersonFanfareCamera? Camera
+        {
+            get => _camera;
+            set
+            {
+                if (value == _camera) return;
+                _camera = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RngAddition));
+            }
+        }
+
+
         public string Description => "Soldiers x3";
+
+        public Command ClearCameraCommand { get; }
     }
 }

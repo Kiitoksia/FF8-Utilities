@@ -138,6 +138,7 @@ namespace FF8Utilities
 
     public enum IfritEncounterType
     {
+        [Description("2x Red Bats")]
         RedBat,
         Buel
     }
