@@ -98,7 +98,7 @@ namespace FF8Utilities.Models
             {
                 // Check which language is installed
                 if (File.Exists(Path.Combine(GameInstallationFolder, "FF8_EN.exe"))) CSRLanguage = CSRLanguage.English;
-                else if (Directory.Exists(Path.Combine(GameInstallationFolder, "FF8_FR.exe"))) CSRLanguage = CSRLanguage.French;
+                else if (File.Exists(Path.Combine(GameInstallationFolder, "FF8_FR.exe"))) CSRLanguage = CSRLanguage.French;
             }
         }
 
