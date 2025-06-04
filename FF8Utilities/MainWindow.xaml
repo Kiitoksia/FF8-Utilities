@@ -417,7 +417,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Ultimecia">
-                <DockPanel LastChildFill="True">
+                <DockPanel LastChildFill="True" MaxHeight="620">
                     <TextBlock DockPanel.Dock="Top" Text="Click in the inputs box to focus, then use WASD/Numpad(2,4,6,8) to input directions" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"/>
                     <GroupBox DockPanel.Dock="Top" Margin="20" Header="Inputs">
                         <StackPanel>
@@ -447,12 +447,6 @@
                                         <TextBlock Text="Submit" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
-                                <Button Style="{StaticResource MahApps.Styles.Button.Square}" Width="200" Height="50" Command="{Binding UltimeciaTimerCommand}">
-                                    <StackPanel Orientation="Horizontal" Height="20">
-                                        <fa:FontAwesome Icon="ClockOutline" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Launch Timer"/>
-                                    </StackPanel>
-                                </Button>
                                 <Controls:MetroProgressBar Width="200" Value="{Binding UltimeciaTimer.Progress}" Visibility="Collapsed"/>
                             </StackPanel>
                             
@@ -462,15 +456,15 @@
                               Header="No formations found">
                         <TextBlock Text="No formations found for inputs, double check directions and re-submit"/>
                     </GroupBox>
-                    <ScrollViewer DockPanel.Dock="Bottom">
-                        <ItemsControl ItemsSource="{Binding UltimeciaFormations}" ItemTemplate="{StaticResource LineupTemplate}"/>
-
-                    </ScrollViewer>
-                    
-                    <StackPanel CanVerticallyScroll="True" Margin="18,0,18,0" Visibility="{Binding NoFormationsFound, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}">
-                        
-                    </StackPanel>
-
+                    <ItemsControl ItemsSource="{Binding UltimeciaFormations}" ItemTemplate="{StaticResource LineupTemplate}" DockPanel.Dock="Bottom" VerticalAlignment="Stretch">
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer>
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                    </ItemsControl>
                 </DockPanel>
             </TabItem>
         </Controls:MetroAnimatedSingleRowTabControl>
@@ -490,7 +484,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
@@ -521,17 +515,26 @@
                         <TextBox Text="{Binding Settings.GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left"/>
                     </DockPanel>
 
-                    <Grid Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch">
+                    <Grid Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" Height="80">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="35" Grid.Column="0" Command="{Binding Settings.InstallCSRCommand}">
                             <TextBlock Text="Install CSR"/>
                         </Button>
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Background="DarkRed" Height="35" Grid.Column="1" Command="{Binding Settings.UninstallCSRCommand}">
-                            <TextBlock Text="Uninstall CSR"/>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Background="DarkRed" Height="75" Margin="2,0,0,0" Grid.Column="1" Grid.RowSpan="2" Command="{Binding Settings.UninstallCSRCommand}" >
+                            <TextBlock Text="Revert"/>
                         </Button>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="35" Grid.Row="1" Grid.Column="0" Command="{Binding Settings.InstallPracticeModCommand}">
+                            <TextBlock Text="Install Practice%"/>
+                        </Button>
+
+
                     </Grid>
 
                     <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch">

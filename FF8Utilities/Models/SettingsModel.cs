@@ -42,6 +42,7 @@ namespace FF8Utilities.Models
             InstallPSXMusicFilesCommand = new Command(() => true, InstallPSXMusic);
             UninstallPSXMusicFilesCommand = new Command(() => true, UninstallPSXMusic);
             GameInstallFolderSelectionCommand = new Command(() => true, ShowGameInstallSelection);
+            InstallPracticeModCommand = new Command(() => true, InstallPracticeMod);
             _mainWindowModel = model;
             DriveManager = new DriveManager(_mainWindowModel, this);
         }
@@ -107,100 +108,7 @@ namespace FF8Utilities.Models
             CheckInstalledGameLanguage();
             DriveManager.CheckAndSetCurrentCSRVersion();
 
-
-
-            string languageFolder;
-            switch (CSRLanguage)
-            {
-                case CSRLanguage.English: languageFolder = "lang-en"; break;
-                case CSRLanguage.French: languageFolder = "lang-fr"; break;
-                default: throw new NotImplementedException();
-            }
-
-
-            string dataFolderPath = Path.Combine(GameInstallationFolder ?? string.Empty, "Data", languageFolder);
-            if (!Directory.Exists(dataFolderPath))
-            {
-                await _mainWindowModel.Window.ShowMessageAsync("Error", "Could not find game install folder");
-                return;
-            }
-
-            // Backup the field files into their own zip if not already backed up
-            string backupFilePath = Path.Combine(dataFolderPath, "field_backup.zip");
-            if (!File.Exists(backupFilePath))
-            {
-                try
-                {
-                    using (ZipArchive zip = ZipFile.Open(Path.Combine(dataFolderPath, "field_backup.zip"), ZipArchiveMode.Create))
-                    {
-                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fi"), "field.fi");
-                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fl"), "field.fl");
-                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fs"), "field.fs");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Could not create backup, ensure file access\r\n{ex.Message}", "Error");
-                    return;
-                }
-                
-            }
-
-            // Check we have a CSR downloaded
-            bool downloadCsr = false;
-
-            if (DriveManager.CurrentCSRVersion == null)
-            {
-                // Must download
-                downloadCsr = true;
-            }
-            else
-            {
-                // Check if there is a new version
-                bool newVersionAvailable = await DriveManager.IsNewCSRVersionAvailable();
-                if (newVersionAvailable)
-                {
-                    MessageDialogResult result = await _mainWindowModel.Window.ShowMessageAsync("New CSR available", "Download new version?", MessageDialogStyle.AffirmativeAndNegative);
-                    downloadCsr = result == MessageDialogResult.Affirmative;
-                }
-            }
-
-            if (downloadCsr)
-            {
-                DownloadResult downloadResult = await DownloadCSR();
-
-                if (downloadResult == DownloadResult.Error)
-                {
-                    _mainWindowModel.Window.Invoke(() =>
-                    {
-                        _mainWindowModel.Window.ShowMessageAsync("Error", "There was an error downloading CSR, try again later or manually install");
-                    });
-                    return;
-                }
-            }
-
-            // Overwrite
-            try
-            {
-                using (ZipArchive zip = ZipFile.OpenRead(Path.Combine(Const.PackagesFolder, $"CSR-{CSRLanguage}_v{DriveManager.CurrentCSRVersion}.zip")))
-                {
-                    foreach (ZipArchiveEntry entry in zip.Entries)
-                    {
-                        string newFilePath = Path.Combine(dataFolderPath, entry.FullName);
-                        entry.ExtractToFile(newFilePath, true);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Could not install CSR, ensure file access\r\n{ex.Message}", "Error");
-                return;
-            }
-
-            _mainWindowModel.Window.Invoke(() =>
-            {
-                _mainWindowModel.Window.ShowMessageAsync("Success", "CSR succesfully installed");
-            });
+            await InstallCSR(false);
         }
 
         private async void UninstallCSR(object sender, EventArgs args)
@@ -257,7 +165,7 @@ namespace FF8Utilities.Models
 
         private async Task<DownloadResult> DownloadCSR()
         {
-            ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading CSR files", "This may take awhile...").ConfigureAwait(true);
+            ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading CSR files", "This may take a while...").ConfigureAwait(true);
             Progress<decimal> progress = new Progress<decimal>(prog =>
             {
                 if (prog >= 1) return;
@@ -270,6 +178,139 @@ namespace FF8Utilities.Models
 
             DriveManager.CheckAndSetCurrentCSRVersion();            
             return downloadResult;
+        }
+
+        private async Task<DownloadResult> DownloadPracticeMod()
+        {
+            ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading Practice Mod files", "This may take a while...").ConfigureAwait(true);
+            Progress<decimal> progress = new Progress<decimal>(prog =>
+            {
+                if (prog >= 1) return;
+                downloadController.SetProgress((double)prog);
+                downloadController.SetMessage($"{(prog * 100):N2}% complete...");
+            });
+
+            DownloadResult downloadResult = await DriveManager.DownloadCSR(progress).ConfigureAwait(false);
+            await downloadController.CloseAsync().ConfigureAwait(false);
+
+            DriveManager.CheckAndSetCurrentCSRVersion();
+            return downloadResult;
+        }
+
+        private async void InstallPracticeMod(object sender, EventArgs args)
+        {
+            await InstallCSR(true);            
+        }
+
+        private async Task InstallCSR(bool isPracticeMod)
+        {
+            CheckInstalledGameLanguage();
+            DriveManager.CheckAndSetCurrentCSRVersion();
+
+
+
+            string languageFolder;
+            switch (CSRLanguage)
+            {
+                case CSRLanguage.English: languageFolder = "lang-en"; break;
+                case CSRLanguage.French: languageFolder = "lang-fr"; break;
+                default: throw new NotImplementedException();
+            }
+
+            if (isPracticeMod && CSRLanguage != CSRLanguage.French) 
+            {
+                _mainWindowModel.Window.Invoke(() =>
+                {
+                    _mainWindowModel.Window.ShowMessageAsync("Error", "Practice mod only available on French game language");
+                });
+                return;
+            }
+
+            string dataFolderPath = Path.Combine(GameInstallationFolder ?? string.Empty, "Data", languageFolder);
+            if (!Directory.Exists(dataFolderPath))
+            {
+                await _mainWindowModel.Window.ShowMessageAsync("Error", "Could not find game install folder");
+                return;
+            }
+
+            // Backup the field files into their own zip if not already backed up
+            string backupFilePath = Path.Combine(dataFolderPath, "field_backup.zip");
+            if (!File.Exists(backupFilePath))
+            {
+                try
+                {
+                    using (ZipArchive zip = ZipFile.Open(Path.Combine(dataFolderPath, "field_backup.zip"), ZipArchiveMode.Create))
+                    {
+                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fi"), "field.fi");
+                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fl"), "field.fl");
+                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fs"), "field.fs");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Could not create backup, ensure file access\r\n{ex.Message}", "Error");
+                    return;
+                }
+
+            }
+
+            // Check we have a CSR downloaded
+            bool downloadCsr = false;
+
+            if (DriveManager.CurrentCSRVersion == null)
+            {
+                // Must download
+                downloadCsr = true;
+            }
+            else
+            {
+                // Check if there is a new version
+                bool newVersionAvailable = isPracticeMod ? await DriveManager.IsNewPracticeModVersionAvailable() : await DriveManager.IsNewCSRVersionAvailable();
+                if (newVersionAvailable)
+                {
+                    MessageDialogResult result = await _mainWindowModel.Window.ShowMessageAsync(isPracticeMod ? "New Practice Mod available" : "New CSR available", "Download new version?", MessageDialogStyle.AffirmativeAndNegative);
+                    downloadCsr = result == MessageDialogResult.Affirmative;
+                }
+            }
+
+            if (downloadCsr)
+            {
+                DownloadResult downloadResult = isPracticeMod ? await DownloadPracticeMod() : await DownloadCSR();
+
+                if (downloadResult == DownloadResult.Error)
+                {
+                    _mainWindowModel.Window.Invoke(() =>
+                    {
+                        _mainWindowModel.Window.ShowMessageAsync("Error", "There was an error downloading, try again later or manually install");
+                    });
+                    return;
+                }
+            }
+
+            // Overwrite
+            try
+            {
+                string baseFilename = isPracticeMod ? "prac" : $"CSR-{CSRLanguage}";
+                Version version = isPracticeMod ? DriveManager.CurrentPracticeVersion :  DriveManager.CurrentCSRVersion;
+                using (ZipArchive zip = ZipFile.OpenRead(Path.Combine(Const.PackagesFolder, $"{baseFilename}_v{version}.zip")))
+                {
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        string newFilePath = Path.Combine(dataFolderPath, entry.FullName);
+                        entry.ExtractToFile(newFilePath, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not install, ensure file access\r\n{ex.Message}", "Error");
+                return;
+            }
+
+            _mainWindowModel.Window.Invoke(() =>
+            {
+                _mainWindowModel.Window.ShowMessageAsync("Success", "Succesfully installed");
+            });
         }
 
         private async void InstallPSXMusic(object sender, EventArgs args)
@@ -504,7 +545,9 @@ namespace FF8Utilities.Models
 
         public Command UninstallPSXMusicFilesCommand { get; }
 
-        public Command GameInstallFolderSelectionCommand { get; set; }
+        public Command GameInstallFolderSelectionCommand { get; }
+
+        public Command InstallPracticeModCommand { get; }
 
 
         private DriveManager DriveManager { get; }

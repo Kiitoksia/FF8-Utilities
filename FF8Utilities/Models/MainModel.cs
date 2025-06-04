@@ -79,7 +79,6 @@ namespace FF8Utilities.Models
                 }
             }, ZellCountdownLaunch);
             UltimeciaLaunchCommand = new Command(() => UltimeciaRng?.Length == 12, UltimeciaLaunch);
-            UltimeciaTimerCommand = new Command(() => Settings.Platform != Platform.PC && Settings.Platform != Platform.PCLite, UltimeciaTimerLaunch);
             LaunchZellCalculatorCommand = new Command(() => true, LaunchZellCalculator);
 
             Poles = new BindingList<PoleModel>();
@@ -695,7 +694,6 @@ namespace FF8Utilities.Models
         }
 
         public UltimeciaTimerModel UltimeciaTimer { get; }
-        public Command UltimeciaTimerCommand { get; }
 
         public string Version => $"v{Assembly.GetEntryAssembly().GetName().Version}";
 

@@ -211,12 +211,6 @@
     <Content Include="Scripts\Newtonsoft.Json.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\ultimeciaJP.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\ultimeciaNA.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\zell.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
