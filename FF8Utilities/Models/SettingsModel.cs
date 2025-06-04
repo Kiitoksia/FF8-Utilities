@@ -190,7 +190,7 @@ namespace FF8Utilities.Models
                 downloadController.SetMessage($"{(prog * 100):N2}% complete...");
             });
 
-            DownloadResult downloadResult = await DriveManager.DownloadCSR(progress).ConfigureAwait(false);
+            DownloadResult downloadResult = await DriveManager.DownloadPracticeMod(progress).ConfigureAwait(false);
             await downloadController.CloseAsync().ConfigureAwait(false);
 
             DriveManager.CheckAndSetCurrentCSRVersion();

@@ -164,7 +164,7 @@ namespace FF8Utilities
 
             Version newVersion = GetFileVersion(file);
             if (newVersion == null) return false;
-            return newVersion > CurrentCSRVersion;
+            return CurrentCSRVersion == null || newVersion > CurrentCSRVersion;
         }
 
         public async Task<bool> IsNewPracticeModVersionAvailable()
@@ -173,7 +173,7 @@ namespace FF8Utilities
             if (file == null) return false;
             Version newVersion = GetFileVersion(file);
             if (newVersion == null) return false;
-            return newVersion > CurrentPracticeVersion;
+            return CurrentPracticeVersion == null || newVersion > CurrentPracticeVersion;
         }
 
         public async Task<DownloadResult> DownloadFile(File file, IProgress<decimal> progressMethod, string baseFileName, bool includeVersionInFilename = true)
