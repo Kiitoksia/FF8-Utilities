@@ -9,7 +9,7 @@ namespace FF8Utilities.Entities.Encounters.Dollet
         private int _zellAttacks;
         private int _limits = 1;
         private int _rayBombs;
-        private int _encounters = 1;
+        private bool _extraEncounter;
 
         public SpiderTankEncounter()
         {
@@ -73,16 +73,17 @@ namespace FF8Utilities.Entities.Encounters.Dollet
                 output += ZellAttacks * 4;
                 output += Limits;
                 output += RayBombs;
-                return (Base * Encounters) + output;
+                if (ExtraEncounter) output += Base;
+                return Base + output;
             }
         }
 
-        public int Encounters 
+        public bool ExtraEncounter
         { 
-            get => _encounters; 
+            get => _extraEncounter; 
             set 
             {
-                _encounters = value;
+                _extraEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(RngAddition));
             }

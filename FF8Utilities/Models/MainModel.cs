@@ -18,6 +18,7 @@ using CarawayCode.Entities;
 using FF8Utilities.Data;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
+using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -66,7 +67,17 @@ namespace FF8Utilities.Models
         public MainModel()
         {
             ZellLaunchCommand = new Command(() => true, ZellLaunch);
-            ZellCountdownCommand = new Command(() => _zellProcess != null && !_zellProcess.HasExited && !_countdownRunning, ZellCountdownLaunch);
+            ZellCountdownCommand = new Command(() =>
+            {
+                try
+                {
+                    return _zellProcess != null && _zellProcess.Handle != IntPtr.Zero && !_zellProcess.HasExited && !_countdownRunning;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }, ZellCountdownLaunch);
             UltimeciaLaunchCommand = new Command(() => UltimeciaRng?.Length == 12, UltimeciaLaunch);
             UltimeciaTimerCommand = new Command(() => Settings.Platform != Platform.PC && Settings.Platform != Platform.PCLite, UltimeciaTimerLaunch);
             LaunchZellCalculatorCommand = new Command(() => true, LaunchZellCalculator);
@@ -171,14 +182,6 @@ namespace FF8Utilities.Models
             }
         }
 
-        /// <summary>
-        /// Delegate for the EnumChildWindows method
-        /// </summary>
-        /// <param name="hWnd">Window handle</param>
-        /// <param name="parameter">Caller-defined variable; we use it for a pointer to our list</param>
-        /// <returns>True to continue enumerating, false to bail.</returns>
-        public delegate bool EnumWindowProc(IntPtr hWnd, IntPtr parameter);
-
         private void ConfigureTally()
         {
             _tallyTimer = new Timer(Const.SeriesInterval);
@@ -217,28 +220,12 @@ namespace FF8Utilities.Models
             };
         }
 
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
-
         private void LaunchZellCalculator(object sender, EventArgs eventArgs)
         {
             ZellCardCalculatorWindow calculatorWindow = new ZellCardCalculatorWindow();
             calculatorWindow.Owner = Window;
             calculatorWindow.Show();
         }
-
-        [DllImport("user32.dll")]
-        private static extern int MapVirtualKey(uint uCode, uint uMapType);
-
 
         private void PopulateCardNotes()
         {
@@ -295,9 +282,6 @@ namespace FF8Utilities.Models
                     break;
             }
         }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool PostMessage(IntPtr hWnd, [MarshalAs(UnmanagedType.U4)] uint Msg, IntPtr wParam, IntPtr lParam);
 
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -470,7 +454,7 @@ namespace FF8Utilities.Models
             _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/zell.exe");
             _zellProcess.StartInfo.WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Scripts");
             _zellProcess.Exited += (s, e) =>
-            {                
+            {
                 _zellProcess = null;
             };
             _zellProcess.Disposed += (s, e) =>
@@ -484,7 +468,15 @@ namespace FF8Utilities.Models
             }
             catch (Exception)
             {
-                MessageBox.Show("There was a problem launching script, try run as administrator, or re-download utilities");
+                Window.Invoke(() =>
+                {
+                    Window.ShowMessageAsync("Permissions error", "There was a problem starting the zell application.  To unblock" +
+                   "\r\n1) Navigate to scripts folder" +
+                   "\r\n2) Find zell.exe, right click > properties" +
+                   "\r\n3) Check the \"unblock\" box and OK" +
+                   "\r\n4) Submit again");
+                });
+               
             }
         }
 
@@ -853,9 +845,6 @@ namespace FF8Utilities.Models
         }
 
         #endregion
-        [DllImport("user32")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumChildWindows(IntPtr window, EnumWindowProc callback, IntPtr i);
 
         public void InitialiseUltimeciaTextBox()
         {

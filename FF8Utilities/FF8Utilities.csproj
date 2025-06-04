@@ -150,7 +150,6 @@
     <Compile Include="Entities\Encounters\WorldMapEncounter.cs" />
     <Compile Include="Entities\Command.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
-    <Compile Include="GlobalHotkeyHook.cs" />
     <Compile Include="HelperMethods.cs" />
     <Compile Include="Interfaces\IEncounter.cs" />
     <Compile Include="MainWindow.xaml.cs">

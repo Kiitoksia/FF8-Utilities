@@ -26,6 +26,8 @@ namespace FF8Utilities.Entities.Encounters
             }
         }
 
+        public string FormationDisplay => Formation?.GetDescription();
+
         #region Implementation of IEncounter
 
         public int RngAddition

@@ -10,6 +10,7 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
         private int _squallPhysicals;
         private int _limits = 2;
         private TwoPersonFanfareCamera? _camera;
+        private int _fishEmerged = 2;
 
         public FishFinsEncounter()
         {
@@ -52,13 +53,26 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
             }
         }
 
+        public int FishEmerged 
+        { 
+            get => _fishEmerged; 
+            set
+            { 
+                if (value == _fishEmerged) return;
+                _fishEmerged = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RngAddition));
+            }
+        }
+
+
         public int RngAddition
         {
             get
             {
                 int output = SquallPhysicals * 2;
                 output += Limits;
-                output += 22; // Fish fins floating up after being hit
+                output += FishEmerged * 22; // Fish fins floating up after being hit
                 switch (Camera)
                 {
                     case null:

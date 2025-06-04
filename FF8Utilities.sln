@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30330.147
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities", "FF8Utilities\FF8Utilities.csproj", "{100B1BE4-EED1-48E4-9DA8-5A411ECB5896}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EE5B5356-F54B-4803-93AF-F7EE76AC91D0} = {EE5B5356-F54B-4803-93AF-F7EE76AC91D0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarawayCode", "CarawayCode\CarawayCode.csproj", "{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}"
 EndProject

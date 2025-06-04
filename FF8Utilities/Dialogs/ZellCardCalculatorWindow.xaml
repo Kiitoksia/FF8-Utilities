@@ -11,6 +11,7 @@
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         xmlns:models="clr-namespace:FF8Utilities.Models"
+        xmlns:encs="clr-namespace:FF8Utilities.Entities.Encounters"
         xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
         xmlns:ff8Utilities="clr-namespace:FF8Utilities"
     xmlns:converters="clr-namespace:FF8Utilities.Converters"
@@ -169,19 +170,16 @@
                             </Grid.ColumnDefinitions>
                             <Expander IsExpanded="True" Header="World Map Encounters">
                                 <StackPanel>
-                                    <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserSortColumns="False"
-                                          CanUserReorderColumns="False" ItemsSource="{Binding WorldMapEncounters}" AutoGenerateColumns="False" >
-                                        <DataGrid.Columns>
-                                            <DataGridComboBoxColumn ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:WorldMapFormation}}}" 
-                                                                DisplayMemberPath="Description"
-                                                                SelectedValuePath="Value"
-                                                                Header="Formation"
-                                                                SelectedValueBinding="{Binding Formation}"
-                                                                IsReadOnly="True"
-                                                                Width="0.9*"/>
-                                            <mah:DataGridNumericUpDownColumn  Header="Quantity" Binding="{Binding Quantity}" Minimum="0"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
+                                    <ItemsControl ItemsSource="{Binding WorldMapEncounters}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="encs:WorldMapEncounter">
+                                                <DockPanel Margin="2">
+                                                    <mah:NumericUpDown Minimum="0" Value="{Binding Quantity}" DockPanel.Dock="Right" Width="80" />
+                                                    <TextBlock Text="{Binding FormationDisplay}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                             </Expander>
                             <Expander Margin="5,0,0,0" IsExpanded="True" Header="Fish Fins" Grid.Column="1">
@@ -196,6 +194,7 @@
                                                                 Width="0.6*"
                                         />
                                             <DataGridTextColumn Binding="{Binding SquallPhysicals}" Header="Squall Physicals"/>
+                                            <DataGridTextColumn Binding="{Binding FishEmerged}" Header="Fish Emerged"/>
                                             <DataGridTextColumn Binding="{Binding Limits}" Header="Limits"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
@@ -233,6 +232,7 @@
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding FirstDolletEncounter.ZellAttacks}" Minimum="0"/>
                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding FirstDolletEncounter.SoldierAttacks}" Minimum="0"/>
+ 
                             </Grid>
                         </GroupBox>
                         <GroupBox Header="2x Soldier" Margin="10">
@@ -523,16 +523,16 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="No. times fought" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Value="{Binding SpiderTankEncounter.Encounters}" Minimum="1" Maximum="5"/>
-                                <TextBlock Grid.Row="1" Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding SpiderTankEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding SpiderTankEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Limits" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding SpiderTankEncounter.Limits}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Ray Bombs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="4" Value="{Binding SpiderTankEncounter.RayBombs}" Minimum="0"/>
+                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <mah:NumericUpDown Grid.Column="1" Value="{Binding SpiderTankEncounter.SquallAttacks}" Minimum="0"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding SpiderTankEncounter.ZellAttacks}" Minimum="0"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Limits" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding SpiderTankEncounter.Limits}" Minimum="0"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Ray Bombs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding SpiderTankEncounter.RayBombs}" Minimum="0"/>
+                                <TextBlock Grid.Row="4" Text="Extra ATM encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <mah:ToggleSwitch Grid.Row="4" Grid.Column="1" IsOn="{Binding SpiderTankEncounter.ExtraEncounter}" OffContent="No" OnContent="Yes"/>
                             </Grid>
                         </GroupBox>
 
@@ -657,13 +657,14 @@
     </ScrollViewer>
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout IsOpen="{Binding FlyoutFishFinEncounterOpen}" Header="Fish Fin" Position="Bottom" Height="230" Theme="Adapt">
+            <mah:Flyout IsOpen="{Binding FlyoutFishFinEncounterOpen}" Header="Fish Fin" Position="Bottom" Height="280" Theme="Adapt">
                 <Grid Margin="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="0.6*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
@@ -680,7 +681,9 @@
                     <mah:NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.SquallPhysicals}"/>
                     <TextBlock Text="Limits" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <mah:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.Limits}"/>
-                    <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Height="50" Grid.Row="3" Grid.Column="1" Command="{Binding RemoveFishFinEncounterCommand}">
+                    <TextBlock Text="Fish Emerged from ground" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <mah:NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.FishEmerged}"/>
+                    <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Height="50" Grid.Row="4" Grid.Column="1" Command="{Binding RemoveFishFinEncounterCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <TextBlock Text="Remove Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
