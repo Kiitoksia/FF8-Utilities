@@ -100,6 +100,7 @@ namespace FF8Utilities.Models
             DiablosEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
 
             AddNewEncounterCommand = new Command(() => true, AddNewEncounter);
+            AddNewHalfEncounterCommand = new Command(() => true, AddNewHalfEncounter);
             RemoveFishFinEncounterCommand = new Command(() => FocusedFishFinEncounter != null, RemoveFishFinEncounter);
         }
 
@@ -113,6 +114,11 @@ namespace FF8Utilities.Models
         private void AddNewEncounter(object sender, EventArgs eventArgs)
         {
             FishFinEncounters.Add(new FishFinsEncounter());
+        }
+
+        private void AddNewHalfEncounter(object sender, EventArgs eventArgs)
+        {
+            FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true });
         }
 
         public BindingList<WorldMapEncounter> WorldMapEncounters
@@ -437,6 +443,8 @@ namespace FF8Utilities.Models
         }
 
         public Command AddNewEncounterCommand { get; }
+
+        public Command AddNewHalfEncounterCommand { get; }
 
         public Command RemoveFishFinEncounterCommand { get; }
 
