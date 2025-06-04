@@ -213,7 +213,7 @@
                                             <Style TargetType="DataGridRow">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding SingleFishKilled}" Value="True">
-                                                        <Setter Property="Background" Value="DarkGray"/>
+                                                        <Setter Property="Background" Value="DarkSlateGray"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -222,20 +222,17 @@
                                     <Grid Height="50">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
-                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
                                         <Button Style="{StaticResource MahApps.Styles.Button.Square.Accent}" IsTabStop="False" Command="{Binding AddNewEncounterCommand}">
                                             <StackPanel Orientation="Horizontal" Height="20">
                                                 <fa:ImageAwesome Icon="PlusCircle" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                <TextBlock Text="Add Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Add Regular Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </Button>
 
-                                        <Button Style="{StaticResource MahApps.Styles.Button.Square.Highlight}" IsTabStop="False" Command="{Binding AddNewHalfEncounterCommand}">
-                                            <StackPanel Orientation="Horizontal" Height="20">
-                                                <fa:ImageAwesome Icon="PlusCircle" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                <TextBlock Text="Add Encounter (Single Fish Killed Only)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                            </StackPanel>
+                                        <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Square}" IsTabStop="False" Command="{Binding AddNewHalfEncounterCommand}" Background="DarkSlateGray">
+                                            <TextBlock Text="Add Single Fish" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
                                         </Button>
                                     </Grid>
                                     
