@@ -22,7 +22,7 @@
         MinHeight="550"
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="False"   
-        Title="Zell Card RNG Calculator" Height="900" Width="768">
+        Title="Zell Card RNG Calculator" Height="840" Width="768">
     <mah:MetroWindow.Resources>
         <Style BasedOn="{StaticResource {x:Type TextBlock}}"
                TargetType="{x:Type TextBlock}"
@@ -35,7 +35,7 @@
     <mah:MetroWindow.DataContext>
         <models:ZellCardTrackerModel/>
     </mah:MetroWindow.DataContext>
-    <ScrollViewer>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel>
             <mah:MetroAnimatedSingleRowTabControl>
                 <TabItem Header="Fish Fins">
