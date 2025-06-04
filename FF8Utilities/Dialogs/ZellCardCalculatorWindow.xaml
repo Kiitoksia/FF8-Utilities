@@ -523,7 +523,7 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="1" Text="No. times fought" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="No. times fought" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Value="{Binding SpiderTankEncounter.Encounters}" Minimum="1" Maximum="5"/>
                                 <TextBlock Grid.Row="1" Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding SpiderTankEncounter.SquallAttacks}" Minimum="0"/>
