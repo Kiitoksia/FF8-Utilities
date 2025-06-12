@@ -55,7 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppSettings.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

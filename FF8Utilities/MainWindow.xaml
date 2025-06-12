@@ -517,7 +517,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -528,28 +527,26 @@
                         </Style>
                     </Grid.Resources>
 
-                    <TextBlock Text="Auto Launch Ultimecia Script" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Controls:ToggleSwitch VerticalAlignment="Center" OnContent="Yes" OffContent="No" Width="100" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" IsOn="{Binding Settings.AutoLaunchUltimeciaScript}"/>
                     
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Platform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:Platform}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.Platform}"/>
+                    <TextBlock Grid.Column="0" Text="Platform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:Platform}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.Platform}"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Custom Delay Frame (Leave blank for default)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Controls:NumericUpDown Minimum="0" Value="{Binding Settings.CustomZellDelayFrame}" Grid.Row="2" Grid.Column="1" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Custom Delay Frame (Leave blank for default)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Controls:NumericUpDown Minimum="0" Value="{Binding Settings.CustomZellDelayFrame}" Grid.Row="1" Grid.Column="1" />
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Zell Countdown Timer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Controls:NumericUpDown Minimum="0" Maximum="60" Value="{Binding Settings.ZellCountdownTimer}" Grid.Row="3" Grid.Column="1" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Countdown Timer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Controls:NumericUpDown Minimum="0" Maximum="60" Value="{Binding Settings.ZellCountdownTimer}" Grid.Row="2" Grid.Column="1" />
 
 
-                    <TextBlock Text="PC Specific Settings" FontSize="18" FontWeight="Bold" Grid.Row="4"/>
+                    <TextBlock Text="PC Specific Settings" FontSize="18" FontWeight="Bold" Grid.Row="3"/>
 
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Game Install Folder" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <DockPanel Grid.Row="5" LastChildFill="True" Grid.Column="1">
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Game Install Folder" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <DockPanel Grid.Row="4" LastChildFill="True" Grid.Column="1">
                         <Button Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{Binding Settings.GameInstallFolderSelectionCommand}" Content="..." Width="40" DockPanel.Dock="Right"/>
                         <TextBox Text="{Binding Settings.GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left"/>
                     </DockPanel>
 
-                    <Grid Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" Height="80">
+                    <Grid Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" Height="80">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -571,7 +568,7 @@
 
                     </Grid>
 
-                    <Grid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Stretch">
+                    <Grid Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -586,7 +583,7 @@
 
 
 
-                    <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="8" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
+                    <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
                             <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="Save Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>

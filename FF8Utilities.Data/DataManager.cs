@@ -15,7 +15,7 @@ namespace FF8Utilities.Data
 
         public DataManager()
         {
-            Reload();
+            
         }
 
 
@@ -28,27 +28,7 @@ namespace FF8Utilities.Data
             }
         }
 
-        public AppSettings CurrentSettings { get; private set; }
-
-
-        private string SettingsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities", Const.SettingsFile);
 
         public bool IsFirstLaunch { get; private set; }
-
-        public void Reload()
-        {
-            XElement xml = null;
-            if (File.Exists(SettingsPath)) xml = XElement.Load(SettingsPath);
-            else IsFirstLaunch = true;
-            CurrentSettings = new AppSettings(xml);
-        }
-
-        public void Save()
-        {
-            XElement xml = null;
-            CurrentSettings.CopyTo(ref xml);
-            xml.Save(SettingsPath);
-        }
-
     }
 }

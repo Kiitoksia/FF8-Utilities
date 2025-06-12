@@ -51,6 +51,8 @@ namespace FF8Utilities
         public const string CSRFrenchFile = "CSR-French";
 
         public static string PackagesFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities");
+        public const string SettingsFile = "Settings.xml";
+
 
     }
 
@@ -66,7 +68,7 @@ namespace FF8Utilities
         GlacialEye,
         [Description("Caterchipillar")]
         Caterchipillar,
-        [Description("Caterchipillar & 2x Bite Big")]
+        [Description("Caterchipillar & 2x Bite Bug")]
         CaterchipillarAnd2xBiteBug,
         [Description("T-Rexaur")]
         TRex

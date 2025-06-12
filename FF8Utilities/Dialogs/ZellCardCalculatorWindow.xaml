@@ -197,7 +197,7 @@
                             </Expander>
                             <Expander Margin="5,0,0,0" IsExpanded="True" Header="Fish Fins" Grid.Column="1">
                                 <StackPanel>
-                                    <DataGrid Height="160" SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
+                                    <DataGrid Height="160" Width="500" SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
                                         <DataGrid.Columns>
                                             <DataGridComboBoxColumn ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}"
                                                                 DisplayMemberPath="Description"

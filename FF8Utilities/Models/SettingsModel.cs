@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.IO.Compression;
 using FF8Utilities.Properties;
 using MahApps.Metro.Controls;
+using System.Xml.Linq;
 
 namespace FF8Utilities.Models
 {
@@ -26,15 +27,12 @@ namespace FF8Utilities.Models
         private int _zellCountdownTimer = 3;
         private string _gameInstallationFolder;
 
+        private string SettingsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities", Const.SettingsFile);
+
 
         public SettingsModel(MainModel model)
         {
-            AutoLaunchUltimeciaScript = DataManager.Current.CurrentSettings.AutoLaunchUltimecia;
-            Platform = DataManager.Current.CurrentSettings.Platform;
-            AutoLaunchUltimeciaScript = DataManager.Current.CurrentSettings.AutoLaunchUltimecia;
-            CustomZellDelayFrame = DataManager.Current.CurrentSettings.CustomZellDelayFrame;
-            ZellCountdownTimer = DataManager.Current.CurrentSettings.ZellCountdownTimer;
-            GameInstallationFolder = DataManager.Current.CurrentSettings.GameInstallationFolder;
+            Populate();
             SaveSettingsCommand = new Command(() => true, SaveSettings);
 
             InstallCSRCommand = new Command(() => true, InstallCSR);
@@ -45,6 +43,158 @@ namespace FF8Utilities.Models
             InstallPracticeModCommand = new Command(() => true, InstallPracticeMod);
             _mainWindowModel = model;
             DriveManager = new DriveManager(_mainWindowModel, this);
+            Instance = this;
+        }
+
+
+        public static SettingsModel Instance { get; private set; }
+
+
+        private void Populate()
+        {
+            XElement xml = null;
+            if (File.Exists(SettingsPath)) xml = XElement.Load(SettingsPath);
+            else IsFirstLaunch = true;
+
+            XElement platformNode = xml?.Element(nameof(Platform));
+
+            if (platformNode != null)
+            {
+                if (platformNode.Value == "BadPort") platformNode.Value = "PC";
+                if (Enum.TryParse(platformNode.Value, out Platform platform)) Platform = platform;
+            }
+
+            XElement zellTrackToDiablos = xml?.Element(nameof(ZellTrackToDiablos));
+
+            if (zellTrackToDiablos != null)
+            {
+                if (bool.TryParse(zellTrackToDiablos.Value, out bool zellTrack)) ZellTrackToDiablos = zellTrack;
+            }
+
+            // Ifrit Encounter
+            // 2nd Bridge Encounter
+            // Red Soldier Encounter
+            //XElement 
+
+            XElement ifritEncounter = xml?.Element(nameof(IfritEncounterType));
+            if (ifritEncounter != null)
+            {
+                if (Enum.TryParse(ifritEncounter.Value, out IfritEncounterType ifritEncounterType)) IfritEncounterType = ifritEncounterType;
+            }
+
+            XElement get2ndBridgeEncounter = xml?.Element(nameof(Get2ndBridgeEncounter));
+            if (get2ndBridgeEncounter != null)
+            {
+                if (bool.TryParse(get2ndBridgeEncounter.Value, out bool bridgeEncounter)) Get2ndBridgeEncounter = bridgeEncounter;
+            }
+
+            XElement getRedSoldierEncounter = xml?.Element(nameof(GetRedSoldierEncounter));
+            if (getRedSoldierEncounter != null)
+            {
+                if (bool.TryParse(getRedSoldierEncounter.Value, out bool bridgeEncounter)) GetRedSoldierEncounter = bridgeEncounter;
+            }
+
+
+            XElement customZellDelayFrameXml = xml?.Element(nameof(CustomZellDelayFrame));
+            if (customZellDelayFrameXml != null)
+            {
+                if (int.TryParse(customZellDelayFrameXml.Value, out int frames)) CustomZellDelayFrame = frames;
+            }
+
+            XElement zellCountdownTimerXml = xml?.Element(nameof(ZellCountdownTimer));
+            if (zellCountdownTimerXml != null)
+            {
+                if (int.TryParse(zellCountdownTimerXml.Value, out int timer)) ZellCountdownTimer = timer;
+            }
+
+            XElement gameInstallFolder = xml?.Element(nameof(GameInstallationFolder));
+            GameInstallationFolder = gameInstallFolder?.Value;
+
+        }
+
+        public XElement CopyTo(ref XElement xml)
+        {
+            XElement rootNode = xml?.Element("Settings");
+            if (rootNode == null)
+            {
+                rootNode = new XElement("Settings");
+                xml = rootNode;
+            }
+
+            XElement platformNode = xml.Element(nameof(Platform));
+            if (platformNode == null)
+            {
+                platformNode = new XElement(nameof(Platform));
+                rootNode.Add(platformNode);
+            }
+
+            platformNode.Value = Platform.ToString();
+
+            XElement zellTrackingNode = xml.Element(nameof(ZellTrackToDiablos));
+            if (zellTrackingNode == null)
+            {
+                zellTrackingNode = new XElement(nameof(ZellTrackToDiablos));
+                rootNode.Add(zellTrackingNode);
+            }
+
+            zellTrackingNode.Value = ZellTrackToDiablos.ToString();
+
+            XElement ifritEncounterNode = xml.Element(nameof(IfritEncounterType));
+            if (ifritEncounterNode == null)
+            {
+                ifritEncounterNode = new XElement(nameof(IfritEncounterType));
+                rootNode.Add(ifritEncounterNode);
+            }
+
+            ifritEncounterNode.Value = IfritEncounterType.ToString();
+
+            XElement secondBridgeEncounterNode = xml.Element(nameof(Get2ndBridgeEncounter));
+            if (secondBridgeEncounterNode == null)
+            {
+                secondBridgeEncounterNode = new XElement(nameof(Get2ndBridgeEncounter));
+                rootNode.Add(secondBridgeEncounterNode);
+            }
+
+            secondBridgeEncounterNode.Value = Get2ndBridgeEncounter.ToString();
+
+            XElement redSoldierEncounterNode = xml.Element(nameof(GetRedSoldierEncounter));
+            if (redSoldierEncounterNode == null)
+            {
+                redSoldierEncounterNode = new XElement(nameof(GetRedSoldierEncounter));
+                rootNode.Add(redSoldierEncounterNode);
+            }
+
+            redSoldierEncounterNode.Value = GetRedSoldierEncounter.ToString();
+
+            XElement customZellDelayFrames = xml.Element(nameof(CustomZellDelayFrame));
+            if (customZellDelayFrames == null)
+            {
+                customZellDelayFrames = new XElement(nameof(CustomZellDelayFrame));
+                rootNode.Add(customZellDelayFrames);
+            }
+
+
+            customZellDelayFrames.Value = CustomZellDelayFrame?.ToString() ?? string.Empty;
+
+            XElement zellCountdownTimer = xml.Element(nameof(ZellCountdownTimer));
+            if (zellCountdownTimer == null)
+            {
+                zellCountdownTimer = new XElement(nameof(ZellCountdownTimer));
+                rootNode.Add(zellCountdownTimer);
+            }
+
+            zellCountdownTimer.Value = ZellCountdownTimer.ToString();
+
+            XElement gameInstallFolder = xml.Element(nameof(GameInstallationFolder));
+            if (gameInstallFolder == null)
+            {
+                gameInstallFolder = new XElement(nameof(GameInstallationFolder));
+                rootNode.Add(gameInstallFolder);
+            }
+
+            gameInstallFolder.Value = GameInstallationFolder ?? string.Empty;
+
+            return xml;
         }
 
         private void ShowGameInstallSelection(object sender, EventArgs args)
@@ -437,42 +587,15 @@ namespace FF8Utilities.Models
 
         private void SaveSettings(object sender, EventArgs eventArgs)
         {
-            DataManager.Current.CurrentSettings.AutoLaunchUltimecia = AutoLaunchUltimeciaScript;
-            DataManager.Current.CurrentSettings.Platform = Platform;
-            DataManager.Current.CurrentSettings.GlobalHotkeys = false;
-            DataManager.Current.CurrentSettings.CustomZellDelayFrame = CustomZellDelayFrame;
-            DataManager.Current.CurrentSettings.ZellCountdownTimer = ZellCountdownTimer;
-            DataManager.Current.CurrentSettings.GameInstallationFolder = GameInstallationFolder;
-            DataManager.Current.Save();
-            _mainWindowModel.FlyoutSettingsOpen = false;
+            Save();
         }
 
-        public bool AutoLaunchUltimeciaScript
+        public void Save()
         {
-            get
-            {
-                return _autoLaunchUltimeciaScript;
-            }
-            set
-            {
-                if (value == _autoLaunchUltimeciaScript) return;
-                _autoLaunchUltimeciaScript = value;
-                OnPropertyChanged();
-            }
-        }
-        public bool GlobalHotkeysEnabled
-        {
-            get
-            {
-                return _globalHotkeysEnabled;
-            }
-            set
-            {
-                if (_globalHotkeysEnabled == value)
-                    return;
-                _globalHotkeysEnabled = value;
-                OnPropertyChanged();
-            }
+            XElement xml = null;
+            CopyTo(ref xml);
+            xml.Save(SettingsPath);
+            _mainWindowModel.FlyoutSettingsOpen = false;
         }
 
         public Platform Platform
@@ -535,6 +658,7 @@ namespace FF8Utilities.Models
         }
 
 
+
         public Command SaveSettingsCommand { get; }
 
         public Command InstallCSRCommand { get; }
@@ -551,6 +675,16 @@ namespace FF8Utilities.Models
 
 
         private DriveManager DriveManager { get; }
+
+        public bool IsFirstLaunch { get; private set; }
+
+        public bool ZellTrackToDiablos { get; set; }
+
+        public IfritEncounterType IfritEncounterType { get; set; }
+
+        public bool Get2ndBridgeEncounter { get; set; }
+
+        public bool GetRedSoldierEncounter { get; set; }
 
     }
 }

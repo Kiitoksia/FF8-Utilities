@@ -57,7 +57,7 @@ namespace CarawayCode
 
             // Using LINQ Grouping is a fast way to only get the results we want
             var subScriptGrouping = subscripts.GroupBy(c => c).Where(c => c.Count() == poles.Length);
-
+            
             // Time to produce our output
             List<CarawayCodeOutput> output = new List<CarawayCodeOutput>();
             foreach (var subScript in subScriptGrouping)

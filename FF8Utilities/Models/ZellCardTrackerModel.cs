@@ -38,6 +38,8 @@ namespace FF8Utilities.Models
         private bool _didGetSecondBridgeEncounter;
         private TripleSoldierEncounter secondBridgeEncounter;
 
+        private bool _initialised;
+
         public ZellCardTrackerModel()
         {
             WorldMapEncounters = new BindingList<WorldMapEncounter>();
@@ -60,10 +62,12 @@ namespace FF8Utilities.Models
             BuelEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             SecondBatsEncounter = new TwoBatsEncounter();
             SecondBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
-            FishFinEncounters = new BindingList<FishFinsEncounter>();
-            FishFinEncounters.Add(new FishFinsEncounter());
-            FishFinEncounters.Add(new FishFinsEncounter());
-            FishFinEncounters.Add(new FishFinsEncounter());
+            FishFinEncounters = new BindingList<FishFinsEncounter>
+            {
+                new FishFinsEncounter(),
+                new FishFinsEncounter(),
+                new FishFinsEncounter()
+            };
             FishFinEncounters.ListChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(FishFinEncounters));
@@ -102,6 +106,12 @@ namespace FF8Utilities.Models
             AddNewEncounterCommand = new Command(() => true, AddNewEncounter);
             AddNewHalfEncounterCommand = new Command(() => true, AddNewHalfEncounter);
             RemoveFishFinEncounterCommand = new Command(() => FocusedFishFinEncounter != null, RemoveFishFinEncounter);
+
+            IfritsCavernEncounterType = SettingsModel.Instance.IfritEncounterType;
+            IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
+            DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
+            RedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
+            _initialised = true;
         }
 
         private void RemoveFishFinEncounter(object sender, EventArgs eventArgs)
@@ -480,6 +490,12 @@ namespace FF8Utilities.Models
                 _redSoldierEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                if (_initialised)
+                {
+                    // Changed setting, save
+                    SettingsModel.Instance.GetRedSoldierEncounter = value;
+                    SettingsModel.Instance.Save();
+                }
             }
         }
 
@@ -491,6 +507,12 @@ namespace FF8Utilities.Models
                 _didGetSecondBridgeEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                if (_initialised)
+                {
+                    // Changed setting, save
+                    SettingsModel.Instance.Get2ndBridgeEncounter = value;
+                    SettingsModel.Instance.Save();
+                }
             }
         }
 
@@ -505,6 +527,12 @@ namespace FF8Utilities.Models
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(BuelEncounterVisible));
                 OnPropertyChanged(nameof(Output));
+                if (_initialised)
+                {
+                    // Changed setting, save
+                    SettingsModel.Instance.IfritEncounterType = value;
+                    SettingsModel.Instance.Save();
+                }
             }
         }
 

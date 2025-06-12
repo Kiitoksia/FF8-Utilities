@@ -882,7 +882,7 @@ namespace FF8Utilities.Models
 
             UltimeciaTextBox.TextChanged += (s, e) =>
             {
-                if (Settings.AutoLaunchUltimeciaScript && UltimeciaRng?.Length == 12) UltimeciaLaunchCommand.Execute(null);
+                if (UltimeciaRng?.Length == 12) UltimeciaLaunchCommand.Execute(null);
             };
         }        
     }
