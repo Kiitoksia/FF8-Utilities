@@ -12,6 +12,7 @@ using System.IO.Compression;
 using FF8Utilities.Properties;
 using MahApps.Metro.Controls;
 using System.Xml.Linq;
+using System.Security.Cryptography;
 
 namespace FF8Utilities.Models
 {
@@ -28,7 +29,8 @@ namespace FF8Utilities.Models
         private string _gameInstallationFolder;
 
         private string SettingsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities", Const.SettingsFile);
-
+        private const string CSREnglishChecksum = "64-B8-0D-20-B4-29-2B-51-BC-1E-E5-87-32-06-9A-51";
+        private const string CSRFrenchChecksum = "4C-52-10-5D-54-5E-2D-96-B2-52-81-83-A3-57-60-39";
 
         public SettingsModel(MainModel model)
         {
@@ -383,18 +385,32 @@ namespace FF8Utilities.Models
                 return;
             }
 
+            bool warnNoBackupPossible = false;
             // Backup the field files into their own zip if not already backed up
             string backupFilePath = Path.Combine(dataFolderPath, "field_backup.zip");
             if (!File.Exists(backupFilePath))
             {
+                using (var md5 = MD5.Create())
+                {
+                    using (Stream stream = File.OpenRead(Path.Combine(dataFolderPath, "field.fs")))
+                    {
+                        byte[] hash = md5.ComputeHash(stream);
+                        string hashString = BitConverter.ToString(hash);
+                        if (CSRLanguage == CSRLanguage.English && hashString != CSREnglishChecksum) warnNoBackupPossible = true;
+                        else if (CSRLanguage == CSRLanguage.French && hashString != CSRFrenchChecksum) warnNoBackupPossible = true;
+                    }
+                }
                 try
                 {
-                    using (ZipArchive zip = ZipFile.Open(Path.Combine(dataFolderPath, "field_backup.zip"), ZipArchiveMode.Create))
+                    if (!warnNoBackupPossible)
                     {
-                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fi"), "field.fi");
-                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fl"), "field.fl");
-                        zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fs"), "field.fs");
-                    }
+                        using (ZipArchive zip = ZipFile.Open(Path.Combine(dataFolderPath, "field_backup.zip"), ZipArchiveMode.Create))
+                        {
+                            zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fi"), "field.fi");
+                            zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fl"), "field.fl");
+                            zip.CreateEntryFromFile(Path.Combine(dataFolderPath, "field.fs"), "field.fs");
+                        }
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -459,7 +475,12 @@ namespace FF8Utilities.Models
 
             _mainWindowModel.Window.Invoke(() =>
             {
-                _mainWindowModel.Window.ShowMessageAsync("Success", "Succesfully installed");
+                string successMessage = "Succesfully installed";
+                if (warnNoBackupPossible)
+                {
+                    successMessage += "\r\nNOTE: CSR was previously manually installed.  Utilities cannot uninstall CSR (must be done in steam instead)";
+                }
+                _mainWindowModel.Window.ShowMessageAsync("Success", successMessage);
             });
         }
 

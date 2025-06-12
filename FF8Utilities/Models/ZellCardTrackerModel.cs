@@ -128,7 +128,7 @@ namespace FF8Utilities.Models
 
         private void AddNewHalfEncounter(object sender, EventArgs eventArgs)
         {
-            FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true });
+            FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true, Limits = 1 });
         }
 
         public BindingList<WorldMapEncounter> WorldMapEncounters
