@@ -377,7 +377,7 @@
                                 </StackPanel>
                             </Button>
 
-                            <GroupBox Header="Legend" Margin="5,0,0,5">
+                            <GroupBox Header="Legend" Margin="0,5,0,5">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <Border Background="SaddleBrown" Width="20" Height="20" Margin="0, 5,5, 2"/>
@@ -391,11 +391,11 @@
                             </GroupBox>
                         </StackPanel>
                     </GroupBox>
-                    <StackPanel Height="500" Margin="0,0,10,0" Grid.Column="1">
+                    <StackPanel Height="600" Margin="0,0,10,0" Grid.Column="1">
                         <GroupBox Header="No Subscripts Found" Visibility="{Binding NoSubscriptsDetected, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
                             <TextBlock Text="No results found for input poles."/>
                         </GroupBox>
-                        <ListBox Height="400" ItemsSource="{Binding CarawayOutput}">
+                        <ListBox Height="600" ItemsSource="{Binding CarawayOutput}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <GroupBox Header="{Binding SubscriptDisplay}" Margin="0,0,0,5">
