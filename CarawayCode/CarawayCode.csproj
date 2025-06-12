@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caraway.cs" />
     <Compile Include="CarawayCode.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Entities\CarawayCodeOutput.cs" />
