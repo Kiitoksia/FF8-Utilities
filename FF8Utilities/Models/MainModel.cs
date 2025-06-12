@@ -59,6 +59,7 @@ namespace FF8Utilities.Models
         private TimeSpan zellCountdownTimer;
         private bool _fishPatternsPopulating;
         private bool _updateAvailable;
+        private bool _hideUnlikelyCarawayResults = true;
 
 
 
@@ -110,6 +111,7 @@ namespace FF8Utilities.Models
                 OnPropertyChanged(nameof(NoFormationsFound));
             };
 
+
             UltimeciaTimer = new UltimeciaTimerModel();
             ZellCountdownText = "Start Countdown";
 
@@ -117,6 +119,18 @@ namespace FF8Utilities.Models
 
             LoadFishPatterns();
             _ = CheckForUpdates();
+
+            if (DataManager.Current.IsFirstLaunch)
+            {
+                FlyoutSettingsOpen = true;
+                Task.Delay(500).ContinueWith(t =>
+                {
+                    this.Window.Invoke(() =>
+                    {
+                        this.Window.ShowMessageAsync("First launch", "Please enter your settings");
+                    });
+                });                
+            }
         }
 
         private void LoadFishPatterns()
@@ -325,7 +339,7 @@ namespace FF8Utilities.Models
 
         private void SubmitPoles(object sender, EventArgs eventArgs)
         {
-            CarawayOutput = new BindingList<CarawayCodeOutput>(CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList())));
+            CarawayOutput = new BindingList<CarawayCodeOutput>(CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList()), HideUnlikelyCarawayResults));
         }
 
         private async void TallyCommand(object sender, EventArgs eventArgs)
@@ -805,6 +819,21 @@ namespace FF8Utilities.Models
                     return;
                 _fishPatternsPopulating = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public bool HideUnlikelyCarawayResults 
+        { 
+            get => _hideUnlikelyCarawayResults; 
+            set
+            { 
+                if (_hideUnlikelyCarawayResults == value) return;
+                _hideUnlikelyCarawayResults = value;
+                OnPropertyChanged();
+                if (PolesAreValid)
+                {
+                    SubmitPoles(this, EventArgs.Empty);
+                }
             }
         }
 

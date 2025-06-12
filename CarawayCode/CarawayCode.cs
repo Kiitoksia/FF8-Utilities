@@ -12,7 +12,7 @@ namespace CarawayCode
         /// <summary>
         /// Given the supplied pole sequences, will produce a list of possible results.  This can return empty if none found
         /// </summary>
-        public static CarawayCodeOutput[] CalculateCode(PoleCount[] poles)
+        public static CarawayCodeOutput[] CalculateCode(PoleCount[] poles, bool hideUnlikelyResults)
         {
             // Create a list to store our possible subscripts
             List<int> subscripts = new List<int>();
@@ -66,9 +66,14 @@ namespace CarawayCode
                 int key = subScript.First() + poles.Length - 1;
                 key = Math.Min(key, Const.Codes.Length - 4); // Shrink our subscript down to the max of the array
 
+                if (hideUnlikelyResults)
+                {
+                    if (key < 220 || key > 580) continue;
+                }
 
                 output.Add(new CarawayCodeOutput($"{key + 1}", Const.Codes[key], Const.Codes[key + 2], Const.Codes[key + 1], Const.Codes[key + 3]));
             }
+
 
             return output.ToArray();
         }

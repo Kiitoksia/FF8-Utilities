@@ -334,8 +334,13 @@
                         <ColumnDefinition Width="0.5*"/>
                         <ColumnDefinition Width="0.5*"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Input" Width="300" Margin="0,0,10,0">
+                    <GroupBox Header="Input" Width="300" Height="580" VerticalAlignment="Top" Margin="0,0,10,0">
                         <StackPanel>
+                            <TextBlock Margin="5" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">
+                                Only input complete sequences
+                                <LineBreak/>
+                                Subscripts are listed in most likely order
+                            </TextBlock>
                             <ItemsControl ItemsSource="{Binding Poles}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -377,7 +382,12 @@
                                 </StackPanel>
                             </Button>
 
-                            <GroupBox Header="Legend" Margin="0,5,0,5">
+                            <StackPanel Orientation="Horizontal" Margin="5" Height="30">
+                                <TextBlock Text="Hide Unlikely Results"  VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <Controls:ToggleSwitch IsOn="{Binding HideUnlikelyCarawayResults}" OnContent="Yes" OffContent="No"/>
+                            </StackPanel>
+
+                            <GroupBox Header="Legend" Margin="0,5,0,0" BorderThickness="0,0,0,0">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <Border Background="SaddleBrown" Width="20" Height="20" Margin="0, 5,5, 2"/>
@@ -388,6 +398,7 @@
                                         <TextBlock Text="Regular" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </StackPanel>
+                                
                             </GroupBox>
                         </StackPanel>
                     </GroupBox>
@@ -534,7 +545,7 @@
 
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Game Install Folder" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <DockPanel Grid.Row="5" LastChildFill="True" Grid.Column="1">
-                        <Button Style="{DynamicResource HighlightedSquareButtonStyle}" Command="{Binding Settings.GameInstallFolderSelectionCommand}" Content="..." Width="40" DockPanel.Dock="Right"/>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{Binding Settings.GameInstallFolderSelectionCommand}" Content="..." Width="40" DockPanel.Dock="Right"/>
                         <TextBox Text="{Binding Settings.GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left"/>
                     </DockPanel>
 
