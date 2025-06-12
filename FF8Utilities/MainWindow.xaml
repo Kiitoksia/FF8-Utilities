@@ -505,8 +505,8 @@
     </StackPanel>
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
-            <Controls:Flyout IsOpen="{Binding FlyoutSettingsOpen}" Header="Settings" Position="Bottom" Height="550">
-                <Grid Margin="20" >
+            <Controls:Flyout IsOpen="{Binding FlyoutSettingsOpen}" Header="Settings" Position="Bottom" Height="400">
+                <Grid Margin="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="0.6*"/>
@@ -519,7 +519,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.Resources>
                         <Style TargetType="TextBlock">
@@ -541,9 +541,9 @@
                     <TextBlock Text="PC Specific Settings" FontSize="18" FontWeight="Bold" Grid.Row="3"/>
 
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Game Install Folder" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <DockPanel Grid.Row="4" LastChildFill="True" Grid.Column="1">
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{Binding Settings.GameInstallFolderSelectionCommand}" Content="..." Width="40" DockPanel.Dock="Right"/>
-                        <TextBox Text="{Binding Settings.GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left"/>
+                    <DockPanel Grid.Row="4" LastChildFill="True" Grid.Column="1" Height="28">
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{Binding Settings.GameInstallFolderSelectionCommand}" Content="..." DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Settings.GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
                     </DockPanel>
 
                     <Grid Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" Height="80">
