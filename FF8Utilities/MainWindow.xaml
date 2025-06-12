@@ -376,9 +376,22 @@
                                     <TextBlock Text="Tally" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
+
+                            <GroupBox Header="Legend" Margin="5,0,0,5">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Background="SaddleBrown" Width="20" Height="20" Margin="0, 5,5, 2"/>
+                                        <TextBlock Text="CSR Only (Or you recently hard reset)" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Background="{DynamicResource MahApps.Brushes.Accent}" Width="20" Height="20"  Margin="0, 5,5, 2"/>
+                                        <TextBlock Text="Regular" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
                         </StackPanel>
                     </GroupBox>
-                    <StackPanel Height="400" Margin="0,0,10,0" Grid.Column="1">
+                    <StackPanel Height="500" Margin="0,0,10,0" Grid.Column="1">
                         <GroupBox Header="No Subscripts Found" Visibility="{Binding NoSubscriptsDetected, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
                             <TextBlock Text="No results found for input poles."/>
                         </GroupBox>
@@ -386,6 +399,16 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <GroupBox Header="{Binding SubscriptDisplay}" Margin="0,0,0,5">
+                                        <GroupBox.Style>
+                                            <Style TargetType="GroupBox" BasedOn="{StaticResource {x:Type GroupBox}}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding LikelyCSR}" Value="true">
+                                                        <Setter Property="Controls:HeaderedControlHelper.HeaderBackground" Value="SaddleBrown"/>
+                                                        <Setter Property="BorderBrush" Value="SaddleBrown"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </GroupBox.Style>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition/>

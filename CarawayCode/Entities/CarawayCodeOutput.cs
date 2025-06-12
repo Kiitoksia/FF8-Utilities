@@ -43,5 +43,7 @@ namespace CarawayCode.Entities
         public string ErrorText { get; }
 
         public string SubscriptDisplay => $"Subscript: {Subscript}";
+
+        public bool LikelyCSR => int.Parse(Subscript) < 300;
     }
 }
