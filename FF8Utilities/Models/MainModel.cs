@@ -187,7 +187,7 @@ namespace FF8Utilities.Models
         public bool CSRUpdateAvailable
         {
             get => _csrUpdateAvailable;
-            private set
+            set
             {
                 if (_csrUpdateAvailable == value)
                     return;
@@ -355,6 +355,16 @@ namespace FF8Utilities.Models
         private void SubmitPoles(object sender, EventArgs eventArgs)
         {
             CarawayOutput = new BindingList<CarawayCodeOutput>(CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList()), HideUnlikelyCarawayResults));
+            if (HideUnlikelyCarawayResults && CarawayOutput.Count == 0)
+            {
+                // Nothing found, toggle back the unlikely results if possible
+                CarawayCodeOutput[] unlikelyResults = CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList()), false);
+                if (unlikelyResults.Length > 0)
+                {
+                    // Found an unlikely one, show this instead
+                    CarawayOutput = new BindingList<CarawayCodeOutput>(unlikelyResults);
+                }
+            }
         }
 
         private async void TallyCommand(object sender, EventArgs eventArgs)

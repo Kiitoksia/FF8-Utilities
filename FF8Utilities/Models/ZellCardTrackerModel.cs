@@ -33,7 +33,7 @@ namespace FF8Utilities.Models
         private DiablosEncounter _diablosEncounter;
         private bool _includeDiablos = false;
         private GranaldoEncounter _granaldoEncounter;
-        private bool _redSoldierEncounter;
+        private bool _didGetRedSoldierEncounter;
         private IfritEncounterType _ifritsCavernEncounterType = IfritEncounterType.Buel;
         private bool _didGetSecondBridgeEncounter;
         private TripleSoldierEncounter secondBridgeEncounter;
@@ -94,6 +94,9 @@ namespace FF8Utilities.Models
             SpiderTankEncounter = new SpiderTankEncounter();
             SpiderTankEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
 
+            RedSoldierEncounter = new RedSoldierEncounter();
+            RedSoldierEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+
             DoubleGratEncounter = new DoubleGratEncounter();
             DoubleGratEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
             GratEncounter = new GratEncounter();
@@ -110,7 +113,7 @@ namespace FF8Utilities.Models
             IfritsCavernEncounterType = SettingsModel.Instance.IfritEncounterType;
             IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
-            RedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
+            DidGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
             _initialised = true;
         }
 
@@ -335,6 +338,23 @@ namespace FF8Utilities.Models
             }
         }
 
+        private RedSoldierEncounter _redSoldierEncounter;
+        public RedSoldierEncounter RedSoldierEncounter
+        {
+            get => _redSoldierEncounter;
+            set
+            {
+                if (_redSoldierEncounter == value)
+                {
+                    return;
+                }
+
+                _redSoldierEncounter = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
 
         #endregion
 
@@ -397,7 +417,7 @@ namespace FF8Utilities.Models
 
                 // Ifrits Cavern
                 output += TwoBatsEncounter.RngAddition;
-                output += 23; // 2x bat 2x bomb encounter
+                output += 23; // 2x bat 2x bomb encounter (Tutorial)
                 output += IfritEncounter.RngAddition;
 
                 switch (IfritsCavernEncounterType)
@@ -436,7 +456,7 @@ namespace FF8Utilities.Models
                 output += ElvoretEncounter.RngAddition;
                 output += SpiderTankEncounter.RngAddition;
 
-                if (RedSoldierEncounter) output += 13;
+                if (DidGetRedSoldierEncounter) output += RedSoldierEncounter.RngAddition;
 
 
                 if (IncludeDiablos)
@@ -481,13 +501,13 @@ namespace FF8Utilities.Models
             }
         }
 
-        public bool RedSoldierEncounter
+        public bool DidGetRedSoldierEncounter
         {
-            get => _redSoldierEncounter; set
+            get => _didGetRedSoldierEncounter; set
             {
-                if (_redSoldierEncounter == value)
+                if (_didGetRedSoldierEncounter == value)
                     return;
-                _redSoldierEncounter = value;
+                _didGetRedSoldierEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
                 if (_initialised)

@@ -74,7 +74,7 @@
                     <TextBlock Text="CSR Update Available" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <TextBlock Text="{Binding Version}" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.45" Margin="0,0,10,0"/>
+            <TextBlock Text="{Binding Version}" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.45" Margin="10,0,10,0"/>
             <Button Command="{Binding UpdateAvailableCommand}" Controls:VisibilityHelper.IsVisible="{Binding UpdateAvailable}">
                 <StackPanel Orientation="Horizontal">
                     <fa:ImageAwesome Icon="Download" Height="10" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0"/>

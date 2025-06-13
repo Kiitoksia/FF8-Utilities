@@ -456,6 +456,8 @@ namespace FF8Utilities.Models
                     });
                     return;
                 }
+
+                _mainWindowModel.CSRUpdateAvailable = false;
             }
 
             // Overwrite

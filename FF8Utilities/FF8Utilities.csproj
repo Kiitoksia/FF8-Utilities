@@ -140,6 +140,7 @@
     <Compile Include="Entities\Encounters\Dollet\AnacondaurEncounter.cs" />
     <Compile Include="Entities\Encounters\Dollet\DoubleSoldierEncounter.cs" />
     <Compile Include="Entities\Encounters\Dollet\ElvoretEncounter.cs" />
+    <Compile Include="Entities\Encounters\Dollet\RedSoldierEncounter.cs" />
     <Compile Include="Entities\Encounters\Dollet\SingleSoldierEncounter.cs" />
     <Compile Include="Entities\Encounters\Dollet\SpiderTankEncounter.cs" />
     <Compile Include="Entities\Encounters\Dollet\TripleSoldierEncounter.cs" />
