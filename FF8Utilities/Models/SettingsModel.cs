@@ -610,6 +610,7 @@ namespace FF8Utilities.Models
         {
             XElement xml = null;
             CopyTo(ref xml);
+            if (!Directory.Exists(Path.GetDirectoryName(SettingsPath))) Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
             xml.Save(SettingsPath);
             _mainWindowModel.FlyoutSettingsOpen = false;
         }
