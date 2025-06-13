@@ -120,14 +120,14 @@ namespace FF8Utilities.Models
             LoadFishPatterns();
             _ = CheckForUpdates();
 
-            if (DataManager.Current.IsFirstLaunch)
+            if (Settings.IsFirstLaunch)
             {
                 FlyoutSettingsOpen = true;
                 Task.Delay(500).ContinueWith(t =>
                 {
                     this.Window.Invoke(() =>
                     {
-                        this.Window.ShowMessageAsync("First launch", "Please enter your settings");
+                        this.Window.ShowMessageAsync("First launch", "Please enter your settings\r\nIf you have CSR already installed, please reverify files for correct functionality");
                     });
                 });                
             }

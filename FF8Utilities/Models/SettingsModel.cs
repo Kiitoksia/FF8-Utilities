@@ -73,11 +73,6 @@ namespace FF8Utilities.Models
                 if (bool.TryParse(zellTrackToDiablos.Value, out bool zellTrack)) ZellTrackToDiablos = zellTrack;
             }
 
-            // Ifrit Encounter
-            // 2nd Bridge Encounter
-            // Red Soldier Encounter
-            //XElement 
-
             XElement ifritEncounter = xml?.Element(nameof(IfritEncounterType));
             if (ifritEncounter != null)
             {

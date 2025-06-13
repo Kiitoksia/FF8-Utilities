@@ -27,8 +27,5 @@ namespace FF8Utilities.Data
                 return _current;
             }
         }
-
-
-        public bool IsFirstLaunch { get; private set; }
     }
 }
