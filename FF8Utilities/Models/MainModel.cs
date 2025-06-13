@@ -120,19 +120,7 @@ namespace FF8Utilities.Models
 
 
             LoadFishPatterns();
-            _ = CheckForUpdates();
-
-            if (Settings.IsFirstLaunch)
-            {
-                FlyoutSettingsOpen = true;
-                Task.Delay(500).ContinueWith(t =>
-                {
-                    this.Window.Invoke(() =>
-                    {
-                        this.Window.ShowMessageAsync("First launch", "Please enter your settings\r\nIf you have CSR already installed, please reverify files for correct functionality");
-                    });
-                });                
-            }
+            _ = CheckForUpdates();            
         }
 
         private void LoadFishPatterns()
@@ -748,7 +736,22 @@ namespace FF8Utilities.Models
             {
                 if (Equals(value, _window)) return;
                 _window = value;
-                if (value != null) ConfigureTally();
+                if (value != null)
+                {
+                    ConfigureTally();
+                    if (Settings.IsFirstLaunch)
+                    {
+                        FlyoutSettingsOpen = true;
+                        Window.Loaded += (s, e) =>
+                        {
+                            Window.Invoke(() =>
+                            {
+                                Window.ShowMessageAsync("First launch", "Please enter your settings\r\nIf you have CSR already installed, please reverify files for correct functionality");
+                            });
+                        };
+                    }
+                }
+                
                 OnPropertyChanged();
             }
         }
