@@ -164,13 +164,13 @@
                             </GroupBox>
 
                         </StackPanel>
-                        <Grid>
+                        <Grid Margin="10">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Expander IsExpanded="True" Header="World Map Encounters">
-                                <StackPanel HorizontalAlignment="Stretch">
+                            <GroupBox Header="World Map Encounters">
+                                <StackPanel>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
@@ -195,20 +195,20 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
-                            </Expander>
-                            <Expander Margin="5,0,0,0" IsExpanded="True" Header="Fish Fins" Grid.Column="1">
+                            </GroupBox>
+                            <GroupBox Margin="5,0,0,0" Header="Fish Fins" Grid.Column="1">
                                 <StackPanel>
-                                    <DataGrid Height="160" Width="500" SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
+                                    <DataGrid Height="185" HorizontalContentAlignment="Stretch"  SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
                                         <DataGrid.Columns>
                                             <DataGridComboBoxColumn ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}"
                                                                 DisplayMemberPath="Description"
                                                                 SelectedValuePath="Value"
                                                                 Header="Camera"
                                                                 SelectedValueBinding="{Binding Camera}"
-                                                                Width="0.6*"
+                                                                Width="*"
                                         />
-                                            <DataGridTextColumn Binding="{Binding SquallPhysicals}" Header="Squall Physicals"/>
-                                            <DataGridTextColumn Binding="{Binding Limits}" Header="Limits"/>
+                                            <DataGridTextColumn Binding="{Binding SquallPhysicals}" Header="Squall Physicals" Width="Auto"/>
+                                            <DataGridTextColumn Binding="{Binding Limits}" Header="Limits" Width="Auto"/>
                                         </DataGrid.Columns>
                                         <DataGrid.RowStyle>
                                             <Style TargetType="DataGridRow">
@@ -236,10 +236,9 @@
                                             <TextBlock Text="Add Single Fish" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
                                         </Button>
                                     </Grid>
-                                    
                                 </StackPanel>
 
-                            </Expander>
+                            </GroupBox>
                         </Grid>
                     </StackPanel>
                 </TabItem>
@@ -597,6 +596,7 @@
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding RedSoldierEncounter.MachineGuns}" Minimum="0"/>
                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Biggs Arms" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding RedSoldierEncounter.Arms}" Minimum="0"/>
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Camera" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <Grid Grid.Row="4" Grid.Column="1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="0.9*"/>
@@ -607,7 +607,7 @@
                                               SelectedValue="{Binding RedSoldierEncounter.Camera}"/>
                                     <Button IsTabStop="False" Grid.Column="1" Command="{Binding RedSoldierEncounter.ClearCameraCommand}">
                                         <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
