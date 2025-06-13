@@ -60,6 +60,8 @@ namespace FF8Utilities.Models
         private bool _fishPatternsPopulating;
         private bool _updateAvailable;
         private bool _hideUnlikelyCarawayResults = true;
+        private bool _csrUpdateAvailable;
+
 
 
 
@@ -178,6 +180,31 @@ namespace FF8Utilities.Models
             catch (Exception)
             {
                 // Can't connect to the internet or something else happened.  Ignore
+            }
+
+            if (!string.IsNullOrWhiteSpace(Settings.GameInstallationFolder))
+            {
+                // Check for CSR updates
+                try
+                {
+                    CSRUpdateAvailable = await Settings.IsCSRUpdateAvailable();
+                }
+                catch (Exception)
+                {
+                    // Can't connect to the internet or something else happened.  Ignore
+                }
+            }
+        }
+
+        public bool CSRUpdateAvailable
+        {
+            get => _csrUpdateAvailable;
+            private set
+            {
+                if (_csrUpdateAvailable == value)
+                    return;
+                _csrUpdateAvailable = value;
+                OnPropertyChanged();
             }
         }
 

@@ -39,6 +39,7 @@ namespace FF8Utilities.Models
 
             InstallCSRCommand = new Command(() => true, InstallCSR);
             UninstallCSRCommand = new Command(() => true, UninstallCSR);
+            UpdateCSRCommand = new Command(() => true, UpdateCSR);
             InstallPSXMusicFilesCommand = new Command(() => true, InstallPSXMusic);
             UninstallPSXMusicFilesCommand = new Command(() => true, UninstallPSXMusic);
             GameInstallFolderSelectionCommand = new Command(() => true, ShowGameInstallSelection);
@@ -250,12 +251,20 @@ namespace FF8Utilities.Models
             }
         }
 
+        private async void UpdateCSR(object sender, EventArgs args)
+        {
+            CheckInstalledGameLanguage();
+            DriveManager.CheckAndSetCurrentCSRVersion();
+
+            await InstallCSR(false, true);
+        }
+
         private async void InstallCSR(object sender, EventArgs args)
         {
             CheckInstalledGameLanguage();
             DriveManager.CheckAndSetCurrentCSRVersion();
 
-            await InstallCSR(false);
+            await InstallCSR(false, false);
         }
 
         private async void UninstallCSR(object sender, EventArgs args)
@@ -346,10 +355,10 @@ namespace FF8Utilities.Models
 
         private async void InstallPracticeMod(object sender, EventArgs args)
         {
-            await InstallCSR(true);            
+            await InstallCSR(true, false);            
         }
 
-        private async Task InstallCSR(bool isPracticeMod)
+        private async Task InstallCSR(bool isPracticeMod, bool forceUpdate)
         {
             CheckInstalledGameLanguage();
             DriveManager.CheckAndSetCurrentCSRVersion();
@@ -427,7 +436,8 @@ namespace FF8Utilities.Models
             {
                 // Check if there is a new version
                 bool newVersionAvailable = isPracticeMod ? await DriveManager.IsNewPracticeModVersionAvailable() : await DriveManager.IsNewCSRVersionAvailable();
-                if (newVersionAvailable)
+                if (forceUpdate) downloadCsr = true;
+                else if (newVersionAvailable)
                 {
                     MessageDialogResult result = await _mainWindowModel.Window.ShowMessageAsync(isPracticeMod ? "New Practice Mod available" : "New CSR available", "Download new version?", MessageDialogStyle.AffirmativeAndNegative);
                     downloadCsr = result == MessageDialogResult.Affirmative;
@@ -675,6 +685,7 @@ namespace FF8Utilities.Models
         }
 
 
+        public Command UpdateCSRCommand { get; }
 
         public Command SaveSettingsCommand { get; }
 
@@ -702,6 +713,8 @@ namespace FF8Utilities.Models
         public bool Get2ndBridgeEncounter { get; set; }
 
         public bool GetRedSoldierEncounter { get; set; }
+
+        public Task<bool> IsCSRUpdateAvailable() => DriveManager.IsNewCSRVersionAvailable();
 
     }
 }
