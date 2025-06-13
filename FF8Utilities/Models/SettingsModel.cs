@@ -716,7 +716,11 @@ namespace FF8Utilities.Models
 
         public bool GetRedSoldierEncounter { get; set; }
 
-        public Task<bool> IsCSRUpdateAvailable() => DriveManager.IsNewCSRVersionAvailable();
+        public Task<bool> IsCSRUpdateAvailable()
+        {
+            CheckInstalledGameLanguage();
+            return DriveManager.IsNewCSRVersionAvailable();
+        }
 
     }
 }

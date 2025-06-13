@@ -66,7 +66,7 @@
                                             />
                                         <Button IsTabStop="False" Grid.Column="1" Command="{Binding TwoBatsEncounter.ClearCameraCommand}">
                                             <StackPanel Orientation="Horizontal" Height="20">
-                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                             </StackPanel>
                                         </Button>
                                     </Grid>
@@ -123,7 +123,7 @@
                                             />
                                         <Button IsTabStop="False" Grid.Column="1" Command="{Binding SecondBatsEncounter.ClearCameraCommand}">
                                             <StackPanel Orientation="Horizontal" Height="20">
-                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                             </StackPanel>
                                         </Button>
                                     </Grid>
@@ -156,7 +156,7 @@
                                         />
                                         <Button IsTabStop="False" Grid.Column="1" Command="{Binding BuelEncounter.ClearCameraCommand}">
                                             <StackPanel Orientation="Horizontal" Height="20">
-                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                             </StackPanel>
                                         </Button>
                                     </Grid>
@@ -188,7 +188,7 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate DataType="encs:WorldMapEncounter">
                                                 <DockPanel Margin="2">
-                                                    <mah:NumericUpDown Minimum="0" Value="{Binding Quantity}" DockPanel.Dock="Right" Width="80" />
+                                                    <mah:NumericUpDown Minimum="0" Value="{Binding Quantity}" DockPanel.Dock="Right" Width="80" BorderBrush="Transparent" />
                                                     <TextBlock Text="{Binding FormationDisplay}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                                 </DockPanel>
                                             </DataTemplate>
@@ -205,7 +205,7 @@
                                                                 SelectedValuePath="Value"
                                                                 Header="Camera"
                                                                 SelectedValueBinding="{Binding Camera}"
-                                                                Width="*"
+                                                                Width="255"
                                         />
                                             <DataGridTextColumn Binding="{Binding SquallPhysicals}" Header="Squall Physicals" Width="Auto"/>
                                             <DataGridTextColumn Binding="{Binding Limits}" Header="Limits" Width="Auto"/>
@@ -374,7 +374,7 @@
                                           SelectedValue="{Binding BridgeEncounter.Camera}"/>
                                     <Button IsTabStop="False" Grid.Column="1" Command="{Binding BridgeEncounter.ClearCameraCommand}">
                                         <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -418,7 +418,7 @@
                                         SelectedValue="{Binding SecondBridgeEncounter.Camera}"/>
                                     <Button IsTabStop="False" Grid.Column="1" Command="{Binding SecondBridgeEncounter.ClearCameraCommand}">
                                         <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -493,7 +493,7 @@
                                           SelectedValue="{Binding PostAnacondaurEncounter.Camera}"/>
                                     <Button IsTabStop="False" Grid.Column="1" Command="{Binding PostAnacondaurEncounter.ClearCameraCommand}">
                                         <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -575,7 +575,7 @@
                             <mah:ToggleSwitch IsOn="{Binding DidGetRedSoldierEncounter}" OffContent="No" OnContent="Yes"/>
                         </StackPanel>
 
-                        <GroupBox Header="Red Soldier Encounter" Margin="10" Visibility="{Binding DidGetRedSoldierEncounter, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
+                        <GroupBox Header="Red Soldier" Margin="10" Visibility="{Binding DidGetRedSoldierEncounter, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.4*"/>
@@ -592,9 +592,9 @@
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding RedSoldierEncounter.SquallAttacks}" Minimum="0"/>
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding RedSoldierEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Biggs Machine Gun" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Machine Gun" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding RedSoldierEncounter.MachineGuns}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Biggs Arms" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Arms" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding RedSoldierEncounter.Arms}" Minimum="0"/>
                                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Camera" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <Grid Grid.Row="4" Grid.Column="1">
@@ -757,7 +757,7 @@
                     <mah:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.Limits}"/>
                     <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Height="50" Grid.Row="3" Grid.Column="1" Command="{Binding RemoveFishFinEncounterCommand}">
                         <StackPanel Orientation="Horizontal" Height="20">
-                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
                             <TextBlock Text="Remove Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>

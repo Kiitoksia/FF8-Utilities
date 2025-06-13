@@ -37,6 +37,8 @@ namespace FF8Utilities.Models
         private IfritEncounterType _ifritsCavernEncounterType = IfritEncounterType.Buel;
         private bool _didGetSecondBridgeEncounter;
         private TripleSoldierEncounter secondBridgeEncounter;
+        private RedSoldierEncounter _redSoldierEncounter;
+
 
         private bool _initialised;
 
@@ -338,7 +340,6 @@ namespace FF8Utilities.Models
             }
         }
 
-        private RedSoldierEncounter _redSoldierEncounter;
         public RedSoldierEncounter RedSoldierEncounter
         {
             get => _redSoldierEncounter;

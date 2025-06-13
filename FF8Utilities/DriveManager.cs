@@ -159,6 +159,7 @@ namespace FF8Utilities
 
         public async Task<bool> IsNewCSRVersionAvailable()
         {
+            CheckAndSetCurrentCSRVersion();
             File file = await GetLatestCSRFile();
             if (file == null) return false;
 
