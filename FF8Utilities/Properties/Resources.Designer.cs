@@ -59,5 +59,15 @@ namespace FF8Utilities.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] zell {
+            get {
+                object obj = ResourceManager.GetObject("zell", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

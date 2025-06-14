@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -118,9 +119,29 @@ namespace FF8Utilities.Models
             ZellCountdownText = "Start Countdown";
 
 
-
+            UnpackZell();
             LoadFishPatterns();
-            _ = CheckForUpdates();            
+            _ = CheckForUpdates();          
+            
+        }
+
+        /// <summary>
+        /// Bundling the .exe in a regular download causes Windows to flag it as from web and is blocked
+        /// Instead bundle the .zip inside of Resources and extract on first load
+        /// </summary>
+        private void UnpackZell()
+        {
+            string scriptsPath = Path.Combine(AppContext.BaseDirectory, "Scripts");
+            if (!Directory.Exists(scriptsPath)) Directory.CreateDirectory(scriptsPath);
+
+            if (File.Exists(Path.Combine(scriptsPath, "zell.exe"))) return; // Already extracted
+            using (MemoryStream compressedFileStream = new MemoryStream(Properties.Resources.zell))
+            {
+                using (ZipArchive zip = new ZipArchive(compressedFileStream, ZipArchiveMode.Read, true))
+                {
+                    zip.ExtractToDirectory(scriptsPath);
+                }
+            }
         }
 
         private void LoadFishPatterns()
