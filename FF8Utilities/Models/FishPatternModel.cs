@@ -13,11 +13,11 @@ namespace FF8Utilities.Models
         {
             Index = json.Value<int>("index");
             Pattern = json.Value<string>("pattern");
-            ATBRefreshes = json.Value<string>("atbrefresh");
-            DropCount = json.Value<string>("findrop");
-            Phase1Comment = json.Value<string>("phase1comment");
-            Phase2Comment = json.Value<string>("phase2comment");
-            Phase3Comment = json.Value<string>("phase3comment");
+            ATBRefreshes = json.Value<string>("atbRefresh");
+            DropCount = json.Value<string>("drop");
+            Phase1Comment = json["notes"]?.Value<string>("Phase 1");
+            Phase2Comment = json["notes"]?.Value<string>("Phase 2");
+            Phase3Comment = json["notes"]?.Value<string>("Phase 3");
             GeneralComment = json.Value<string>("generalcomment");
 
             Phase1CommentsVisible = !string.IsNullOrWhiteSpace(Phase1Comment);

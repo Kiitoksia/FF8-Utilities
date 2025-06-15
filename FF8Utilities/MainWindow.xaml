@@ -274,7 +274,6 @@
                                   IsHitTestVisible="False"
                                   AutoGenerateColumns="False"
                                   VerticalScrollBarVisibility="Auto"
-                                  AlternatingRowBackground="DimGray"
                                   RowHeight="100"
                                   CanUserSortColumns="False">
                                 <DataGrid.Columns>
