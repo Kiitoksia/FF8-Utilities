@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Data", "FF8Uti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimeciaManip", "UltimeciaManip\UltimeciaManip.csproj", "{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ff8-card-manip", "..\ff8-card-manip\ff8-card-manip.csproj", "{EE5B5356-F54B-4803-93AF-F7EE76AC91D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ff8-card-manip", "ff8-card-manip\ff8-card-manip.csproj", "{EE5B5356-F54B-4803-93AF-F7EE76AC91D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

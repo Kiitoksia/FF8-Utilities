@@ -18,8 +18,6 @@ namespace FF8Utilities.Models
 {
     public class SettingsModel : BaseModel
     {
-        private bool _autoLaunchUltimeciaScript = true;
-        private bool _globalHotkeysEnabled;
         private readonly MainModel _mainWindowModel;
         private Platform _platform = Platform.PS2;
         private CSRLanguage _csrLanguage;
