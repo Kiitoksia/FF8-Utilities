@@ -165,12 +165,16 @@
                             </GroupBox>
 
                         </StackPanel>
-                        <Grid Margin="10">
+                        <Grid Margin="10,10,10,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <GroupBox Header="World Map Encounters">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Header="World Map Encounters" Grid.RowSpan="2">
                                 <StackPanel>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -199,7 +203,7 @@
                             </GroupBox>
                             <GroupBox Margin="5,0,0,0" Header="Fish Fins" Grid.Column="1">
                                 <StackPanel>
-                                    <DataGrid Height="185" HorizontalContentAlignment="Stretch"  SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
+                                    <DataGrid Height="160" HorizontalContentAlignment="Stretch"  SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
                                         <DataGrid.Columns>
                                             <DataGridComboBoxColumn ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}"
                                                                 DisplayMemberPath="Description"
@@ -221,7 +225,7 @@
                                             </Style>
                                         </DataGrid.RowStyle>
                                     </DataGrid>
-                                    <Grid Height="50">
+                                    <Grid >
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
                                             <ColumnDefinition Width="100"/>
@@ -240,6 +244,7 @@
                                 </StackPanel>
 
                             </GroupBox>
+                            <Button Content="Get Late Quistis Patterns" Grid.Column="1" Grid.Row="1" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" Margin="5,5,0,0" Command="{Binding LaunchQuistisPatternsCommand}"/>
                         </Grid>
                     </StackPanel>
                 </TabItem>

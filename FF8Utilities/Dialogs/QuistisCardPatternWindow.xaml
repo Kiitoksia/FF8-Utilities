@@ -27,7 +27,7 @@
     <mah:MetroWindow.Resources>
         <ff8Utilities:ByteArrayToImageConverter x:Key="ImageConverter"/>
     </mah:MetroWindow.Resources>
-    <TabControl ItemsSource="{Binding Strategies}" TabStripPlacement="Left" Style="{DynamicResource MahApps.Styles.TabControl.Animated}">
+    <TabControl ItemsSource="{Binding Strategies}" TabStripPlacement="Left" Style="{DynamicResource MahApps.Styles.TabControl.Animated}" SelectedIndex="0">
         <TabControl.ItemContainerStyle>
             <Style TargetType="TabItem">
                 <Setter Property="Template">

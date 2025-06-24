@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
 using FF8Utilities.Entities.Encounters;
 using FF8Utilities.Entities.Encounters.Diablos;
 using FF8Utilities.Entities.Encounters.Dollet;
 using FF8Utilities.Entities.Encounters.Ifrits_Cavern;
+using LateQuistisManipulation;
 
 namespace FF8Utilities.Models
 {
@@ -112,6 +114,8 @@ namespace FF8Utilities.Models
             AddNewHalfEncounterCommand = new Command(() => true, AddNewHalfEncounter);
             RemoveFishFinEncounterCommand = new Command(() => FocusedFishFinEncounter != null, RemoveFishFinEncounter);
 
+            LaunchQuistisPatternsCommand = new Command(() => true, LaunchQuistisPatterns);
+
             IfritsCavernEncounterType = SettingsModel.Instance.IfritEncounterType;
             IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
@@ -134,6 +138,13 @@ namespace FF8Utilities.Models
         private void AddNewHalfEncounter(object sender, EventArgs eventArgs)
         {
             FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true, Limits = 1 });
+        }
+
+        private void LaunchQuistisPatterns(object sender, EventArgs eventArgs)
+        {
+            LateQuistis lq = new LateQuistis(Const.PackagesFolder);
+            QuistisCardPatternWindow window = new QuistisCardPatternWindow(lq.GetPattern(LateQuistisOutput));
+            window.ShowDialog();
         }
 
         public BindingList<WorldMapEncounter> WorldMapEncounters
@@ -223,7 +234,7 @@ namespace FF8Utilities.Models
 
         #endregion
 
-        #region Dollet^
+        #region Dollet
 
         public DoubleSoldierEncounter FirstDolletEncounter
         {
@@ -414,28 +425,8 @@ namespace FF8Utilities.Models
         {
             get
             {
-                int output = 0;
-
-                // Ifrits Cavern
-                output += TwoBatsEncounter.RngAddition;
-                output += 23; // 2x bat 2x bomb encounter (Tutorial)
-                output += IfritEncounter.RngAddition;
-
-                switch (IfritsCavernEncounterType)
-                {
-                    case IfritEncounterType.Buel:
-                        output += BuelEncounter.RngAddition;
-                        break;
-                    case IfritEncounterType.RedBat:
-                        output += SecondBatsEncounter.RngAddition;
-                        break;
-                    default: throw new NotImplementedException();
-
-                }
-                output += 11; // Bomb encounter
-                output += WorldMapEncounters.Sum(s => s.RngAddition);
-                output += FishFinEncounters.Sum(s => s.RngAddition);
-
+                int output = LateQuistisOutput;
+              
                 // Dollet
                 output += FirstDolletEncounter.RngAddition;
                 output += SecondDolletEncounter.RngAddition;
@@ -473,11 +464,44 @@ namespace FF8Utilities.Models
             }
         }
 
+        public int LateQuistisOutput
+        {
+            get
+            {
+                int output = 0;
+
+                // Ifrits Cavern
+                output += TwoBatsEncounter.RngAddition;
+                output += 23; // 2x bat 2x bomb encounter (Tutorial)
+                output += IfritEncounter.RngAddition;
+
+                switch (IfritsCavernEncounterType)
+                {
+                    case IfritEncounterType.Buel:
+                        output += BuelEncounter.RngAddition;
+                        break;
+                    case IfritEncounterType.RedBat:
+                        output += SecondBatsEncounter.RngAddition;
+                        break;
+                    default: throw new NotImplementedException();
+
+                }
+                output += 11; // Bomb encounter
+                output += WorldMapEncounters.Sum(s => s.RngAddition);
+                output += FishFinEncounters.Sum(s => s.RngAddition);
+
+               
+                return output;
+            }
+        }
+
         public Command AddNewEncounterCommand { get; }
 
         public Command AddNewHalfEncounterCommand { get; }
 
         public Command RemoveFishFinEncounterCommand { get; }
+
+        public Command LaunchQuistisPatternsCommand { get; }
 
         public bool FlyoutFishFinEncounterOpen
         {

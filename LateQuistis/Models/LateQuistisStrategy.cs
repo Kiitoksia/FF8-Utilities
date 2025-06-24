@@ -14,7 +14,7 @@ namespace LateQuistisManipulation.Models
         {
             RNGIndex = rngIndex;
             Frame = frame;
-            Positions = positions.OrderBy(t => t.Position).ToList();
+            Positions = positions?.OrderBy(t => t.Position).ToList();
             OpponentDeck = opponentDeck;
 
             MatchCollection matches = Regex.Matches(opponentDeck, @"([^ \/]+)");
