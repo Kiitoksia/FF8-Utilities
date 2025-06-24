@@ -14,12 +14,16 @@ namespace LateQuistis
         public const string QuistisCardHowToPlayFilename = "Q card Late - How to Play.csv";
         public const string QuistisCardOpponentDeckFilename = "Q card Late - Opponent Deck.csv";
 
+        private string _baseFolder;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="baseFolder">Should be the folder containing the 4 quistis CSV files</param>
         public LateQuistis(string baseFolder)
         {
+            _baseFolder = baseFolder;
+
             foreach (string filename in new[] { QuistisCardRNGResultFilename, QuistisCardFullGameFilename, QuistisCardHowToPlayFilename, QuistisCardOpponentDeckFilename })
             {
                 if (!File.Exists(Path.Combine(baseFolder, filename)))
@@ -28,9 +32,31 @@ namespace LateQuistis
                 }
             }
 
-
+            LoadRNGResult();
         }
 
+
+        private void LoadRNGResult()
+        {
+            Microsoft.VisualBasic.FileIO.TextFieldParser parser = new Microsoft.VisualBasic.FileIO.TextFieldParser(Path.Combine(_baseFolder, QuistisCardRNGResultFilename));
+            parser.TextFieldType = Microsoft.VisualBasic.FileIO.FieldType.Delimited;
+            parser.SetDelimiters(";");
+
+            while (!parser.EndOfData)
+            {
+                if (parser.LineNumber == 0)
+                {
+                    // Header, ignore
+                    parser.ReadLine();
+                    continue;
+                }
+                
+                
+                string[] row = parser.ReadFields();
+
+
+            }
+        }
         
     }
 }
