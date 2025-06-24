@@ -115,6 +115,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\QuistisCardPatternCardPosition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\QuistisCardPatternWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ZellCardCalculatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -128,7 +136,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Const.cs" />
+    <Compile Include="Controls\QuistisCardPatternCardPosition.xaml.cs">
+      <DependentUpon>QuistisCardPatternCardPosition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\KiiVisibilityConverter.cs" />
+    <Compile Include="Dialogs\QuistisCardPatternWindow.xaml.cs">
+      <DependentUpon>QuistisCardPatternWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ZellCardCalculatorWindow.xaml.cs">
       <DependentUpon>ZellCardCalculatorWindow.xaml</DependentUpon>
     </Compile>

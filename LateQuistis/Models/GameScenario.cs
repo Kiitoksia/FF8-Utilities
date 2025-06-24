@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -45,41 +47,18 @@ namespace LateQuistisManipulation.Models
         internal bool IsValid => !string.IsNullOrEmpty(string.Concat(Frame1, Frame2, Frame3, Frame4, Frame5, Frame6, Frame7, Frame8, Frame9, Frame10, ExtraFrame));
 
 
-        private Bitmap GetCardImage(string card)
+        private byte[] GetCardImage(string card)
         {
-            switch (card.ToLower())
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream($"LateQuistisManipulation.CardImages.{card.ToLower()}.png"))
             {
-                case "a": return Properties.Resources.a;
-                case "b": return Properties.Resources.b;
-                case "beast": return Properties.Resources.beast;
-                case "biggs": return Properties.Resources.biggs;
-                case "bird": return Properties.Resources.bird;
-                case "buel": return Properties.Resources.buel;
-                case "c": return Properties.Resources.c;
-                case "chimera": return Properties.Resources.chimera;
-                case "creeps": return Properties.Resources.creeps;
-                case "elastoid": return Properties.Resources.elastoid;
-                case "elnoyle": return Properties.Resources.elnoyle;
-                case "f": return Properties.Resources.f;
-                case "g": return Properties.Resources.g;
-                case "giant": return Properties.Resources.giant;
-                case "glacial": return Properties.Resources.glacial;
-                case "grat": return Properties.Resources.grat;
-                case "grendel": return Properties.Resources.grendel;
-                case "i": return Properties.Resources.i;
-                case "jelleye": return Properties.Resources.jelleye;
-                case "king": return Properties.Resources.king;
-                case "m": return Properties.Resources.m;
-                case "malboro": return Properties.Resources.malboro;
-                case "mantis": return Properties.Resources.mantis;
-                case "mask": return Properties.Resources.mask;
-                case "q": return Properties.Resources.q;
-                case "robot": return Properties.Resources.robot;
-                case "ruby": return Properties.Resources.ruby;
-                case "snake": return Properties.Resources.snake;
-                case "t": return Properties.Resources.t;
-                case "unicorn": return Properties.Resources.unicorn;
-                default: return null;
+                if (stream == null) return null;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    stream.CopyTo(ms);
+                    ms.Position = 0;
+                    return ms.ToArray();
+                }
             }
         }
 
@@ -110,6 +89,8 @@ namespace LateQuistisManipulation.Models
             if (string.IsNullOrWhiteSpace(frameString)) return null;
             MatchCollection matches = Regex.Matches(frameString, "([^ ]+)");
 
+            int playerTurns = 1;
+            int opponentTurns = 1;
             for (int i = 0; i < matches.Count; i++)
             {
                 Match match = matches[i];
@@ -122,7 +103,10 @@ namespace LateQuistisManipulation.Models
                 string card = patternMatch.Groups[1].Value;
                 int boardPosition = int.Parse(patternMatch.Groups[2].Value);
 
-                positions.Add(new LateQuistisPosition(boardPosition, isPlayerTurn, i + 1, GetCardImage(card)));
+                positions.Add(new LateQuistisPosition(boardPosition, isPlayerTurn, isPlayerTurn ? playerTurns : opponentTurns, GetCardImage(card)));
+
+                if (isPlayerTurn) playerTurns++;
+                else opponentTurns++;
             }
 
 

@@ -1,0 +1,54 @@
+﻿<mah:MetroWindow
+    x:Class="FF8Utilities.Dialogs.QuistisCardPatternWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:converters="clr-namespace:FF8Utilities.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:encs="clr-namespace:FF8Utilities.Entities.Encounters"
+    xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:ff8PingvalGui="clr-namespace:FF8Utilities"
+    xmlns:ff8Utilities="clr-namespace:FF8Utilities"
+    xmlns:local="clr-namespace:FF8Utilities.Dialogs"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:FF8Utilities.Models"
+    xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
+
+    xmlns:controls1="clr-namespace:FF8Utilities.Controls"
+    d:DataContext="{d:DesignInstance quistis:LateQuistisPattern}"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d"
+    Title="Quistis Card Pattern">
+    <TabControl ItemsSource="{Binding Strategies}" TabStripPlacement="Left">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding OpponentDeck}"/>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+
+        <TabControl.ContentTemplate>
+            <DataTemplate>
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Positions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls1:QuistisCardPatternCardPosition DataContext="{Binding .}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </DataTemplate>
+        </TabControl.ContentTemplate>
+    </TabControl>
+</mah:MetroWindow>

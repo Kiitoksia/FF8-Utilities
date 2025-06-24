@@ -1,5 +1,7 @@
 ﻿using FF8Utilities.Common;
+using FF8Utilities.Dialogs;
 using FF8Utilities.Models;
+using LateQuistisManipulation;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
@@ -36,6 +38,12 @@ namespace FF8Utilities
             ConfigureAttackButtons(FirstSquallButton, FirstSquallCrossButton, FirstQuistisButton, FirstQuistisCrossButton, FirstDamageRoll, 0);
             ConfigureAttackButtons(SecondSquallButton, SecondSquallCrossButton, SecondQuistisButton, SecondQuistisCrossButton, SecondDamageRoll, 1);
             ConfigureAttackButtons(ThirdSquallButton, ThirdSquallCrossButton, ThirdQuistisButton, ThirdQuistisCrossButton, ThirdDamageRoll, 2);
+
+            //LateQuistis lq = new LateQuistis(Const.PackagesFolder);
+            //var pattern = lq.GetPattern(178);
+
+            //QuistisCardPatternWindow patternWindow = new QuistisCardPatternWindow(pattern);
+            //patternWindow.Show();
         }
 
         private MainModel Model => (MainModel)DataContext;

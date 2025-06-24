@@ -133,7 +133,8 @@ namespace LateQuistisManipulation
                     row[9],
                     row[10],
                     row[11],
-                    row[12]
+                    row[12],
+                    row[13]
                     );
 
                 if (deck.IsValid) OpponentDecks.Add(deck);

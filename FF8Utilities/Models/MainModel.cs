@@ -131,10 +131,7 @@ namespace FF8Utilities.Models
                     _ = Settings.DownloadLateQuistis(false);
                     break;
                 }
-            }
-
-            LateQuistis lq = new LateQuistis(Const.PackagesFolder);
-            var pattern = lq.GetPattern(178);
+            }            
         }
 
         /// <summary>

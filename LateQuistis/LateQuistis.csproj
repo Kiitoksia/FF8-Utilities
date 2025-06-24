@@ -64,133 +64,136 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\a.png" />
+    <EmbeddedResource Include="CardImages\a.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\b.png" />
+    <EmbeddedResource Include="CardImages\b.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\beast.png" />
+    <EmbeddedResource Include="CardImages\beast.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\biggs.png" />
+    <EmbeddedResource Include="CardImages\biggs.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\bird.png" />
+    <EmbeddedResource Include="CardImages\bird.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\buel.png" />
+    <EmbeddedResource Include="CardImages\buel.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\c.png" />
+    <EmbeddedResource Include="CardImages\c.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_0_O.png" />
+    <EmbeddedResource Include="CardImages\Cadre_0_O.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_0_P.png" />
+    <EmbeddedResource Include="CardImages\Cadre_0_P.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_1_O.png" />
+    <EmbeddedResource Include="CardImages\Cadre_1_O.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_1_P.png" />
+    <EmbeddedResource Include="CardImages\Cadre_1_P.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_2_O.png" />
+    <EmbeddedResource Include="CardImages\Cadre_2_O.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_2_P.png" />
+    <EmbeddedResource Include="CardImages\Cadre_2_P.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_3_O.png" />
+    <EmbeddedResource Include="CardImages\Cadre_3_O.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_3_P.png" />
+    <EmbeddedResource Include="CardImages\Cadre_3_P.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_4_O.png" />
+    <EmbeddedResource Include="CardImages\Cadre_4_O.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_4_P.png" />
+    <EmbeddedResource Include="CardImages\Cadre_4_P.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_5_O.png" />
+    <EmbeddedResource Include="CardImages\Cadre_5_O.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cadre_5_P.png" />
+    <EmbeddedResource Include="CardImages\Cadre_5_P.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\chimera.png" />
+    <EmbeddedResource Include="CardImages\chimera.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\creeps.png" />
+    <EmbeddedResource Include="CardImages\creeps.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\elastoid.png" />
+    <EmbeddedResource Include="CardImages\elastoid.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\elnoyle.png" />
+    <EmbeddedResource Include="CardImages\elnoyle.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\f.png" />
+    <EmbeddedResource Include="CardImages\f.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\g.png" />
+    <EmbeddedResource Include="CardImages\g.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\giant.png" />
+    <EmbeddedResource Include="CardImages\giant.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\glacial.png" />
+    <EmbeddedResource Include="CardImages\glacial.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\grat.png" />
+    <EmbeddedResource Include="CardImages\grat.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\grendel.png" />
+    <EmbeddedResource Include="CardImages\grendel.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\i.png" />
+    <EmbeddedResource Include="CardImages\i.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\jelleye.png" />
+    <EmbeddedResource Include="CardImages\jelleye.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\king.png" />
+    <EmbeddedResource Include="CardImages\king.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\m.png" />
+    <EmbeddedResource Include="CardImages\m.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\malboro.png" />
+    <EmbeddedResource Include="CardImages\malboro.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\mantis.png" />
+    <EmbeddedResource Include="CardImages\mantis.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\mask.png" />
+    <EmbeddedResource Include="CardImages\mask.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\null.png" />
+    <EmbeddedResource Include="CardImages\null.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\q.png" />
+    <EmbeddedResource Include="CardImages\q.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\robot.png" />
+    <EmbeddedResource Include="CardImages\robot.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ruby.png" />
+    <EmbeddedResource Include="CardImages\ruby.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\snake.png" />
+    <EmbeddedResource Include="CardImages\snake.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\t.png" />
+    <EmbeddedResource Include="CardImages\t.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\unicorn.png" />
+    <EmbeddedResource Include="CardImages\unicorn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

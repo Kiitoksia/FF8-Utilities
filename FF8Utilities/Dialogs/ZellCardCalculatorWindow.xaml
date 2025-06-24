@@ -15,7 +15,7 @@
         xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
         xmlns:ff8Utilities="clr-namespace:FF8Utilities"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:converters="clr-namespace:FF8Utilities.Converters"
+        xmlns:converters="clr-namespace:FF8Utilities.Converters"        
     x:Class="FF8Utilities.Dialogs.ZellCardCalculatorWindow"
         GlowBrush="{DynamicResource AccentColorBrush}"
         mc:Ignorable="d"
@@ -23,6 +23,7 @@
         MinHeight="550"
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="False"   
+       
         Title="Zell Card RNG Calculator" Height="840" Width="768">
     <mah:MetroWindow.Resources>
         <Style BasedOn="{StaticResource {x:Type TextBlock}}"

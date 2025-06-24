@@ -17,9 +17,9 @@ namespace LateQuistisManipulation.Models
             Pattern = pattern;
 
             Strategies = new List<LateQuistisStrategy>();
-            for (int i = 1; i < 10; i++)
+            for (int i = 1; i < 11; i++)
             {
-                Strategies.Add(new LateQuistisStrategy(RNGIndex, scenario.CreatePositions(i)));
+                Strategies.Add(new LateQuistisStrategy(RNGIndex, scenario.CreatePositions(i), deck.GetFrame(i)));
             }
         }
 
