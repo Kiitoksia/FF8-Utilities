@@ -16,7 +16,7 @@
     <Grid>
         <Image Source="{Binding Card, Converter={StaticResource ImageConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         <Border Controls:VisibilityHelper.IsHidden="{Binding IsPlayerTurn}" Background="Black" Opacity="0.5"/>
-        <TextBlock Text="{Binding Turn}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="60" FontWeight="Bold">
+        <TextBlock Text="{Binding Turn}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="128" FontWeight="Bold" Margin="0,0,5,0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>

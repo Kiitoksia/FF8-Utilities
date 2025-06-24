@@ -39,11 +39,11 @@ namespace FF8Utilities
             ConfigureAttackButtons(SecondSquallButton, SecondSquallCrossButton, SecondQuistisButton, SecondQuistisCrossButton, SecondDamageRoll, 1);
             ConfigureAttackButtons(ThirdSquallButton, ThirdSquallCrossButton, ThirdQuistisButton, ThirdQuistisCrossButton, ThirdDamageRoll, 2);
 
-            //LateQuistis lq = new LateQuistis(Const.PackagesFolder);
-            //var pattern = lq.GetPattern(178);
+            LateQuistis lq = new LateQuistis(Const.PackagesFolder);
+            var pattern = lq.GetPattern(178);
 
-            //QuistisCardPatternWindow patternWindow = new QuistisCardPatternWindow(pattern);
-            //patternWindow.Show();
+            QuistisCardPatternWindow patternWindow = new QuistisCardPatternWindow(pattern);
+            patternWindow.Show();
         }
 
         private MainModel Model => (MainModel)DataContext;

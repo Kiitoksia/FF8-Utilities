@@ -11,31 +11,92 @@
     xmlns:encs="clr-namespace:FF8Utilities.Entities.Encounters"
     xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:ff8PingvalGui="clr-namespace:FF8Utilities"
     xmlns:ff8Utilities="clr-namespace:FF8Utilities"
     xmlns:local="clr-namespace:FF8Utilities.Dialogs"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:FF8Utilities.Models"
     xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
-
+    ResizeMode="NoResize"
+    Height="730"
     xmlns:controls1="clr-namespace:FF8Utilities.Controls"
     d:DataContext="{d:DesignInstance quistis:LateQuistisPattern}"
-    Width="800"
-    Height="450"
+    Width="620"
     mc:Ignorable="d"
-    Title="Quistis Card Pattern">
-    <TabControl ItemsSource="{Binding Strategies}" TabStripPlacement="Left">
-        <TabControl.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Text="{Binding OpponentDeck}"/>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-
+    Title="{Binding RNGIndex, StringFormat='Quistis Card Pattern (RNG Index: {0})'}">
+    <mah:MetroWindow.Resources>
+        <ff8Utilities:ByteArrayToImageConverter x:Key="ImageConverter"/>
+    </mah:MetroWindow.Resources>
+    <TabControl ItemsSource="{Binding Strategies}" TabStripPlacement="Left" Style="{DynamicResource MahApps.Styles.TabControl.Animated}">
+        <TabControl.ItemContainerStyle>
+            <Style TargetType="TabItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabItem">
+                            <Border x:Name="Border" BorderThickness="5" BorderBrush="Transparent" Background="Transparent">
+                                <Grid>
+                                    <ItemsControl ItemsSource="{Binding OpponentCards}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Image Source="{Binding ., Converter={StaticResource ImageConverter}}" Height="68"/>
+                                                    <Border x:Name="ImageBorder" Background="Black">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TabItem}, Path=IsSelected}" Value="True">
+                                                                        <Setter Property="Opacity" Value="0"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TabItem}, Path=IsSelected}" Value="False">
+                                                                        <Setter Property="Opacity" Value="0.25"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
+                                                </Grid>
+                                                
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Text="{Binding Frame, StringFormat={}Frame {0}}"
+                                           VerticalAlignment="Bottom"
+                                               HorizontalAlignment="Left"
+                                           Foreground="White"
+                                           Background="#7F000000"
+                                               Padding="2"
+                                           FontSize="16"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="White"/>
+                                    <Setter TargetName="Border" Property="BorderThickness" Value="5"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="False">
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="Transparent"/>
+                                    <Setter TargetName="Border" Property="BorderThickness" Value="0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </TabControl.ItemContainerStyle>
         <TabControl.ContentTemplate>
             <DataTemplate>
-                <Grid>
-                    <ItemsControl ItemsSource="{Binding Positions}">
+                <Grid Width="460">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="600"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <ItemsControl ItemsSource="{Binding Positions}" Grid.Row="1" AlternationCount="20">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="3"/>
@@ -47,6 +108,8 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="{Binding Frame, StringFormat={}Frame {0}}" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold"/>
+                    <Button Grid.Row="2" Content="SUBMIT" Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"/>
                 </Grid>
             </DataTemplate>
         </TabControl.ContentTemplate>

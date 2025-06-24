@@ -3,23 +3,40 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LateQuistisManipulation.Models
 {
     public class LateQuistisStrategy
     {
-        public LateQuistisStrategy(int rngIndex, List<LateQuistisPosition> positions, string opponentDeck)
+        internal LateQuistisStrategy(int rngIndex, int frame, List<LateQuistisPosition> positions, string opponentDeck)
         {
             RNGIndex = rngIndex;
-            Positions = positions;
+            Frame = frame;
+            Positions = positions.OrderBy(t => t.Position).ToList();
             OpponentDeck = opponentDeck;
+
+            MatchCollection matches = Regex.Matches(opponentDeck, @"([^ \/]+)");
+            OpponentCards = new List<byte[]>();
+
+            int index = 0;
+            foreach (Match match in matches)
+            {
+                if (index > 1) break;
+                OpponentCards.Add(GameScenario.GetDeckCardImage(match.Groups[1].Value));
+                index++;
+            }
         }
+
+        public int Frame { get; }
 
         public int RNGIndex { get; }
         public List<LateQuistisPosition> Positions { get; }
 
         public string OpponentDeck { get; }
+
+        public List<byte[]> OpponentCards { get; }
     }
 
     public class LateQuistisPosition

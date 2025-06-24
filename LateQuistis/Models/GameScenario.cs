@@ -47,7 +47,7 @@ namespace LateQuistisManipulation.Models
         internal bool IsValid => !string.IsNullOrEmpty(string.Concat(Frame1, Frame2, Frame3, Frame4, Frame5, Frame6, Frame7, Frame8, Frame9, Frame10, ExtraFrame));
 
 
-        private byte[] GetCardImage(string card)
+        internal static byte[] GetCardImage(string card)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream($"LateQuistisManipulation.CardImages.{card.ToLower()}.png"))
@@ -59,6 +59,35 @@ namespace LateQuistisManipulation.Models
                     ms.Position = 0;
                     return ms.ToArray();
                 }
+            }
+        }
+
+        internal static byte[] GetDeckCardImage(string card)
+        {
+            switch (card.ToLower())
+            {
+                case "behemoth": return GetCardImage("beast");
+                case "irongiant": return GetCardImage("giant");
+                case "gim47n": return GetCardImage("robot");
+                case "glacialeye": return GetCardImage("glacial");
+                case "buel": return GetCardImage("buel");
+                case "malboro": return GetCardImage("malboro");
+                case "creeps": return GetCardImage("creeps");
+                case "elnoyle": return GetCardImage("elnoyle");
+                case "grendel": return GetCardImage("grendel");
+                case "tonberryking": return GetCardImage("king");
+                case "chimera": return GetCardImage("chimera");
+                case "grat": return GetCardImage("grat");
+                case "jelleye": return GetCardImage("jelleye");
+                case "anacondaur": return GetCardImage("snake");
+                case "belhelmel": return GetCardImage("mask");
+                case "elastoid": return GetCardImage("elastoid");
+                case "rubydragon": return GetCardImage("ruby");
+                case "wedge+biggs": return GetCardImage("biggs");
+                case "grandmantis": return GetCardImage("mantis");
+                case "mesmerize": return GetCardImage("unicorn");
+                case "thrustaevis": return GetCardImage("bird");
+                default: throw new NotImplementedException();
             }
         }
 
