@@ -72,18 +72,6 @@ namespace LateQuistisManipulation
                 }
 
                 rowHandler((int)parser.LineNumber, parser.ReadFields());
-
-                string[] row = parser.ReadFields();
-                if (row == null) continue;
-                if (!int.TryParse(row[1], out int rngIndex))
-                {
-                    // Invalid row, ignore
-                }
-                for (int i = 0; i < 9; i++)
-                {
-                    RNGResults.Add(new RNGResult(row[0], rngIndex, i + 1, row[i + 2]));
-                }
-
             }
         }
 
@@ -100,10 +88,23 @@ namespace LateQuistisManipulation
                     // Invalid row, ignore
                     return;
                 }
-                for (int i = 0; i < 9; i++)
-                {
-                    RNGResults.Add(new RNGResult(row[0], rngIndex, i + 1, row[i + 2]));
-                }
+
+                RNGResult result = new RNGResult(
+                    row[0],
+                    rngIndex,
+                    row[2],
+                    row[3],
+                    row[4],
+                    row[5],
+                    row[6],
+                    row[7],
+                    row[8],
+                    row[9],
+                    row[10],
+                    row[11],
+                    row[12]);
+
+                if (result.IsValid) RNGResults.Add(result);
             });        
         }
 
@@ -206,9 +207,9 @@ namespace LateQuistisManipulation
             GameScenario scenario = GameScenarios.SingleOrDefault(t => t.RNGIndex == rngModifier);
             OpponentDeck deck = OpponentDecks.SingleOrDefault(t => t.RNGIndex == rngModifier);
             PlayPattern pattern = PlayPatterns.SingleOrDefault(t => t.RNGIndex == rngModifier);
-            List<RNGResult> results = RNGResults.Where(t => t.RNGIndex == rngModifier).ToList();
+            RNGResult result = RNGResults.SingleOrDefault(t => t.RNGIndex == rngModifier);
 
-            throw new NotImplementedException();
+            return new LateQuistisPattern(scenario?.RNGHex, rngModifier, scenario, deck, pattern, result);
         }
 
     }
