@@ -7,8 +7,8 @@
     <ProjectGuid>{82CB8657-475A-4223-A6BE-54BBA965AD23}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LateQuistis</RootNamespace>
-    <AssemblyName>LateQuistis</AssemblyName>
+    <RootNamespace>LateQuistisManipulation</RootNamespace>
+    <AssemblyName>LateQuistisManipulation</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="LateQuistis.cs" />
     <Compile Include="Models\GameScenario.cs" />
+    <Compile Include="Models\LateQuistisPattern.cs" />
     <Compile Include="Models\OpponentDeck.cs" />
     <Compile Include="Models\PlayPattern.cs" />
     <Compile Include="Models\RNGResult.cs" />

@@ -19,7 +19,7 @@ using CarawayCode.Entities;
 using FF8Utilities.Common;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
-using LateQuistis;
+using LateQuistisManipulation;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
@@ -125,7 +125,7 @@ namespace FF8Utilities.Models
             _ = CheckForUpdates();          
 
 
-            foreach (string quistisFile in new[] { Const.QuistisCardRNGResultFilename, Const.QuistisCardHowToPlayFilename, Const.QuistisCardFullGameFilename, Const.QuistisCardOpponentDeckFilename })
+            foreach (string quistisFile in LateQuistis.RequiredFiles)
             {
                 if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
                 {
@@ -135,7 +135,7 @@ namespace FF8Utilities.Models
                 }
             }
 
-            LateQuistis.LateQuistis lq = new LateQuistis.LateQuistis(Const.PackagesFolder);
+            LateQuistis lq = new LateQuistis(Const.PackagesFolder);
         }
 
         /// <summary>

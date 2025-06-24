@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LateQuistis.Models
+namespace LateQuistisManipulation.Models
 {
     public class RNGResult
     {

@@ -1,4 +1,4 @@
-﻿using LateQuistis.Models;
+﻿using LateQuistisManipulation.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LateQuistis
+namespace LateQuistisManipulation
 {
     public class LateQuistis
     {
@@ -15,17 +15,20 @@ namespace LateQuistis
         public const string QuistisCardHowToPlayFilename = "Q card Late - How to Play.csv";
         public const string QuistisCardOpponentDeckFilename = "Q card Late - Opponent Deck.csv";
 
+        public static readonly string[] RequiredFiles = new[] { QuistisCardRNGResultFilename, QuistisCardFullGameFilename, QuistisCardHowToPlayFilename, QuistisCardOpponentDeckFilename };
+
         private string _baseFolder;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="baseFolder">Should be the folder containing the 4 quistis CSV files</param>
+        /// <exception cref="ArgumentException">Thrown if base folder does not contain the 4 expected files</exception>
         public LateQuistis(string baseFolder)
         {
             _baseFolder = baseFolder;
 
-            foreach (string filename in new[] { QuistisCardRNGResultFilename, QuistisCardFullGameFilename, QuistisCardHowToPlayFilename, QuistisCardOpponentDeckFilename })
+            foreach (string filename in RequiredFiles)
             {
                 if (!File.Exists(Path.Combine(baseFolder, filename)))
                 {
@@ -87,10 +90,6 @@ namespace LateQuistis
 
         private void LoadRNGResult()
         {
-            Microsoft.VisualBasic.FileIO.TextFieldParser parser = new Microsoft.VisualBasic.FileIO.TextFieldParser(Path.Combine(_baseFolder, QuistisCardRNGResultFilename));
-            parser.TextFieldType = Microsoft.VisualBasic.FileIO.FieldType.Delimited;
-            parser.SetDelimiters(",");
-
             RNGResults = new List<RNGResult>();
             LoadFile(QuistisCardRNGResultFilename, (rowNo, row) =>
             {
@@ -201,6 +200,16 @@ namespace LateQuistis
                 if (scenario.IsValid) GameScenarios.Add(scenario);
             });
         }
-        
+
+        public LateQuistisPattern GetPattern(int rngModifier)
+        {
+            GameScenario scenario = GameScenarios.SingleOrDefault(t => t.RNGIndex == rngModifier);
+            OpponentDeck deck = OpponentDecks.SingleOrDefault(t => t.RNGIndex == rngModifier);
+            PlayPattern pattern = PlayPatterns.SingleOrDefault(t => t.RNGIndex == rngModifier);
+            List<RNGResult> results = RNGResults.Where(t => t.RNGIndex == rngModifier).ToList();
+
+            throw new NotImplementedException();
+        }
+
     }
 }
