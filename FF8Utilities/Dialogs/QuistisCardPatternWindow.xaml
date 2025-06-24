@@ -19,6 +19,7 @@
     xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
     ResizeMode="NoResize"
     Height="730"
+    x:Name="Window"
     xmlns:controls1="clr-namespace:FF8Utilities.Controls"
     d:DataContext="{d:DesignInstance quistis:LateQuistisPattern}"
     Width="620"
@@ -109,7 +110,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <TextBlock Text="{Binding Frame, StringFormat={}Frame {0}}" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold"/>
-                    <Button Grid.Row="2" Content="SUBMIT" Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"/>
+                    <Button Grid.Row="2" Content="SUBMIT" Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" Command="{Binding SubmitCommand, ElementName=Window}" CommandParameter="{Binding .}"/>
                 </Grid>
             </DataTemplate>
         </TabControl.ContentTemplate>

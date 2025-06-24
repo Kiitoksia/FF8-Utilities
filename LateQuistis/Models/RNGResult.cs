@@ -42,6 +42,25 @@ namespace LateQuistisManipulation.Models
         public string Frame10Result { get; }
         public string ExtraFrameResult { get; }
 
+        public string GetFrame(int index)
+        {
+            switch (index)
+            {
+                case 1: return Frame1Result;
+                case 2: return Frame2Result;
+                case 3: return Frame3Result;
+                case 4: return Frame4Result;
+                case 5: return Frame5Result;
+                case 6: return Frame6Result;                        
+                case 7: return Frame7Result;
+                case 8: return Frame8Result;
+                case 9: return Frame9Result;
+                case 10: return Frame10Result;
+                case 11: return ExtraFrameResult;
+                default: throw new NotImplementedException();
+            }
+        }
+
         internal bool IsValid => !string.IsNullOrEmpty(string.Concat(Frame1Result, Frame2Result, Frame3Result, Frame4Result, Frame5Result, Frame6Result, 
             Frame7Result, Frame8Result, Frame9Result, Frame10Result, ExtraFrameResult).Replace("XX", string.Empty));
     }

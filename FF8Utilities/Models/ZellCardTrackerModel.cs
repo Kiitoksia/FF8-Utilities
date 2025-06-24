@@ -145,6 +145,7 @@ namespace FF8Utilities.Models
             LateQuistis lq = new LateQuistis(Const.PackagesFolder);
             QuistisCardPatternWindow window = new QuistisCardPatternWindow(lq.GetPattern(LateQuistisOutput));
             window.ShowDialog();
+            string hex = window.ResultHex;
         }
 
         public BindingList<WorldMapEncounter> WorldMapEncounters

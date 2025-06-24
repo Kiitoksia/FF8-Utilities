@@ -1,4 +1,5 @@
-﻿using LateQuistisManipulation.Models;
+﻿using FF8Utilities.Entities;
+using LateQuistisManipulation.Models;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
@@ -25,8 +26,16 @@ namespace FF8Utilities.Dialogs
         {
             InitializeComponent();
             DataContext = pattern;
+
+            SubmitCommand = new Command<LateQuistisStrategy>(() => true, (s, e) =>
+            {
+                ResultHex = e.ResultHex;
+                Close();
+            });
         }
 
-        
+        public string ResultHex { get; private set; }
+
+        public Command<LateQuistisStrategy> SubmitCommand { get; }
     }
 }
