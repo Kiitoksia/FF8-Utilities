@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LateQuistis.cs" />
+    <Compile Include="Models\GameScenario.cs" />
+    <Compile Include="Models\OpponentDeck.cs" />
+    <Compile Include="Models\PlayPattern.cs" />
     <Compile Include="Models\RNGResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

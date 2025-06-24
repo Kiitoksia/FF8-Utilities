@@ -218,6 +218,10 @@
       <Project>{6ffa01c4-ca0a-4752-8b26-daf0b9867dad}</Project>
       <Name>FF8Utilities.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LateQuistis\LateQuistis.csproj">
+      <Project>{82cb8657-475a-4223-a6be-54bba965ad23}</Project>
+      <Name>LateQuistis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj">
       <Project>{1bea2ddc-acfd-48a9-9e37-15cc4b19a3fe}</Project>
       <Name>UltimeciaManip</Name>

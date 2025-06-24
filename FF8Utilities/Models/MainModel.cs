@@ -19,6 +19,7 @@ using CarawayCode.Entities;
 using FF8Utilities.Common;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
+using LateQuistis;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
@@ -133,6 +134,8 @@ namespace FF8Utilities.Models
                     break;
                 }
             }
+
+            LateQuistis.LateQuistis lq = new LateQuistis.LateQuistis(Const.PackagesFolder);
         }
 
         /// <summary>

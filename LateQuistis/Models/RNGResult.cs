@@ -8,7 +8,20 @@ namespace LateQuistis.Models
 {
     public class RNGResult
     {
-        public int Result { get; }
+        public RNGResult(string rngHex, int rngIndex, int frame, string result)
+        {
+            RNGHex = rngHex;
+            Result = result;
+            Frame = frame;
+            RNGIndex = rngIndex;
+        }
+
+        public string RNGHex { get; }
+
         public int RNGIndex { get; }
+
+        public int Frame { get; }
+
+        public string Result { get; }
     }
 }
