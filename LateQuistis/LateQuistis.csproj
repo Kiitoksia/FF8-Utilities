@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Const.cs" />
     <Compile Include="LateQuistis.cs" />
     <Compile Include="Models\GameScenario.cs" />
     <Compile Include="Models\LateQuistisPattern.cs" />
