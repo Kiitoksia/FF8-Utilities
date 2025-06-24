@@ -33,9 +33,7 @@ namespace FF8Utilities.Models
     public class MainModel : BaseModel
     {
 
-        private const int WM_CHAR = 0x0102;
         private const int WM_KEYDOWN = 0x0100;
-        private const  int WM_KEYUP = 0x0101;
 
         private BindingList<CarawayCodeOutput> _carawayOutput;
         private BindingList<CardNotesModel> _cardNotes;
@@ -136,6 +134,7 @@ namespace FF8Utilities.Models
             }
 
             LateQuistis lq = new LateQuistis(Const.PackagesFolder);
+            var pattern = lq.GetPattern(178);
         }
 
         /// <summary>
@@ -921,10 +920,10 @@ namespace FF8Utilities.Models
                 _filterTimer.AutoReset = false;
                 _filterTimer.Elapsed += (s, e) =>
                 {
-                    string pattern = FishFinManipPattern?.Trim();
+                    string pattern = FishFinManipPattern?.Trim()?.Replace(" ", string.Empty);
                     if (!string.IsNullOrWhiteSpace(pattern))
                     {                       
-                        FishPatterns = AllFishPatterns.Where(t => t.Pattern.StartsWith(pattern)).ToList();
+                        FishPatterns = AllFishPatterns.Where(t => t.SearchablePattern.StartsWith(pattern)).ToList();
                     }
                     else
                     {

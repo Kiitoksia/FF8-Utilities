@@ -28,6 +28,8 @@ namespace FF8Utilities.Models
 
         public int Index { get; private set; }
         public string Pattern { get; private set; }
+        public string SearchablePattern => Pattern.Replace(" ", string.Empty);
+
         public string ATBRefreshes { get; private set; }
         public string DropCount { get; private set;  }
         public string Phase1Comment { get; private set; }
