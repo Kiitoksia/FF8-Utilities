@@ -11,7 +11,7 @@
         xmlns:models="clr-namespace:FF8Utilities.Models"
         xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
         xmlns:ff8Utilities="clr-namespace:FF8Utilities"
-        xmlns:data="clr-namespace:FF8Utilities.Data;assembly=FF8Utilities.Data"
+        xmlns:data="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
         xmlns:converters="clr-namespace:FF8Utilities.Converters"
         ShowMaxRestoreButton="False"
         x:Name="Window"

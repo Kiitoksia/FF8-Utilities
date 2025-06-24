@@ -1,4 +1,4 @@
-﻿using FF8Utilities.Data;
+﻿using FF8Utilities.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -53,7 +53,10 @@ namespace FF8Utilities
         public static string PackagesFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FF8-Utilities");
         public const string SettingsFile = "Settings.xml";
 
-
+        public const string QuistisCardRNGResultFilename = "Q card Late - RNG result.csv";
+        public const string QuistisCardFullGameFilename = "Q card Late - Full Game Scenario.csv";
+        public const string QuistisCardHowToPlayFilename = "Q card Late - How to Play.csv";
+        public const string QuistisCardOpponentDeckFilename = "Q card Late - Opponent Deck.csv";
     }
 
     public enum WorldMapFormation
@@ -143,5 +146,11 @@ namespace FF8Utilities
         [Description("2x Red Bats")]
         RedBat,
         Buel
+    }    
+
+    public enum CSRLanguage
+    {
+        English,
+        French
     }
 }

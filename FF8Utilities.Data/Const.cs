@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FF8Utilities.Data
-{
+namespace FF8Utilities.Common
+{    
     public enum Platform
     {
         [Description("PS2 (NA)")]
@@ -17,17 +16,6 @@ namespace FF8Utilities.Data
         [Description("PC")]
         PC,
         [Description("PC (CSR)")]
-        PCLite        
-    }
-
-    public enum CSRLanguage
-    {
-        English,
-        French
-    }
-
-    public static class Const
-    {
-        public const string SettingsFile = "Settings.xml";        
+        PCLite
     }
 }

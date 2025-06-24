@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FF8Utilities.Data;
+using FF8Utilities.Common;
 using FF8Utilities.Entities;
 using MahApps.Metro.Controls.Dialogs;
 using System.Windows.Forms;
@@ -42,6 +42,7 @@ namespace FF8Utilities.Models
             UninstallPSXMusicFilesCommand = new Command(() => true, UninstallPSXMusic);
             GameInstallFolderSelectionCommand = new Command(() => true, ShowGameInstallSelection);
             InstallPracticeModCommand = new Command(() => true, InstallPracticeMod);
+            DownloadLateQuistisFiles = new Command(() => true, DownloadLateQuistis);
             _mainWindowModel = model;
             DriveManager = new DriveManager(_mainWindowModel, this);
             Instance = this;
@@ -49,6 +50,24 @@ namespace FF8Utilities.Models
 
 
         public static SettingsModel Instance { get; private set; }
+
+
+        private async void DownloadLateQuistis(object sender, EventArgs args)
+        {
+            await DownloadLateQuistis(true);
+        }
+
+        public async Task DownloadLateQuistis(bool notify)
+        {
+            DownloadResult result = await DriveManager.DownloadLateQuistisCSRFiles();
+            if (notify)
+            {
+                _mainWindowModel.Window.Invoke(() =>
+                {
+                    _mainWindowModel.Window.ShowMessageAsync("Result", result == DownloadResult.Downloaded ? "Files succesfully downloaded" : "Error downloading");
+                });
+            }            
+        }
 
 
         private void Populate()
@@ -701,8 +720,10 @@ namespace FF8Utilities.Models
 
         public Command InstallPracticeModCommand { get; }
 
+        public Command DownloadLateQuistisFiles { get; }
 
-        private DriveManager DriveManager { get; }
+
+        public DriveManager DriveManager { get; }
 
         public bool IsFirstLaunch { get; private set; }
 

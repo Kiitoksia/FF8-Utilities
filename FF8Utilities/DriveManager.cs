@@ -15,8 +15,7 @@ using File = Google.Apis.Drive.v3.Data.File;
 using System.Text.RegularExpressions;
 using System.Runtime;
 using FF8Utilities.Models;
-using FF8Utilities.Data;
-using FF8Utilities.Properties;
+using FF8Utilities.Common;
 
 namespace FF8Utilities
 {
@@ -26,6 +25,7 @@ namespace FF8Utilities
         private const string CSRFrenchFolder = "1Y9l6Iuu3prrRT-VJq--XnTb2HYQa8ttW";
         private const string PSXMidiFolder = "1giHGMoAOjkjkS_DVFCLKnl5wT9j9p_Yx";
         private const string FrenchPracticeFolder = "1SsgQvURp3B7-VQ3VdP-T5d0uWgtnu5hj";
+        private const string LateQuistisCSVFolder = "1G54gySh762w-skt6qLwj7wy0_X2M8O_d";
 
         private static DriveService DriveService;
 
@@ -191,13 +191,13 @@ namespace FF8Utilities
                 {
                     case DownloadStatus.Downloading:
                         decimal percentage = (decimal)((float)progress.BytesDownloaded / file.Size.Value);
-                        progressMethod.Report(percentage);
+                        progressMethod?.Report(percentage);
                         break;
                     case DownloadStatus.Completed:
-                        progressMethod.Report(100m);
+                        progressMethod?.Report(100m);
                         break;
                     case DownloadStatus.Failed:
-                        progressMethod.Report(-1m);
+                        progressMethod?.Report(-1m);
                         break;
                 }
             };
@@ -212,9 +212,10 @@ namespace FF8Utilities
                     if (!Directory.Exists(Const.PackagesFolder)) Directory.CreateDirectory(Const.PackagesFolder);
 
                     string filename = baseFileName;
+
                     if (includeVersionInFilename) filename += $"_v{newVersion.ToString()}";
 
-                    using (FileStream fs = new FileStream(Path.Combine(Const.PackagesFolder, $"{filename}.zip"), FileMode.Create, FileAccess.Write))
+                    using (FileStream fs = new FileStream(Path.Combine(Const.PackagesFolder, $"{filename}.{file.FileExtension}"), FileMode.Create, FileAccess.Write))
                     {
                         ms.Position = 0;
                         await ms.CopyToAsync(fs).ConfigureAwait(false);
@@ -260,6 +261,25 @@ namespace FF8Utilities
             if (file == null) return DownloadResult.Error;
 
             return await DownloadFile(file, progressMethod, "ff8dm", false);
+        }
+
+        public async Task<DownloadResult> DownloadLateQuistisCSRFiles()
+        {
+            DriveService service = await GetDriveService().ConfigureAwait(false);
+            FilesResource.ListRequest request = service.Files.List();
+
+            request.Q = $"'{LateQuistisCSVFolder}' in parents and trashed = false";
+            request.Fields = "files(id, name, size)";
+
+            FileList result = await request.ExecuteAsync().ConfigureAwait(false);
+
+            List<DownloadResult> results = new List<DownloadResult>();
+            foreach (File file in result.Files)
+            {
+                results.Add(await DownloadFile(file, null, file.Name, false));
+            }
+
+            return results.Contains(DownloadResult.Error) ? DownloadResult.Error : DownloadResult.Downloaded;
         }
     }
 }

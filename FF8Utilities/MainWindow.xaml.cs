@@ -1,4 +1,4 @@
-﻿using FF8Utilities.Data;
+﻿using FF8Utilities.Common;
 using FF8Utilities.Models;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;

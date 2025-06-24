@@ -48,9 +48,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FF8Utilities.Data\FF8Utilities.Data.csproj">
+    <ProjectReference Include="..\FF8Utilities.Data\FF8Utilities.Common.csproj">
       <Project>{6FFA01C4-CA0A-4752-8B26-DAF0B9867DAD}</Project>
-      <Name>FF8Utilities.Data</Name>
+      <Name>FF8Utilities.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
