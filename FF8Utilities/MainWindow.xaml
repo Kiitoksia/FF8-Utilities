@@ -115,7 +115,21 @@
                     </Grid.ColumnDefinitions>
 
                     <GroupBox Grid.ColumnSpan="3" Margin="20,20,20,0" Header="(Quistis Card) Cards to select">
-                        <TextBlock FontSize="14" Text="Geezard, Funguar, Gayla, Fastitocalon-F, Caterchipallar"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock FontSize="14" Text="Early Quistis" FontWeight="Bold"/>
+                            <TextBlock FontSize="14" Text="Late Quistis" FontWeight="Bold" Grid.Row="1"/>
+                            <TextBlock FontSize="14" Text="Geezard, Funguar, Gayla, Fastitocalon-F, Caterchipallar" Grid.Column="1"/>
+                            <TextBlock FontSize="14" Text="Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit" Grid.Row="1" Grid.Column="1"/>
+                        </Grid>
+                        
                     </GroupBox>
                     <TextBlock Grid.Row="1" Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
                     <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,0,20">

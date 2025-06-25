@@ -148,4 +148,10 @@ namespace FF8Utilities
         English,
         French
     }
+
+    public enum DefaultFishFinEncounters
+    {
+        ThreeBattles,
+        OnePointFiveBattles
+    }
 }

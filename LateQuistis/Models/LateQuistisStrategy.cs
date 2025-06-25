@@ -18,7 +18,7 @@ namespace LateQuistisManipulation.Models
             OpponentDeck = opponentDeck;
             ResultHex = resultHex;
 
-            MatchCollection matches = Regex.Matches(opponentDeck, @"([^ \/]+)");
+            MatchCollection matches = Regex.Matches(opponentDeck ?? string.Empty, @"([^ \/]+)");
             OpponentCards = new List<byte[]>();
 
             if (loadImages)

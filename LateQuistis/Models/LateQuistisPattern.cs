@@ -19,7 +19,7 @@ namespace LateQuistisManipulation.Models
             Strategies = new List<LateQuistisStrategy>();
             for (int i = 1; i < 11; i++)
             {
-                Strategies.Add(new LateQuistisStrategy(RNGIndex, i, scenario.CreatePositions(i, loadImages), deck.GetFrame(i), result.GetFrame(i), loadImages));
+                Strategies.Add(new LateQuistisStrategy(RNGIndex, i, scenario?.CreatePositions(i, loadImages), deck?.GetFrame(i), result?.GetFrame(i), loadImages));
             }
         }
 

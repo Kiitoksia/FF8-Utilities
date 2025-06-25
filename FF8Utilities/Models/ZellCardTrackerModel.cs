@@ -564,7 +564,7 @@ namespace FF8Utilities.Models
                 if (_currentPattern == null)
                 {
                     _currentPattern = _lateQuistisManip.GetPattern(output, false);
-                    QuistisPatternMashDisplay = _currentPattern?.Deck.InstantMash;
+                    QuistisPatternMashDisplay = _currentPattern?.Deck?.InstantMash;
                 }
 
 

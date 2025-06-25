@@ -66,7 +66,9 @@ namespace LateQuistisManipulation.Models
         {
             switch (card.ToLower())
             {
-                case "behemoth": return GetCardImage("beast");
+                case "behemoth": 
+                case "behemot":
+                    return GetCardImage("beast");
                 case "irongiant": return GetCardImage("giant");
                 case "gim47n": return GetCardImage("robot");
                 case "glacialeye": return GetCardImage("glacial");

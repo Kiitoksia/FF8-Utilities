@@ -155,7 +155,11 @@ namespace FF8Utilities.Models
             {
                 using (ZipArchive zip = new ZipArchive(compressedFileStream, ZipArchiveMode.Read, true))
                 {
-                    zip.ExtractToDirectory(scriptsPath);
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        string newFilePath = Path.Combine(scriptsPath, entry.FullName);
+                        entry.ExtractToFile(newFilePath, true);
+                    }
                 }
             }
         }
@@ -528,6 +532,8 @@ namespace FF8Utilities.Models
                     default: throw new NotImplementedException();
                 }
             }
+
+            if (!isZell) patternString = "0x00000001";
             
             string jsonFilePath = Path.Combine(AppContext.BaseDirectory, "Scripts", "settings.json");
             string jsonSettings = File.ReadAllText(jsonFilePath);

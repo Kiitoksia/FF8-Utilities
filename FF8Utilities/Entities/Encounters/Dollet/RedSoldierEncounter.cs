@@ -14,11 +14,10 @@ namespace FF8Utilities.Entities.Encounters.Dollet
         private int _zellAttacks;
         private int _machineGuns;
         private int _arms;
-        private ThreePersonFanfareCamera? _camera;
 
         public RedSoldierEncounter()
         {
-            ClearCameraCommand = new Command(() => true, (s, e) => Camera = null);
+            
         }
 
 
@@ -33,23 +32,6 @@ namespace FF8Utilities.Entities.Encounters.Dollet
                 output += ZellAttacks * 4;
                 output += MachineGuns * 5;
                 output += Arms * 4;
-
-                switch (Camera)
-                {
-                    case null:
-                        break;
-                    case ThreePersonFanfareCamera.OneToOne:
-                        output += 3;
-                        break;
-                    case ThreePersonFanfareCamera.SingleCharacter:
-                        output += 2;
-                        break;
-                    case ThreePersonFanfareCamera.ThreeCharacters:
-                        output += 4;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(Camera), Camera, "Camera not recognised");
-                }
 
                 return Base + output;
             }
@@ -120,23 +102,5 @@ namespace FF8Utilities.Entities.Encounters.Dollet
                 OnPropertyChanged(nameof(RngAddition));
             }
         }
-
-        public ThreePersonFanfareCamera? Camera
-        {
-            get => _camera;
-            set
-            {
-                if (_camera == value)
-                {
-                    return;
-                }
-
-                _camera = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public Command ClearCameraCommand { get; }
     }
 }
