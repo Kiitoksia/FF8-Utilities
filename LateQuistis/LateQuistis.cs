@@ -203,14 +203,14 @@ namespace LateQuistisManipulation
             });
         }
 
-        public LateQuistisPattern GetPattern(int rngModifier)
+        public LateQuistisPattern GetPattern(int rngModifier, bool loadImages)
         {
             GameScenario scenario = GameScenarios.SingleOrDefault(t => t.RNGIndex == rngModifier);
             OpponentDeck deck = OpponentDecks.SingleOrDefault(t => t.RNGIndex == rngModifier);
             PlayPattern pattern = PlayPatterns.SingleOrDefault(t => t.RNGIndex == rngModifier);
             RNGResult result = RNGResults.SingleOrDefault(t => t.RNGIndex == rngModifier);
 
-            return new LateQuistisPattern(scenario?.RNGHex, rngModifier, scenario, deck, pattern, result);
+            return new LateQuistisPattern(scenario?.RNGHex, rngModifier, scenario, deck, pattern, result, loadImages);
         }
 
     }

@@ -8,7 +8,7 @@ namespace LateQuistisManipulation.Models
 {
     public class LateQuistisPattern
     {
-        internal LateQuistisPattern(string rngHex, int rngIndex, GameScenario scenario, OpponentDeck deck, PlayPattern pattern, RNGResult result)
+        internal LateQuistisPattern(string rngHex, int rngIndex, GameScenario scenario, OpponentDeck deck, PlayPattern pattern, RNGResult result, bool loadImages)
         {
             RNGHex = rngHex;
             RNGIndex = rngIndex;
@@ -19,7 +19,7 @@ namespace LateQuistisManipulation.Models
             Strategies = new List<LateQuistisStrategy>();
             for (int i = 1; i < 11; i++)
             {
-                Strategies.Add(new LateQuistisStrategy(RNGIndex, i, scenario.CreatePositions(i), deck.GetFrame(i), result.GetFrame(i)));
+                Strategies.Add(new LateQuistisStrategy(RNGIndex, i, scenario.CreatePositions(i, loadImages), deck.GetFrame(i), result.GetFrame(i), loadImages));
             }
         }
 

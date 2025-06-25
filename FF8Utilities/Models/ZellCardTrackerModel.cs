@@ -8,6 +8,7 @@ using FF8Utilities.Entities.Encounters.Diablos;
 using FF8Utilities.Entities.Encounters.Dollet;
 using FF8Utilities.Entities.Encounters.Ifrits_Cavern;
 using LateQuistisManipulation;
+using LateQuistisManipulation.Models;
 
 namespace FF8Utilities.Models
 {
@@ -40,6 +41,10 @@ namespace FF8Utilities.Models
         private bool _didGetSecondBridgeEncounter;
         private TripleSoldierEncounter secondBridgeEncounter;
         private RedSoldierEncounter _redSoldierEncounter;
+        private int _focusedTabIndex;
+        private LateQuistisPattern _currentPattern;            
+        private LateQuistis _lateQuistisManip;
+
 
 
         private bool _initialised;
@@ -122,6 +127,8 @@ namespace FF8Utilities.Models
             IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
             DidGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
+
+            _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
             _initialised = true;
         }
 
@@ -152,8 +159,7 @@ namespace FF8Utilities.Models
 
         private void LaunchQuistisPatterns(object sender, EventArgs eventArgs)
         {
-            LateQuistis lq = new LateQuistis(Const.PackagesFolder);
-            QuistisCardPatternWindow window = new QuistisCardPatternWindow(Window, lq.GetPattern(LateQuistisOutput));
+            QuistisCardPatternWindow window = new QuistisCardPatternWindow(Window, _lateQuistisManip.GetPattern(LateQuistisOutput, true));
             window.Owner = Window;
             MainModel.Instance.LaunchCardScript(false, LateQuistisOutput);
             window.ShowDialog();
@@ -520,10 +526,13 @@ namespace FF8Utilities.Models
             }
         }
 
+        
+
         public int LateQuistisOutput
         {
             get
             {
+
                 int output = 0;
 
                 // Ifrits Cavern
@@ -546,7 +555,19 @@ namespace FF8Utilities.Models
                 output += WorldMapEncounters.Sum(s => s.RngAddition);
                 output += FishFinEncounters.Sum(s => s.RngAddition);
 
-               
+                if (_currentPattern != null && _currentPattern.RNGIndex != output)
+                {
+                    // Reload
+                    _currentPattern = null;
+                }
+
+                if (_currentPattern == null)
+                {
+                    _currentPattern = _lateQuistisManip.GetPattern(output, false);
+                    QuistisPatternMashDisplay = _currentPattern?.Deck.InstantMash;
+                }
+
+
                 return output;
             }
         }
@@ -641,5 +662,34 @@ namespace FF8Utilities.Models
 
         public bool BuelEncounterVisible => IfritsCavernEncounterType == IfritEncounterType.Buel;
 
+        public int FocusedTabIndex
+        {
+            get => _focusedTabIndex;
+            set
+            {
+                if (_focusedTabIndex == value)
+                    return;
+                _focusedTabIndex = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowQuistisPatternButton));
+            }
+        }
+
+        public bool ShowQuistisPatternButton => FocusedTabIndex == 0;
+
+
+        private string _quistisPatternMashDisplay;
+
+        public string QuistisPatternMashDisplay
+        {
+            get => _quistisPatternMashDisplay;
+            private set
+            {
+                if (_quistisPatternMashDisplay == value)
+                    return;
+                _quistisPatternMashDisplay = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

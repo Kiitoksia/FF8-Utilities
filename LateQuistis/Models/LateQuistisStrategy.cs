@@ -10,7 +10,7 @@ namespace LateQuistisManipulation.Models
 {
     public class LateQuistisStrategy
     {
-        internal LateQuistisStrategy(int rngIndex, int frame, List<LateQuistisPosition> positions, string opponentDeck, string resultHex)
+        internal LateQuistisStrategy(int rngIndex, int frame, List<LateQuistisPosition> positions, string opponentDeck, string resultHex, bool loadImages)
         {
             RNGIndex = rngIndex;
             Frame = frame;
@@ -21,13 +21,16 @@ namespace LateQuistisManipulation.Models
             MatchCollection matches = Regex.Matches(opponentDeck, @"([^ \/]+)");
             OpponentCards = new List<byte[]>();
 
-            int index = 0;
-            foreach (Match match in matches)
+            if (loadImages)
             {
-                if (index > 1) break;
-                OpponentCards.Add(GameScenario.GetDeckCardImage(match.Groups[1].Value));
-                index++;
-            }
+                int index = 0;
+                foreach (Match match in matches)
+                {
+                    if (index > 1) break;
+                    OpponentCards.Add(GameScenario.GetDeckCardImage(match.Groups[1].Value));
+                    index++;
+                }
+            }            
         }
 
         public int Frame { get; }

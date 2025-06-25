@@ -111,7 +111,7 @@ namespace LateQuistisManipulation.Models
             }
         }
 
-        internal List<LateQuistisPosition> CreatePositions(int frame)
+        internal List<LateQuistisPosition> CreatePositions(int frame, bool loadImages)
         {
             List<LateQuistisPosition> positions = new List<LateQuistisPosition>();
 
@@ -133,7 +133,7 @@ namespace LateQuistisManipulation.Models
                 string card = patternMatch.Groups[1].Value;
                 int boardPosition = int.Parse(patternMatch.Groups[2].Value);
 
-                positions.Add(new LateQuistisPosition(boardPosition, isPlayerTurn, isPlayerTurn ? playerTurns : opponentTurns, GetCardImage(card)));
+                positions.Add(new LateQuistisPosition(boardPosition, isPlayerTurn, isPlayerTurn ? playerTurns : opponentTurns, loadImages ? GetCardImage(card) : null));
 
                 if (isPlayerTurn) playerTurns++;
                 else opponentTurns++;
