@@ -30,7 +30,7 @@ namespace LateQuistisManipulation.Models
                     OpponentCards.Add(GameScenario.GetDeckCardImage(match.Groups[1].Value));
                     index++;
                 }
-            }            
+            }
         }
 
         public int Frame { get; }

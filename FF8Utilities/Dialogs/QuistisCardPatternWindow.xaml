@@ -19,6 +19,7 @@
     xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
     ResizeMode="NoResize"
     Height="730"
+    WindowStartupLocation="CenterOwner"
     x:Name="Window"
     xmlns:controls1="clr-namespace:FF8Utilities.Controls"
     d:DataContext="{d:DesignInstance quistis:LateQuistisPattern}"
