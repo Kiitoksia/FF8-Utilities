@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimeciaManip", "Ultimecia
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LateQuistis", "LateQuistis\LateQuistis.csproj", "{82CB8657-475A-4223-A6BE-54BBA965AD23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Updater", "FF8Utilities.Updater\FF8Utilities.Updater.csproj", "{CC22D4C1-852D-4F8C-8968-135492BA37F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

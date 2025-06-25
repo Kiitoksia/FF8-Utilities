@@ -215,6 +215,7 @@
     <Content Include="Scripts\fins.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Updater.zip" />
     <None Include="Resources\zell.zip" />
   </ItemGroup>
   <ItemGroup>

@@ -151,7 +151,9 @@ namespace FF8Utilities
 
     public enum DefaultFishFinEncounters
     {
+        [Description("Standard (3 Battles)")]
         ThreeBattles,
-        OnePointFiveBattles
+        [Description("Quetz Manip (1.5 battles)")]
+        QuetzManip,
     }
 }

@@ -125,6 +125,29 @@ namespace FF8Utilities.Models
             XElement gameInstallFolder = xml?.Element(nameof(GameInstallationFolder));
             GameInstallationFolder = gameInstallFolder?.Value;
 
+            XElement defaultFishFinEncountersXml = xml?.Element(nameof(DefaultFishFinEncounters));
+            if (defaultFishFinEncountersXml != null)
+            {
+                if (Enum.TryParse(defaultFishFinEncountersXml.Value, out DefaultFishFinEncounters defaultFishFinEncs)) DefaultFishFinEncounters = defaultFishFinEncs;
+            }
+
+            XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
+            if (lastLaunchedVersion != null)
+            {
+                if (Version.TryParse(zellCountdownTimerXml.Value, out Version oldVersion))
+                {
+                    Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
+                    if (oldVersion < currentVersion)
+                    {
+                        IsFirstLaunchAfterUpdate = true;
+                    }
+                }
+            }
+            else
+            {
+                IsFirstLaunchAfterUpdate = true;
+            }
+
         }
 
         public XElement CopyTo(ref XElement xml)
@@ -206,8 +229,28 @@ namespace FF8Utilities.Models
                 gameInstallFolder = new XElement(nameof(GameInstallationFolder));
                 rootNode.Add(gameInstallFolder);
             }
-
+            
             gameInstallFolder.Value = GameInstallationFolder ?? string.Empty;
+
+            XElement defaultFishFinEncounters = xml.Element(nameof(DefaultFishFinEncounters));
+            if (defaultFishFinEncounters == null)
+            {
+                defaultFishFinEncounters = new XElement(nameof(DefaultFishFinEncounters));
+                rootNode.Add(defaultFishFinEncounters);
+            }
+            
+            defaultFishFinEncounters.Value = DefaultFishFinEncounters.ToString();
+
+            XElement lastLaunchedVersion = xml.Element("LastLaunchedVersion");
+            if (defaultFishFinEncounters == null)
+            {
+                defaultFishFinEncounters = new XElement("LastLaunchedVersion");
+                rootNode.Add(defaultFishFinEncounters);
+            }
+
+            Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
+            lastLaunchedVersion.Value = currentVersion.ToString();
+
 
             return xml;
         }
@@ -727,6 +770,8 @@ namespace FF8Utilities.Models
 
         public bool IsFirstLaunch { get; private set; }
 
+        public bool IsFirstLaunchAfterUpdate { get; private set; }
+
         public bool ZellTrackToDiablos { get; set; }
 
         public IfritEncounterType IfritEncounterType { get; set; }
@@ -734,6 +779,8 @@ namespace FF8Utilities.Models
         public bool Get2ndBridgeEncounter { get; set; }
 
         public bool GetRedSoldierEncounter { get; set; }
+
+        public DefaultFishFinEncounters DefaultFishFinEncounters { get; set; } = DefaultFishFinEncounters.ThreeBattles;
 
 
         public Task<bool> IsCSRUpdateAvailable()

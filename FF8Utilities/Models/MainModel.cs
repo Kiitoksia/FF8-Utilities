@@ -103,7 +103,7 @@ namespace FF8Utilities.Models
             ResetPolesCommand = new Command(() => true, ResetPoles);
             PoleTallyCommand = new Command(() => !CurrentlyTalling, TallyCommand);
             ShowAboutCommand = new Command(() => true, ShowAbout);
-            UpdateAvailableCommand = new Command(() => UpdateAvailable, LaunchUpdate);
+            UpdateAvailableCommand = new Command(() => UpdateAvailable, DownloadUpdate);
             ShowSettingsCommand = new Command(() => true, (s, e) => FlyoutSettingsOpen = !FlyoutSettingsOpen);
 
             CardNotes = new BindingList<CardNotesModel>();
@@ -121,7 +121,13 @@ namespace FF8Utilities.Models
             ZellCountdownText = "Start Countdown";
 
 
-            UnpackZell();
+            if (Settings.IsFirstLaunchAfterUpdate)
+            {
+                // Always update these for safety
+                UnpackZell();
+                UnpackUpdater();
+            }
+
             LoadFishPatterns();
             _ = CheckForUpdates();          
 
@@ -150,7 +156,6 @@ namespace FF8Utilities.Models
             string scriptsPath = Path.Combine(AppContext.BaseDirectory, "Scripts");
             if (!Directory.Exists(scriptsPath)) Directory.CreateDirectory(scriptsPath);
 
-            if (File.Exists(Path.Combine(scriptsPath, "ff8-card-manip.exe"))) return; // Already extracted
             using (MemoryStream compressedFileStream = new MemoryStream(Properties.Resources.zell))
             {
                 using (ZipArchive zip = new ZipArchive(compressedFileStream, ZipArchiveMode.Read, true))
@@ -158,6 +163,24 @@ namespace FF8Utilities.Models
                     foreach (ZipArchiveEntry entry in zip.Entries)
                     {
                         string newFilePath = Path.Combine(scriptsPath, entry.FullName);
+                        entry.ExtractToFile(newFilePath, true);
+                    }
+                }
+            }
+        }
+
+        private void UnpackUpdater()
+        {
+            if (!Directory.Exists(Const.PackagesFolder)) Directory.CreateDirectory(Const.PackagesFolder);
+
+            // Check if our updater is new
+            using (MemoryStream compressedFileStream = new MemoryStream(Properties.Resources.Updater))
+            {
+                using (ZipArchive zip = new ZipArchive(compressedFileStream, ZipArchiveMode.Read, true))
+                {
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        string newFilePath = Path.Combine(Const.PackagesFolder, entry.FullName);
                         entry.ExtractToFile(newFilePath, true);
                     }
                 }
@@ -419,9 +442,38 @@ namespace FF8Utilities.Models
         }
 
 
-        private void LaunchUpdate(object sender, EventArgs eventArgs)
+        private async void DownloadUpdate(object sender, EventArgs eventArgs)
         {
-            Process.Start("https://github.com/Kiitoksia/FF8-Utilities/releases/latest");
+            ProgressDialogController progress = await Window.ShowProgressAsync("Updating", "Automatically updating, please wait");
+
+            HttpClient client = new HttpClient();
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
+                string jsonString = await client.GetStringAsync("https://api.github.com/repos/kiitoksia/FF8-Utilities/releases/latest");
+                JObject json = JObject.Parse(jsonString);
+
+                JArray assets = (JArray)json["assets"];
+                JToken downloadAsset = assets[0];
+                string downloadUrl = downloadAsset["browser_download_url"]?.ToString();
+                
+                byte[] fileBytes = await client.GetByteArrayAsync(downloadUrl);
+
+                string filePath = Path.GetTempFileName();
+                File.WriteAllBytes(filePath, fileBytes);
+
+                Process updateProcess = new Process();
+                updateProcess.StartInfo.Arguments = $"\"{AppContext.BaseDirectory.TrimEnd('\\')}\" \"{filePath}\"";
+                updateProcess.StartInfo.FileName = Path.Combine(Const.PackagesFolder, "FF8Utilities.Updater.exe");
+                updateProcess.Start();
+                Environment.Exit(0);
+            }
+            catch (Exception)
+            {
+                await Window.ShowMessageAsync("Error", "Could not manually update, please manually update by clicking OK", MessageDialogStyle.Affirmative);
+                Process.Start("https://github.com/Kiitoksia/FF8-Utilities/releases/latest");
+            }
         }
 
         private void UltimeciaLaunch(object sender, EventArgs eventArgs)

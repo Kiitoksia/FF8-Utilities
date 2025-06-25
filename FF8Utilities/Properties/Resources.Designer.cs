@@ -63,6 +63,16 @@ namespace FF8Utilities.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Updater {
+            get {
+                object obj = ResourceManager.GetObject("Updater", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] zell {
             get {
                 object obj = ResourceManager.GetObject("zell", resourceCulture);

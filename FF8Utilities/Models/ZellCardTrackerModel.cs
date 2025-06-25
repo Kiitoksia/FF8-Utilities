@@ -72,12 +72,23 @@ namespace FF8Utilities.Models
             BuelEncounter.PropertyChanged += EncounterPropertyChanged;
             SecondBatsEncounter = new TwoBatsEncounter();
             SecondBatsEncounter.PropertyChanged += EncounterPropertyChanged;
-            FishFinEncounters = new BindingList<FishFinsEncounter>
+            
+            FishFinEncounters = new BindingList<FishFinsEncounter>();
+            
+            switch (SettingsModel.Instance.DefaultFishFinEncounters)
             {
-                new FishFinsEncounter(),
-                new FishFinsEncounter(),
-                new FishFinsEncounter()
-            };
+                case DefaultFishFinEncounters.ThreeBattles:
+                    FishFinEncounters.Add(new FishFinsEncounter());
+                    FishFinEncounters.Add(new FishFinsEncounter());
+                    FishFinEncounters.Add(new FishFinsEncounter());
+                    break;
+                case DefaultFishFinEncounters.QuetzManip:
+                    FishFinEncounters.Add(new FishFinsEncounter { Limits = 1 });
+                    FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true, Limits = 0 });
+                    break;
+                default: throw new NotImplementedException();
+            }
+
             FishFinEncounters.ListChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(FishFinEncounters));
