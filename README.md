@@ -8,7 +8,11 @@ Manipulations are broken up into separate projects.  Currently the Zell Card Man
 For explanations on how to perform FF8 manipulations, please visit https://www.speedrun.com/ff8/guides
 
 ## Features
-- Supports most FF8 manipulations
+- Manipulations supported
+  - Quistis/Zell cards
+  - Quetzacotl Fish Fins
+  - Caraway Code 
+  - Ultimecia RTA Party
 - One click downloading to download updates
 - One click downloading/updating for CSR/Practice% mods
 
