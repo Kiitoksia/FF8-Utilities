@@ -10,7 +10,7 @@ For explanations on how to perform FF8 manipulations, please visit https://www.s
 ## Features
 - Manipulations supported
   - Quistis/Zell cards
-  - Quetzacotl Fish Fins
+  - Quezacotl Fish Fins
   - Caraway Code 
   - Ultimecia RTA Party
 - One click downloading to download updates
