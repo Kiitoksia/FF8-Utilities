@@ -61,6 +61,9 @@ namespace FF8Utilities.Models
         private bool _updateAvailable;
         private bool _hideUnlikelyCarawayResults = true;
         private bool _csrUpdateAvailable;
+        private bool _useCustomQuistisPattern;
+        private string _customQuistisPattern;
+
 
 
 
@@ -131,8 +134,12 @@ namespace FF8Utilities.Models
                     _ = Settings.DownloadLateQuistis(false);
                     break;
                 }
-            }            
+            }           
+            
+            Instance = this;
         }
+
+        public static MainModel Instance { get; private set; }
 
         /// <summary>
         /// Bundling the .exe in a regular download causes Windows to flag it as from web and is blocked
@@ -143,7 +150,7 @@ namespace FF8Utilities.Models
             string scriptsPath = Path.Combine(AppContext.BaseDirectory, "Scripts");
             if (!Directory.Exists(scriptsPath)) Directory.CreateDirectory(scriptsPath);
 
-            if (File.Exists(Path.Combine(scriptsPath, "zell.exe"))) return; // Already extracted
+            if (File.Exists(Path.Combine(scriptsPath, "ff8-card-manip.exe"))) return; // Already extracted
             using (MemoryStream compressedFileStream = new MemoryStream(Properties.Resources.zell))
             {
                 using (ZipArchive zip = new ZipArchive(compressedFileStream, ZipArchiveMode.Read, true))
@@ -462,7 +469,8 @@ namespace FF8Utilities.Models
             _countdownRunning = false;
         }
 
-        private void ZellLaunch(object sender, EventArgs eventArgs)
+
+        public void LaunchCardScript(bool isZell, int? rngModifier)
         {
             int delayFrames;
 
@@ -482,44 +490,59 @@ namespace FF8Utilities.Models
             if (Settings.CustomZellDelayFrame != null) delayFrames = Settings.CustomZellDelayFrame.Value;
 
             string patternString = null;
-            switch (Pattern)
+            if (UseCustomQuistisPattern)
             {
-                case QuistisPattern.Elastoid_JellyEye:
-                    patternString = "1";
-                    break;
-                case QuistisPattern.Malboro_Snek:
-                    patternString = "2";
-                    break;
-                case QuistisPattern.BiggsWedge_JellyEye:
-                    patternString = "3";
-                    break;
-                case QuistisPattern.Elastoid_Grendel:
-                    patternString = "0x65c6be07";
-                    break;
-                case QuistisPattern.Malboro_GrandMantis:
-                case QuistisPattern.GrandMantis_Elastoid:
-                case QuistisPattern.Snek_GIM:
-                    //Unwinnable
-                    MessageBox.Show("This is unwinnable and thus you can't continue manip.  If you somehow won, please let us know!");
-                    return;
-                case QuistisPattern.GlacialEye_GrandMantis:
-                    patternString = "0x832b19d2";
-                    break;
-                case QuistisPattern.JellyEye_BiggsWedge:
-                    patternString = "0xad8f1b2f";
-                    break;
-                case QuistisPattern.Chimera_Thrustaevis:
-                    patternString = "0xf99a05ef";
-                    break;
-                default: throw new NotImplementedException();                
+                patternString = CustomQuistisPattern;
             }
+            else
+            {
+                switch (Pattern)
+                {
+                    case QuistisPattern.Elastoid_JellyEye:
+                        patternString = "1";
+                        break;
+                    case QuistisPattern.Malboro_Snek:
+                        patternString = "2";
+                        break;
+                    case QuistisPattern.BiggsWedge_JellyEye:
+                        patternString = "3";
+                        break;
+                    case QuistisPattern.Elastoid_Grendel:
+                        patternString = "0x65c6be07";
+                        break;
+                    case QuistisPattern.Malboro_GrandMantis:
+                    case QuistisPattern.GrandMantis_Elastoid:
+                    case QuistisPattern.Snek_GIM:
+                        //Unwinnable
+                        MessageBox.Show("This is unwinnable and thus you can't continue manip.  If you somehow won, please let us know!");
+                        return;
+                    case QuistisPattern.GlacialEye_GrandMantis:
+                        patternString = "0x832b19d2";
+                        break;
+                    case QuistisPattern.JellyEye_BiggsWedge:
+                        patternString = "0xad8f1b2f";
+                        break;
+                    case QuistisPattern.Chimera_Thrustaevis:
+                        patternString = "0xf99a05ef";
+                        break;
+                    default: throw new NotImplementedException();
+                }
+            }
+            
+            string jsonFilePath = Path.Combine(AppContext.BaseDirectory, "Scripts", "settings.json");
+            string jsonSettings = File.ReadAllText(jsonFilePath);
+            dynamic jObj = JsonConvert.DeserializeObject(jsonSettings);
+            jObj["DelayFrame"] = delayFrames;
+            jObj["player"] = isZell ? "zellmama" : "fc01"; // Quistis
 
+            jsonSettings = JsonConvert.SerializeObject(jObj);
+            File.WriteAllText(jsonFilePath, jsonSettings);
 
-            string arguments = $"{patternString} {delayFrames} {RngPattern}".Trim();
+            string arguments = $"{patternString} {rngModifier}".Trim();
 
             _zellProcess = new Process();
             _zellProcess.StartInfo.Arguments = arguments;
-            _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/zell.exe");
+            _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/ff8-card-manip.exe");
             _zellProcess.StartInfo.WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Scripts");
             _zellProcess.Exited += (s, e) =>
             {
@@ -544,8 +567,13 @@ namespace FF8Utilities.Models
                    "\r\n3) Check the \"unblock\" box and OK" +
                    "\r\n4) Submit again");
                 });
-               
+
             }
+        }
+
+        private void ZellLaunch(object sender, EventArgs eventArgs)
+        {
+            LaunchCardScript(true, RngPattern);
         }
 
         public BindingList<CarawayCodeOutput> CarawayOutput
@@ -838,6 +866,30 @@ namespace FF8Utilities.Models
                 if (_zellCountdownText == value)
                     return;
                 _zellCountdownText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UseCustomQuistisPattern
+        {
+            get => _useCustomQuistisPattern;
+            set
+            {
+                if (_useCustomQuistisPattern == value)
+                    return;
+                _useCustomQuistisPattern = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CustomQuistisPattern
+        {
+            get => _customQuistisPattern;
+            set
+            {
+                if (_customQuistisPattern == value)
+                    return;
+                _customQuistisPattern = value;
                 OnPropertyChanged();
             }
         }

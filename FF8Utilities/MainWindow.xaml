@@ -118,13 +118,24 @@
                         <TextBlock FontSize="14" Text="Geezard, Funguar, Gayla, Fastitocalon-F, Caterchipallar"/>
                     </GroupBox>
                     <TextBlock Grid.Row="1" Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
-                    <ComboBox Grid.Row="1" Grid.Column="1"
-                        Margin="20,20,0,20" 
-                              ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:QuistisPattern}}}"  
-                              SelectedValue="{Binding Pattern}"
-                              DisplayMemberPath="Description"
-                              SelectedValuePath="Value"/>
-                    <ToggleButton Grid.Row="1" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}">
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox 
+                                    ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:QuistisPattern}}}"  
+                                    SelectedValue="{Binding Pattern}"
+                                    DisplayMemberPath="Description"
+                                    HorizontalAlignment="Stretch"
+                                    Controls:VisibilityHelper.IsHidden="{Binding UseCustomQuistisPattern}"
+                                    SelectedValuePath="Value"/>
+
+                        <TextBox Text="{Binding CustomQuistisPattern}" Controls:VisibilityHelper.IsVisible="{Binding UseCustomQuistisPattern}" VerticalContentAlignment="Center"/>
+                        <ToggleButton Grid.Column="1" IsChecked="{Binding UseCustomQuistisPattern}" Content="Custom" Style="{DynamicResource MahApps.Styles.Button.Square}"/>
+                    </Grid>
+                    
+                    <ToggleButton Grid.Row="1" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}" Controls:VisibilityHelper.IsHidden="{Binding UseCustomQuistisPattern}">
                         <fa:ImageAwesome Icon="ListOl" Margin="5" Height="15" Foreground="White"/>
                     </ToggleButton>
                     <StackPanel Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,12">

@@ -87,6 +87,7 @@ namespace LateQuistisManipulation.Models
                 case "grandmantis": return GetCardImage("mantis");
                 case "mesmerize": return GetCardImage("unicorn");
                 case "thrustaevis": return GetCardImage("bird");
+                case "xx": return null;
                 default: throw new NotImplementedException();
             }
         }

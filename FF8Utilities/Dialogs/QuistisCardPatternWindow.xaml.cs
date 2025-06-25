@@ -22,7 +22,7 @@ namespace FF8Utilities.Dialogs
     /// </summary>
     public partial class QuistisCardPatternWindow : MetroWindow
     {
-        public QuistisCardPatternWindow(LateQuistisPattern pattern)
+        public QuistisCardPatternWindow(ZellCardCalculatorWindow window, LateQuistisPattern pattern)
         {
             InitializeComponent();
             DataContext = pattern;

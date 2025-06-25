@@ -50,6 +50,7 @@ namespace FF8Utilities.Models
             WorldMapEncounters.ListChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(WorldMapEncounters));
+                OnPropertyChanged(nameof(LateQuistisOutput));
                 OnPropertyChanged(nameof(Output));
             };
 
@@ -59,13 +60,13 @@ namespace FF8Utilities.Models
             }
 
             TwoBatsEncounter = new TwoBatsEncounter();
-            TwoBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            TwoBatsEncounter.PropertyChanged += EncounterPropertyChanged;
             IfritEncounter = new IfritEncounter();
-            IfritEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            IfritEncounter.PropertyChanged += EncounterPropertyChanged;
             BuelEncounter = new BuelEncounter();
-            BuelEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            BuelEncounter.PropertyChanged += EncounterPropertyChanged;
             SecondBatsEncounter = new TwoBatsEncounter();
-            SecondBatsEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            SecondBatsEncounter.PropertyChanged += EncounterPropertyChanged;
             FishFinEncounters = new BindingList<FishFinsEncounter>
             {
                 new FishFinsEncounter(),
@@ -78,49 +79,58 @@ namespace FF8Utilities.Models
                 OnPropertyChanged(nameof(Output));
             };
             FirstDolletEncounter = new DoubleSoldierEncounter();
-            FirstDolletEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            FirstDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             SecondDolletEncounter = new DoubleSoldierEncounter();
-            SecondDolletEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            SecondDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             ThirdDolletEncounter = new SingleSoldierEncounter();
-            ThirdDolletEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            ThirdDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             FourthDolletEncounter = new SingleSoldierEncounter();
-            FourthDolletEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            FourthDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             BridgeEncounter = new SingleSoldierEncounter();
-            BridgeEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            BridgeEncounter.PropertyChanged += EncounterPropertyChanged;
             SecondBridgeEncounter = new TripleSoldierEncounter();
-            SecondBridgeEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            SecondBridgeEncounter.PropertyChanged += EncounterPropertyChanged;
             AnacondaurEncounter = new AnacondaurEncounter();
-            AnacondaurEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            AnacondaurEncounter.PropertyChanged += EncounterPropertyChanged;
             PostAnacondaurEncounter = new SingleSoldierEncounter();
-            PostAnacondaurEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            PostAnacondaurEncounter.PropertyChanged += EncounterPropertyChanged;
             ElvoretEncounter = new ElvoretEncounter();
-            ElvoretEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            ElvoretEncounter.PropertyChanged += EncounterPropertyChanged;
             SpiderTankEncounter = new SpiderTankEncounter();
-            SpiderTankEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            SpiderTankEncounter.PropertyChanged += EncounterPropertyChanged;
 
             RedSoldierEncounter = new RedSoldierEncounter();
-            RedSoldierEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            RedSoldierEncounter.PropertyChanged += EncounterPropertyChanged;
 
             DoubleGratEncounter = new DoubleGratEncounter();
-            DoubleGratEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            DoubleGratEncounter.PropertyChanged += EncounterPropertyChanged;
             GratEncounter = new GratEncounter();
-            GratEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            GratEncounter.PropertyChanged += EncounterPropertyChanged;
             GranaldoEncounter = new GranaldoEncounter();
-            GranaldoEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            GranaldoEncounter.PropertyChanged += EncounterPropertyChanged;
             DiablosEncounter = new DiablosEncounter();
-            DiablosEncounter.PropertyChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            DiablosEncounter.PropertyChanged += EncounterPropertyChanged;
 
             AddNewEncounterCommand = new Command(() => true, AddNewEncounter);
             AddNewHalfEncounterCommand = new Command(() => true, AddNewHalfEncounter);
             RemoveFishFinEncounterCommand = new Command(() => FocusedFishFinEncounter != null, RemoveFishFinEncounter);
 
             LaunchQuistisPatternsCommand = new Command(() => true, LaunchQuistisPatterns);
+            LaunchZellCommand = new Command(() => true, LaunchZell);
 
             IfritsCavernEncounterType = SettingsModel.Instance.IfritEncounterType;
             IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
             DidGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
             _initialised = true;
+        }
+
+        public ZellCardCalculatorWindow Window { get; set; }
+
+        private void EncounterPropertyChanged(object sender, PropertyChangedEventArgs arg)
+        {
+            OnPropertyChanged(nameof(LateQuistisOutput));
+            OnPropertyChanged(nameof(Output));            
         }
 
         private void RemoveFishFinEncounter(object sender, EventArgs eventArgs)
@@ -143,9 +153,27 @@ namespace FF8Utilities.Models
         private void LaunchQuistisPatterns(object sender, EventArgs eventArgs)
         {
             LateQuistis lq = new LateQuistis(Const.PackagesFolder);
-            QuistisCardPatternWindow window = new QuistisCardPatternWindow(lq.GetPattern(LateQuistisOutput));
+            QuistisCardPatternWindow window = new QuistisCardPatternWindow(Window, lq.GetPattern(LateQuistisOutput));
+            window.Owner = Window;
+            MainModel.Instance.LaunchCardScript(false, LateQuistisOutput);
             window.ShowDialog();
-            string hex = window.ResultHex;
+            if (!string.IsNullOrEmpty(window.ResultHex))
+            {
+                MainModel.Instance.UseCustomQuistisPattern = true;
+                MainModel.Instance.CustomQuistisPattern = window.ResultHex;
+                QuistisCardObtained = true;
+            }
+            else
+            {
+                MainModel.Instance.UseCustomQuistisPattern = false;
+                MainModel.Instance.CustomQuistisPattern = null;
+                QuistisCardObtained = false;
+            }                        
+        }
+
+        private void LaunchZell(object sender, EventArgs eventArgs)
+        {
+            MainModel.Instance.LaunchCardScript(true, Output);
         }
 
         public BindingList<WorldMapEncounter> WorldMapEncounters
@@ -157,6 +185,7 @@ namespace FF8Utilities.Models
                 _worldMapEncounters = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -171,6 +200,7 @@ namespace FF8Utilities.Models
                 _twoBatsEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -185,6 +215,7 @@ namespace FF8Utilities.Models
                 _ifritEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -246,7 +277,7 @@ namespace FF8Utilities.Models
                 _firstDolletEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
-
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -259,6 +290,7 @@ namespace FF8Utilities.Models
                 _secondDolletEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -283,6 +315,7 @@ namespace FF8Utilities.Models
                 _fourthDolletEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -295,6 +328,7 @@ namespace FF8Utilities.Models
                 _bridgeEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -313,6 +347,7 @@ namespace FF8Utilities.Models
                 _anacondaurEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -325,6 +360,7 @@ namespace FF8Utilities.Models
                 _postAnacondaurEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -337,6 +373,7 @@ namespace FF8Utilities.Models
                 _elvoretEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -349,6 +386,7 @@ namespace FF8Utilities.Models
                 _spiderTankEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -365,6 +403,7 @@ namespace FF8Utilities.Models
                 _redSoldierEncounter = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(LateQuistisOutput));
             }
         }
 
@@ -420,13 +459,29 @@ namespace FF8Utilities.Models
             }
         }
 
+        private bool _quistisCardObtained;
         #endregion
+
+        public bool QuistisCardObtained
+        {
+            get => _quistisCardObtained;
+            set
+            {
+                if (_quistisCardObtained == value)
+                    return;
+                _quistisCardObtained = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Output));
+            }
+        }
 
         public int Output
         {
             get
             {
-                int output = LateQuistisOutput;
+                int output = 0;
+
+                if (!QuistisCardObtained) output += LateQuistisOutput;
               
                 // Dollet
                 output += FirstDolletEncounter.RngAddition;
@@ -503,6 +558,8 @@ namespace FF8Utilities.Models
         public Command RemoveFishFinEncounterCommand { get; }
 
         public Command LaunchQuistisPatternsCommand { get; }
+
+        public Command LaunchZellCommand { get; }
 
         public bool FlyoutFishFinEncounterOpen
         {

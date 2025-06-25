@@ -12,7 +12,6 @@ namespace FF8Utilities.Dialogs
         public ZellCardCalculatorWindow()
         {
             InitializeComponent();
-
         }
 
     }

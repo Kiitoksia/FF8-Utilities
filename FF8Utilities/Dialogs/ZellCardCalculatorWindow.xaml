@@ -23,7 +23,7 @@
         MinHeight="550"
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="False"   
-       
+       x:Name="this"
         Title="Zell Card RNG Calculator" Height="840" Width="768">
     <mah:MetroWindow.Resources>
         <Style BasedOn="{StaticResource {x:Type TextBlock}}"
@@ -35,7 +35,7 @@
         </Style>
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.DataContext>
-        <models:ZellCardTrackerModel/>
+        <models:ZellCardTrackerModel Window="{x:Reference this}"/>
     </mah:MetroWindow.DataContext>
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel>
@@ -729,11 +729,14 @@
                     </StackPanel>
                 </TabItem>
             </mah:MetroAnimatedSingleRowTabControl>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Output:" Margin="0,0,20,0" FontSize="24"/>
-                <TextBlock Text="{Binding Output}" FontSize="24" FontWeight="Bold"/>
-            </StackPanel>
-
+            <Grid HorizontalAlignment="Stretch" Margin="10">
+                <Button Command="{Binding LaunchQuistisPatternsCommand}" Width="200" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding LateQuistisOutput, StringFormat='Get Qustis Patterns (Index: {0})'}"/>
+                </Button>
+                <Button Command="{Binding LaunchZellCommand}" Width="200" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}"/>
+                </Button>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
     <mah:MetroWindow.Flyouts>
