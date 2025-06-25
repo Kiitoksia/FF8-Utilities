@@ -4,6 +4,14 @@ A program designed to collate all the manipulation used into one easy to use pro
 The UI is written in WPF, utilising MAHApps Metro for a slick ui.
 Manipulations are broken up into separate projects.  Currently the Zell Card Manip is a WIP and is not utilised (instead links to pingval script)
 
+## Manipulation Guides
+For explanations on how to perform FF8 manipulations, please visit https://www.speedrun.com/ff8/guides
+
+## Features
+- Supports most FF8 manipulations
+- One click downloading to download updates
+- One click downloading/updating for CSR/Practice% mods
+
 ## Card Manipulations
 Utilities supports 
 - Early Quistis (Frames 1-10)
@@ -37,3 +45,17 @@ Click on the calculator button beside RNG Modifier box to launch the tracker.
 This tracker supports both Early and Late Quistis.
 If you click "Get Quistis Patterns" and later submit, the tracker will be aware of that index and update the Zell Tracking
 Otherwise "Get Quistis Patterns" can be ignored for Early Quistis, simply track the entire way and click "Launch Zell"
+
+The tracker remembers your last used settings, so this allows the runner to customise the tracker to their step count without needing programming knowledge.
+
+
+## Settings / Tools
+![image](https://github.com/user-attachments/assets/237cdbdc-dad6-4ec7-b057-83c8f90beb4f)
+
+PC Users also have the ability to toggle various mods
+- CSR
+- Practice%
+- PSX Music files
+These can be reverted to default incase you you need to switch to regular any%.
+Installing these mods detects your current language and installs the correct version depending.
+
