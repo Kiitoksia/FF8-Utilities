@@ -245,7 +245,7 @@ namespace FF8Utilities.Models
             if (defaultFishFinEncounters == null)
             {
                 defaultFishFinEncounters = new XElement("LastLaunchedVersion");
-                rootNode.Add(defaultFishFinEncounters);
+                rootNode.Add(lastLaunchedVersion);
             }
 
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
@@ -662,6 +662,7 @@ namespace FF8Utilities.Models
             ProgressDialogController downloadController = await _mainWindowModel.Window.ShowProgressAsync("Downloading PSX Music files", "This may take awhile...").ConfigureAwait(true);
             Progress<decimal> progress = new Progress<decimal>(prog =>
             {
+                if (prog < 0.01m || prog >= 1m) return; // Invalid percentage
                 if (prog >= 1) return;
                 downloadController.SetProgress((double)prog);
                 downloadController.SetMessage($"{(prog * 100):N2}% complete...");
