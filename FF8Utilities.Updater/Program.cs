@@ -36,7 +36,7 @@ namespace FF8Utilities.Updater
                     Console.WriteLine("Update failed. Pressing enter will open the download page in your browser to manually install");
                     Console.ReadLine();
                     Process.Start("https://github.com/Kiitoksia/FF8-Utilities/releases/latest");
-
+                    Environment.Exit();
                 }
 
                 // Wait for utilities to close
