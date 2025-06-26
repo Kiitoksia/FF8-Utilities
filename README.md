@@ -61,5 +61,6 @@ PC Users also have the ability to toggle various mods
 - Practice%
 - PSX Music files
 These can be reverted to default incase you you need to switch to regular any%.
+
 Installing these mods detects your current language and installs the correct version depending.
 
