@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FF8Utilities.Updater
 {
@@ -36,7 +32,7 @@ namespace FF8Utilities.Updater
                     Console.WriteLine("Update failed. Pressing enter will open the download page in your browser to manually install");
                     Console.ReadLine();
                     Process.Start("https://github.com/Kiitoksia/FF8-Utilities/releases/latest");
-                    Environment.Exit();
+                    Environment.Exit(0);
                 }
 
                 // Wait for utilities to close
