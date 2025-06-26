@@ -119,7 +119,7 @@ namespace FF8Utilities
             DriveService service = await GetDriveService().ConfigureAwait(false);
             FilesResource.ListRequest request = service.Files.List();
 
-            request.Q = $"'{folderId}' in parents and trashed = false";
+            request.Q = $"'{folderId}' in parents and trashed = false and fileExtension=\"zip\"";
             request.Fields = "files(id, name, size, fileExtension)";
             request.PageSize = 1; // Should only ever be one file per folder
 

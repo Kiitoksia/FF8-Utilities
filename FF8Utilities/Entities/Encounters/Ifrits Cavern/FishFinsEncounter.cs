@@ -91,6 +91,7 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
             }
         }
 
+
         public string Description => "Fish Fins";
 
         public int Base => 15;

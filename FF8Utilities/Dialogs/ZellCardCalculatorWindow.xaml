@@ -24,7 +24,7 @@
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="False"   
        x:Name="this"
-        Title="Zell Card RNG Calculator" Height="870" Width="768">
+        Title="Zell Card RNG Calculator" Height="870" Width="768">f
     <mah:MetroWindow.Resources>
         <Style BasedOn="{StaticResource {x:Type TextBlock}}"
                TargetType="{x:Type TextBlock}"
@@ -199,28 +199,53 @@
                             </GroupBox>
                             <GroupBox Margin="5,0,0,0" Header="Fish Fins" Grid.Column="1">
                                 <StackPanel>
-                                    <DataGrid Height="200" HorizontalContentAlignment="Stretch"  SelectedValue="{Binding FocusedFishFinEncounter}" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding FishFinEncounters}">
-                                        <DataGrid.Columns>
-                                            <DataGridComboBoxColumn ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}"
-                                                                DisplayMemberPath="Description"
-                                                                SelectedValuePath="Value"
-                                                                Header="Camera"
-                                                                SelectedValueBinding="{Binding Camera}"
-                                                                Width="255"
-                                        />
-                                            <DataGridTextColumn Binding="{Binding SquallPhysicals}" Header="Squall Physicals" Width="Auto"/>
-                                            <DataGridTextColumn Binding="{Binding Limits}" Header="Limits" Width="Auto"/>
-                                        </DataGrid.Columns>
-                                        <DataGrid.RowStyle>
-                                            <Style TargetType="DataGridRow">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SingleFishKilled}" Value="True">
-                                                        <Setter Property="Background" Value="DarkSlateGray"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGrid.RowStyle>
-                                    </DataGrid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="35"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="22"/>
+                                            <RowDefinition Height="3"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="CAMERA" VerticalAlignment="Center"  FontWeight="SemiBold" Grid.Column="1"/>
+                                        <TextBlock Text="SQUALL PHYSICALS" Grid.Column="2" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                        <TextBlock Text="LIMITS" Grid.Column="3" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                        <Border Grid.ColumnSpan="4" Grid.Row="1" Background="LightGray"/>
+                                    </Grid>
+                                    <ItemsControl Height="200" ItemsSource="{Binding FishFinEncounters}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="data:FishFinsEncounter">
+                                                <Grid Margin="2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="30"/>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition Width="150"/>
+                                                        <ColumnDefinition Width="80"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.ColumnSpan="4" Background="DarkSlateGray" controls:VisibilityHelper.IsVisible="{Binding SingleFishKilled}"/>
+                                                    <Button Command="{Binding DataContext.RemoveFishFinEncounterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding .}"
+                                                            Background="Transparent" 
+                                                            Margin="2,2,5,2">
+                                                        <fa:ImageAwesome Icon="Remove" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red" />
+                                                    </Button>
+                                                    <ComboBox 
+                                                        ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}" 
+                                                        DisplayMemberPath="Description"
+                                                        SelectedValuePath="Value"
+                                                        SelectedValue="{Binding Camera}"
+                                                        Background="Transparent"
+                                                        Grid.Column="1"
+                                                        />
+                                                    <mah:NumericUpDown Background="Transparent" Grid.Column="2" Minimum="0" Value="{Binding SquallPhysicals}" Width="150" BorderBrush="Transparent" />
+                                                    <mah:NumericUpDown Background="Transparent" Grid.Column="3" Minimum="0" Value="{Binding Limits}" Width="80" BorderBrush="Transparent" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
@@ -263,7 +288,7 @@
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding FirstDolletEncounter.ZellAttacks}" Minimum="0"/>
                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding FirstDolletEncounter.SoldierAttacks}" Minimum="0"/>
- 
+
                             </Grid>
                         </GroupBox>
                         <GroupBox Header="2x Soldier" Margin="10">
@@ -541,7 +566,7 @@
                                   SelectedValue="{Binding ElvoretEncounter.Camera}"/>
                             </Grid>
                         </GroupBox>
-                        
+
 
                         <GroupBox Header="Spider Tank" Margin="10">
                             <Grid>
@@ -602,7 +627,7 @@
                             <mah:ToggleSwitch IsOn="{Binding IncludeDiablos}" OffContent="No" OnContent="Yes"/>
                         </StackPanel>
 
-                        
+
                     </StackPanel>
 
                 </TabItem>
@@ -717,7 +742,7 @@
                     <TextBlock Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0}) - '}"/>
                 </Button>
 
-                <Border Grid.Column="1" Background="{Binding QuistisMashTextBackgroundBrush}">
+                <Border controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}" Grid.Column="1" Background="{Binding QuistisMashTextBackgroundBrush}">
                     <TextBlock Text="{Binding QuistisPatternMashDisplay}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16"/>
                 </Border>
                 <Button Grid.Column="2" Command="{Binding LaunchZellCommand}" Width="200" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Right">
@@ -726,40 +751,5 @@
             </Grid>
         </StackPanel>
     </ScrollViewer>
-    <mah:MetroWindow.Flyouts>
-        <mah:FlyoutsControl>
-            <mah:Flyout IsOpen="{Binding FlyoutFishFinEncounterOpen}" Header="Fish Fin" Position="Bottom" Height="280" Theme="Adapt">
-                <Grid Margin="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.4*"/>
-                        <ColumnDefinition Width="0.6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="80"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="Fanfare Camera" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" Grid.Row="0"
-                        ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}"
-                              SelectedValuePath="Value"
-                              DisplayMemberPath="Description"
-                              SelectedValue="{Binding FocusedFishFinEncounter.Camera}"
-                              />
-                    <TextBlock Text="Squall Attacks" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <mah:NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.SquallPhysicals}"/>
-                    <TextBlock Text="Limits" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <mah:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding FocusedFishFinEncounter.Limits}"/>
-                    <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Height="50" Grid.Row="3" Grid.Column="1" Command="{Binding RemoveFishFinEncounterCommand}">
-                        <StackPanel Orientation="Horizontal" Height="20">
-                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-                            <TextBlock Text="Remove Encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </mah:Flyout>
-        </mah:FlyoutsControl>
-    </mah:MetroWindow.Flyouts>
 </mah:MetroWindow>
 

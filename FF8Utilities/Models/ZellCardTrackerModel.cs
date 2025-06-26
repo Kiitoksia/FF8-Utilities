@@ -32,8 +32,6 @@ namespace FF8Utilities.Models
         private SingleSoldierEncounter _postAnacondaurEncounter;
         private ElvoretEncounter _elvoretEncounter;
         private SpiderTankEncounter _spiderTankEncounter;
-        private FishFinsEncounter _focusedFishFinEncounter;
-        private bool _flyoutFishFinEncounterOpen;
         private DoubleGratEncounter _doubleGratEncounter;
         private GratEncounter _gratEncounter;
         private DiablosEncounter _diablosEncounter;
@@ -141,7 +139,7 @@ namespace FF8Utilities.Models
 
             AddNewEncounterCommand = new Command(() => true, AddNewEncounter);
             AddNewHalfEncounterCommand = new Command(() => true, AddNewHalfEncounter);
-            RemoveFishFinEncounterCommand = new Command(() => FocusedFishFinEncounter != null, RemoveFishFinEncounter);
+            RemoveFishFinEncounterCommand = new Command<FishFinsEncounter>(() => FishFinEncounters.Count > 0, RemoveFishFinEncounter);
 
             LaunchQuistisPatternsCommand = new Command(() => true, LaunchQuistisPatterns);
             LaunchZellCommand = new Command(() => true, LaunchZell);
@@ -171,11 +169,9 @@ namespace FF8Utilities.Models
             OnPropertyChanged(nameof(Output));            
         }
 
-        private void RemoveFishFinEncounter(object sender, EventArgs eventArgs)
+        private void RemoveFishFinEncounter(object sender, FishFinsEncounter enc)
         {
-            FishFinEncounters.Remove(FocusedFishFinEncounter);
-            FocusedFishFinEncounter = null;
-            FlyoutFishFinEncounterOpen = false;
+            FishFinEncounters.Remove(enc);
         }
 
         private void AddNewEncounter(object sender, EventArgs eventArgs)
@@ -285,18 +281,6 @@ namespace FF8Utilities.Models
             {
                 if (Equals(value, _fishFinEncounters)) return;
                 _fishFinEncounters = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public FishFinsEncounter FocusedFishFinEncounter
-        {
-            get => _focusedFishFinEncounter;
-            set
-            {
-                if (Equals(value, _focusedFishFinEncounter)) return;
-                _focusedFishFinEncounter = value;
-                FlyoutFishFinEncounterOpen = value != null;
                 OnPropertyChanged();
             }
         }
@@ -602,7 +586,7 @@ namespace FF8Utilities.Models
                         if (match.Groups[1].Value.Equals("YES", StringComparison.CurrentCultureIgnoreCase))
                         {
                             // Instant mash
-                            QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Red);
+                            QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.DarkRed);
                         }
                         else
                         {
@@ -634,22 +618,12 @@ namespace FF8Utilities.Models
 
         public Command AddNewHalfEncounterCommand { get; }
 
-        public Command RemoveFishFinEncounterCommand { get; }
+        public Command<FishFinsEncounter> RemoveFishFinEncounterCommand { get; }
 
         public Command LaunchQuistisPatternsCommand { get; }
 
         public Command LaunchZellCommand { get; }
 
-        public bool FlyoutFishFinEncounterOpen
-        {
-            get => _flyoutFishFinEncounterOpen;
-            set
-            {
-                if (value == _flyoutFishFinEncounterOpen) return;
-                _flyoutFishFinEncounterOpen = value;
-                OnPropertyChanged();
-            }
-        }
 
         public bool IncludeDiablos
         {
