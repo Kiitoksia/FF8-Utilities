@@ -707,15 +707,20 @@
                 </TabItem>
             </mah:MetroAnimatedSingleRowTabControl>
             <Grid HorizontalAlignment="Stretch" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <Button Command="{Binding LaunchQuistisPatternsCommand}"  Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Left"
                         controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}" Padding="10">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0}) - '}"/>
-                        <TextBlock Text="{Binding QuistisPatternMashDisplay,StringFormat='Instant Mash: {0}'}" Margin="10,0,0,0"/>
-                    </StackPanel>
-                    
+                    <TextBlock Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0}) - '}"/>
                 </Button>
-                <Button Command="{Binding LaunchZellCommand}" Width="200" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Right">
+
+                <Border Grid.Column="1" Background="{Binding QuistisMashTextBackgroundBrush}">
+                    <TextBlock Text="{Binding QuistisPatternMashDisplay}" VerticalAlignment="Center" FontWeight="Bold"/>
+                </Border>
+                <Button Grid.Column="2" Command="{Binding LaunchZellCommand}" Width="200" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Right">
                     <TextBlock Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}"/>
                 </Button>
             </Grid>

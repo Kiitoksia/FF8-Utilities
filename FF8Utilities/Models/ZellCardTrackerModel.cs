@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using FF8Utilities.Dialogs;
+﻿using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
 using FF8Utilities.Entities.Encounters;
 using FF8Utilities.Entities.Encounters.Diablos;
@@ -9,6 +6,12 @@ using FF8Utilities.Entities.Encounters.Dollet;
 using FF8Utilities.Entities.Encounters.Ifrits_Cavern;
 using LateQuistisManipulation;
 using LateQuistisManipulation.Models;
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace FF8Utilities.Models
 {
@@ -44,6 +47,7 @@ namespace FF8Utilities.Models
         private int _focusedTabIndex;
         private LateQuistisPattern _currentPattern;            
         private LateQuistis _lateQuistisManip;
+        private SolidColorBrush _quistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent);
 
 
 
@@ -576,6 +580,29 @@ namespace FF8Utilities.Models
                 {
                     _currentPattern = _lateQuistisManip.GetPattern(output, false);
                     QuistisPatternMashDisplay = _currentPattern?.Deck?.InstantMash;
+                    Match match = Regex.Match(QuistisPatternMashDisplay, @"(YES|NO).*?(\d+)", RegexOptions.IgnoreCase);
+                    if (match.Success)
+                    {
+                        if (match.Groups[1].Value.Equals("YES", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            // Instant mash
+                            QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Red);
+                        }
+                        else
+                        {
+                            int framesTillMash = int.Parse(match.Groups[2].Value);
+                            if (framesTillMash < 20)
+                            {
+                                // Almost instant mash but not quite
+                                QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Orange);
+                            }
+                            else
+                            {
+                                // Regular
+                                QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent); // Standard
+                            }
+                        }
+                    }
                 }
 
 
@@ -699,6 +726,18 @@ namespace FF8Utilities.Models
                 if (_quistisPatternMashDisplay == value)
                     return;
                 _quistisPatternMashDisplay = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SolidColorBrush QuistisMashTextBackgroundBrush
+        {
+            get => _quistisMashTextBackgroundBrush;
+            set
+            {
+                if (_quistisMashTextBackgroundBrush == value)
+                    return;
+                _quistisMashTextBackgroundBrush = value;
                 OnPropertyChanged();
             }
         }
