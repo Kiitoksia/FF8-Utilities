@@ -718,7 +718,7 @@
                 </Button>
 
                 <Border Grid.Column="1" Background="{Binding QuistisMashTextBackgroundBrush}">
-                    <TextBlock Text="{Binding QuistisPatternMashDisplay}" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding QuistisPatternMashDisplay}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16"/>
                 </Border>
                 <Button Grid.Column="2" Command="{Binding LaunchZellCommand}" Width="200" Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}" HorizontalAlignment="Right">
                     <TextBlock Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}"/>

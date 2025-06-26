@@ -120,7 +120,7 @@ namespace FF8Utilities
             FilesResource.ListRequest request = service.Files.List();
 
             request.Q = $"'{folderId}' in parents and trashed = false";
-            request.Fields = "files(id, name, size)";
+            request.Fields = "files(id, name, size, fileExtension)";
             request.PageSize = 1; // Should only ever be one file per folder
 
             FileList result = await request.ExecuteAsync().ConfigureAwait(false);
@@ -269,7 +269,7 @@ namespace FF8Utilities
             FilesResource.ListRequest request = service.Files.List();
 
             request.Q = $"'{LateQuistisCSVFolder}' in parents and trashed = false";
-            request.Fields = "files(id, name, size)";
+            request.Fields = "files(id, name, size, extension)";
 
             FileList result = await request.ExecuteAsync().ConfigureAwait(false);
 

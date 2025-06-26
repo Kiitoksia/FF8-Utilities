@@ -93,6 +93,14 @@ namespace FF8Utilities.Models
                 default: throw new NotImplementedException();
             }
 
+            foreach (FishFinsEncounter f in FishFinEncounters)
+            {
+                f.PropertyChanged += (s, e) =>
+                {
+                    OnPropertyChanged(nameof(Output));
+                };
+            }
+
             FishFinEncounters.ListChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(FishFinEncounters));
@@ -142,6 +150,14 @@ namespace FF8Utilities.Models
             IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
             DidGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
+
+            PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(Output))
+                {
+                    OnPropertyChanged(nameof(LateQuistisOutput));
+                }
+            };
 
             _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
             _initialised = true;
@@ -580,7 +596,7 @@ namespace FF8Utilities.Models
                 {
                     _currentPattern = _lateQuistisManip.GetPattern(output, false);
                     QuistisPatternMashDisplay = _currentPattern?.Deck?.InstantMash;
-                    Match match = Regex.Match(QuistisPatternMashDisplay, @"(YES|NO).*?(\d+)", RegexOptions.IgnoreCase);
+                    Match match = Regex.Match(QuistisPatternMashDisplay ?? string.Empty, @"(YES|NO).*?(\d+)", RegexOptions.IgnoreCase);
                     if (match.Success)
                     {
                         if (match.Groups[1].Value.Equals("YES", StringComparison.CurrentCultureIgnoreCase))
@@ -591,10 +607,10 @@ namespace FF8Utilities.Models
                         else
                         {
                             int framesTillMash = int.Parse(match.Groups[2].Value);
-                            if (framesTillMash < 20)
+                            if (framesTillMash < 85)
                             {
                                 // Almost instant mash but not quite
-                                QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Orange);
+                                QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.DarkOrange);
                             }
                             else
                             {
@@ -602,6 +618,10 @@ namespace FF8Utilities.Models
                                 QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent); // Standard
                             }
                         }
+                    }
+                    else
+                    {
+                        QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent); // Standard
                     }
                 }
 

@@ -120,13 +120,8 @@ namespace FF8Utilities.Models
             UltimeciaTimer = new UltimeciaTimerModel();
             ZellCountdownText = "Start Countdown";
 
-
-            if (Settings.IsFirstLaunchAfterUpdate)
-            {
-                // Always update these for safety
-                UnpackZell();
-                UnpackUpdater();
-            }
+            UnpackZell();
+            UnpackUpdater();
 
             LoadFishPatterns();
             _ = CheckForUpdates();          
@@ -156,6 +151,8 @@ namespace FF8Utilities.Models
             string scriptsPath = Path.Combine(AppContext.BaseDirectory, "Scripts");
             if (!Directory.Exists(scriptsPath)) Directory.CreateDirectory(scriptsPath);
 
+            bool extract = Settings.IsFirstLaunchAfterUpdate;
+
             using (MemoryStream compressedFileStream = new MemoryStream(Properties.Resources.zell))
             {
                 using (ZipArchive zip = new ZipArchive(compressedFileStream, ZipArchiveMode.Read, true))
@@ -163,6 +160,8 @@ namespace FF8Utilities.Models
                     foreach (ZipArchiveEntry entry in zip.Entries)
                     {
                         string newFilePath = Path.Combine(scriptsPath, entry.FullName);
+                        if (!extract && File.Exists(newFilePath)) continue;
+
                         entry.ExtractToFile(newFilePath, true);
                     }
                 }
@@ -173,6 +172,9 @@ namespace FF8Utilities.Models
         {
             if (!Directory.Exists(Const.PackagesFolder)) Directory.CreateDirectory(Const.PackagesFolder);
 
+            bool extract = Settings.IsFirstLaunchAfterUpdate;
+
+
             // Check if our updater is new
             using (MemoryStream compressedFileStream = new MemoryStream(Properties.Resources.Updater))
             {
@@ -181,6 +183,7 @@ namespace FF8Utilities.Models
                     foreach (ZipArchiveEntry entry in zip.Entries)
                     {
                         string newFilePath = Path.Combine(Const.PackagesFolder, entry.FullName);
+                        if (!extract && File.Exists(newFilePath)) continue;
                         entry.ExtractToFile(newFilePath, true);
                     }
                 }

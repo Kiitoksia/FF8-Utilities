@@ -242,9 +242,9 @@ namespace FF8Utilities.Models
             defaultFishFinEncounters.Value = DefaultFishFinEncounters.ToString();
 
             XElement lastLaunchedVersion = xml.Element("LastLaunchedVersion");
-            if (defaultFishFinEncounters == null)
+            if (lastLaunchedVersion == null)
             {
-                defaultFishFinEncounters = new XElement("LastLaunchedVersion");
+                lastLaunchedVersion = new XElement("LastLaunchedVersion");
                 rootNode.Add(lastLaunchedVersion);
             }
 
