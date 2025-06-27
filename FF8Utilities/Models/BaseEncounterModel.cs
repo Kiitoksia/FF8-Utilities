@@ -16,6 +16,8 @@ namespace FF8Utilities.Models
         private Enum _fanfare;
         private bool _isToggled;
         private bool _showFanfare;
+        private string _notes;
+
 
         public BaseEncounterModel(string description, int baseAddition, Type fanfareType = null)
         {
@@ -62,6 +64,8 @@ namespace FF8Utilities.Models
                 {
                     ability.Count = count;
                 }
+
+                Notes = abilityXml.Attribute(nameof(Notes))?.Value;
             }
         }
 
@@ -69,6 +73,7 @@ namespace FF8Utilities.Models
         {
             XElement xml = new XElement(nameof(BaseEncounterModel));
             xml.Add(new XAttribute("Identifier", identifier));
+            xml.Add(new XAttribute(nameof(Notes), Notes ?? string.Empty));
             foreach (EncounterAbilityModel ability in Abilities)
             {
                 XElement abilityXml = new XElement("Ability");
@@ -195,5 +200,20 @@ namespace FF8Utilities.Models
         public bool ShowToggleOption => !string.IsNullOrEmpty(ToggleOptionDescription);
 
         public bool ShowPlusOneToAllButton { get; protected set; }
+
+        public string Notes
+        {
+            get => _notes;
+            set
+            {
+                if (_notes == value)
+                {
+                    return;
+                }
+
+                _notes = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

@@ -27,7 +27,12 @@
     <GroupBox>
         <GroupBox.Header>
             <DockPanel Margin="10,3">
-                <TextBlock Text="{Binding Description}" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock Text="{Binding Description}" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" Margin="0,0,10,0" />
+                    <TextBlock Text="{Binding Notes}" mah:VisibilityHelper.IsCollapsed="{Binding DataContext.DesignMode, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Notes}" mah:VisibilityHelper.IsVisible="{Binding DataContext.DesignMode, RelativeSource={RelativeSource AncestorType=Window}}" Width="200"/>
+                </StackPanel>
+                
                 <Button DockPanel.Dock="Right" Content="+1 to all" Style="{StaticResource MahApps.Styles.Button.Square}" Width="100" Margin="0,0,35,0" 
                         HorizontalAlignment="Right" mah:VisibilityHelper.IsVisible="{Binding ShowPlusOneToAllButton}" Command="{Binding PlusOneToAllCommand}"/>
             </DockPanel>
