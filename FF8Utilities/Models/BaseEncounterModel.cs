@@ -1,4 +1,5 @@
 ﻿using FF8Utilities.Entities;
+using FF8Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
-using static FF8Utilities.Extensions.EnumExtension;
 
 namespace FF8Utilities.Models
 {
@@ -29,6 +29,7 @@ namespace FF8Utilities.Models
 
             if (fanfareType != null)
             {
+                FanfareTypeList.Add(new EnumerationMember { Value = null, Description = "None", IsSelected = true });
                 foreach (Enum enumValue in Enum.GetValues(fanfareType))
                 {
                     FanfareTypeList.Add(new EnumerationMember { Value = enumValue, Description = ((Enum)enumValue).GetDescription() });

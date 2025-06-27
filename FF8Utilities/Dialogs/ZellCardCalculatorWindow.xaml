@@ -21,19 +21,15 @@
         GlowBrush="{DynamicResource AccentColorBrush}"
         mc:Ignorable="d"
         MinWidth="768"
-        MinHeight="870"
+        MinHeight="953"
         WindowStartupLocation="CenterOwner"
     d:DataContext="{d:DesignInstance models:ZellCardTrackerModel}"
         ShowMaxRestoreButton="False"   
        x:Name="this"
         Title="Zell Card RNG Calculator" Height="870" Width="768">
     <mah:MetroWindow.Resources>
-        <Style BasedOn="{StaticResource {x:Type TextBlock}}"
-               TargetType="{x:Type TextBlock}"
-               x:Key="EncounterHeader">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="TextDecorations" Value="Underline"/>
-            <Setter Property="Foreground" Value="CadetBlue"/>
+        <Style TargetType="controls1:EncounterControl">
+            <Setter Property="Margin" Value="10"/>
         </Style>
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.DataContext>
@@ -45,19 +41,40 @@
                 <TabItem Header="Fish Fins">
                     <StackPanel>
                         <StackPanel>
-                            <controls1:EncounterControl DataContext="{Binding TwoBatsEncounter}"/>
-                            <controls1:EncounterControl DataContext="{Binding IfritEncounter}"/>
-                           
-                            <DockPanel Margin="10">
-                                <TextBlock Text="Post Ifrit Encounter" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                                <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:IfritEncounterType}}"
-                                            DisplayMemberPath="Description" SelectedValuePath="Value"
-                                            SelectedValue="{Binding IfritsCavernEncounterType}"
-                                            DockPanel.Dock="Right"/>
-                            </DockPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <controls1:EncounterControl DataContext="{Binding TwoBatsEncounter}"/>
+                                <controls1:EncounterControl DataContext="{Binding IfritEncounter}" Grid.Column="1"/>
+                            </Grid>
 
-                            <controls1:EncounterControl DataContext="{Binding SecondBatsEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                            <controls1:EncounterControl DataContext="{Binding BuelEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <DockPanel Margin="10">
+                                    <TextBlock Text="Post Ifrit Encounter" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                    <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:IfritEncounterType}}"
+                                        DisplayMemberPath="Description" SelectedValuePath="Value"
+                                        SelectedValue="{Binding IfritsCavernEncounterType}"
+                                        DockPanel.Dock="Right"/>
+                                </DockPanel>
+                            </Grid>
+                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                
+                            </Grid>
+
+                            <controls1:EncounterControl DataContext="{Binding SecondBatsEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"  HorizontalAlignment="Center"/>
+                            <controls1:EncounterControl DataContext="{Binding BuelEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Center"/>
+
                         </StackPanel>
                         <Grid Margin="10,10,10,0">
                             <Grid.ColumnDefinitions>
@@ -161,31 +178,59 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Dollet">
-                    <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <controls1:EncounterControl DataContext="{Binding FirstDolletEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding SecondDolletEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding ThirdDolletEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding FourthDolletEncounter}"/>
-                    </StackPanel>
+                        <controls1:EncounterControl DataContext="{Binding SecondDolletEncounter}" Grid.Column="1"/>
+                        <controls1:EncounterControl DataContext="{Binding ThirdDolletEncounter}" Grid.Row="1"/>
+                        <controls1:EncounterControl DataContext="{Binding FourthDolletEncounter}" Grid.Row="1" Grid.Column="1"/>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Anacondaur">
                     <StackPanel>
-                        <controls1:EncounterControl DataContext="{Binding BridgeEncounter}"/>
-
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <controls1:EncounterControl DataContext="{Binding BridgeEncounter}"/>
+                            <controls1:EncounterControl DataContext="{Binding SecondBridgeEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1"/>
+                        </Grid>
+                        
                         <DockPanel Margin="10">
                             <TextBlock Text="2nd Bridge Encounter" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <mah:ToggleSwitch IsOn="{Binding DidGetSecondBridgeEncounter}" OnContent="Yes" OffContent="No"/>
                         </DockPanel>
 
-                        <controls1:EncounterControl DataContext="{Binding SecondBridgeEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                        <controls1:EncounterControl DataContext="{Binding AnacondaurEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding PostAnacondaurEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <controls1:EncounterControl DataContext="{Binding AnacondaurEncounter}"/>
+                            <controls1:EncounterControl DataContext="{Binding PostAnacondaurEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1"/>
+                        </Grid>
+                        
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Elvoret + Spider Tank">
                     <StackPanel>
-                        <controls1:EncounterControl DataContext="{Binding ElvoretEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding SpiderTankEncounter}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <controls1:EncounterControl DataContext="{Binding ElvoretEncounter}" Margin="10,10,5,10"/>
+                            <controls1:EncounterControl DataContext="{Binding SpiderTankEncounter}" Grid.Column="1" Margin="5,10,10,10"/>
+                        </Grid>
+                        
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Include Red Soldier Encounter" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>

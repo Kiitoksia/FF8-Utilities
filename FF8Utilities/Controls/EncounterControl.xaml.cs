@@ -1,5 +1,8 @@
-﻿using System;
+﻿using FF8Utilities.Entities;
+using FF8Utilities.Models;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,8 +26,20 @@ namespace FF8Utilities.Controls
         public EncounterControl()
         {
             InitializeComponent();
+
+            SelectFanfareCommand = new Command<object>(() => true, (s, e) =>
+            {
+                BaseEncounterModel model = (BaseEncounterModel)DataContext;
+                model.Fanfare = (Enum)e;
+                foreach (var item in model.FanfareTypeList)
+                {
+                    if (item.Value == e) continue;
+                    item.IsSelected = false;
+                }
+            });
         }
 
+        public ICommand SelectFanfareCommand { get; }
         
     }
 }
