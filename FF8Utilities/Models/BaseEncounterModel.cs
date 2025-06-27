@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
+using System.Xml.Linq;
 
 namespace FF8Utilities.Models
 {
@@ -14,7 +15,6 @@ namespace FF8Utilities.Models
     {
         private Enum _fanfare;
         private bool _isToggled;
-
         private bool _showFanfare;
 
         public BaseEncounterModel(string description, int baseAddition, Type fanfareType = null)
@@ -45,6 +45,7 @@ namespace FF8Utilities.Models
             });
         }
 
+      
         public string Description { get; }
 
         public int Base { get; }
@@ -158,7 +159,5 @@ namespace FF8Utilities.Models
         public bool ShowToggleOption => !string.IsNullOrEmpty(ToggleOptionDescription);
 
         public bool ShowPlusOneToAllButton { get; protected set; }
-
-
     }
 }

@@ -9,6 +9,8 @@ namespace FF8Utilities.Models
     public class EncounterAbilityModel : BaseModel
     {
         private int _count;
+        private bool isVisible = true;
+
 
         public EncounterAbilityModel(string description, int addition, int count = 0)
         {
@@ -32,5 +34,17 @@ namespace FF8Utilities.Models
         }
 
         public int Output => Addition * Count;
+
+        public bool IsVisible
+        {
+            get => isVisible;
+            set
+            {
+                if (isVisible == value)
+                    return;
+                isVisible = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

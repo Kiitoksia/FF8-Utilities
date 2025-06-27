@@ -10,6 +10,8 @@
     xmlns:ext="clr-namespace:FF8Utilities.Extensions"
     xmlns:models="clr-namespace:FF8Utilities.Models"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:ff8utilities="clr-namespace:FF8Utilities"
+    xmlns:converters="clr-namespace:FF8Utilities.Converters"
     x:Name="this"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance models:BaseEncounterModel}"
@@ -35,21 +37,42 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="models:EncounterAbilityModel">
                         <Grid Margin="20,3,0,3">
+                            <mah:VisibilityHelper.IsVisible>
+                                <MultiBinding>
+                                    <MultiBinding.Converter>
+                                        <converters:BooleanOrConverter/>
+                                    </MultiBinding.Converter>
+                                    <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.DesignMode" Mode="OneWay"/>
+
+                                    <Binding Path="IsVisible"/>
+                                </MultiBinding>
+                            </mah:VisibilityHelper.IsVisible>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition>
+                                    <ColumnDefinition.Width>
+                                        <Binding Path="DataContext.DesignMode" RelativeSource="{RelativeSource AncestorType=Window}">
+                                            <Binding.Converter>
+                                                <converters:BoolToGridLengthConverter True="60" False="0"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </ColumnDefinition.Width>
+                                </ColumnDefinition>
                                 <ColumnDefinition Width="180" />
                                 <ColumnDefinition Width="100" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Description}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+
+                            <ToggleButton Content="Visible" IsChecked="{Binding IsVisible}"/>
+                            <TextBlock Text="{Binding Description}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Grid.Column="1"/>
                             <mah:NumericUpDown
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Value="{Binding Count}"
                                 BorderThickness="0"
                                 Minimum="0" />
-                            <Border Background="Gray" Grid.Row="1" Grid.ColumnSpan="2" Height="1" VerticalAlignment="Center" x:Name="SeperatorBlock"/>
+                            <Border Background="Gray" Grid.Row="1" Grid.ColumnSpan="3" Height="1" VerticalAlignment="Center" x:Name="SeperatorBlock"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

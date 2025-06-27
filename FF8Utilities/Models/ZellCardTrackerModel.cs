@@ -43,6 +43,7 @@ namespace FF8Utilities.Models
         private LateQuistis _lateQuistisManip;
         private SolidColorBrush _quistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent);
         private bool _quistisCardObtained;
+        private bool _designMode;
 
 
 
@@ -651,6 +652,18 @@ namespace FF8Utilities.Models
                 if (_quistisMashTextBackgroundBrush == value)
                     return;
                 _quistisMashTextBackgroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool DesignMode
+        {
+            get => _designMode;
+            set
+            {
+                if (_designMode == value)
+                    return;
+                _designMode = value;
                 OnPropertyChanged();
             }
         }

@@ -35,6 +35,11 @@
     <mah:MetroWindow.DataContext>
         <models:ZellCardTrackerModel Window="{x:Reference this}"/>
     </mah:MetroWindow.DataContext>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <controls:ToggleSwitch OnContent="Design Mode" OffContent="Design Mode" IsOn="{Binding DesignMode}" Margin="0,0,20,0" FlowDirection="LeftToRight" ContentDirection="LeftToRight" HorizontalAlignment="Right"/>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel>
             <mah:MetroAnimatedSingleRowTabControl SelectedIndex="{Binding FocusedTabIndex}">

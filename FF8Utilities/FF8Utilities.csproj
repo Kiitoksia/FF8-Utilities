@@ -146,6 +146,10 @@
     <Compile Include="Controls\QuistisCardPatternCardPosition.xaml.cs">
       <DependentUpon>QuistisCardPatternCardPosition.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanAndConverter.cs" />
+    <Compile Include="Converters\BooleanOrConverter.cs" />
+    <Compile Include="Converters\BoolToGridLengthConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\KiiVisibilityConverter.cs" />
     <Compile Include="Dialogs\QuistisCardPatternWindow.xaml.cs">
       <DependentUpon>QuistisCardPatternWindow.xaml</DependentUpon>
