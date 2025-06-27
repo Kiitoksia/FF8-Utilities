@@ -187,7 +187,7 @@ namespace FF8Utilities.Models
                 {
                     case nameof(TwoBatsEncounter): encounter = TwoBatsEncounter; break;
                     case nameof(IfritEncounter): encounter = IfritEncounter; break;
-                    case nameof(BuelEncounter): encounter = IfritEncounter; break;
+                    case nameof(BuelEncounter): encounter = BuelEncounter; break;
                     case nameof(SecondBatsEncounter): encounter = SecondBatsEncounter; break;
                     case nameof(ThirdDolletEncounter): encounter = ThirdDolletEncounter; break;
                     case nameof(FourthDolletEncounter): encounter = FourthDolletEncounter; break;

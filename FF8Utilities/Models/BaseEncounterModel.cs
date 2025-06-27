@@ -53,7 +53,7 @@ namespace FF8Utilities.Models
                 if (string.IsNullOrWhiteSpace(description)) continue;
 
                 EncounterAbilityModel ability = Abilities.SingleOrDefault(t => t.Description == description);
-                if (bool.TryParse(abilityXml.Attribute(nameof(EncounterAbilityModel.Count))?.Value ?? string.Empty, out bool isVisible))
+                if (bool.TryParse(abilityXml.Attribute(nameof(EncounterAbilityModel.IsVisible))?.Value ?? string.Empty, out bool isVisible))
                 {
                     ability.IsVisible = isVisible;
                 }
@@ -75,7 +75,7 @@ namespace FF8Utilities.Models
                 abilityXml.Add(new XAttribute(nameof(EncounterAbilityModel.Description), ability.Description));
                 abilityXml.Add(new XAttribute(nameof(EncounterAbilityModel.IsVisible), ability.IsVisible));
                 abilityXml.Add(new XAttribute(nameof(EncounterAbilityModel.Count), ability.Count));
-                xml.Add(ability);
+                xml.Add(abilityXml);
             }
 
             return xml;
