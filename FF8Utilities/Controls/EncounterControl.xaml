@@ -50,7 +50,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{Binding ToggleOptionDescription}"/>
-                <mah:ToggleSwitch IsOn="{Binding IsToggled}"/>
+                <mah:ToggleSwitch IsOn="{Binding IsToggled}" Grid.Column="1"/>
             </Grid>
         </StackPanel>
 

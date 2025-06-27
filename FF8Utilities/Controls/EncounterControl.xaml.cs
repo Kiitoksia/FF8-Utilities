@@ -24,5 +24,7 @@ namespace FF8Utilities.Controls
         {
             InitializeComponent();
         }
+
+        
     }
 }

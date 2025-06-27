@@ -23,6 +23,7 @@
         MinWidth="768"
         MinHeight="870"
         WindowStartupLocation="CenterOwner"
+    d:DataContext="{d:DesignInstance models:ZellCardTrackerModel}"
         ShowMaxRestoreButton="False"   
        x:Name="this"
         Title="Zell Card RNG Calculator" Height="870" Width="768">
@@ -45,25 +46,8 @@
                     <StackPanel>
                         <StackPanel>
                             <controls1:EncounterControl DataContext="{Binding TwoBatsEncounter}"/>
-                            <GroupBox Header="Ifrit" Margin="10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.4*"/>
-                                        <ColumnDefinition Width="0.6*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Text="Limits" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding IfritEncounter.Limits}" Minimum="0"/>
-                                    <TextBlock Text="Squall Attacks" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding IfritEncounter.SquallAttacks}" Minimum="0"/>
-                                    <TextBlock Text="Ifrit Punches" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding IfritEncounter.IfritPunches}" Minimum="0"/>
-                                </Grid>
-                            </GroupBox>
+                            <controls1:EncounterControl DataContext="{Binding IfritEncounter}"/>
+                           
                             <DockPanel Margin="10">
                                 <TextBlock Text="Post Ifrit Encounter" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,20,0"/>
                                 <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:IfritEncounterType}}"
@@ -72,70 +56,8 @@
                                             DockPanel.Dock="Right"/>
                             </DockPanel>
 
-                            <GroupBox Header="2x Bats" Margin="10" Visibility="{Binding BuelEncounterVisible, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.4*"/>
-                                        <ColumnDefinition Width="0.6*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding SecondBatsEncounter.SquallAttacks}" Minimum="0"/>
-                                    <TextBlock Text="Fanfare Camera" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Grid Grid.Row="1" Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.9*"/>
-                                            <ColumnDefinition Width="0.1*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:TwoPersonFanfareCamera}}"
-                                              DisplayMemberPath="Description" SelectedValuePath="Value"
-                                              SelectedValue="{Binding SecondBatsEncounter.Camera}"
-                                            />
-                                        <Button IsTabStop="False" Grid.Column="1" Command="{Binding SecondBatsEncounter.ClearCameraCommand}">
-                                            <StackPanel Orientation="Horizontal" Height="20">
-                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox Header="Buel" Margin="10" Visibility="{Binding BuelEncounterVisible, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.4*"/>
-                                        <ColumnDefinition Width="0.6*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Text="Buel Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding BuelEncounter.BuelAttacks}" Minimum="0"/>
-                                    <TextBlock Grid.Row="1" Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding BuelEncounter.SquallAttacks}" Minimum="0"/>
-                                    <TextBlock Text="Fanfare Camera" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Grid Grid.Row="2" Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.9*"/>
-                                            <ColumnDefinition Width="0.1*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:TwoPersonFanfareCamera}}"
-                                            DisplayMemberPath="Description" SelectedValuePath="Value"
-                                            SelectedValue="{Binding BuelEncounter.Camera}"
-                                        />
-                                        <Button IsTabStop="False" Grid.Column="1" Command="{Binding BuelEncounter.ClearCameraCommand}">
-                                            <StackPanel Orientation="Horizontal" Height="20">
-                                                <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </GroupBox>
-
+                            <controls1:EncounterControl DataContext="{Binding SecondBatsEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            <controls1:EncounterControl DataContext="{Binding BuelEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"/>
                         </StackPanel>
                         <Grid Margin="10,10,10,0">
                             <Grid.ColumnDefinitions>
@@ -240,359 +162,37 @@
                 </TabItem>
                 <TabItem Header="Dollet">
                     <StackPanel>
-                        <GroupBox Header="2x Soldier" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding FirstDolletEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding FirstDolletEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding FirstDolletEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding FirstDolletEncounter.SoldierAttacks}" Minimum="0"/>
-
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="2x Soldier" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding SecondDolletEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding SecondDolletEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding SecondDolletEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding SecondDolletEncounter.SoldierAttacks}" Minimum="0"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Soldier" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding ThirdDolletEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding ThirdDolletEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding ThirdDolletEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding ThirdDolletEncounter.SoldierAttacks}" Minimum="0"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Soldier" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding FourthDolletEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding FourthDolletEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding FourthDolletEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding FourthDolletEncounter.SoldierAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Camera" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ThreePersonFanfareCamera}}"
-                                  DisplayMemberPath="Description" SelectedValuePath="Value"
-                                  SelectedValue="{Binding FourthDolletEncounter.Camera}"/>
-                            </Grid>
-                        </GroupBox>
+                        <controls1:EncounterControl DataContext="{Binding FirstDolletEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding SecondDolletEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding ThirdDolletEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding FourthDolletEncounter}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Anacondaur">
                     <StackPanel>
-                        <GroupBox Header="Soldier" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding BridgeEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding BridgeEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding BridgeEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding BridgeEncounter.SoldierAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Camera" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <Grid Grid.Row="4" Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.9*"/>
-                                        <ColumnDefinition Width="0.1*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ThreePersonFanfareCamera}}"
-                                          DisplayMemberPath="Description" SelectedValuePath="Value"
-                                          SelectedValue="{Binding BridgeEncounter.Camera}"/>
-                                    <Button IsTabStop="False" Grid.Column="1" Command="{Binding BridgeEncounter.ClearCameraCommand}">
-                                        <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-                                        </StackPanel>
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </GroupBox>
+                        <controls1:EncounterControl DataContext="{Binding BridgeEncounter}"/>
 
                         <DockPanel Margin="10">
                             <TextBlock Text="2nd Bridge Encounter" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <mah:ToggleSwitch IsOn="{Binding DidGetSecondBridgeEncounter}" OnContent="Yes" OffContent="No"/>
                         </DockPanel>
 
-                        <GroupBox Header="3x Soldier" Margin="10" Visibility="{Binding DidGetSecondBridgeEncounter, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding SecondBridgeEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding SecondBridgeEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding SecondBridgeEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding SecondBridgeEncounter.SoldierAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Camera" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <Grid Grid.Row="4" Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.9*"/>
-                                        <ColumnDefinition Width="0.1*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ThreePersonFanfareCamera}}"
-                                        DisplayMemberPath="Description" SelectedValuePath="Value"
-                                        SelectedValue="{Binding SecondBridgeEncounter.Camera}"/>
-                                    <Button IsTabStop="False" Grid.Column="1" Command="{Binding SecondBridgeEncounter.ClearCameraCommand}">
-                                        <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-                                        </StackPanel>
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </GroupBox>
-
-                        <GroupBox Header="Anacondaur" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding AnacondaurEncounter.SquallPhysicals}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding AnacondaurEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding AnacondaurEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Limits" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding AnacondaurEncounter.Limits}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Squeeze" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="4" Value="{Binding AnacondaurEncounter.Rolls}" Minimum="0"/>
-                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Dark Mists" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="5" Value="{Binding AnacondaurEncounter.Blind}" Minimum="0"/>
-                                <TextBlock Grid.Row="6" Grid.Column="0" Text="All chars alive on defeat?" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:ToggleSwitch Grid.Column="1" Grid.Row="6" IsOn="{Binding AnacondaurEncounter.AllCharactersSurvived}" OnContent="Yes" OffContent="No"/>
-                                <TextBlock Grid.Row="7" Grid.Column="0" Text="Camera" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ThreePersonFanfareCamera}}"
-                                      DisplayMemberPath="Description" SelectedValuePath="Value"
-                                      SelectedValue="{Binding AnacondaurEncounter.Camera}"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Soldier" Margin="10" Visibility="{Binding DidGetSecondBridgeEncounter, Converter={x:Static converters:KiiVisibilityConverter.TrueToCollapsed}}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding PostAnacondaurEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Seifer Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding PostAnacondaurEncounter.SeiferAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding PostAnacondaurEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Soldier Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding PostAnacondaurEncounter.SoldierAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Camera" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <Grid Grid.Row="4" Grid.Column="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.9*"/>
-                                        <ColumnDefinition Width="0.1*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ThreePersonFanfareCamera}}"
-                                          DisplayMemberPath="Description" SelectedValuePath="Value"
-                                          SelectedValue="{Binding PostAnacondaurEncounter.Camera}"/>
-                                    <Button IsTabStop="False" Grid.Column="1" Command="{Binding PostAnacondaurEncounter.ClearCameraCommand}">
-                                        <StackPanel Orientation="Horizontal" Height="20">
-                                            <fa:ImageAwesome Icon="Remove" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-                                        </StackPanel>
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </GroupBox>
+                        <controls1:EncounterControl DataContext="{Binding SecondBridgeEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        <controls1:EncounterControl DataContext="{Binding AnacondaurEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding PostAnacondaurEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Elvoret + Spider Tank">
                     <StackPanel>
-                        <GroupBox Header="Elvoret" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding ElvoretEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding ElvoretEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Biggs Machine Gun" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding ElvoretEncounter.BiggsMachineGuns}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Biggs Arms" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding ElvoretEncounter.BiggsArms}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Wedge Fire" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="4" Value="{Binding ElvoretEncounter.WedgeFires}" Minimum="0"/>
-                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Elvoret Fire/Thunder" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="5" Value="{Binding ElvoretEncounter.ElvoretFireThunder}" Minimum="0"/>
-                                <TextBlock Grid.Row="6" Grid.Column="0" Text="Elvoret Storm Breath" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="6" Value="{Binding ElvoretEncounter.ElvoretStormBreath}" Minimum="0"/>
-                                <TextBlock Grid.Row="7" Grid.Column="0" Text="Limits" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="7" Value="{Binding ElvoretEncounter.Limits}"/>
-                                <TextBlock Grid.Row="8" Grid.Column="0" Text="Camera" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ElvoretFanfareCamera}}"
-                                  DisplayMemberPath="Description" SelectedValuePath="Value"
-                                  SelectedValue="{Binding ElvoretEncounter.Camera}"/>
-                            </Grid>
-                        </GroupBox>
-
-
-                        <GroupBox Header="Spider Tank" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Value="{Binding SpiderTankEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding SpiderTankEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Limits" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding SpiderTankEncounter.Limits}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Ray Bombs" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding SpiderTankEncounter.RayBombs}" Minimum="0"/>
-                                <TextBlock Grid.Row="4" Text="Extra ATM encounter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:ToggleSwitch Grid.Row="4" Grid.Column="1" IsOn="{Binding SpiderTankEncounter.ExtraEncounter}" OffContent="No" OnContent="Yes"/>
-                            </Grid>
-                        </GroupBox>
+                        <controls1:EncounterControl DataContext="{Binding ElvoretEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding SpiderTankEncounter}"/>
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Include Red Soldier Encounter" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>
                             <mah:ToggleSwitch IsOn="{Binding DidGetRedSoldierEncounter}" OffContent="No" OnContent="Yes"/>
                         </StackPanel>
 
-                        <GroupBox Header="Red Soldier" Margin="10" Visibility="{Binding DidGetRedSoldierEncounter, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding RedSoldierEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding RedSoldierEncounter.ZellAttacks}" Minimum="0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Machine Gun" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding RedSoldierEncounter.MachineGuns}" Minimum="0"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Arms" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding RedSoldierEncounter.Arms}" Minimum="0"/>
-                            </Grid>
-                        </GroupBox>
+                        <controls1:EncounterControl DataContext="{Binding RedSoldierEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" />
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Include Diablos" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>
@@ -605,101 +205,10 @@
                 </TabItem>
                 <TabItem Header="Diablos" Visibility="{Binding IncludeDiablos, Converter={x:Static converters:KiiVisibilityConverter.FalseToHidden}}">
                     <StackPanel>
-                        <GroupBox Header="2x Grat" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding DoubleGratEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Text="Vampire Bites" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding DoubleGratEncounter.VampireBites}"/>
-                                <TextBlock Text="Sleeping Gas" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding DoubleGratEncounter.SleepingGas}"/>
-                            </Grid>
-                        </GroupBox>
-
-                        <GroupBox Header="Grat" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding GratEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Text="Vampire Bites" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding GratEncounter.VampireBites}"/>
-                                <TextBlock Text="Sleeping Gas" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding GratEncounter.SleepingGas}"/>
-                            </Grid>
-                        </GroupBox>
-
-                        <GroupBox Header="Granaldo" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding GranaldoEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Text="Granaldo Attacks" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding GranaldoEncounter.GranaldoAttacks}"/>
-                                <TextBlock Text="Limits" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding GranaldoEncounter.Limits}"/>
-                                <TextBlock Text="Shiva" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding GranaldoEncounter.Shiva}"/>
-                                <TextBlock Text="Camera" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <ComboBox Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:TwoPersonFanfareCamera}}"
-                                  DisplayMemberPath="Description" SelectedValuePath="Value"
-                                  SelectedValue="{Binding GranaldoEncounter.Camera}"/>
-                            </Grid>
-                        </GroupBox>
-
-                        <GroupBox Header="Diablos" Margin="10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.4*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Squall Attacks" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Value="{Binding DiablosEncounter.SquallAttacks}" Minimum="0"/>
-                                <TextBlock Text="Zell Attacks" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding DiablosEncounter.ZellAttacks}"/>
-                                <TextBlock Text="Gravija" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding DiablosEncounter.Gravija}"/>
-                                <TextBlock Text="Limits" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding DiablosEncounter.Limits}"/>
-                                <TextBlock Text="Camera" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <ComboBox Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:ThreePersonFanfareCamera}}"
-                                  DisplayMemberPath="Description" SelectedValuePath="Value"
-                                  SelectedValue="{Binding DiablosEncounter.Camera}"/>
-                            </Grid>
-                        </GroupBox>
+                        <controls1:EncounterControl DataContext="{Binding DoubleGratEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding GratEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding GranaldoEncounter}"/>
+                        <controls1:EncounterControl DataContext="{Binding DiablosEncounter}"/>
                     </StackPanel>
                 </TabItem>
             </mah:MetroAnimatedSingleRowTabControl>
