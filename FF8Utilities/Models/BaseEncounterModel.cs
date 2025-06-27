@@ -45,6 +45,42 @@ namespace FF8Utilities.Models
             });
         }
 
+        public void FromXml(XElement xml)
+        {
+            foreach (XElement abilityXml in xml.Elements("Ability"))
+            {
+                string description = abilityXml.Attribute(nameof(EncounterAbilityModel.Description))?.Value;
+                if (string.IsNullOrWhiteSpace(description)) continue;
+
+                EncounterAbilityModel ability = Abilities.SingleOrDefault(t => t.Description == description);
+                if (bool.TryParse(abilityXml.Attribute(nameof(EncounterAbilityModel.Count))?.Value ?? string.Empty, out bool isVisible))
+                {
+                    ability.IsVisible = isVisible;
+                }
+                
+                if (int.TryParse(abilityXml.Attribute(nameof(EncounterAbilityModel.Count))?.Value ?? string.Empty, out int count))
+                {
+                    ability.Count = count;
+                }
+            }
+        }
+
+        public XElement ToXml(string identifier)
+        {
+            XElement xml = new XElement(nameof(BaseEncounterModel));
+            xml.Add(new XAttribute("Identifier", identifier));
+            foreach (EncounterAbilityModel ability in Abilities)
+            {
+                XElement abilityXml = new XElement("Ability");
+                abilityXml.Add(new XAttribute(nameof(EncounterAbilityModel.Description), ability.Description));
+                abilityXml.Add(new XAttribute(nameof(EncounterAbilityModel.IsVisible), ability.IsVisible));
+                abilityXml.Add(new XAttribute(nameof(EncounterAbilityModel.Count), ability.Count));
+                xml.Add(ability);
+            }
+
+            return xml;
+        }
+
       
         public string Description { get; }
 

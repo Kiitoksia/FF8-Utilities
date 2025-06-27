@@ -10,9 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace FF8Utilities.Models
 {
@@ -45,6 +48,7 @@ namespace FF8Utilities.Models
         private bool _quistisCardObtained;
         private bool _designMode;
 
+        private const string TrackingSettingsFilename = "TrackingSettings.xml";
 
 
 
@@ -146,13 +150,82 @@ namespace FF8Utilities.Models
                 {
                     OnPropertyChanged(nameof(LateQuistisOutput));
                 }
+                else if (e.PropertyName == nameof(DesignMode))
+                {
+                    if (!DesignMode) SaveEncounterDetails();
+                }
             };
 
             _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
             _initialised = true;
+
+            try
+            {
+                string settingsFile = Path.Combine(Const.PackagesFolder, TrackingSettingsFilename);
+                if (File.Exists(settingsFile))
+                {
+                    string settingsFileString = File.ReadAllText(settingsFile);
+                    XElement xml = XElement.Parse(settingsFileString);
+                    FromXml(xml);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not load tracking settings, defaults have been set\r\n{ex.Message}", "Error", MessageBoxButton.OK);
+            }
+            
         }
 
-        public BindingList<BaseEncounterModel> Encounters { get; }
+        private void FromXml(XElement xml)
+        {
+            foreach (XElement encounterXml in xml.Elements(nameof(BaseEncounterModel)))
+            {
+                BaseEncounterModel encounter;
+                string identifier = encounterXml.Attribute("Identifier")?.Value;
+
+                switch (identifier)
+                {
+                    case nameof(TwoBatsEncounter): encounter = TwoBatsEncounter; break;
+                    case nameof(IfritEncounter): encounter = IfritEncounter; break;
+                    case nameof(BuelEncounter): encounter = IfritEncounter; break;
+                    case nameof(SecondBatsEncounter): encounter = SecondBatsEncounter; break;
+                    case nameof(ThirdDolletEncounter): encounter = ThirdDolletEncounter; break;
+                    case nameof(FourthDolletEncounter): encounter = FourthDolletEncounter; break;
+                    case nameof(BridgeEncounter): encounter = BridgeEncounter; break;
+                    case nameof(SecondBridgeEncounter): encounter = SecondBridgeEncounter; break;
+                    case nameof(AnacondaurEncounter): encounter = AnacondaurEncounter; break;
+                    case nameof(PostAnacondaurEncounter): encounter = PostAnacondaurEncounter; break;
+                    case nameof(ElvoretEncounter): encounter = ElvoretEncounter; break;
+                    case nameof(SpiderTankEncounter): encounter = SpiderTankEncounter; break;
+                    case nameof(RedSoldierEncounter): encounter = RedSoldierEncounter; break;
+                    default: continue; // Cannot parse
+                }
+
+                encounter.FromXml(encounterXml);
+            }
+        }
+
+        private void SaveEncounterDetails()
+        {
+            XElement xml = new XElement("CardTrackingSettings");
+            xml.Add(TwoBatsEncounter.ToXml(nameof(TwoBatsEncounter)));
+            xml.Add(IfritEncounter.ToXml(nameof(IfritEncounter)));
+            xml.Add(BuelEncounter.ToXml(nameof(BuelEncounter)));
+            xml.Add(SecondBatsEncounter.ToXml(nameof(SecondBatsEncounter)));
+            xml.Add(FirstDolletEncounter.ToXml(nameof(FirstDolletEncounter)));
+            xml.Add(SecondDolletEncounter.ToXml(nameof(SecondDolletEncounter)));
+            xml.Add(ThirdDolletEncounter.ToXml(nameof(ThirdDolletEncounter)));
+            xml.Add(FourthDolletEncounter.ToXml(nameof(FourthDolletEncounter)));
+            xml.Add(BridgeEncounter.ToXml(nameof(BridgeEncounter)));
+            xml.Add(SecondBridgeEncounter.ToXml(nameof(SecondBridgeEncounter)));
+            xml.Add(AnacondaurEncounter.ToXml(nameof(AnacondaurEncounter)));
+            xml.Add(PostAnacondaurEncounter.ToXml(nameof(PostAnacondaurEncounter)));
+            xml.Add(ElvoretEncounter.ToXml(nameof(ElvoretEncounter)));
+            xml.Add(SpiderTankEncounter.ToXml(nameof(SpiderTankEncounter)));
+            xml.Add(RedSoldierEncounter.ToXml(nameof(RedSoldierEncounter)));
+
+            File.WriteAllText(Path.Combine(Const.PackagesFolder, TrackingSettingsFilename), xml.ToString());
+        }
 
         public ZellCardCalculatorWindow Window { get; set; }
 

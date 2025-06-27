@@ -58,7 +58,6 @@
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
                 </StackPanel>
-                
             </GroupBox>
         </DataTemplate>
     </Controls:MetroWindow.Resources>
