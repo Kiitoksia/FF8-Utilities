@@ -18,6 +18,8 @@ namespace FF8Utilities.Entities.Encounters.Dollet
             Abilities.Add(new SeiferAttack());
             Abilities.Add(new ZellAttack());
             Abilities.Add(new SoldierAttack());
+
+            ShowPlusOneToAllButton = true;
         }
     }
 }

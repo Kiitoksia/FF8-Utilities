@@ -24,7 +24,11 @@
     </UserControl.Resources>
     <GroupBox>
         <GroupBox.Header>
-            <TextBlock Text="{Binding Description}" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" Margin="10,3"/>
+            <DockPanel Margin="10,3">
+                <TextBlock Text="{Binding Description}" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" DockPanel.Dock="Left"/>
+                <Button DockPanel.Dock="Right" Content="+1 to all" Style="{StaticResource MahApps.Styles.Button.Square}" Width="100" Margin="0,0,35,0" 
+                        HorizontalAlignment="Right" mah:VisibilityHelper.IsVisible="{Binding ShowPlusOneToAllButton}" Command="{Binding PlusOneToAllCommand}"/>
+            </DockPanel>
         </GroupBox.Header>
         <StackPanel>
             <ItemsControl ItemsSource="{Binding Abilities}">
@@ -50,6 +54,14 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <Grid mah:VisibilityHelper.IsVisible="{Binding ShowToggleOption}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding ToggleOptionDescription}"/>
+                <mah:ToggleSwitch IsOn="{Binding IsToggled}" OnContent="Yes" OffContent="No" Grid.Column="1" HorizontalContentAlignment="Right"/>
+            </Grid>
             <Grid mah:VisibilityHelper.IsVisible="{Binding FanfareVisible}" Margin="20,3,0,3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
@@ -73,14 +85,6 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-            </Grid>
-            <Grid mah:VisibilityHelper.IsVisible="{Binding ShowToggleOption}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="80"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding ToggleOptionDescription}"/>
-                <mah:ToggleSwitch IsOn="{Binding IsToggled}" OnContent="Yes" OffContent="No" Grid.Column="1" HorizontalContentAlignment="Right"/>
             </Grid>
         </StackPanel>
 

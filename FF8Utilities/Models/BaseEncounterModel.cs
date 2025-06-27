@@ -35,7 +35,14 @@ namespace FF8Utilities.Models
                     FanfareTypeList.Add(new EnumerationMember { Value = enumValue, Description = ((Enum)enumValue).GetDescription() });
                 }
             }
-            ClearCameraCommand = new Command(() => true, (s, e) => Fanfare = null);
+
+            PlusOneToAllCommand = new Command(() => true, (s, e) =>
+            {
+                foreach (EncounterAbilityModel ability in Abilities)
+                {
+                    ability.Count++;
+                }
+            });
         }
 
         public string Description { get; }
@@ -111,7 +118,7 @@ namespace FF8Utilities.Models
 
         public BindingList<EncounterAbilityModel> Abilities { get; }
 
-        public Command ClearCameraCommand { get; }
+        public Command PlusOneToAllCommand { get; }
 
         public Enum Fanfare
         {
@@ -149,6 +156,8 @@ namespace FF8Utilities.Models
         }
 
         public bool ShowToggleOption => !string.IsNullOrEmpty(ToggleOptionDescription);
+
+        public bool ShowPlusOneToAllButton { get; protected set; }
 
 
     }

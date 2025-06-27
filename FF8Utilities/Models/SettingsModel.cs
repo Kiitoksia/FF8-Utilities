@@ -84,13 +84,6 @@ namespace FF8Utilities.Models
                 if (Enum.TryParse(platformNode.Value, out Platform platform)) Platform = platform;
             }
 
-            XElement zellTrackToDiablos = xml?.Element(nameof(ZellTrackToDiablos));
-
-            if (zellTrackToDiablos != null)
-            {
-                if (bool.TryParse(zellTrackToDiablos.Value, out bool zellTrack)) ZellTrackToDiablos = zellTrack;
-            }
-
             XElement ifritEncounter = xml?.Element(nameof(IfritEncounterType));
             if (ifritEncounter != null)
             {
@@ -167,15 +160,6 @@ namespace FF8Utilities.Models
             }
 
             platformNode.Value = Platform.ToString();
-
-            XElement zellTrackingNode = xml.Element(nameof(ZellTrackToDiablos));
-            if (zellTrackingNode == null)
-            {
-                zellTrackingNode = new XElement(nameof(ZellTrackToDiablos));
-                rootNode.Add(zellTrackingNode);
-            }
-
-            zellTrackingNode.Value = ZellTrackToDiablos.ToString();
 
             XElement ifritEncounterNode = xml.Element(nameof(IfritEncounterType));
             if (ifritEncounterNode == null)
@@ -772,8 +756,6 @@ namespace FF8Utilities.Models
         public bool IsFirstLaunch { get; private set; }
 
         public bool IsFirstLaunchAfterUpdate { get; private set; }
-
-        public bool ZellTrackToDiablos { get; set; }
 
         public IfritEncounterType IfritEncounterType { get; set; }
 

@@ -50,30 +50,40 @@
                                 <controls1:EncounterControl DataContext="{Binding IfritEncounter}" Grid.Column="1"/>
                             </Grid>
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <DockPanel Margin="10">
-                                    <TextBlock Text="Post Ifrit Encounter" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                                    <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:IfritEncounterType}}"
-                                        DisplayMemberPath="Description" SelectedValuePath="Value"
-                                        SelectedValue="{Binding IfritsCavernEncounterType}"
-                                        DockPanel.Dock="Right"/>
-                                </DockPanel>
-                            </Grid>
+
+                            <StackPanel>
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <DockPanel Margin="10">
+                                        <TextBlock Text="Post Ifrit Encounter" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                        <ComboBox ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:IfritEncounterType}}"
+                                            DisplayMemberPath="Description" SelectedValuePath="Value"
+                                            SelectedValue="{Binding IfritsCavernEncounterType}"
+                                                  Width="190"
+                                            DockPanel.Dock="Right"/>
+                                    </DockPanel>
+                                </Grid>
+                                <controls1:EncounterControl Grid.Row="1" DataContext="{Binding SecondBatsEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"  HorizontalAlignment="Center"/>
+                                <controls1:EncounterControl Grid.Row="1" DataContext="{Binding BuelEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Center"/>
+                            </StackPanel>
                             
-                            <Grid>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
+
                                 
                             </Grid>
 
-                            <controls1:EncounterControl DataContext="{Binding SecondBatsEncounter}" controls:VisibilityHelper.IsCollapsed="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"  HorizontalAlignment="Center"/>
-                            <controls1:EncounterControl DataContext="{Binding BuelEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Center"/>
+                            
 
                         </StackPanel>
                         <Grid Margin="10,10,10,0">
@@ -203,11 +213,15 @@
                             <controls1:EncounterControl DataContext="{Binding BridgeEncounter}"/>
                             <controls1:EncounterControl DataContext="{Binding SecondBridgeEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetSecondBridgeEncounter, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1"/>
                         </Grid>
-                        
-                        <DockPanel Margin="10">
-                            <TextBlock Text="2nd Bridge Encounter" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <mah:ToggleSwitch IsOn="{Binding DidGetSecondBridgeEncounter}" OnContent="Yes" OffContent="No"/>
-                        </DockPanel>
+
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="2nd Bridge Encounter" Margin="0,0,10,0"  VerticalAlignment="Center"/>
+                            <mah:ToggleSwitch IsOn="{Binding DidGetSecondBridgeEncounter}" Margin="0,0,10,0" ContentDirection="LeftToRight" HorizontalAlignment="Right" OnContent="Yes" OffContent="No"/>
+                        </Grid>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -230,31 +244,17 @@
                             <controls1:EncounterControl DataContext="{Binding ElvoretEncounter}" Margin="10,10,5,10"/>
                             <controls1:EncounterControl DataContext="{Binding SpiderTankEncounter}" Grid.Column="1" Margin="5,10,10,10"/>
                         </Grid>
-                        
 
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Include Red Soldier Encounter" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>
-                            <mah:ToggleSwitch IsOn="{Binding DidGetRedSoldierEncounter}" OffContent="No" OnContent="Yes"/>
+
+                        <StackPanel HorizontalAlignment="Center">
+                            <DockPanel LastChildFill="True">
+                                <mah:ToggleSwitch ContentDirection="LeftToRight" HorizontalContentAlignment="Right" HorizontalAlignment="Right" IsOn="{Binding DidGetRedSoldierEncounter}" OffContent="No" OnContent="Yes" Margin="0,0,10,0" DockPanel.Dock="Right"/>
+                                <TextBlock Text="Include Red Soldier Encounter" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,30,0" DockPanel.Dock="Left"/>
+                            </DockPanel>
+                            <controls1:EncounterControl DataContext="{Binding RedSoldierEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" />
                         </StackPanel>
-
-                        <controls1:EncounterControl DataContext="{Binding RedSoldierEncounter}" controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" />
-
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Include Diablos" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,10,0"/>
-                            <mah:ToggleSwitch IsOn="{Binding IncludeDiablos}" OffContent="No" OnContent="Yes"/>
-                        </StackPanel>
-
-
                     </StackPanel>
 
-                </TabItem>
-                <TabItem Header="Diablos" Visibility="{Binding IncludeDiablos, Converter={x:Static converters:KiiVisibilityConverter.FalseToHidden}}">
-                    <StackPanel>
-                        <controls1:EncounterControl DataContext="{Binding DoubleGratEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding GratEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding GranaldoEncounter}"/>
-                        <controls1:EncounterControl DataContext="{Binding DiablosEncounter}"/>
-                    </StackPanel>
                 </TabItem>
             </mah:MetroAnimatedSingleRowTabControl>
             <Grid HorizontalAlignment="Stretch" Margin="10">

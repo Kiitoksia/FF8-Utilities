@@ -33,11 +33,6 @@ namespace FF8Utilities.Models
         private SingleSoldierEncounter _postAnacondaurEncounter;
         private ElvoretEncounter _elvoretEncounter;
         private SpiderTankEncounter _spiderTankEncounter;
-        private DoubleGratEncounter _doubleGratEncounter;
-        private GratEncounter _gratEncounter;
-        private DiablosEncounter _diablosEncounter;
-        private bool _includeDiablos = false;
-        private GranaldoEncounter _granaldoEncounter;
         private bool _didGetRedSoldierEncounter;
         private IfritEncounterType _ifritsCavernEncounterType = IfritEncounterType.Buel;
         private bool _didGetSecondBridgeEncounter;
@@ -47,6 +42,7 @@ namespace FF8Utilities.Models
         private LateQuistisPattern _currentPattern;            
         private LateQuistis _lateQuistisManip;
         private SolidColorBrush _quistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent);
+        private bool _quistisCardObtained;
 
 
 
@@ -132,15 +128,6 @@ namespace FF8Utilities.Models
             RedSoldierEncounter = new RedSoldierEncounter(false);
             RedSoldierEncounter.PropertyChanged += EncounterPropertyChanged;
 
-            DoubleGratEncounter = new DoubleGratEncounter();
-            DoubleGratEncounter.PropertyChanged += EncounterPropertyChanged;
-            GratEncounter = new GratEncounter();
-            GratEncounter.PropertyChanged += EncounterPropertyChanged;
-            GranaldoEncounter = new GranaldoEncounter();
-            GranaldoEncounter.PropertyChanged += EncounterPropertyChanged;
-            DiablosEncounter = new DiablosEncounter();
-            DiablosEncounter.PropertyChanged += EncounterPropertyChanged;
-
             AddNewEncounterCommand = new Command(() => true, AddNewEncounter);
             AddNewHalfEncounterCommand = new Command(() => true, AddNewHalfEncounter);
             RemoveFishFinEncounterCommand = new Command<FishFinsEncounter>(() => FishFinEncounters.Count > 0, RemoveFishFinEncounter);
@@ -149,7 +136,6 @@ namespace FF8Utilities.Models
             LaunchZellCommand = new Command(() => true, LaunchZell);
 
             IfritsCavernEncounterType = SettingsModel.Instance.IfritEncounterType;
-            IncludeDiablos = SettingsModel.Instance.ZellTrackToDiablos;
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
             DidGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
 
@@ -437,57 +423,7 @@ namespace FF8Utilities.Models
 
         #endregion
 
-        #region Diablos
 
-        public DoubleGratEncounter DoubleGratEncounter
-        {
-            get => _doubleGratEncounter;
-            set
-            {
-                if (Equals(value, _doubleGratEncounter)) return;
-                _doubleGratEncounter = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Output));
-            }
-        }
-        public GratEncounter GratEncounter
-        {
-            get => _gratEncounter;
-            set
-            {
-                if (Equals(value, _gratEncounter)) return;
-                _gratEncounter = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Output));
-            }
-        }
-
-        public GranaldoEncounter GranaldoEncounter
-        {
-            get => _granaldoEncounter;
-            set
-            {
-                if (Equals(value, _granaldoEncounter)) return;
-                _granaldoEncounter = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Output));
-            }
-        }
-
-        public DiablosEncounter DiablosEncounter
-        {
-            get => _diablosEncounter;
-            set
-            {
-                if (Equals(value, _diablosEncounter)) return;
-                _diablosEncounter = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Output));
-            }
-        }
-
-        private bool _quistisCardObtained;
-        #endregion
 
         public bool QuistisCardObtained
         {
@@ -532,16 +468,6 @@ namespace FF8Utilities.Models
                 output += SpiderTankEncounter.Output;
 
                 if (DidGetRedSoldierEncounter) output += RedSoldierEncounter.Output;
-
-
-                if (IncludeDiablos)
-                {
-                    output += DoubleGratEncounter.Output;
-                    output += GratEncounter.Output;
-                    output += GranaldoEncounter.Output;
-                    output += DiablosEncounter.Output;
-                }
-
                 
                 return output;
             }
@@ -629,19 +555,6 @@ namespace FF8Utilities.Models
         public Command LaunchQuistisPatternsCommand { get; }
 
         public Command LaunchZellCommand { get; }
-
-
-        public bool IncludeDiablos
-        {
-            get => _includeDiablos;
-            set
-            {
-                if (value == _includeDiablos) return;
-                _includeDiablos = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Output));
-            }
-        }
 
         public bool DidGetRedSoldierEncounter
         {
