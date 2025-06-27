@@ -62,7 +62,7 @@ namespace FF8Utilities.Dialogs
                     orderedList = orderedList.OrderBy(t => t.Frame).ToList();
                     break;
                 case QuistisPatternsOrderBy.Alphabetical:
-                    orderedList = orderedList.OrderBy(t => t.OpponentDeck).ToList();
+                    orderedList = orderedList.OrderBy(t => t.OpponentDeckOrderer).ToList();
                     break;
             }
 

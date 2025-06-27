@@ -40,6 +40,20 @@ namespace LateQuistisManipulation.Models
 
         public string OpponentDeck { get; }
 
+        /// <summary>
+        /// Opponent Deck has some outliers like "Wedge+Biggs", this changes it into an expected order
+        /// </summary>
+        public string OpponentDeckOrderer
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(OpponentDeck)) return string.Empty;
+                string output = OpponentDeck;
+                output = Regex.Replace(output, @"Wedge\+Biggs", "Biggs/Wedge");
+                return output;
+            }
+        }
+
         public List<byte[]> OpponentCards { get; }
 
         public string ResultHex { get; set; }

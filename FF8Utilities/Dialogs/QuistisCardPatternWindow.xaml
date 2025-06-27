@@ -100,7 +100,7 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Background="#7F000000"
-                                        FontSize="16"
+                                        FontSize="13"
                                         Foreground="White"
                                         Padding="2"
                                         Text="{Binding Frame, StringFormat={}Frame {0}}">
