@@ -156,4 +156,10 @@ namespace FF8Utilities
         [Description("Quetz Manip (1.5 battles)")]
         QuetzManip,
     }
+
+    public enum QuistisPatternsOrderBy
+    {
+        Alphabetical,
+        Frame
+    }
 }

@@ -49,6 +49,8 @@ namespace FF8Utilities.Models
 
         public void FromXml(XElement xml)
         {
+            Notes = xml.Attribute(nameof(Notes))?.Value;
+
             foreach (XElement abilityXml in xml.Elements("Ability"))
             {
                 string description = abilityXml.Attribute(nameof(EncounterAbilityModel.Description))?.Value;
@@ -64,8 +66,6 @@ namespace FF8Utilities.Models
                 {
                     ability.Count = count;
                 }
-
-                Notes = abilityXml.Attribute(nameof(Notes))?.Value;
             }
         }
 

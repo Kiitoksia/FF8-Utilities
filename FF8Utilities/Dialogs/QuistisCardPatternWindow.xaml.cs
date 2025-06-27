@@ -1,8 +1,10 @@
 ﻿using FF8Utilities.Entities;
+using FF8Utilities.Models;
 using LateQuistisManipulation.Models;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,20 +24,56 @@ namespace FF8Utilities.Dialogs
     /// </summary>
     public partial class QuistisCardPatternWindow : MetroWindow
     {
+        private List<LateQuistisStrategy> _strategies;
+
         public QuistisCardPatternWindow(ZellCardCalculatorWindow window, LateQuistisPattern pattern)
         {
             InitializeComponent();
             DataContext = pattern;
 
+            _strategies = pattern.Strategies;
             SubmitCommand = new Command<LateQuistisStrategy>(() => true, (s, e) =>
             {
                 ResultHex = e.ResultHex;
                 Close();
             });
+            
+            ChangeOrderingCommand = new Command<QuistisPatternsOrderBy>(() => true, (s, e) =>
+            {
+                SettingsModel.Instance.QuistisPatternsOrderBy = e;
+                SettingsModel.Instance.Save();
+                OrderList();
+            });
+
+            OrderList();
+        }
+
+        private void OrderList()
+        {
+            BindingList<LateQuistisStrategy> orderedStrategies = new BindingList<LateQuistisStrategy>();
+
+            List<LateQuistisStrategy> orderedList = _strategies;
+
+            RadioButtonAlphabetical.IsChecked = SettingsModel.Instance.QuistisPatternsOrderBy == QuistisPatternsOrderBy.Alphabetical;
+            RadioButtonFrame.IsChecked = SettingsModel.Instance.QuistisPatternsOrderBy == QuistisPatternsOrderBy.Frame;
+            switch (SettingsModel.Instance.QuistisPatternsOrderBy)
+            {
+                case QuistisPatternsOrderBy.Frame:
+                    orderedList = orderedList.OrderBy(t => t.Frame).ToList();
+                    break;
+                case QuistisPatternsOrderBy.Alphabetical:
+                    orderedList = orderedList.OrderBy(t => t.OpponentDeck).ToList();
+                    break;
+            }
+
+            Tabs.ItemsSource = new BindingList<LateQuistisStrategy>(orderedList);
         }
 
         public string ResultHex { get; private set; }
 
         public Command<LateQuistisStrategy> SubmitCommand { get; }
+
+        public Command<QuistisPatternsOrderBy> ChangeOrderingCommand { get; }
+
     }
 }

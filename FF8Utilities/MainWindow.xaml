@@ -21,6 +21,7 @@
     GlowBrush="{DynamicResource AccentColorBrush}"
     WindowStartupLocation="CenterScreen"
     MinHeight="700"
+    Topmost="False"
     ShowIconOnTitleBar="True"
     MinWidth="700">
     <Controls:MetroWindow.Resources>

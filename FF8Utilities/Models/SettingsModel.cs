@@ -124,6 +124,14 @@ namespace FF8Utilities.Models
                 if (Enum.TryParse(defaultFishFinEncountersXml.Value, out DefaultFishFinEncounters defaultFishFinEncs)) DefaultFishFinEncounters = defaultFishFinEncs;
             }
 
+            //QuistisPatternsOrderBy
+
+            XElement quistisPatternOrderByXml = xml?.Element(nameof(QuistisPatternsOrderBy));
+            if (quistisPatternOrderByXml != null)
+            {
+                if (Enum.TryParse(quistisPatternOrderByXml.Value, out QuistisPatternsOrderBy quistisPatternsOrderBy)) QuistisPatternsOrderBy = quistisPatternsOrderBy;
+            }
+
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
             {
@@ -143,98 +151,19 @@ namespace FF8Utilities.Models
 
         }
 
-        public XElement CopyTo(ref XElement xml)
+        public XElement CopyTo()
         {
-            XElement rootNode = xml?.Element("Settings");
-            if (rootNode == null)
-            {
-                rootNode = new XElement("Settings");
-                xml = rootNode;
-            }
-
-            XElement platformNode = xml.Element(nameof(Platform));
-            if (platformNode == null)
-            {
-                platformNode = new XElement(nameof(Platform));
-                rootNode.Add(platformNode);
-            }
-
-            platformNode.Value = Platform.ToString();
-
-            XElement ifritEncounterNode = xml.Element(nameof(IfritEncounterType));
-            if (ifritEncounterNode == null)
-            {
-                ifritEncounterNode = new XElement(nameof(IfritEncounterType));
-                rootNode.Add(ifritEncounterNode);
-            }
-
-            ifritEncounterNode.Value = IfritEncounterType.ToString();
-
-            XElement secondBridgeEncounterNode = xml.Element(nameof(Get2ndBridgeEncounter));
-            if (secondBridgeEncounterNode == null)
-            {
-                secondBridgeEncounterNode = new XElement(nameof(Get2ndBridgeEncounter));
-                rootNode.Add(secondBridgeEncounterNode);
-            }
-
-            secondBridgeEncounterNode.Value = Get2ndBridgeEncounter.ToString();
-
-            XElement redSoldierEncounterNode = xml.Element(nameof(GetRedSoldierEncounter));
-            if (redSoldierEncounterNode == null)
-            {
-                redSoldierEncounterNode = new XElement(nameof(GetRedSoldierEncounter));
-                rootNode.Add(redSoldierEncounterNode);
-            }
-
-            redSoldierEncounterNode.Value = GetRedSoldierEncounter.ToString();
-
-            XElement customZellDelayFrames = xml.Element(nameof(CustomZellDelayFrame));
-            if (customZellDelayFrames == null)
-            {
-                customZellDelayFrames = new XElement(nameof(CustomZellDelayFrame));
-                rootNode.Add(customZellDelayFrames);
-            }
-
-
-            customZellDelayFrames.Value = CustomZellDelayFrame?.ToString() ?? string.Empty;
-
-            XElement zellCountdownTimer = xml.Element(nameof(ZellCountdownTimer));
-            if (zellCountdownTimer == null)
-            {
-                zellCountdownTimer = new XElement(nameof(ZellCountdownTimer));
-                rootNode.Add(zellCountdownTimer);
-            }
-
-            zellCountdownTimer.Value = ZellCountdownTimer.ToString();
-
-            XElement gameInstallFolder = xml.Element(nameof(GameInstallationFolder));
-            if (gameInstallFolder == null)
-            {
-                gameInstallFolder = new XElement(nameof(GameInstallationFolder));
-                rootNode.Add(gameInstallFolder);
-            }
-            
-            gameInstallFolder.Value = GameInstallationFolder ?? string.Empty;
-
-            XElement defaultFishFinEncounters = xml.Element(nameof(DefaultFishFinEncounters));
-            if (defaultFishFinEncounters == null)
-            {
-                defaultFishFinEncounters = new XElement(nameof(DefaultFishFinEncounters));
-                rootNode.Add(defaultFishFinEncounters);
-            }
-            
-            defaultFishFinEncounters.Value = DefaultFishFinEncounters.ToString();
-
-            XElement lastLaunchedVersion = xml.Element("LastLaunchedVersion");
-            if (lastLaunchedVersion == null)
-            {
-                lastLaunchedVersion = new XElement("LastLaunchedVersion");
-                rootNode.Add(lastLaunchedVersion);
-            }
+            XElement xml = new XElement("Settings");
+            xml.Add(new XElement(nameof(Platform), Platform.ToString()));
+            xml.Add(new XElement(nameof(IfritEncounterType), IfritEncounterType.ToString()));
+            xml.Add(new XElement(nameof(Get2ndBridgeEncounter), Get2ndBridgeEncounter.ToString()));
+            xml.Add(new XElement(nameof(GetRedSoldierEncounter), GetRedSoldierEncounter.ToString()));
+            xml.Add(new XElement(nameof(CustomZellDelayFrame), CustomZellDelayFrame?.ToString() ?? string.Empty));
+            xml.Add(new XElement(nameof(ZellCountdownTimer), ZellCountdownTimer.ToString()));
+            xml.Add(new XElement(nameof(GameInstallationFolder), GameInstallationFolder ?? string.Empty));
 
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
-            lastLaunchedVersion.Value = currentVersion.ToString();
-
+            xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
 
             return xml;
         }
@@ -665,8 +594,7 @@ namespace FF8Utilities.Models
 
         public void Save()
         {
-            XElement xml = null;
-            CopyTo(ref xml);
+            XElement xml = CopyTo();
             if (!Directory.Exists(Path.GetDirectoryName(SettingsPath))) Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
             xml.Save(SettingsPath);
             _mainWindowModel.FlyoutSettingsOpen = false;
@@ -764,6 +692,8 @@ namespace FF8Utilities.Models
         public bool GetRedSoldierEncounter { get; set; }
 
         public DefaultFishFinEncounters DefaultFishFinEncounters { get; set; } = DefaultFishFinEncounters.ThreeBattles;
+
+        public QuistisPatternsOrderBy QuistisPatternsOrderBy { get; set; } = QuistisPatternsOrderBy.Frame;
 
 
         public Task<bool> IsCSRUpdateAvailable()
