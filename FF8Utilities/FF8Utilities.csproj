@@ -115,6 +115,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\EncounterControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\QuistisCardPatternCardPosition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,6 +140,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Const.cs" />
+    <Compile Include="Controls\EncounterControl.xaml.cs">
+      <DependentUpon>EncounterControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\QuistisCardPatternCardPosition.xaml.cs">
       <DependentUpon>QuistisCardPatternCardPosition.xaml</DependentUpon>
     </Compile>
@@ -173,6 +180,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AbilityModels\Limit.cs" />
+    <Compile Include="Models\AbilityModels\SeiferAttack.cs" />
+    <Compile Include="Models\AbilityModels\SoldierAttack.cs" />
+    <Compile Include="Models\AbilityModels\SquallAttack.cs" />
+    <Compile Include="Models\AbilityModels\ZellAttack.cs" />
     <Compile Include="Models\BaseEncounterModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CardNotesModel.cs" />

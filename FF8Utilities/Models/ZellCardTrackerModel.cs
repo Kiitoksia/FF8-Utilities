@@ -7,6 +7,7 @@ using FF8Utilities.Entities.Encounters.Ifrits_Cavern;
 using LateQuistisManipulation;
 using LateQuistisManipulation.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -49,6 +50,7 @@ namespace FF8Utilities.Models
 
 
 
+
         private bool _initialised;
 
         public ZellCardTrackerModel()
@@ -65,6 +67,8 @@ namespace FF8Utilities.Models
             {
                 WorldMapEncounters.Add(new WorldMapEncounter { Formation = formation });
             }
+
+
 
             TwoBatsEncounter = new TwoBatsEncounter();
             TwoBatsEncounter.PropertyChanged += EncounterPropertyChanged;
@@ -104,28 +108,28 @@ namespace FF8Utilities.Models
                 OnPropertyChanged(nameof(FishFinEncounters));
                 OnPropertyChanged(nameof(Output));
             };
-            FirstDolletEncounter = new DoubleSoldierEncounter();
+            FirstDolletEncounter = new DoubleSoldierEncounter(false);
             FirstDolletEncounter.PropertyChanged += EncounterPropertyChanged;
-            SecondDolletEncounter = new DoubleSoldierEncounter();
+            SecondDolletEncounter = new DoubleSoldierEncounter(false);
             SecondDolletEncounter.PropertyChanged += EncounterPropertyChanged;
-            ThirdDolletEncounter = new SingleSoldierEncounter();
+            ThirdDolletEncounter = new SingleSoldierEncounter(false);
             ThirdDolletEncounter.PropertyChanged += EncounterPropertyChanged;
-            FourthDolletEncounter = new SingleSoldierEncounter();
+            FourthDolletEncounter = new SingleSoldierEncounter(false);
             FourthDolletEncounter.PropertyChanged += EncounterPropertyChanged;
-            BridgeEncounter = new SingleSoldierEncounter();
+            BridgeEncounter = new SingleSoldierEncounter(true);
             BridgeEncounter.PropertyChanged += EncounterPropertyChanged;
             SecondBridgeEncounter = new TripleSoldierEncounter();
             SecondBridgeEncounter.PropertyChanged += EncounterPropertyChanged;
             AnacondaurEncounter = new AnacondaurEncounter();
             AnacondaurEncounter.PropertyChanged += EncounterPropertyChanged;
-            PostAnacondaurEncounter = new SingleSoldierEncounter();
+            PostAnacondaurEncounter = new SingleSoldierEncounter(true);
             PostAnacondaurEncounter.PropertyChanged += EncounterPropertyChanged;
             ElvoretEncounter = new ElvoretEncounter();
             ElvoretEncounter.PropertyChanged += EncounterPropertyChanged;
             SpiderTankEncounter = new SpiderTankEncounter();
             SpiderTankEncounter.PropertyChanged += EncounterPropertyChanged;
 
-            RedSoldierEncounter = new RedSoldierEncounter();
+            RedSoldierEncounter = new RedSoldierEncounter(false);
             RedSoldierEncounter.PropertyChanged += EncounterPropertyChanged;
 
             DoubleGratEncounter = new DoubleGratEncounter();
@@ -160,6 +164,8 @@ namespace FF8Utilities.Models
             _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
             _initialised = true;
         }
+
+        public BindingList<BaseEncounterModel> Encounters { get; }
 
         public ZellCardCalculatorWindow Window { get; set; }
 
@@ -505,35 +511,35 @@ namespace FF8Utilities.Models
                 if (!QuistisCardObtained) output += LateQuistisOutput;
               
                 // Dollet
-                output += FirstDolletEncounter.RngAddition;
-                output += SecondDolletEncounter.RngAddition;
-                output += ThirdDolletEncounter.RngAddition;
-                output += FourthDolletEncounter.RngAddition;
-                output += BridgeEncounter.RngAddition;
+                output += FirstDolletEncounter.Output;
+                output += SecondDolletEncounter.Output;
+                output += ThirdDolletEncounter.Output;
+                output += FourthDolletEncounter.Output;
+                output += BridgeEncounter.Output;
 
                 if (DidGetSecondBridgeEncounter)
                 {
-                    output += SecondBridgeEncounter.RngAddition;
+                    output += SecondBridgeEncounter.Output;
                 }
 
-                output += AnacondaurEncounter.RngAddition;
+                output += AnacondaurEncounter.Output;
 
                 if (!DidGetSecondBridgeEncounter)
                 {
-                    output += PostAnacondaurEncounter.RngAddition;
+                    output += PostAnacondaurEncounter.Output;
                 }
-                output += ElvoretEncounter.RngAddition;
-                output += SpiderTankEncounter.RngAddition;
+                output += ElvoretEncounter.Output;
+                output += SpiderTankEncounter.Output;
 
-                if (DidGetRedSoldierEncounter) output += RedSoldierEncounter.RngAddition;
+                if (DidGetRedSoldierEncounter) output += RedSoldierEncounter.Output;
 
 
                 if (IncludeDiablos)
                 {
-                    output += DoubleGratEncounter.RngAddition;
-                    output += GratEncounter.RngAddition;
-                    output += GranaldoEncounter.RngAddition;
-                    output += DiablosEncounter.RngAddition;
+                    output += DoubleGratEncounter.Output;
+                    output += GratEncounter.Output;
+                    output += GranaldoEncounter.Output;
+                    output += DiablosEncounter.Output;
                 }
 
                 
@@ -551,17 +557,17 @@ namespace FF8Utilities.Models
                 int output = 0;
 
                 // Ifrits Cavern
-                output += TwoBatsEncounter.RngAddition;
+                output += TwoBatsEncounter.Output;
                 output += 23; // 2x bat 2x bomb encounter (Tutorial)
-                output += IfritEncounter.RngAddition;
+                output += IfritEncounter.Output;
 
                 switch (IfritsCavernEncounterType)
                 {
                     case IfritEncounterType.Buel:
-                        output += BuelEncounter.RngAddition;
+                        output += BuelEncounter.Output;
                         break;
                     case IfritEncounterType.RedBat:
-                        output += SecondBatsEncounter.RngAddition;
+                        output += SecondBatsEncounter.Output;
                         break;
                     default: throw new NotImplementedException();
 

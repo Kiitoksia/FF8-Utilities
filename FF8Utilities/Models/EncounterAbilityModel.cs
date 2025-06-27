@@ -30,5 +30,7 @@ namespace FF8Utilities.Models
                 OnPropertyChanged();
             }
         }
+
+        public int Output => Addition * Count;
     }
 }

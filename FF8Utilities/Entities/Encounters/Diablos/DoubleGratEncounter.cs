@@ -1,5 +1,6 @@
 ﻿using FF8Utilities.Interfaces;
 using FF8Utilities.Models;
+using FF8Utilities.Models.AbilityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,61 +9,13 @@ using System.Threading.Tasks;
 
 namespace FF8Utilities.Entities.Encounters.Diablos
 {
-    public class DoubleGratEncounter : BaseModel
+    public class DoubleGratEncounter : BaseEncounterModel
     {
-        private int _squallAttacks;
-        private int _vampireBites;
-        private int _sleepingGas;
-
-        public int Base => 15;
-
-        public int RngAddition
+        public DoubleGratEncounter() : base("2X Grat", 15)
         {
-            get
-            {
-                int output = SquallAttacks * 2;
-                output += VampireBites * 33;
-                output += SleepingGas;
-                return Base + output;
-            }
-        }
-
-        public string Description => "2x Grat";
-
-
-        public int SquallAttacks
-        {
-            get => _squallAttacks;
-            set
-            {
-                if (_squallAttacks == value) return;
-                _squallAttacks = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-        public int VampireBites
-        {
-            get => _vampireBites;
-            set
-            {
-                if (_vampireBites == value) return;
-                _vampireBites = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int SleepingGas
-        {
-            get => _sleepingGas;
-            set
-            {
-                if (_sleepingGas == value) return;
-                _sleepingGas = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
+            Abilities.Add(new SquallAttack());
+            Abilities.Add(new EncounterAbilityModel("Vampire Bites", 33));
+            Abilities.Add(new EncounterAbilityModel("Sleeping Gas", 1));
         }
     }
 }

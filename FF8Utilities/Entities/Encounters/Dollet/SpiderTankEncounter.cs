@@ -1,95 +1,28 @@
 ﻿using FF8Utilities.Interfaces;
 using FF8Utilities.Models;
+using FF8Utilities.Models.AbilityModels;
 
 namespace FF8Utilities.Entities.Encounters.Dollet
 {
-    public class SpiderTankEncounter : BaseModel, IEncounter
+    public class SpiderTankEncounter : BaseEncounterModel
     {
-        private int _squallAttacks;
-        private int _zellAttacks;
-        private int _limits = 1;
-        private int _rayBombs;
-        private bool _extraEncounter;
-
-        public SpiderTankEncounter()
+        public SpiderTankEncounter() : base("X-ATM092", 13)
         {
+            Abilities.Add(new SquallAttack());
+            Abilities.Add(new ZellAttack());
+            Abilities.Add(new Limit(1));
+            Abilities.Add(new EncounterAbilityModel("Ray Bomb", 1));
 
+            ToggleOptionDescription = "Extra ATM Encounter";            
         }
 
-        public int SquallAttacks
-        {
-            get => _squallAttacks;
-            set
-            {
-                if (value == _squallAttacks) return;
-                _squallAttacks = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int ZellAttacks
-        {
-            get => _zellAttacks;
-            set
-            {
-                if (value == _zellAttacks) return;
-                _zellAttacks = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int Limits
-        {
-            get => _limits;
-            set
-            {
-                if (value == _limits) return;
-                _limits = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int RayBombs
-        {
-            get => _rayBombs;
-            set
-            {
-                if (value == _rayBombs) return;
-                _rayBombs = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int Base => 13;
-        public int RngAddition
+        protected override int CustomRNGAddition
         {
             get
             {
-                int output = SquallAttacks * 2;
-                output += ZellAttacks * 4;
-                output += Limits;
-                output += RayBombs;
-                if (ExtraEncounter) output += Base;
-                return Base + output;
+                if (IsToggled) return 13;
+                return 0;
             }
         }
-
-        public bool ExtraEncounter
-        { 
-            get => _extraEncounter; 
-            set 
-            {
-                _extraEncounter = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-            
-        }
-
-        public string Description => "Spider Tank";
     }
 }

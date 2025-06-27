@@ -1,10 +1,11 @@
 ﻿using System;
 using FF8Utilities.Interfaces;
 using FF8Utilities.Models;
+using FF8Utilities.Models.AbilityModels;
 
 namespace FF8Utilities.Entities.Encounters.Dollet
 {
-    public class AnacondaurEncounter : BaseModel, IEncounter
+    public class AnacondaurEncounter : BaseEncounterModel
     {
         private int _squallPhysicals;
         private int _seiferAttacks;
@@ -15,145 +16,31 @@ namespace FF8Utilities.Entities.Encounters.Dollet
         private ThreePersonFanfareCamera? _camera;
         private bool _allCharactersSurvived = true;
 
-        public AnacondaurEncounter()
+        public AnacondaurEncounter() : base("Anacondaur", 14, typeof(ThreePersonFanfareCamera))
         {
+            Abilities.Add(new SquallAttack());
+            Abilities.Add(new SeiferAttack());
+            Abilities.Add(new ZellAttack());
+            Abilities.Add(new Limit(1));
+            Abilities.Add(new EncounterAbilityModel("Squeeze", 3));
+            Abilities.Add(new EncounterAbilityModel("Dark Mists", 1));
 
+            ToggleOptionDescription = "All chars alive on defeat?";
+            IsToggled = true;
         }
 
-        public int SquallPhysicals
-        {
-            get => _squallPhysicals;
-            set
-            {
-                if (value == _squallPhysicals) return;
-                _squallPhysicals = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int SeiferAttacks
-        {
-            get => _seiferAttacks;
-            set
-            {
-                if (value == _seiferAttacks) return;
-                _seiferAttacks = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int ZellAttacks
-        {
-            get => _zellAttacks;
-            set
-            {
-                if (value == _zellAttacks) return;
-                _zellAttacks = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int Limits
-        {
-            get => _limits;
-            set
-            {
-                if (value == _limits) return;
-                _limits = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int Rolls
-        {
-            get => _rolls;
-            set
-            {
-                if (value == _rolls) return;
-                _rolls = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int Blind
-        {
-            get => _blind;
-            set
-            {
-                if (value == _blind) return;
-                _blind = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public ThreePersonFanfareCamera? Camera
-        {
-            get => _camera;
-            set
-            {
-                if (value == _camera) return;
-                _camera = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
-            }
-        }
-
-        public int Base => 14;
-        public int RngAddition
+        protected override int CustomRNGAddition
         {
             get
             {
-                int output = SquallPhysicals * 2;
-                output += SeiferAttacks * 2;
-                output += ZellAttacks * 4;
-                output += Rolls * 3;
-                output += Limits;
-                output += Blind;
-
-
-                switch (Camera)
-                {
-                    case null:
-                        break;
-                    case ThreePersonFanfareCamera.SingleCharacter:
-                        output += 2;
-                        break;
-                    case ThreePersonFanfareCamera.ThreeCharacters:
-                        output += 4;
-                        break;
-                    case ThreePersonFanfareCamera.OneToOne:
-                        output += 3;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(Camera), Camera, "Camera not recognised");
-                }
-
-                if (!AllCharactersSurvived && Camera == ThreePersonFanfareCamera.ThreeCharacters)
+                if (Fanfare == null) return 0;
+                if ((ThreePersonFanfareCamera)Fanfare == ThreePersonFanfareCamera.ThreeCharacters && !IsToggled)
                 {
                     // Special case, subtract one if three character camera and not everyone is alive
-                    output--;
+                    return -1;
                 }
-  
-                return Base + output;
-            }
-        }
 
-        public string Description => "Anacondaur";
-
-        public bool AllCharactersSurvived 
-        { 
-            get => _allCharactersSurvived;
-            set 
-            {
-                if (_allCharactersSurvived == value) return;
-                _allCharactersSurvived = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(RngAddition));
+                return 0;
             }
         }
     }
