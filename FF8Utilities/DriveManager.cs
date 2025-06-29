@@ -265,18 +265,19 @@ namespace FF8Utilities
 
         public async Task<DownloadResult> DownloadLateQuistisCSRFiles()
         {
+
             DriveService service = await GetDriveService().ConfigureAwait(false);
             FilesResource.ListRequest request = service.Files.List();
 
             request.Q = $"'{LateQuistisCSVFolder}' in parents and trashed = false";
-            request.Fields = "files(id, name, size, extension)";
+            request.Fields = "files(id, name, size, fileExtension)";
 
             FileList result = await request.ExecuteAsync().ConfigureAwait(false);
 
             List<DownloadResult> results = new List<DownloadResult>();
             foreach (File file in result.Files)
             {
-                results.Add(await DownloadFile(file, null, file.Name, false));
+                results.Add(await DownloadFile(file, null, Path.GetFileNameWithoutExtension(file.Name), false));
             }
 
             return results.Contains(DownloadResult.Error) ? DownloadResult.Error : DownloadResult.Downloaded;

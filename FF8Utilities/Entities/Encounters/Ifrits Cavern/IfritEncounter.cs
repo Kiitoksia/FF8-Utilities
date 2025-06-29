@@ -12,5 +12,13 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
             Abilities.Add(new SquallAttack());
             Abilities.Add(new EncounterAbilityModel("Ifrit Punches", 2));
         }
+
+        protected override int CustomRNGAddition
+        {
+            get 
+            {
+                return 2; // Always add +2 for the camera
+            }
+        }
     }
 }

@@ -115,7 +115,7 @@ namespace FF8Utilities.Models
             SecondDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             ThirdDolletEncounter = new SingleSoldierEncounter(false);
             ThirdDolletEncounter.PropertyChanged += EncounterPropertyChanged;
-            FourthDolletEncounter = new SingleSoldierEncounter(false);
+            FourthDolletEncounter = new SingleSoldierEncounter(true);
             FourthDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             BridgeEncounter = new SingleSoldierEncounter(true);
             BridgeEncounter.PropertyChanged += EncounterPropertyChanged;

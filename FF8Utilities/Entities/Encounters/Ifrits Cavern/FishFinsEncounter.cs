@@ -72,7 +72,7 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
             {
                 int output = SquallPhysicals * 2;
                 output += Limits;
-                output += !SingleFishKilled ? 22 : 11; // Fish fins floating up after being hit
+                output += SingleFishKilled ? 11 : 22; // Fish fins floating up after being hit
                 switch (Camera)
                 {
                     case null:

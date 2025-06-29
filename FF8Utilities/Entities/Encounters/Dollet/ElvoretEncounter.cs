@@ -18,5 +18,13 @@ namespace FF8Utilities.Entities.Encounters.Dollet
             Abilities.Add(new EncounterAbilityModel("Elvoret Storm Breath", 1));
             Abilities.Add(new Limit(4));
         }
+
+        protected override int CustomRNGAddition
+        {
+            get
+            {
+                return 3; // Elvoret appearing
+            }
+        }
     }
 }

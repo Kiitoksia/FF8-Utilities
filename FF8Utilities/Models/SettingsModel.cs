@@ -161,6 +161,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(CustomZellDelayFrame), CustomZellDelayFrame?.ToString() ?? string.Empty));
             xml.Add(new XElement(nameof(ZellCountdownTimer), ZellCountdownTimer.ToString()));
             xml.Add(new XElement(nameof(GameInstallationFolder), GameInstallationFolder ?? string.Empty));
+            xml.Add(new XElement(nameof(QuistisPatternsOrderBy), QuistisPatternsOrderBy.ToString()));
 
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
