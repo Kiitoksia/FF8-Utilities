@@ -418,7 +418,7 @@
                         Width="100"
                         Background="{Binding QuistisMashTextBackgroundBrush}"
                         BorderBrush="White"
-                        BorderThickness="2"
+                        BorderThickness="0,2,2,2"
                         Padding="10"
                         controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}">
                         <StackPanel>
