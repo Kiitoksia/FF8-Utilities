@@ -12,7 +12,7 @@ namespace FF8Utilities.Entities.Encounters.Dollet
 {
     public class TripleSoldierEncounter : BaseEncounterModel
     {
-        public TripleSoldierEncounter() : base("3X Soldier", 22, typeof(ThreePersonFanfareCamera))
+        public TripleSoldierEncounter(string description = "3X Soldier") : base(description, 22, typeof(ThreePersonFanfareCamera))
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new SeiferAttack());

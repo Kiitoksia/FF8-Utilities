@@ -7,7 +7,7 @@ namespace FF8Utilities.Entities.Encounters.Dollet
 {
     public class SingleSoldierEncounter : BaseEncounterModel
     {
-        public SingleSoldierEncounter(bool hasFanfare) : base("Soldier", 14, hasFanfare ? typeof(ThreePersonFanfareCamera) : null)
+        public SingleSoldierEncounter(bool hasFanfare, string description = "Soldier") : base(description, 14, hasFanfare ? typeof(ThreePersonFanfareCamera) : null)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new SeiferAttack());
