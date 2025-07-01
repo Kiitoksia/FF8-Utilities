@@ -26,7 +26,11 @@ namespace FF8Utilities.Models
             Description = description;
             Base = baseAddition;
             Abilities = new BindingList<EncounterAbilityModel>();
-            Abilities.ListChanged += (s, e) => OnPropertyChanged(nameof(Output));
+            Abilities.ListChanged += (s, e) =>
+            {
+                OnPropertyChanged(nameof(Output));
+                OnPropertyChanged(nameof(HiddenByDesigner));
+            };
 
             _usesFanfare = fanfareType != null;
             ShowFanfareOverride = _usesFanfare;
@@ -243,6 +247,7 @@ namespace FF8Utilities.Models
                     return;
                 _showFanfareOverride = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(HiddenByDesigner));
             }
         }
 
@@ -255,6 +260,18 @@ namespace FF8Utilities.Models
                     return;
                 _showToggleOverride = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(HiddenByDesigner));
+            }
+        }
+
+        public bool HiddenByDesigner
+        {
+            get
+            {
+                if (Abilities.Any(t => t.IsVisible)) return false;
+                if (_usesFanfare && ShowFanfareOverride) return false;
+                if (ShowToggleOption && ShowToggleOverride) return false;
+                return true;
             }
         }
     }
