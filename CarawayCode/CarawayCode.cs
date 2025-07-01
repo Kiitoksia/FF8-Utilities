@@ -15,6 +15,18 @@ namespace CarawayCode
         public static CarawayCodeOutput[] CalculateCode(PoleCount[] poles, bool hideUnlikelyResults)
         {
             // Create a list to store our possible subscripts
+
+            //var orderArr = Enumerable.Range(0, Options.SearchWidth / 2)
+            //    .SelectMany(offset => new[] { Options.DefaultStartIndex + offset, Options.DefaultStartIndex - offset })
+            //    .Where(d => d >= 0);
+
+            //var order = orderArr.Distinct().ToList();
+            //int min = order.Min();
+            //int max = order.Max();
+
+            //var test = new Caraway().CreateCarawayCodeTable(min, max);
+
+
             List<int> subscripts = new List<int>();
 
             

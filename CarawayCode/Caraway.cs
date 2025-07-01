@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CarawayCode.Entities;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -85,7 +87,7 @@ namespace CarawayCode
             }
         }
 
-        public void CreateCarawayCodeTable(int from, int to)
+        public List<CarawayOutput> CreateCarawayCodeTable(int from, int to)
         {
             RNG rng = new RNG();
             int margin = 10;
@@ -98,106 +100,124 @@ namespace CarawayCode
             // >> is a Right shift operand, which shifts the first operand the specified number of bits
             int[] sourceArray = rngStateArray.Select(t => (t >> 16) & 255).ToArray();
 
-            //var table = Enumerable.Range(0, to).Select(idx =>
-            //{
-            //    if (idx < from || idx > to) return null;
+            return Enumerable.Range(0, to).Select(idx =>
+            {
+                if (idx < from || idx > to) return null;
 
-            //    // source
-            //    int source = sourceArray[idx];
+                // source
+                int source = sourceArray[idx];
 
-            //    // The code
-            //    int rawCode = source;
+                // The code
+                int rawCode = source;
 
-            //    // Game does some logic if the code is out of bounds
-            //    if (source == 0) rawCode = 1;
-            //    else if (source >= 200) rawCode = source - 199;
+                // Game does some logic if the code is out of bounds
+                if (source == 0) rawCode = 1;
+                else if (source >= 200) rawCode = source - 199;
 
-            //    // Format it as a 3-digit 0 padded number
-            //    string code = rawCode.ToString().PadLeft(3, '0');
+                // Format it as a 3-digit 0 padded number
+                string code = rawCode.ToString().PadLeft(3, '0');
 
-            //    // The number of utility poles is rand (0..255)% 16
-            //    int polesMinIdx = idx - (Options.PolesArraySize + 3);
+                // The number of utility poles is rand (0..255)% 16
+                int polesMinIdx = idx - (Options.PolesArraySize + 3);
 
-            //    int[] polesArray = polesMinIdx < 0 ? null : sourceArray.Skip(polesMinIdx).Take(idx - 4 + 1 - polesMinIdx).Select(t => t % 16).ToArray();
+                int[] polesArray = polesMinIdx < 0 ? null : sourceArray.Skip(polesMinIdx).Take(idx - 4 + 1 - polesMinIdx).Select(t => t % 16).ToArray();
 
-            //    string polesHex = string.Join("", polesArray.Select(t => t.ToString("X")));
+                string polesHex = string.Join("", polesArray.Select(t => t.ToString("X")));
 
-            //    string bus = null;
-            //    string street = null;
-            //    string escalator = null;
-            //    string station = null;
+                string bus = null;
+                string street = null;
+                string escalator = null;
+                string station = null;
 
-            //    // Station NPC
-            //    if (idx - 1 >= 0)
-            //    {
-            //        if (sourceArray[idx - 3] >= 100) station = "None";
-            //        else station = "Walk";
-            //    }
+                // Station NPC
+                if (idx - 1 >= 0)
+                {
+                    if (sourceArray[idx - 3] >= 100) station = "None";
+                    else station = "Walk";
+                }
 
-            //    // Escalator NPC
-            //    if (idx - 2 >= 0)
-            //    {
-            //        if (sourceArray[idx - 2] >= 150)
-            //        {
-            //            if (sourceArray[idx - 1] >= 150) escalator = "None";
-            //            else escalator = "Boy";
-            //        }
-            //        else
-            //        {
-            //            if (sourceArray[idx - 1] >= 150) escalator = "Girl";
-            //            else escalator = "Boy + Girl";
-            //        }
-            //    }
+                // Escalator NPC
+                if (idx - 2 >= 0)
+                {
+                    if (sourceArray[idx - 2] >= 150)
+                    {
+                        if (sourceArray[idx - 1] >= 150) escalator = "None";
+                        else escalator = "Boy";
+                    }
+                    else
+                    {
+                        if (sourceArray[idx - 1] >= 150) escalator = "Girl";
+                        else escalator = "Boy + Girl";
+                    }
+                }
 
-            //    // Street NPC
-            //    if (sourceArray[idx + 1] >= 120)
-            //    {
-            //        if (sourceArray[idx  +1] >= 200)
-            //        {
-            //            if (sourceArray[idx + 3] >= 130) street = "Still -> Walk";
-            //            else street = "None";
-            //        }
-            //        else street = "None";
-            //    }
-            //    else street = "Walk";
+                // Street NPC
+                if (sourceArray[idx + 1] >= 120)
+                {
+                    if (sourceArray[idx + 1] >= 200)
+                    {
+                        if (sourceArray[idx + 3] >= 130) street = "Still -> Walk";
+                        else street = "None";
+                    }
+                    else street = "None";
+                }
+                else street = "Walk";
 
-            //    // Bus NPC
-            //    if (sourceArray[idx + 1] >= 200)
-            //    {
-            //        if (sourceArray[idx + 6] < 200)
-            //        {
-            //            if (sourceArray[idx + 4] >= 100)
-            //            {
-            //                if (sourceArray[idx + 5] >= 100) bus = "Spawn";
-            //                else bus = "Stop";
-            //            }
-            //            else
-            //            {
-            //                if (sourceArray[idx + 5] >= 100) bus = "Stop";
-            //                else bus = "Leave";
-            //            }
-            //        }
-            //        else bus = "None";
-            //    }
-            //    else
-            //    {
-            //        if (sourceArray[idx + 4] < 200)
-            //        {
-            //            if (sourceArray[idx] + 2 >= 100)
-            //            {
-            //                if (sourceArray[idx + 3] >= 100) bus = "Spawn";
-            //                else bus = "Stop";
-            //            }
-            //        }
-            //        else
-            //        {
-            //            if (sourceArray[idx + 3] >= 100) bus = "Stop";
-            //            else bus = "Leave";
-            //        }                    
-            //    }
-            //});
+                // Bus NPC
+                if (sourceArray[idx + 1] >= 200)
+                {
+                    if (sourceArray[idx + 6] < 200)
+                    {
+                        if (sourceArray[idx + 4] >= 100)
+                        {
+                            if (sourceArray[idx + 5] >= 100) bus = "Spawn";
+                            else bus = "Stop";
+                        }
+                        else
+                        {
+                            if (sourceArray[idx + 5] >= 100) bus = "Stop";
+                            else bus = "Leave";
+                        }
+                    }
+                    else bus = "None";
+                }
+                else
+                {
+                    if (sourceArray[idx + 4] < 200)
+                    {
+                        if (sourceArray[idx + 2] >= 100)
+                        {
+                            if (sourceArray[idx + 3] >= 100) bus = "Spawn";
+                            else bus = "Stop";
+                        }
+                        else
+                        {
+                            if (sourceArray[idx + 3] >= 100) bus = "Stop";
+                            else bus = "Leave";
+                        }
+                    }
+                    else bus = "None";
+                }
 
-            throw new NotImplementedException();
+                string codeInput = string.Join(", ", code.Reverse().Select(c =>
+                {
+                    string up = "↑";
+                    string down = "↓";
+                    string asIs = "-";
+                    string open = "[";
+                    string close = "]";
+
+                    int n = int.Parse(c.ToString());
+                    if (n == 0) return $"{open}{asIs}{close}";
+                    string direction = n <= 5 ? down : up;
+                    int count = n <= 5 ? n : 10 - n;
+                    return $"{direction}{count}";
+                }));
+
+                // RNG State - converted to hex format
+                var hexRngState = rngStateArray[idx].ToString("x8");
+                return new CarawayOutput(idx, hexRngState, source, code, polesArray, polesHex, station, escalator, street, bus, codeInput);
+            }).ToList();
         }
     }
 }
