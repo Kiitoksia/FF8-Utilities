@@ -26,7 +26,9 @@ namespace FF8Utilities
         [Description("[Frame 9] - Jellyeye (Biggs & Wedge)")]
         JellyEye_BiggsWedge = 9,
         [Description("[Frame 10] - Chimera (Thrustaevis)")]
-        Chimera_Thrustaevis = 10
+        Chimera_Thrustaevis = 10,
+        [Description("Late Quistis")]
+        LateQuistis = -1
     }
 
     [Flags]

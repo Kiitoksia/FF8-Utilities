@@ -96,8 +96,13 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
     <StackPanel>
-        <Controls:MetroAnimatedSingleRowTabControl
+        <Controls:MetroAnimatedTabControl            
             Controls:TabControlHelper.Underlined="SelectedTabItem">
+            <Controls:MetroAnimatedTabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </Controls:MetroAnimatedTabControl.Resources>
             <TabItem Header="Zell Card">
                 <Grid Margin="0,20,0,0">
                     <Grid.RowDefinitions>
@@ -133,23 +138,12 @@
                     </GroupBox>
                     <TextBlock Grid.Row="1" Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
                     <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,0,20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
                         <ComboBox 
-                                    Grid.Column="1"
                                     ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:QuistisPattern}}}"  
                                     SelectedValue="{Binding Pattern}"
                                     DisplayMemberPath="Description"
                                     HorizontalAlignment="Stretch"
-                                    Controls:VisibilityHelper.IsHidden="{Binding UseCustomQuistisPattern}"
                                     SelectedValuePath="Value"/>
-
-                        <TextBox Text="{Binding CustomQuistisPattern}" Controls:VisibilityHelper.IsVisible="{Binding UseCustomQuistisPattern}" VerticalContentAlignment="Center" Grid.Column="1"/>
-                        <ToggleButton  IsChecked="{Binding UseCustomQuistisPattern}" Style="{DynamicResource MahApps.Styles.Button.Square}">
-                            <TextBlock Text="Custom"/>
-                        </ToggleButton>
                     </Grid>
                     
                     <ToggleButton Grid.Row="1" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}" Controls:VisibilityHelper.IsHidden="{Binding UseCustomQuistisPattern}">
@@ -534,7 +528,7 @@
                     </ItemsControl>
                 </DockPanel>
             </TabItem>
-        </Controls:MetroAnimatedSingleRowTabControl>
+        </Controls:MetroAnimatedTabControl>
     </StackPanel>
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>

@@ -138,6 +138,22 @@ namespace FF8Utilities.Models
             }           
             
             Instance = this;
+
+            PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(Pattern))
+                {
+                    if (Pattern == QuistisPattern.LateQuistis && string.IsNullOrWhiteSpace(CustomQuistisPattern))
+                    {
+                        // Don't let them select this
+                        Window.BeginInvoke(() =>
+                        {
+                            Pattern = QuistisPattern.Elastoid_JellyEye;
+                            Window.ShowMessageAsync("Error", "Use tracker to set late quistis pattern");
+                        });
+                    }
+                }
+            };
         }
 
         public static MainModel Instance { get; private set; }

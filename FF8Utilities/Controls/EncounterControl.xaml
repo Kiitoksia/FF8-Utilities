@@ -75,7 +75,6 @@
                             <mah:NumericUpDown
                                 Grid.Column="2"
                                 Value="{Binding Count}"
-                                BorderThickness="0"
                                 Minimum="0" />
                             <Border Background="Gray" Grid.Row="1" Grid.ColumnSpan="3" Height="1" VerticalAlignment="Center" x:Name="SeperatorBlock"/>
                         </Grid>

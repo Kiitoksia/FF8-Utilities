@@ -260,12 +260,14 @@ namespace FF8Utilities.Models
             {
                 MainModel.Instance.UseCustomQuistisPattern = true;
                 MainModel.Instance.CustomQuistisPattern = window.ResultHex;
+                MainModel.Instance.Pattern = QuistisPattern.LateQuistis;
                 QuistisCardObtained = true;
             }
             else
             {
                 MainModel.Instance.UseCustomQuistisPattern = false;
                 MainModel.Instance.CustomQuistisPattern = null;
+                MainModel.Instance.Pattern = QuistisPattern.Elastoid_JellyEye;
                 QuistisCardObtained = false;
             }                        
         }
@@ -697,6 +699,7 @@ namespace FF8Utilities.Models
                 _focusedTabIndex = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ShowQuistisPatternButton));
+                OnPropertyChanged(nameof(ShowZellButton));
             }
         }
 
@@ -716,6 +719,8 @@ namespace FF8Utilities.Models
                 OnPropertyChanged();
             }
         }
+
+        public bool ShowZellButton => FocusedTabIndex == 3;
 
         public SolidColorBrush QuistisMashTextBackgroundBrush
         {

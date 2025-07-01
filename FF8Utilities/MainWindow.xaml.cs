@@ -163,6 +163,5 @@ namespace FF8Utilities
         {
             ResetFishFinManip();            
         }
-
     }
 }
