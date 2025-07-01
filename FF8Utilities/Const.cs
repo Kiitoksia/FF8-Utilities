@@ -151,14 +151,6 @@ namespace FF8Utilities
         French
     }
 
-    public enum DefaultFishFinEncounters
-    {
-        [Description("Standard (3 Battles)")]
-        ThreeBattles,
-        [Description("Quetz Manip (1.5 battles)")]
-        QuetzManip,
-    }
-
     public enum QuistisPatternsOrderBy
     {
         Alphabetical,

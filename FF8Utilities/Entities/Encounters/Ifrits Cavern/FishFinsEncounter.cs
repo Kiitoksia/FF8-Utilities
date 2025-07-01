@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 using FF8Utilities.Interfaces;
 using FF8Utilities.Models;
 
@@ -95,5 +96,32 @@ namespace FF8Utilities.Entities.Encounters.Ifrits_Cavern
         public string Description => "Fish Fins";
 
         public int Base => 15;
+
+        public XElement ToXml()
+        {
+            XElement xml = new XElement(nameof(FishFinsEncounter));
+            xml.Add(new XAttribute(nameof(SquallPhysicals), SquallPhysicals));
+            xml.Add(new XAttribute(nameof(Limits), Limits));
+            xml.Add(new XAttribute(nameof(SingleFishKilled), SingleFishKilled));
+            return xml;
+        }
+
+        public void FromXml(XElement xml)
+        {
+            if (int.TryParse(xml.Attribute(nameof(SquallPhysicals))?.Value ?? string.Empty, out int squallPhysicals))
+            {
+                SquallPhysicals = squallPhysicals;
+            }
+
+            if (int.TryParse(xml.Attribute(nameof(Limits))?.Value ?? string.Empty, out int limits))
+            {
+                Limits = limits;
+            }
+
+            if (bool.TryParse(xml.Attribute(nameof(SingleFishKilled))?.Value ?? string.Empty, out bool singleFin))
+            {
+                SingleFishKilled = singleFin;
+            }
+        }
     }
 }

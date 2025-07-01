@@ -16,7 +16,6 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance models:BaseEncounterModel}"
     d:DesignHeight="450"
-    mah:VisibilityHelper.IsCollapsed="{Binding HiddenByDesigner}"
     d:DesignWidth="800">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
@@ -91,41 +90,12 @@
             </Grid>
             <Grid mah:VisibilityHelper.IsVisible="{Binding FanfareVisible}" Margin="20,3,0,3">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition>
-                        <ColumnDefinition.Width>
-                            <Binding Path="DataContext.DesignMode" RelativeSource="{RelativeSource AncestorType=Window}">
-                                <Binding.Converter>
-                                    <converters:BoolToGridLengthConverter True="60" False="0"/>
-                                </Binding.Converter>
-                            </Binding>
-                        </ColumnDefinition.Width>
-                    </ColumnDefinition>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
 
-                <ToggleButton Content="Visible" IsChecked="{Binding ShowFanfareOverride}"/>
-                <TextBlock Text="Camera" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold">
-                    <mah:VisibilityHelper.IsVisible>
-                        <MultiBinding>
-                            <MultiBinding.Converter>
-                                <converters:BooleanOrConverter/>
-                            </MultiBinding.Converter>
-                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.DesignMode" Mode="OneWay"/>
-                            <Binding Path="ShowToggleOverride"/>
-                        </MultiBinding>
-                    </mah:VisibilityHelper.IsVisible>
-                </TextBlock>
-                <Grid Grid.Column="2">
-                    <mah:VisibilityHelper.IsVisible>
-                        <MultiBinding>
-                            <MultiBinding.Converter>
-                                <converters:BooleanOrConverter/>
-                            </MultiBinding.Converter>
-                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.DesignMode" Mode="OneWay"/>
-                            <Binding Path="ShowFanfareOverride"/>
-                        </MultiBinding>
-                    </mah:VisibilityHelper.IsVisible>
+                <TextBlock Text="Camera" VerticalAlignment="Center" FontWeight="Bold"/>
+                <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="30"/>

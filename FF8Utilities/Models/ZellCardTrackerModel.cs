@@ -80,22 +80,13 @@ namespace FF8Utilities.Models
             SecondBatsEncounter = new TwoBatsEncounter();
             SecondBatsEncounter.PropertyChanged += EncounterPropertyChanged;
             
-            FishFinEncounters = new BindingList<FishFinsEncounter>();
-            
-            switch (SettingsModel.Instance.DefaultFishFinEncounters)
+            FishFinEncounters = new BindingList<FishFinsEncounter>
             {
-                case DefaultFishFinEncounters.ThreeBattles:
-                    FishFinEncounters.Add(new FishFinsEncounter());
-                    FishFinEncounters.Add(new FishFinsEncounter());
-                    FishFinEncounters.Add(new FishFinsEncounter());
-                    break;
-                case DefaultFishFinEncounters.QuetzManip:
-                    FishFinEncounters.Add(new FishFinsEncounter { Limits = 1 });
-                    FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true, Limits = 0 });
-                    break;
-                default: throw new NotImplementedException();
-            }
-
+                // Default to 3 encounters
+                new FishFinsEncounter(),
+                new FishFinsEncounter(),
+                new FishFinsEncounter()
+            };
             foreach (FishFinsEncounter f in FishFinEncounters)
             {
                 f.PropertyChanged += (s, e) =>
@@ -203,6 +194,24 @@ namespace FF8Utilities.Models
 
                 encounter.FromXml(encounterXml);
             }
+
+            XElement fishFinXml = xml.Element(nameof(FishFinEncounters));
+            if (fishFinXml != null)
+            {
+                FishFinEncounters.Clear();
+                foreach (XElement fishFin in fishFinXml.Elements(nameof(FishFinsEncounter)))
+                {
+                    FishFinsEncounter enc = new FishFinsEncounter();
+                    enc.FromXml(fishFin);
+
+                    enc.PropertyChanged += (s, e) =>
+                    {
+                        OnPropertyChanged(nameof(Output));
+                    };
+
+                    FishFinEncounters.Add(enc);
+                }
+            }
         }
 
         private void SaveEncounterDetails()
@@ -223,6 +232,14 @@ namespace FF8Utilities.Models
             xml.Add(ElvoretEncounter.ToXml(nameof(ElvoretEncounter)));
             xml.Add(SpiderTankEncounter.ToXml(nameof(SpiderTankEncounter)));
             xml.Add(RedSoldierEncounter.ToXml(nameof(RedSoldierEncounter)));
+
+            XElement fishFinXml = new XElement(nameof(FishFinEncounters));
+            foreach (FishFinsEncounter encounter in FishFinEncounters)
+            {
+                fishFinXml.Add(encounter.ToXml());
+            }
+
+            xml.Add(fishFinXml);
 
             File.WriteAllText(Path.Combine(Const.PackagesFolder, TrackingSettingsFilename), xml.ToString());
         }

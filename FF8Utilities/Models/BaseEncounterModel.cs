@@ -17,8 +17,6 @@ namespace FF8Utilities.Models
         private bool _isToggled;
         private bool _usesFanfare;
         private string _notes;
-        private bool _showFanfareOverride;
-        private bool _showToggleOverride;
 
 
         public BaseEncounterModel(string description, int baseAddition, Type fanfareType = null)
@@ -29,11 +27,9 @@ namespace FF8Utilities.Models
             Abilities.ListChanged += (s, e) =>
             {
                 OnPropertyChanged(nameof(Output));
-                OnPropertyChanged(nameof(HiddenByDesigner));
             };
 
             _usesFanfare = fanfareType != null;
-            ShowFanfareOverride = _usesFanfare;
             FanfareTypeList = new BindingList<EnumerationMember>();
 
             if (fanfareType != null)
@@ -57,17 +53,6 @@ namespace FF8Utilities.Models
         public void FromXml(XElement xml)
         {
             Notes = xml.Attribute(nameof(Notes))?.Value;
-
-            if (bool.TryParse(xml.Attribute(nameof(ShowFanfareOverride))?.Value ?? bool.TrueString, out bool fanfare))
-            {
-                ShowFanfareOverride = fanfare;
-            }
-
-            if (bool.TryParse(xml.Attribute(nameof(ShowToggleOverride))?.Value ?? bool.TrueString, out bool toggle))
-            {
-                ShowToggleOverride = toggle;
-            }
-
             foreach (XElement abilityXml in xml.Elements("Ability"))
             {
                 string description = abilityXml.Attribute(nameof(EncounterAbilityModel.Description))?.Value;
@@ -91,8 +76,6 @@ namespace FF8Utilities.Models
             XElement xml = new XElement(nameof(BaseEncounterModel));
             xml.Add(new XAttribute("Identifier", identifier));
             xml.Add(new XAttribute(nameof(Notes), Notes ?? string.Empty));
-            xml.Add(new XAttribute(nameof(ShowFanfareOverride), ShowFanfareOverride));
-            xml.Add(new XAttribute(nameof(ShowToggleOverride), ShowToggleOverride));
             foreach (EncounterAbilityModel ability in Abilities)
             {
                 XElement abilityXml = new XElement("Ability");
@@ -232,46 +215,6 @@ namespace FF8Utilities.Models
 
                 _notes = value;
                 OnPropertyChanged();
-            }
-        }        
-
-        /// <summary>
-        /// Always false if no fanfaretype.  Otherwise uses DesignMode settings
-        /// </summary>
-        public bool ShowFanfareOverride
-        {
-            get => _showFanfareOverride;
-            set
-            {
-                if (_showFanfareOverride == value)
-                    return;
-                _showFanfareOverride = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(HiddenByDesigner));
-            }
-        }
-
-        public bool ShowToggleOverride
-        {
-            get => _showToggleOverride;
-            set
-            {
-                if (_showToggleOverride == value)
-                    return;
-                _showToggleOverride = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(HiddenByDesigner));
-            }
-        }
-
-        public bool HiddenByDesigner
-        {
-            get
-            {
-                if (Abilities.Any(t => t.IsVisible)) return false;
-                if (_usesFanfare && ShowFanfareOverride) return false;
-                if (ShowToggleOption && ShowToggleOverride) return false;
-                return true;
             }
         }
     }

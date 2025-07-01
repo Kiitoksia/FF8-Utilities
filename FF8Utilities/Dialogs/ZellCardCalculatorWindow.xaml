@@ -438,6 +438,7 @@
                     Width="200"
                     Command="{Binding LaunchZellCommand}"
                     Padding="10"
+                    Height="65"
                     controls:VisibilityHelper.IsVisible="{Binding ShowZellButton}"
                     Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
                     <TextBlock FontSize="16" Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}" />

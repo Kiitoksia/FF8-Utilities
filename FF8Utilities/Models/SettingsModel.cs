@@ -118,13 +118,6 @@ namespace FF8Utilities.Models
             XElement gameInstallFolder = xml?.Element(nameof(GameInstallationFolder));
             GameInstallationFolder = gameInstallFolder?.Value;
 
-            XElement defaultFishFinEncountersXml = xml?.Element(nameof(DefaultFishFinEncounters));
-            if (defaultFishFinEncountersXml != null)
-            {
-                if (Enum.TryParse(defaultFishFinEncountersXml.Value, out DefaultFishFinEncounters defaultFishFinEncs)) DefaultFishFinEncounters = defaultFishFinEncs;
-            }
-
-            //QuistisPatternsOrderBy
 
             XElement quistisPatternOrderByXml = xml?.Element(nameof(QuistisPatternsOrderBy));
             if (quistisPatternOrderByXml != null)
@@ -691,8 +684,6 @@ namespace FF8Utilities.Models
         public bool Get2ndBridgeEncounter { get; set; }
 
         public bool GetRedSoldierEncounter { get; set; }
-
-        public DefaultFishFinEncounters DefaultFishFinEncounters { get; set; } = DefaultFishFinEncounters.ThreeBattles;
 
         public QuistisPatternsOrderBy QuistisPatternsOrderBy { get; set; } = QuistisPatternsOrderBy.Frame;
 
