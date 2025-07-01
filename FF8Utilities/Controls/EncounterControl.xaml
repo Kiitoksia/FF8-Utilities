@@ -48,7 +48,6 @@
                                         <converters:BooleanOrConverter/>
                                     </MultiBinding.Converter>
                                     <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.DesignMode" Mode="OneWay"/>
-
                                     <Binding Path="IsVisible"/>
                                 </MultiBinding>
                             </mah:VisibilityHelper.IsVisible>
@@ -91,11 +90,41 @@
             </Grid>
             <Grid mah:VisibilityHelper.IsVisible="{Binding FanfareVisible}" Margin="20,3,0,3">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition>
+                        <ColumnDefinition.Width>
+                            <Binding Path="DataContext.DesignMode" RelativeSource="{RelativeSource AncestorType=Window}">
+                                <Binding.Converter>
+                                    <converters:BoolToGridLengthConverter True="60" False="0"/>
+                                </Binding.Converter>
+                            </Binding>
+                        </ColumnDefinition.Width>
+                    </ColumnDefinition>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Camera" VerticalAlignment="Center" FontWeight="Bold" />
-                <Grid Grid.Column="1">
+
+                <ToggleButton Content="Visible" IsChecked="{Binding ShowToggleOverride}"/>
+                <TextBlock Text="Camera" Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold">
+                    <mah:VisibilityHelper.IsVisible>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <converters:BooleanOrConverter/>
+                            </MultiBinding.Converter>
+                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.DesignMode" Mode="OneWay"/>
+                            <Binding Path="ShowToggleOverride"/>
+                        </MultiBinding>
+                    </mah:VisibilityHelper.IsVisible>
+                </TextBlock>
+                <Grid Grid.Column="2">
+                    <mah:VisibilityHelper.IsVisible>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <converters:BooleanOrConverter/>
+                            </MultiBinding.Converter>
+                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.DesignMode" Mode="OneWay"/>
+                            <Binding Path="ShowToggleOverride"/>
+                        </MultiBinding>
+                    </mah:VisibilityHelper.IsVisible>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="30"/>
