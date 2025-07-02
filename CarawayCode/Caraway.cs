@@ -28,14 +28,14 @@ namespace CarawayCode
         {
             private static int Initial_State = 0x00000001;
 
-            internal long Current_Rng { get; private set; }
+            internal int Current_Rng { get; private set; }
 
             internal RNG()
             {
                 Current_Rng = 1;
             }
 
-            private long CreateRand(long? seed)
+            private int CreateRand(long? seed)
             {
                 /**
                 * https://en.wikipedia.org/wiki/Linear_congruential_generator
@@ -60,12 +60,12 @@ namespace CarawayCode
 
                 long z = seed ?? randomSeed;
                 long rngCalc = (z * a + b) & m;
-                return rngCalc;
+                return (int)rngCalc;
             }
 
-            public long NextRng()
+            public int NextRng()
             {
-                long oldRng = Current_Rng;
+                int oldRng = Current_Rng;
                 Current_Rng = CreateRand(oldRng);
                 return oldRng;
             }
@@ -94,7 +94,7 @@ namespace CarawayCode
             int size = to + margin;
 
             int[] rngStateArray = GetRange(0, size);  //0 - (1015+250)
-            rngStateArray.Select(t => rng.NextRng());
+            rngStateArray = rngStateArray.Select(t => rng.NextRng()).ToArray();
 
             // Random numbers actually used (0..255)
             // >> is a Right shift operand, which shifts the first operand the specified number of bits
