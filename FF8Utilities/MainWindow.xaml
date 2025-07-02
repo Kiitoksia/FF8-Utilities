@@ -13,6 +13,7 @@
         xmlns:ff8Utilities="clr-namespace:FF8Utilities"
         xmlns:data="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
         xmlns:converters="clr-namespace:FF8Utilities.Converters"
+        xmlns:controls="clr-namespace:FF8Utilities.Controls"
         ShowMaxRestoreButton="False"
         x:Name="Window"
         mc:Ignorable="d"
@@ -464,11 +465,9 @@
                                             <TextBlock Grid.Row="0" Grid.Column="2" Text="Option 2"/>
                                             <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#FF798299" CornerRadius="5"/>
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Complete"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding FirstOption}" FontWeight="Bold"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding SecondOption}" FontWeight="Bold"/>
+                                            <controls:CarawayOptionControl Grid.Row="2" Grid.Column="1" DataContext="{Binding FirstOption}"/>
                                             <TextBlock Grid.Row="3" Grid.Column="0" Text="Incomplete"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ThirdOption}" FontWeight="Bold"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding FourthOption}" FontWeight="Bold"/>
+                                            <controls:CarawayOptionControl Grid.Row="3" Grid.Column="1" DataContext="{Binding SecondOption}"/>
                                         </Grid>
                                     </GroupBox>
                                 </DataTemplate>
