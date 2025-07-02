@@ -362,7 +362,7 @@
                         <ColumnDefinition Width="0.5*"/>
                         <ColumnDefinition Width="0.5*"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Input" Width="300" Height="580" VerticalAlignment="Top" Margin="0,0,10,0">
+                    <GroupBox Header="Input" Width="300" Height="610" VerticalAlignment="Top" Margin="0,0,10,0">
                         <StackPanel>
                             <TextBlock Margin="5" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">
                                 Only input complete sequences
@@ -435,11 +435,11 @@
                             </GroupBox>
                         </StackPanel>
                     </GroupBox>
-                    <StackPanel Height="600" Margin="0,0,10,0" Grid.Column="1">
+                    <StackPanel Height="610" Margin="0,0,10,0" Grid.Column="1">
                         <GroupBox Header="No Subscripts Found" Visibility="{Binding NoSubscriptsDetected, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
                             <TextBlock Text="No results found for input poles."/>
                         </GroupBox>
-                        <ScrollViewer Height="600">
+                        <ScrollViewer Height="610">
                             <ItemsControl ItemsSource="{Binding CarawayOutput}" >
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
