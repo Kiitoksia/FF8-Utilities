@@ -13,7 +13,7 @@ namespace CarawayCode.Entities
         /// <summary>
         /// Constructor will return a valid output
         /// </summary>
-        public CarawayCodeOutput(string subScript, string firstOption, string secondOption, string thirdOption, string fourthOption)
+        public CarawayCodeOutput(string subScript, CarawayOption firstOption, CarawayOption secondOption, CarawayOption thirdOption, CarawayOption fourthOption)
         {
             Subscript = subScript;
             FirstOption = firstOption;
@@ -32,10 +32,10 @@ namespace CarawayCode.Entities
             ErrorText = errorText;
         }
 
-        public string FirstOption { get; }
-        public string SecondOption { get; }
-        public string ThirdOption { get;}
-        public string FourthOption { get; }
+        public CarawayOption FirstOption { get; }
+        public CarawayOption SecondOption { get; }
+        public CarawayOption ThirdOption { get;}
+        public CarawayOption FourthOption { get; }
 
         public string Subscript { get; }
 
@@ -45,5 +45,30 @@ namespace CarawayCode.Entities
         public string SubscriptDisplay => $"Subscript: {Subscript}";
 
         public bool LikelyCSR => int.Parse(Subscript) < 320;
+
+    }
+
+    public class CarawayOption
+    {
+        internal CarawayOption(CarawayOutput output)
+        {
+            Code = output.Code;
+            Station = output.Station;
+            Escalator = output.Escalator;
+            Street = output.Street;
+            Bus = output.Bus;
+            Input = output.Input;
+        }
+
+        public string Code { get; }
+        public string Station { get; }
+
+        public string Escalator { get; }
+
+        public string Street { get; }
+
+        public string Bus { get; }
+
+        public string Input { get; }
     }
 }

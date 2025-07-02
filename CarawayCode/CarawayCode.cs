@@ -24,7 +24,7 @@ namespace CarawayCode
             int min = order.Min();
             int max = order.Max();
 
-            var test = new Caraway().CreateCarawayCodeTable(min, max);
+            List<CarawayOutput> calculatedOutput = new Caraway().CreateCarawayCodeTable(min, max).Where(t => t != null).ToList();
 
 
             List<int> subscripts = new List<int>();
@@ -83,7 +83,17 @@ namespace CarawayCode
                     if (key < 220 || key > 580) continue;
                 }
 
-                output.Add(new CarawayCodeOutput($"{key + 1}", Const.Codes[key], Const.Codes[key + 2], Const.Codes[key + 1], Const.Codes[key + 3]));
+                CarawayOutput option1 = calculatedOutput.SingleOrDefault(t => t.Index == key);
+                CarawayOutput option2 = calculatedOutput.SingleOrDefault(t => t.Index == key + 2);
+                CarawayOutput option3 = calculatedOutput.SingleOrDefault(t => t.Index == key + 1);
+                CarawayOutput option4 = calculatedOutput.SingleOrDefault(t => t.Index == key + 3);
+
+
+                output.Add(new CarawayCodeOutput($"{key + 1}", 
+                    option1 != null ? new CarawayOption(option1) : null, 
+                    option2 != null ? new CarawayOption(option2) : null,
+                    option3 != null ? new CarawayOption(option3) : null,
+                    option4 != null ? new CarawayOption(option4) : null));
             }
 
 
