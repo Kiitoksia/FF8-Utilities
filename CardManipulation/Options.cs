@@ -1,7 +1,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace ff8_card_manip
+namespace CardManipulation
 {
     public class Options
     {

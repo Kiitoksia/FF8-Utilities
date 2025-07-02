@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ff8_card_manip
+namespace CardManipulation
 {
     public class PlayerTable
     {

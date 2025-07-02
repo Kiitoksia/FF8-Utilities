@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ff8_card_manip
+namespace CardManipulation
 {
     public class CardTable
     {

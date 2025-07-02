@@ -1,6 +1,6 @@
 using System;
 
-namespace ff8_card_manip
+namespace CardManipulation
 {
     public static class DateTimeExtensions
     {
