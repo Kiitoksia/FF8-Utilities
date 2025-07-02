@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="Caraway.cs" />
     <Compile Include="CarawayCode.cs" />
-    <Compile Include="Const.cs" />
     <Compile Include="Entities\CarawayCodeOutput.cs" />
     <Compile Include="Entities\CarawayOutput.cs" />
     <Compile Include="Entities\PoleCount.cs" />
