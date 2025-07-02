@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace CarawayCode.Entities
 {
-    [DebuggerDisplay("Subscript: {Subscript}, {FirstOption}, {SecondOption}, {ThirdOption}, {FourthOption}")]
+    [DebuggerDisplay("Subscript: {Subscript}")]
     public class CarawayCodeOutput
     {
         /// <summary>
         /// Constructor will return a valid output
         /// </summary>
-        public CarawayCodeOutput(string subScript, CarawayOption firstOption, CarawayOption secondOption, CarawayOption thirdOption, CarawayOption fourthOption)
+        public CarawayCodeOutput(string subScript, CarawayOption completeOption, CarawayOption incompleteOption)
         {
             Subscript = subScript;
-            FirstOption = firstOption;
-            SecondOption = secondOption;
-            ThirdOption = thirdOption;
-            FourthOption = fourthOption;
+            CompleteOption = completeOption;
+            IncompleteOption = incompleteOption;
             IsValid = true;
         }
 
@@ -32,10 +30,8 @@ namespace CarawayCode.Entities
             ErrorText = errorText;
         }
 
-        public CarawayOption FirstOption { get; }
-        public CarawayOption SecondOption { get; }
-        public CarawayOption ThirdOption { get;}
-        public CarawayOption FourthOption { get; }
+        public CarawayOption CompleteOption { get; }
+        public CarawayOption IncompleteOption { get; }
 
         public string Subscript { get; }
 

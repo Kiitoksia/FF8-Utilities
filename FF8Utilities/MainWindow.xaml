@@ -434,7 +434,7 @@
                         <GroupBox Header="No Subscripts Found" Visibility="{Binding NoSubscriptsDetected, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
                             <TextBlock Text="No results found for input poles."/>
                         </GroupBox>
-                        <ListBox Height="600" ItemsSource="{Binding CarawayOutput}">
+                        <ListBox Height="600" ItemsSource="{Binding CarawayOutput}" IsHitTestVisible="False">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <GroupBox Header="{Binding SubscriptDisplay}" Margin="0,0,0,5">
@@ -448,27 +448,14 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </GroupBox.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition Height="1"/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Last Series"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Option 1"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Option 2"/>
-                                            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Background="#FF798299" CornerRadius="5"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Complete"/>
-                                            <controls:CarawayOptionControl Grid.Row="2" Grid.Column="1" DataContext="{Binding FirstOption}"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Incomplete"/>
-                                            <controls:CarawayOptionControl Grid.Row="3" Grid.Column="1" DataContext="{Binding SecondOption}"/>
-                                        </Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="Last Series Complete" FontSize="16" HorizontalAlignment="Center"/>
+                                            <Border Background="#FF798299" CornerRadius="5"/>
+                                            <controls:CarawayOptionControl DataContext="{Binding CompleteOption}"/>
+                                            <TextBlock Text="Last Series Incomplete" FontSize="16" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                                            <Border Background="#FF798299" CornerRadius="5"/>
+                                            <controls:CarawayOptionControl Grid.Row="3" Grid.Column="1" DataContext="{Binding IncompleteOption}"/>
+                                        </StackPanel>
                                     </GroupBox>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

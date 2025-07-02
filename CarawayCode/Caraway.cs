@@ -20,7 +20,7 @@ namespace CarawayCode
 
     internal class Caraway
     {
-        private static int[] GetRange(int start, int end) => Enumerable.Range(start, end - start  +1).ToArray();
+        private static uint[] GetRange(int start, int end) => Enumerable.Range(start, end - start  +1).Select(t => (uint)t).ToArray();
 
         private bool ArrayCompare(int[] array1, int[] array2) => Enumerable.SequenceEqual(array1.OrderBy(t => t), array2.OrderBy(t => t));
 
@@ -28,14 +28,14 @@ namespace CarawayCode
         {
             private static int Initial_State = 0x00000001;
 
-            internal int Current_Rng { get; private set; }
+            internal uint Current_Rng { get; private set; }
 
             internal RNG()
             {
                 Current_Rng = 1;
             }
 
-            private int CreateRand(long? seed)
+            private uint CreateRand(long? seed)
             {
                 /**
                 * https://en.wikipedia.org/wiki/Linear_congruential_generator
@@ -46,11 +46,11 @@ namespace CarawayCode
                 * NewRNG = (OldRNG * a + b) mod m
                 **/
 
-                long a = 0x41C64E6D;
-                long b = 0x3039;
-                long m = 0xffffffff;
+                uint a = 0x41C64E6D;
+                uint b = 0x3039;
+                uint m = 0xffffffff;
 
-                long randomSeed;
+                uint randomSeed;
                 using (var rng = RandomNumberGenerator.Create())
                 {
                     byte[] bytes = new byte[4];
@@ -59,13 +59,13 @@ namespace CarawayCode
                 }
 
                 long z = seed ?? randomSeed;
-                long rngCalc = (z * a + b) & m;
-                return (int)rngCalc;
+                uint rngCalc = (uint)(((ulong)z * a + b) & m); // Use ulong to avoid overflow
+                return (uint)rngCalc;
             }
 
-            public int NextRng()
+            public uint NextRng()
             {
-                int oldRng = Current_Rng;
+                uint oldRng = Current_Rng;
                 Current_Rng = CreateRand(oldRng);
                 return oldRng;
             }
@@ -93,12 +93,12 @@ namespace CarawayCode
             int margin = 10;
             int size = to + margin;
 
-            int[] rngStateArray = GetRange(0, size);  //0 - (1015+250)
+            uint[] rngStateArray = GetRange(0, size);  //0 - (1015+250)
             rngStateArray = rngStateArray.Select(t => rng.NextRng()).ToArray();
 
             // Random numbers actually used (0..255)
             // >> is a Right shift operand, which shifts the first operand the specified number of bits
-            int[] sourceArray = rngStateArray.Select(t => (t >> 16) & 255).ToArray();
+            int[] sourceArray = rngStateArray.Select(t => Convert.ToInt32((t >> 16) & 255)).ToArray();
 
             return Enumerable.Range(0, to).Select(idx =>
             {

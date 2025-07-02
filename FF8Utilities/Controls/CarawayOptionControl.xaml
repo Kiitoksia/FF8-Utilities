@@ -6,6 +6,7 @@
              xmlns:c="clr-namespace:CarawayCode.Entities;assembly=CarawayCode"
              xmlns:local="clr-namespace:FF8Utilities.Controls"
              mc:Ignorable="d" 
+             Margin="5"
              d:DataContext="{d:DesignInstance c:CarawayOption}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -21,18 +22,19 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Code"/>
-        <TextBlock Text="{Binding Code}" Grid.Column="1"/>
 
-        <TextBlock Text="Inputs" Grid.Row="1"/>
-        <TextBlock Text="{Binding Input}" Grid.Row="1" Grid.Column="1"/>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding Code}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Input}" Margin="20,0,0,0" FontSize="16" VerticalAlignment="Center"/>
+        </StackPanel>
+
 
         <TextBlock Text="NPC Details" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold"/>
         
