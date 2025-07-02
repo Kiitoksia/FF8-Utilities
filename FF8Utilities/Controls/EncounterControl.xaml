@@ -53,7 +53,7 @@
                             </mah:VisibilityHelper.IsVisible>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
-                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="6"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition>
@@ -75,7 +75,7 @@
                                 Grid.Column="2"
                                 Value="{Binding Count}"
                                 Minimum="0" />
-                            <Border Background="Gray" Grid.Row="1" Grid.ColumnSpan="3" Height="1" VerticalAlignment="Center" x:Name="SeperatorBlock"/>
+                            <Border Background="Gray" Grid.Row="1" Grid.ColumnSpan="3" Height="1" VerticalAlignment="Bottom" x:Name="SeperatorBlock"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

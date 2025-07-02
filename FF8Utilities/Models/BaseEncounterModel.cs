@@ -53,6 +53,10 @@ namespace FF8Utilities.Models
         public void FromXml(XElement xml)
         {
             Notes = xml.Attribute(nameof(Notes))?.Value;
+            if (bool.TryParse(xml.Attribute(nameof(IsToggled))?.Value ?? string.Empty, out bool isToggled))
+            {
+                IsToggled = isToggled;
+            }
             foreach (XElement abilityXml in xml.Elements("Ability"))
             {
                 string description = abilityXml.Attribute(nameof(EncounterAbilityModel.Description))?.Value;
@@ -76,6 +80,7 @@ namespace FF8Utilities.Models
             XElement xml = new XElement(nameof(BaseEncounterModel));
             xml.Add(new XAttribute("Identifier", identifier));
             xml.Add(new XAttribute(nameof(Notes), Notes ?? string.Empty));
+            xml.Add(new XAttribute(nameof(IsToggled), IsToggled));
             foreach (EncounterAbilityModel ability in Abilities)
             {
                 XElement abilityXml = new XElement("Ability");
