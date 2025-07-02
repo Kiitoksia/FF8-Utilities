@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:c="clr-namespace:CarawayCode.Entities;assembly=CarawayCode"
              xmlns:local="clr-namespace:FF8Utilities.Controls"
+             xmlns:converters="clr-namespace:FF8Utilities.Converters"
              mc:Ignorable="d" 
              Margin="5"
              d:DataContext="{d:DesignInstance c:CarawayOption}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <converters:BoolToGridLengthConverter x:Key="ShowConverter" True="30" False="0"/>
         <Style TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
@@ -21,33 +23,52 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition Height="10"/>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="{Binding Path=DataContext.ShowCarawayNPCMovement, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ShowConverter}}"/>
+            <RowDefinition Height="{Binding Path=DataContext.ShowCarawayNPCMovement, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ShowConverter}}"/>
+            <RowDefinition Height="{Binding Path=DataContext.ShowCarawayNPCMovement, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ShowConverter}}"/>
+            <RowDefinition Height="{Binding Path=DataContext.ShowCarawayNPCMovement, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ShowConverter}}"/>
+            <RowDefinition Height="{Binding Path=DataContext.ShowCarawayNPCMovement, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ShowConverter}}"/>
         </Grid.RowDefinitions>
 
+        <Grid Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
-            <TextBlock Text="{Binding Code}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding Input}" Margin="20,0,0,0" FontSize="16" VerticalAlignment="Center"/>
-        </StackPanel>
+            <Button IsHitTestVisible="False" Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}" Grid.Column="1">
+                <TextBlock Text="{Binding Code}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+            </Button>
+            <TextBlock Text="{Binding Input}" FontSize="16" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Center"/>
+
+            <TextBlock Text="Backup" Grid.Row="1" HorizontalAlignment="Center"/>
+            <Button IsHitTestVisible="False"  Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}" Grid.Row="1" Grid.Column="1" Background="Transparent">
+                <TextBlock Text="{Binding BackupCode}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+            </Button>
+            <TextBlock Text="{Binding BackupInput}" FontSize="16" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"/>
+        </Grid>
 
 
-        <TextBlock Text="NPC Details" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold"/>
+
+        <TextBlock Text="NPC Details" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="Bold"/>
         
-        <TextBlock Text="Station" Grid.Row="3"/>
-        <TextBlock Text="{Binding Station}" Grid.Row="3" Grid.Column="1"/>
+        <TextBlock Text="Station" Grid.Row="4"/>
+        <TextBlock Text="{Binding Station}" Grid.Row="4" Grid.Column="1"/>
 
-        <TextBlock Text="Escalator" Grid.Row="4"/>
-        <TextBlock Text="{Binding Escalator}" Grid.Row="4" Grid.Column="1"/>
+        <TextBlock Text="Escalator" Grid.Row="5"/>
+        <TextBlock Text="{Binding Escalator}" Grid.Row="5" Grid.Column="1"/>
 
-        <TextBlock Text="Street" Grid.Row="5"/>
-        <TextBlock Text="{Binding Street}" Grid.Row="5" Grid.Column="1"/>
+        <TextBlock Text="Street" Grid.Row="6"/>
+        <TextBlock Text="{Binding Street}" Grid.Row="6" Grid.Column="1"/>
 
-        <TextBlock Text="Bus" Grid.Row="6"/>
-        <TextBlock Text="{Binding Bus}" Grid.Row="6" Grid.Column="1"/>
+        <TextBlock Text="Bus" Grid.Row="7"/>
+        <TextBlock Text="{Binding Bus}" Grid.Row="7" Grid.Column="1"/>
     </Grid>
 </UserControl>

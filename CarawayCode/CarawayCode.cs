@@ -83,38 +83,12 @@ namespace CarawayCode
                     if (completedOutput.Index < 220 || completedOutput.Index > 580) continue;
                 }
 
-                output.Add(new CarawayCodeOutput(completedOutput.Index.ToString(), new CarawayOption(completedOutput), new CarawayOption(incompleteOutput)));
+                CarawayOutput completeBackup = calculatedOutput.SingleOrDefault(t => t.Index == completedOutput.Index + 2);
+                CarawayOutput incompleteBackup = calculatedOutput.SingleOrDefault(t => t.Index == incompleteOutput.Index + 2);
+
+                output.Add(new CarawayCodeOutput(completedOutput.Index.ToString(), new CarawayOption(completedOutput, completeBackup), new CarawayOption(incompleteOutput, incompleteBackup)));
 
             }
-
-
-
-
-            //// Time to produce our output
-            //foreach (var subScript in subScriptGrouping)
-            //{
-            //    // Valid series
-            //    int key = subScript.First() + poles.Length - 1;
-            //    key = Math.Min(key, Const.Codes.Length - 4); // Shrink our subscript down to the max of the array
-
-            //    if (hideUnlikelyResults)
-            //    {
-            //        if (key < 220 || key > 580) continue;
-            //    }
-
-            //    CarawayOutput option1 = calculatedOutput.SingleOrDefault(t => t.Index == key);
-            //    CarawayOutput option2 = calculatedOutput.SingleOrDefault(t => t.Index == key + 2);
-            //    CarawayOutput option3 = calculatedOutput.SingleOrDefault(t => t.Index == key + 1);
-            //    CarawayOutput option4 = calculatedOutput.SingleOrDefault(t => t.Index == key + 3);
-
-
-            //    output.Add(new CarawayCodeOutput($"{key + 1}", 
-            //        option1 != null ? new CarawayOption(option1) : null, 
-            //        option2 != null ? new CarawayOption(option2) : null,
-            //        option3 != null ? new CarawayOption(option3) : null,
-            //        option4 != null ? new CarawayOption(option4) : null));
-            //}
-
 
             return output.ToArray();
         }

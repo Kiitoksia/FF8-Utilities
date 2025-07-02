@@ -409,12 +409,17 @@
                                     <TextBlock Text="Tally" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
-
+                            
                             <StackPanel Orientation="Horizontal" Margin="5" Height="30">
-                                <TextBlock Text="Hide Unlikely Results"  VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Hide Unlikely Results"  VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <Controls:ToggleSwitch IsOn="{Binding HideUnlikelyCarawayResults}" OnContent="Yes" OffContent="No"/>
                             </StackPanel>
 
+                            <StackPanel Orientation="Horizontal" Margin="5" Height="30">
+                                <TextBlock Text="Show NPC Movement" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Controls:ToggleSwitch IsOn="{Binding ShowCarawayNPCMovement}" OnContent="Yes" OffContent="No"/>
+                            </StackPanel>
+                            
                             <GroupBox Header="Legend" Margin="0,5,0,0" BorderThickness="0,0,0,0">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
@@ -434,8 +439,11 @@
                         <GroupBox Header="No Subscripts Found" Visibility="{Binding NoSubscriptsDetected, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}">
                             <TextBlock Text="No results found for input poles."/>
                         </GroupBox>
-                        <ListBox Height="600" ItemsSource="{Binding CarawayOutput}" IsHitTestVisible="False">
-                            <ListBox.ItemTemplate>
+                        <ScrollBar>
+                            
+                        </ScrollBar>
+                        <ItemsControl Height="600" ItemsSource="{Binding CarawayOutput}" >
+                            <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <GroupBox Header="{Binding SubscriptDisplay}" Margin="0,0,0,5">
                                         <GroupBox.Style>
@@ -458,8 +466,8 @@
                                         </StackPanel>
                                     </GroupBox>
                                 </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </Grid>
             </TabItem>

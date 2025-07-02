@@ -125,6 +125,13 @@ namespace FF8Utilities.Models
                 if (Enum.TryParse(quistisPatternOrderByXml.Value, out QuistisPatternsOrderBy quistisPatternsOrderBy)) QuistisPatternsOrderBy = quistisPatternsOrderBy;
             }
 
+
+            XElement showCarawayNPCMovementXml = xml?.Element(nameof(ShowCarawayNPCMovement));
+            if (showCarawayNPCMovementXml != null)
+            {
+                if (bool.TryParse(showCarawayNPCMovementXml.Value, out bool showCarawayNPCMovement)) ShowCarawayNPCMovement = showCarawayNPCMovement;
+            }
+
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
             {
@@ -155,6 +162,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(ZellCountdownTimer), ZellCountdownTimer.ToString()));
             xml.Add(new XElement(nameof(GameInstallationFolder), GameInstallationFolder ?? string.Empty));
             xml.Add(new XElement(nameof(QuistisPatternsOrderBy), QuistisPatternsOrderBy.ToString()));
+            xml.Add(new XElement(nameof(ShowCarawayNPCMovement), ShowCarawayNPCMovement.ToString()));
 
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
@@ -687,6 +695,7 @@ namespace FF8Utilities.Models
 
         public QuistisPatternsOrderBy QuistisPatternsOrderBy { get; set; } = QuistisPatternsOrderBy.Frame;
 
+        public bool ShowCarawayNPCMovement { get; set; }
 
         public Task<bool> IsCSRUpdateAvailable()
         {

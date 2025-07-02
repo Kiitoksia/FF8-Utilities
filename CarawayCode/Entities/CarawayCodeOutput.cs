@@ -46,7 +46,7 @@ namespace CarawayCode.Entities
 
     public class CarawayOption
     {
-        internal CarawayOption(CarawayOutput output)
+        internal CarawayOption(CarawayOutput output, CarawayOutput backupOutput)
         {
             Code = output.Code;
             Station = output.Station;
@@ -54,6 +54,8 @@ namespace CarawayCode.Entities
             Street = output.Street;
             Bus = output.Bus;
             Input = output.Input;
+            BackupCode = backupOutput?.Code;
+            BackupInput = backupOutput?.Input;
         }
 
         public string Code { get; }
@@ -66,5 +68,9 @@ namespace CarawayCode.Entities
         public string Bus { get; }
 
         public string Input { get; }
+
+        public string BackupCode { get; }
+
+        public string BackupInput { get; }
     }
 }

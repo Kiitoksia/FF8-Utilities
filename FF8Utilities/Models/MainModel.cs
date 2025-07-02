@@ -63,6 +63,7 @@ namespace FF8Utilities.Models
         private bool _csrUpdateAvailable;
         private bool _useCustomQuistisPattern;
         private string _customQuistisPattern;
+        private bool _showCarawayNPCMovement;
 
 
 
@@ -108,6 +109,7 @@ namespace FF8Utilities.Models
 
             CardNotes = new BindingList<CardNotesModel>();
             Settings = new SettingsModel(this);
+            ShowCarawayNPCMovement = Settings.ShowCarawayNPCMovement;
             PopulateCardNotes();
             UltimeciaFormations = new BindingList<PartyFormationModel>();
             UltimeciaFormations.ListChanged += (s, e) =>
@@ -1032,6 +1034,23 @@ namespace FF8Utilities.Models
                 if (PolesAreValid)
                 {
                     SubmitPoles(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        public bool ShowCarawayNPCMovement
+        {
+            get => _showCarawayNPCMovement;
+            set
+            {
+                if (_showCarawayNPCMovement == value)
+                    return;
+                _showCarawayNPCMovement = value;
+                OnPropertyChanged();
+                if (Settings != null && Settings.ShowCarawayNPCMovement != value)
+                {
+                    Settings.ShowCarawayNPCMovement = value;
+                    Settings.Save();
                 }
             }
         }
