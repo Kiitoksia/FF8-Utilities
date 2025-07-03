@@ -240,6 +240,12 @@
     </Content>
     <None Include="Resources\Updater.zip" />
     <None Include="Resources\zell.zip" />
+    <Content Include="Scripts\kaivel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\limitRng.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

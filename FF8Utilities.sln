@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Updater", "FF8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardManipulation", "CardManipulation\CardManipulation.csproj", "{D2B3549B-6A5E-47BB-9027-8538B60BD738}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaivelFins", "KaivelFins\KaivelFins.csproj", "{F3F797FC-051E-46A3-9E6D-8D330D8B0544}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{D2B3549B-6A5E-47BB-9027-8538B60BD738}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2B3549B-6A5E-47BB-9027-8538B60BD738}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2B3549B-6A5E-47BB-9027-8538B60BD738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F797FC-051E-46A3-9E6D-8D330D8B0544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F797FC-051E-46A3-9E6D-8D330D8B0544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F797FC-051E-46A3-9E6D-8D330D8B0544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F797FC-051E-46A3-9E6D-8D330D8B0544}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
