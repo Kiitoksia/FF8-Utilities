@@ -188,4 +188,11 @@ namespace CardManipulation
             };
         }
     }
+
+    public enum SearchType
+    {
+        First,
+        Counting,
+        Recovery
+    }
 }

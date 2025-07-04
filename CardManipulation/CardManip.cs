@@ -22,7 +22,7 @@ namespace CardManipulation
             Options = Options.Default();
         }
 
-        public async Task RareTimerAsync(uint state, string playerKey, Action<RareTimerResult> onTick, CancellationToken token, int fps = 60, int count = 0)
+        public async Task RareTimerAsync(uint state, string playerKey, SearchType searchType, Action<RareTimerResult> onTick, CancellationToken token, int fps = 60, int count = 0)
         {
             // Advance RNG by count if needed
             if (count > 0)
@@ -36,14 +36,35 @@ namespace CardManipulation
             while (!token.IsCancellationRequested)
             {
                 double elapsed = (DateTime.UtcNow - start).TotalSeconds;
-                var result = GetRareTimerStep(state, playerKey, elapsed);
+                var result = GetRareTimerStep(state, playerKey, elapsed, searchType);
                 onTick?.Invoke(result);
                 await Task.Delay(1000 / fps, token);
             }
         }
 
-        private RareTimerResult GetRareTimerStep(uint state, string playerKey, double elapsedSeconds, int width = 60, int count = 0)
+        private RareTimerResult GetRareTimerStep(
+            uint state,
+            string playerKey,
+            double elapsedSeconds,
+            SearchType searchType = SearchType.First,
+            int count = 0)
         {
+            // Select width based on searchType
+            int tableWidth;
+            switch (searchType)
+            {
+                case SearchType.Counting:
+                    tableWidth = (int)Options.CountingFrameWidth;
+                    break;
+                case SearchType.Recovery:
+                    tableWidth = (int)Options.RecoveryWidth;
+                    break;
+                case SearchType.First:
+                default:
+                    tableWidth = 60; // Or (int)Options.Width, or (int)Math.Ceiling(60.0 / Options.AutofireSpeed)
+                    break;
+            }
+
             // Advance RNG by count if needed
             if (count > 0)
             {
@@ -57,8 +78,6 @@ namespace CardManipulation
             double delay = Options.DelayFrame / Options.GameFps;
             int forcedIncr = (int)Options.ForcedIncr;
             int acceptDelay = (int)Options.AcceptDelayFrame;
-            int timerWidth = 8;
-            int tableWidth = width;
 
             double incrStart = delay - (forcedIncr / Options.GameFps);
             int incr = Math.Max(
@@ -85,6 +104,7 @@ namespace CardManipulation
             var player = PlayerProfiles[playerKey];
             var rng = new CardRng(state);
             var deck = new List<int>();
+            const int PupuId = 47; // Match Ruby's Pupu_ID
 
             if (!noRare)
             {
@@ -102,7 +122,7 @@ namespace CardManipulation
                 var lv = player.Levels[rng.Next() % player.Levels.Count];
                 var row = rng.Next() % 11;
                 var cardId = (lv - 1) * 11 + row;
-                if (deck.Contains(cardId)) continue;
+                if (cardId == PupuId || deck.Contains(cardId)) continue; // Skip Pupu and duplicates
                 deck.Add(cardId);
             }
 
@@ -190,68 +210,6 @@ namespace CardManipulation
             };
         }
 
-        /// <summary>
-        /// Simulates the rare card timer. Returns the increment and rare table for UI display.
-        /// </summary>
-        private RareTimerResult RunRareTimer(uint state, string playerKey, int width = 60, int? overrideFps = null, int? overrideDelayMs = null, CancellationToken? cancel = null, int count = 0)
-        {
-            // Advance RNG by count if needed
-            if (count > 0)
-            {
-                var rng = new CardRng(state);
-                for (int i = 0; i < count; i++) rng.Next();
-                state = rng.State;
-            }
-
-            var player = PlayerProfiles[playerKey];
-            int rareLimit = player.RareLimit;
-            int fps = overrideFps ?? Options.ConsoleFps;
-            double delay = Options.DelayFrame / Options.GameFps;
-            int forcedIncr = (int)Options.ForcedIncr;
-            int acceptDelay = (int)Options.AcceptDelayFrame;
-            int timerWidth = 8;
-            int tableWidth = width;
-
-            var start = DateTime.UtcNow;
-            int incr = 0;
-            double incrStart = delay - (forcedIncr / Options.GameFps);
-
-            List<bool> rareTbl = new List<bool>();
-            double duration = 0;
-
-            // For WPF, you can call this in a Task and update UI on each tick if desired.
-            while (true)
-            {
-                duration = (DateTime.UtcNow - start).TotalSeconds;
-                incr = Math.Max(
-                    (int)Math.Round((duration - incrStart) * Options.GameFps),
-                    forcedIncr + acceptDelay
-                );
-                if (incr <= forcedIncr + acceptDelay)
-                    incr = forcedIncr;
-
-                rareTbl = Enumerable.Range(0, tableWidth)
-                    .Select(i => NextRare(state + (uint)incr + (uint)i, rareLimit))
-                    .ToList();
-
-                // For WPF: break on cancellation or user input
-                if (cancel?.IsCancellationRequested == true)
-                    break;
-
-                if (overrideDelayMs.HasValue)
-                    Thread.Sleep(overrideDelayMs.Value);
-                else
-                    Thread.Sleep(1000 / fps);
-            }
-
-            return new RareTimerResult
-            {
-                Incr = incr,
-                RareTable = rareTbl,
-                DurationSeconds = duration
-            };
-        }
-
         private bool NextRare(uint state, int rareLimit)
         {
             var nextRnd = ((state * 0x10dcd + 1) & 0xffffffff) >> 17;
@@ -261,7 +219,16 @@ namespace CardManipulation
         /// <summary>
         /// Returns a list of possible opening situations matching the pattern.
         /// </summary>
-        public List<SearchResult> SearchOpenings(uint state, string playerKey, PatternParseResult pattern, bool fuzzyOrder = false, int? startIndexOverride = null, int? widthOverride = null, int? offsetOverride = null, int count = 0)
+        public List<SearchResult> SearchOpenings(
+            uint state,
+            string playerKey,
+            PatternParseResult pattern,
+            bool fuzzyOrder = false,
+            int? startIndexOverride = null,
+            int? widthOverride = null,
+            int? offsetOverride = null,
+            int count = 0,
+            SearchType searchType = SearchType.First)
         {
             // Advance RNG by count if needed
             if (count > 0)
@@ -272,8 +239,27 @@ namespace CardManipulation
             }
 
             var player = PlayerProfiles[playerKey];
-            int startIndex = startIndexOverride ?? (int)Options.Base;
-            int width = widthOverride ?? (int)Options.Width;
+
+            // Select width and startIndex based on searchType
+            int width;
+            int startIndex;
+            switch (searchType)
+            {
+                case SearchType.Counting:
+                    width = (int)Options.CountingWidth;
+                    startIndex = startIndexOverride ?? (int)Options.Base;
+                    break;
+                case SearchType.Recovery:
+                    width = (int)Options.RecoveryWidth;
+                    // For recovery, you may want to center the search around the middle of the recovery width
+                    startIndex = startIndexOverride ?? (int)(Options.RecoveryWidth / 2);
+                    break;
+                case SearchType.First:
+                default:
+                    width = widthOverride ?? (int)Options.Width;
+                    startIndex = startIndexOverride ?? (int)Options.Base;
+                    break;
+            }
             int offset = offsetOverride ?? 0;
 
             // Build search order (centered, then +/-1, +/-2, ...)
