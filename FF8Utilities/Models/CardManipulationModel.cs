@@ -187,10 +187,23 @@ namespace FF8Utilities.Models
             int desiredBeeps = SettingsModel.Instance.BeepCount;
             int maxNaturalInterval = (int)Math.Floor(_timeTillNextCard.TotalMilliseconds / desiredBeeps);
 
+            int frameOffset = 0;
+            if (_player == "zellmama")
+            {
+                // Aim for the middle of the snake as it doesnt matter which frame and this gives maximum chance
+                // Slightly less than half to handle user reaction
+                frameOffset = (int)Math.Floor((_timeTillNextCardEnd.TotalMilliseconds - _timeTillNextCard.TotalMilliseconds) / 2.1);
+            }
+            else
+            {
+                // Aim for the start of the snake, but add 3 frames on for safety
+                frameOffset = 32; // Roughly 2 frames
+            }
+
             interval = Math.Min(interval, maxNaturalInterval);
 
-            int totalBeepDuration = interval * desiredBeeps;
-            int delay = Math.Max((int)_timeTillNextCard.TotalMilliseconds - totalBeepDuration, 0);
+            int totalBeepDuration = interval * (desiredBeeps - 1);
+            int delay = Math.Max((int)_timeTillNextCard.TotalMilliseconds - totalBeepDuration + frameOffset, 0);
 
             int playedBeeps = 0;
             // Play at normal speed
@@ -207,6 +220,7 @@ namespace FF8Utilities.Models
         }
 
         private TimeSpan _timeTillNextCard;
+        private TimeSpan _timeTillNextCardEnd;
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
@@ -232,6 +246,7 @@ namespace FF8Utilities.Models
             else
             {
                 int framesTillAvailable = 0;
+                int framesTillAvailableEnd = 0;
                 for (int i = 0; i < _currentResult.RareTable.Count; i++)
                 {
                     if (_currentResult.RareTable[i])
@@ -241,7 +256,17 @@ namespace FF8Utilities.Models
                     }
                 }
 
+                for (int i = framesTillAvailable; i < _currentResult.RareTable.Count; i++)
+                {
+                    if (!_currentResult.RareTable[i])
+                    {
+                        framesTillAvailableEnd = i;
+                        break;
+                    }
+                }
+
                 _timeTillNextCard = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // Assuming 60 FPS
+                _timeTillNextCardEnd = TimeSpan.FromSeconds(framesTillAvailableEnd * 0.01666); // Assuming 60 FPS
                 RareCardTimer = $"{_timeTillNextCard.TotalSeconds:F2}s";
                 Debug.WriteLine($"Time till available: {_timeTillNextCard.TotalSeconds:F2}s");
                 if (_timeTillNextCard.TotalSeconds > 2.8)
