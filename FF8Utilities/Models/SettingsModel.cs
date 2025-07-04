@@ -132,11 +132,24 @@ namespace FF8Utilities.Models
                 if (bool.TryParse(showCarawayNPCMovementXml.Value, out bool showCarawayNPCMovement)) ShowCarawayNPCMovement = showCarawayNPCMovement;
             }
 
-            XElement beepSoundXml = xml?.Element(nameof(ShowCarawayNPCMovement));
-            if (showCarawayNPCMovementXml != null)
+            XElement beepSoundXml = xml?.Element(nameof(BeepSound));
+            if (beepSoundXml != null)
             {
-                if (bool.TryParse(showCarawayNPCMovementXml.Value, out bool showCarawayNPCMovement)) ShowCarawayNPCMovement = showCarawayNPCMovement;
+                if (Enum.TryParse(beepSoundXml.Value, out BeepSound beepSound)) BeepSound = beepSound;
             }
+
+            XElement beepIntervalXml = xml?.Element(nameof(BeepInterval));
+            if (beepIntervalXml != null)
+            {
+                if (int.TryParse(beepSoundXml.Value, out int beepInterval)) BeepInterval = beepInterval;
+            }
+
+            XElement beepCountXml = xml?.Element(nameof(BeepCount));
+            if (beepCountXml != null)
+            {
+                if (int.TryParse(beepCountXml.Value, out int beepCount)) BeepCount = beepCount;
+            }
+
 
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
@@ -169,6 +182,9 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(GameInstallationFolder), GameInstallationFolder ?? string.Empty));
             xml.Add(new XElement(nameof(QuistisPatternsOrderBy), QuistisPatternsOrderBy.ToString()));
             xml.Add(new XElement(nameof(ShowCarawayNPCMovement), ShowCarawayNPCMovement.ToString()));
+            xml.Add(new XElement(nameof(BeepSound), BeepSound.ToString()));
+            xml.Add(new XElement(nameof(BeepInterval), BeepInterval));
+            xml.Add(new XElement(nameof(BeepCount), BeepCount));
 
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
@@ -597,6 +613,16 @@ namespace FF8Utilities.Models
 
         private void SaveSettings(object sender, EventArgs eventArgs)
         {
+            int totalDelay = BeepInterval * BeepCount;
+            if (totalDelay > 1500)
+            {
+                _mainWindowModel.Window.Invoke(() =>
+                {
+                    _mainWindowModel.Window.ShowMessageAsync("Error", "Beep Interval/Count must be under 1.5s total");
+                });
+                return;
+            }
+
             Save();
         }
 
@@ -705,7 +731,7 @@ namespace FF8Utilities.Models
 
         public BeepSound BeepSound { get; set; } = BeepSound.Ping1;
 
-        public BeepInterval BeepInterval { get; set; } = BeepInterval.Medium;
+        public int BeepInterval { get; set; } = 400;
 
         public int BeepCount { get; set; } = 4;
 

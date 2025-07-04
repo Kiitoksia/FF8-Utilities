@@ -66,6 +66,8 @@ namespace CardManipulation
             }
 
             // Advance RNG by count if needed
+
+            tableWidth = 600; // I feel like this can always be 600, let's test
             if (count > 0)
             {
                 var rng = new CardRng(state);

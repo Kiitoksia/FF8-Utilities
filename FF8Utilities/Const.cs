@@ -164,11 +164,4 @@ namespace FF8Utilities
         Click,
         Clack
     }
-
-    public enum BeepInterval
-    {
-        Long = 430,
-        Medium = 400,
-        Short = 340,
-    }
 }
