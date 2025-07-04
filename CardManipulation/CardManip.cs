@@ -1,631 +1,72 @@
-﻿using System;
+﻿using CardManipulation.Models;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using static CardManipulation.CardManip;
 
 namespace CardManipulation
 {
     public class CardManip
     {
-        // EventArgs for input requests, allowing the handler to set the result
-        public class InputRequestedEventArgs : EventArgs
+        public List<Card> CardTable { get; }
+        public Dictionary<string, PlayerProfile> PlayerProfiles { get; }
+        public Options Options { get; set; }
+
+        public CardManip()
         {
-            public string Prompt { get; }
-            public string Result { get; set; }
-            public InputRequestedEventArgs(string prompt) => Prompt = prompt;
+            CardTable = DataFactory.CreateCardTable();
+            PlayerProfiles = DataFactory.CreatePlayerProfiles();
+            Options = Options.Default();
         }
 
-        public class KeyRequestedEventArgs : EventArgs
+        public async Task RareTimerAsync(uint state, string playerKey, Action<RareTimerResult> onTick, CancellationToken token, int fps = 60)
         {
-            public bool Intercept { get; }
-            public ConsoleKeyInfo KeyInfo { get; set; }
-            public KeyRequestedEventArgs(bool intercept) => Intercept = intercept;
-        }
-
-        public class IOHandler
-        {
-            public IOHandler(int windowWidth)
+            var start = DateTime.UtcNow;
+            while (!token.IsCancellationRequested)
             {
-                WindowWidth = windowWidth;
-            }
-
-            public int WindowWidth { get; }
-
-            // Event for output (write)
-            public event EventHandler<string> OutputRequested;
-
-            // Event for input (read)
-            public event EventHandler<InputRequestedEventArgs> InputRequested;
-
-            // Event for key input (read key)
-            public event EventHandler<KeyRequestedEventArgs> KeyRequested;
-
-            // Call this to write output
-            public void WriteLine(string message)
-            {
-                OutputRequested?.Invoke(this, message);
-            }
-
-            public void WriteLine()
-            {
-                OutputRequested?.Invoke(this, Environment.NewLine);
-            }
-
-            public void Write(string message)
-            {
-                OutputRequested?.Invoke(this, message);
-            }
-
-            public string ReadLine(string prompt = null)
-            {
-                var args = new InputRequestedEventArgs(prompt);
-                InputRequested?.Invoke(this, args);
-                return args.Result;
-            }
-
-            // Read a key, like Console.ReadKey
-            public ConsoleKeyInfo ReadKey(bool intercept = false)
-            {
-                var args = new KeyRequestedEventArgs(intercept);
-                KeyRequested?.Invoke(this, args);
-                return args.KeyInfo;
+                double elapsed = (DateTime.UtcNow - start).TotalSeconds;
+                var result = GetRareTimerStep(state, playerKey, elapsed);
+                onTick?.Invoke(result);
+                await Task.Delay(1000 / fps, token);
             }
         }
 
-
-        public CardManip(IOHandler handler, Options options, params string[] args)
+        public RareTimerResult GetRareTimerStep(uint state, string playerKey, double elapsedSeconds, int width = 60)
         {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _args = args ?? throw new ArgumentNullException(nameof(args));
-        }
-
-        private IOHandler _handler;
-        private string[] _args;
-        private Options _options;
-
-
-
-        // Main logic, can be called externally
-        public void Run()
-        {
-            if (_args == null || _args.Length == 0)
-            {
-                if (_options.Interactive)
-                {
-                    _args = PromptArgs();
-                }
-                else
-                {
-                    ShowHelp();
-                    return;
-                }
-            }
-
-            var (firstState, state, count, searchType) = ReadArgs(_args);
-            var player = PlayerTable.Get(_options.Player);
-
-            if (searchType == TSearchType.First)
-            {
-                while (true)
-                {
-                    _handler.WriteLine();
-                    _handler.WriteLine();
-                    _handler.WriteLine(Translate.Get("prompt.second_game_method"));
-                    var line = Prompt();
-
-                    if (line.StartsWith("h"))
-                    {
-                        ShowPatternHelp();
-                    }
-                    else if (line.StartsWith("q"))
-                    {
-                        Environment.Exit(0);
-                    }
-                    else
-                    {
-                        var pattern = StringToPattern(line, player);
-
-                        if (pattern == null)
-                        {
-                            continue;
-                        }
-
-                        var scanner = OpeningScanner(state, player, searchType);
-                        StartSearch(scanner, pattern, player);
-                    }
-                }
-            }
-            else
-            {
-                while (true)
-                {
-                    _handler.WriteLine();
-                    _handler.WriteLine(Translate.Get("prompt.first_game_method"));
-                    var line = Prompt();
-
-                    if (line.StartsWith("h"))
-                    {
-                        ShowPatternHelp();
-                    }
-                    else if (line.StartsWith("q"))
-                    {
-                        Environment.Exit(0);
-                    }
-                    else
-                    {
-                        RareSearch(state, player, counting: searchType == TSearchType.Counting);
-                    }
-                }
-            }
-        }
-
-        void StartSearch(Func<Pattern, bool, IEnumerable<ScanEntry>> scanner, Pattern pattern, Player player)
-        {
-            IEnumerable<ScanEntry> result = Enumerable.Empty<ScanEntry>();
-
-            for (var i = 0; i < _options.Fuzzy.Length; i++)
-            {
-                var fuzzy = _options.Fuzzy[i];
-
-                var fuzzyRanks = fuzzy.Contains('r');
-                var fuzzyOrder = fuzzy.Contains('o');
-                _handler.WriteLine(new string('-', 60));
-                _handler.WriteLine(string.Format(Translate.Get("fuzzy.fmt"), FuzzyToString(fuzzy)));
-
-                pattern = StringToPattern(pattern.Str, player, fuzzyRanks, silent: true);
-                _handler.WriteLine(PatternToString(pattern));
-
-                var r = scanner(pattern, fuzzyOrder);
-                var msg = r.Count() == 0 ? "not" : r.Count().ToString();
-                msg = msg + " found.";
-
-                var lastp = (i == (_options.Fuzzy.Length - 1));
-
-                if (!r.Any() && !lastp)
-                {
-                    msg = msg + " retry...";
-                }
-
-                _handler.WriteLine(msg);
-
-                if (r.Any())
-                {
-                    OutputSearchResults(r);
-                    result = r;
-                    break;
-                }
-            }
-
-            while (true)
-            {
-                _handler.WriteLine();
-                _handler.WriteLine(Translate.Get("prompt.after_normal_search"));
-                var line = Prompt();
-
-                if (string.IsNullOrEmpty(line))
-                {
-                    var target = result.OrderBy(x => Math.Abs(x.Index)).FirstOrDefault();
-
-                    if (target == null)
-                    {
-                        _handler.WriteLine(Translate.Get("no_target"));
-                        continue;
-                    }
-
-                    var lastState = target.Data.Opening.LastState;
-                    RareSearch(lastState, player);
-                }
-                else if (line.StartsWith("h"))
-                {
-                    ShowPatternHelp();
-                }
-                else if (line.StartsWith("q"))
-                {
-                    Environment.Exit(0);
-                }
-                else
-                {
-                    var newPattern = StringToPattern(line, player, fuzzyRanks: false);
-
-                    if (newPattern == null)
-                    {
-                        continue;
-                    }
-
-                    StartSearch(scanner, newPattern, player);
-                }
-            }
-        }
-
-        void RareSearch(uint state, Player player, bool counting = false)
-        {
-            var lastIncr = RareTimer(state, player);
-
-            while (true)
-            {
-                _handler.WriteLine();
-                _handler.WriteLine(Translate.Get("prompt.rare_search"));
-                var line = Prompt();
-
-                if (string.IsNullOrEmpty(line))
-                {
-                    RareSearch(state, player, counting);
-                }
-                else if (line.StartsWith("h"))
-                {
-                    ShowPatternHelp();
-                }
-                else if (line.StartsWith("q"))
-                {
-                    Environment.Exit(0);
-                }
-                else
-                {
-                    var recoveryPattern = StringToPattern(line, player);
-
-                    if (recoveryPattern == null)
-                    {
-                        continue;
-                    }
-
-                    var nextSearchType = counting ? TSearchType.Counting : TSearchType.Recovery;
-                    var recoveryScanner = OpeningScanner(state, player, nextSearchType, lastIncr);
-                    StartSearch(recoveryScanner, recoveryPattern, player);
-                }
-            }
-        }
-
-        uint RareTimer(uint state, Player player)
-        {
-            var fps = _options.ConsoleFps;
-
-            var start = DateTime.Now.SecondsSinceEpoch();
-            var delay = _options.DelayFrame / _options.GameFps;
-
-            var incr = 0U;
-            var incrStart = delay - (_options.ForcedIncr / _options.GameFps);
-            var timerWidth = 8;
-            var width = Math.Min(_handler.WindowWidth - 1 - timerWidth, 60);
-
-            var header = "timer".PadRight(timerWidth) + "! " + Translate.Get("prompt.rare_timer");
-            _handler.WriteLine(header);
-
-            while (true)
-            {
-                var duration = DateTime.Now.SecondsSinceEpoch() - start;
-
-                incr = (uint)Math.Max(
-                    Math.Round((duration - incrStart) * _options.GameFps),
-                    _options.ForcedIncr + _options.AcceptDelayFrame
-                );
-
-                if (incr <= _options.ForcedIncr + _options.AcceptDelayFrame)
-                {
-                    incr = _options.ForcedIncr;
-                }
-
-                var rareTbl = new int[width].Select((_, idx) => NextRare(state + incr + (uint)idx, player.RareLimit));
-
-                var durationS = (duration - delay).ToString("0.00") + "s" + (rareTbl.First() ? "!" : "");
-
-                var tableS = rareTbl.Select((x, i) =>
-                {
-                    if (x)
-                    {
-                        return "*";
-                    }
-                    else if (i == 0)
-                    {
-                        return "!";
-                    }
-                    else
-                    {
-                        return "-";
-                    }
-                }).Aggregate((acc, x) => acc + x);
-
-                _handler.Write(durationS.PadRight(timerWidth) + tableS + "\r");
-
-                Thread.Sleep(1000 / fps);
-
-                if (_handler.KeyAvailable && _handler.ReadKey(true).Key == ConsoleKey.Enter)
-                {
-                    _handler.WriteLine();
-                    _handler.CursorVisible = true;
-                    return incr;
-                }
-            }
-        }
-
-        bool NextRare(uint state, int limit)
-        {
-            var nextRnd = ((state * 0x10dcd + 1) & 0xffff_ffff) >> 17;
-            return nextRnd % 100 < limit;
-        }
-
-        Pattern StringToPattern(string s, Player player, bool fuzzyRanks = false, bool silent = false)
-        {
-            var rare = player.Rares.Any() ? player.Rares.First() : new int?();
-
-            var cardRegex = new Regex("[0-9a]{4}", RegexOptions.IgnoreCase);
-            var ranksArr = cardRegex.Matches(s).Cast<Match>().Select(x => x.Value).Take(5).ToList();
-
-            if (ranksArr.Count < (rare == null ? 5 : 4))
-            {
-                _handler.WriteLine(string.Format(Translate.Get("str2pattern.UnmatchedInput_fmt"), s));
-                return null;
-            }
-
-            var regexInitiative = new Regex("[+-]");
-            var initiative = regexInitiative.Matches(s).Cast<Match>().Select(x => x.Value).Aggregate(new bool?(), (acc, x) => x == "+");
-
-            var customRanksOrder = "urdl".Select(c => _options.RanksOrder.IndexOf(c));
-            var urdlArr = ranksArr.Select(ranks =>
-            {
-                var ranksNumber = ranks
-                    .Select(c => Convert.ToInt32(c.ToString(), fromBase: 16))
-                    .Select(x => x == 0 ? 10 : x);
-
-                return customRanksOrder.Select(idx => ranksNumber.ElementAt(idx)).ToArray();
-            });
-
-            var idsArr = urdlArr.Select(urdl => CardTable.ListIdsByUrdl(urdl, fuzzyRanks)).ToList();
-            var retryCount = 0;
-
-            while (true)
-            {
-                if (idsArr.Any(x => x.Count == 0))
-                {
-                    var emptyNoArr = idsArr.Select((_, idx) => idx + 1).Where(no => idsArr[no - 1].Count == 0);
-                    var emptyNoS = string.Join(", ", emptyNoArr.Select(no => string.Format("#{0}:{1}", no, ranksArr[no - 1])));
-                    var errorMsg = string.Format(Translate.Get("str2pattern.EmptyIDs_fmt"), emptyNoS);
-
-                    retryCount++;
-
-                    if (fuzzyRanks || retryCount > 1)
-                    {
-                        _handler.WriteLine(errorMsg);
-                        return null;
-                    }
-
-                    if (!silent)
-                    {
-                        _handler.WriteLine(errorMsg);
-                        _handler.WriteLine(Translate.Get("str2pattern.read_as_fuzzy"));
-                    }
-
-                    idsArr = urdlArr
-                        .Select((urdl, idx) => CardTable.ListIdsByUrdl(urdl, fuzzy: emptyNoArr.Contains(idx + 1)))
-                        .ToList();
-
-                    continue;
-                }
-
-                break;
-            }
-
-            var arrExceptUniq = idsArr.Select(ids =>
-            {
-                if (!fuzzyRanks)
-                {
-                    return idsArr.Count(x => x.SequenceEqual(ids)) > 1 ? ids : null;
-                }
-                else
-                {
-                    return ids.Count == 1 && idsArr.Count(x => x.SequenceEqual(ids)) > 1 ? ids : null;
-                }
-            }).ToList();
-
-            if (arrExceptUniq.Where(x => x != null).Any())
-            {
-                var duplicatedNoArr = arrExceptUniq.Select((_, idx) => idx + 1).Where(no => arrExceptUniq[no - 1] != null);
-                var duplicatedNoS = string.Join(", ", duplicatedNoArr.Select(no => string.Format("#{0}:{1}", no, ranksArr[no - 1])));
-                var errorMsg = string.Format(Translate.Get("str2pattern.DuplicatedIDs_fmt"), duplicatedNoS);
-
-                _handler.WriteLine(errorMsg);
-                return null;
-            }
-
-            if (idsArr.Count == 4)
-            {
-                idsArr.Insert(0, new List<int>() { rare.Value });
-            }
-
-            return new Pattern()
-            {
-                Str = s,
-                Deck = idsArr,
-                Initiative = initiative
-            };
-        }
-
-        Func<Pattern, bool, IEnumerable<ScanEntry>> OpeningScanner(uint state, Player player, TSearchType searchType, uint incr = 0)
-        {
-            var startIndex = 0U;
-            var width = 0U;
-
-            switch (searchType)
-            {
-                case TSearchType.First:
-                    startIndex = _options.Base;
-                    width = _options.Width;
-                    break;
-                case TSearchType.Counting:
-                    startIndex = ReadArgs(_args, silent: true).count;
-                    width = _options.CountingWidth;
-                    break;
-                case TSearchType.Recovery:
-                    startIndex = _options.RecoveryWidth / 2;
-                    state = (state + incr - startIndex) & 0xffff_ffff;
-                    width = _options.RecoveryWidth;
-                    break;
-            }
-
-            var order = Enumerable.Range(1, (int)(width / 2))
-                .Select(offset => new[] { startIndex + offset, startIndex - offset })
-                .SelectMany(x => x)
+            var player = PlayerProfiles[playerKey];
+            int rareLimit = player.RareLimit;
+            double delay = Options.DelayFrame / Options.GameFps;
+            int forcedIncr = (int)Options.ForcedIncr;
+            int acceptDelay = (int)Options.AcceptDelayFrame;
+            int timerWidth = 8;
+            int tableWidth = width;
+
+            double incrStart = delay - (forcedIncr / Options.GameFps);
+            int incr = Math.Max(
+                (int)Math.Round((elapsedSeconds - incrStart) * Options.GameFps),
+                forcedIncr + acceptDelay
+            );
+            if (incr <= forcedIncr + acceptDelay)
+                incr = forcedIncr;
+
+            var rareTbl = Enumerable.Range(0, tableWidth)
+                .Select(i => NextRare(state + (uint)incr + (uint)i, rareLimit))
                 .ToList();
 
-            order.Insert(0, startIndex);
-
-            order = order.Where(x => x >= 0).ToList();
-
-            if (width % 2 == 0)
+            return new RareTimerResult
             {
-                order.Remove(order.Max());
-            }
-
-            switch (_options.Order)
-            {
-                case Options.TOrder.Reverse:
-                    order.Reverse();
-                    break;
-                case Options.TOrder.Ascending:
-                    order.Sort();
-                    break;
-                case Options.TOrder.Descending:
-                    order.Sort();
-                    order.Reverse();
-                    break;
-            }
-
-            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, incr);
-
-            return (pattern, fuzzyOrder) =>
-            {
-                return order
-                    .Select(idx =>
-                    {
-                        var dataArr = table.Where(x => x.Index == idx);
-
-                        return dataArr.Select(data =>
-                        {
-                            if (OpeningMatch(pattern, data, fuzzyOrder))
-                            {
-                                return new ScanEntry()
-                                {
-                                    Diff = (int)idx - (int)startIndex,
-                                    Index = (uint)idx,
-                                    Data = data,
-                                };
-                            }
-
-                            return null;
-                        });
-                    })
-                    .SelectMany(x => x)
-                    .Where(x => x != null);
+                Incr = incr,
+                RareTable = rareTbl,
+                DurationSeconds = elapsedSeconds
             };
         }
 
-        bool OpeningMatch(Pattern pattern, TableEntry data, bool fuzzyOrder)
+        public OpeningSituation GenerateOpeningSituation(uint state, string playerKey, bool noRare = false)
         {
-            var opening = data.Opening;
-
-            if (pattern.Initiative.HasValue && pattern.Initiative.Value != opening.Initiative)
-            {
-                return false;
-            }
-
-            var patDeck = fuzzyOrder ? pattern.Deck.OrderBy(x => x, new ListComparer()).ToList() : pattern.Deck;
-            var deck = fuzzyOrder ? opening.Deck.OrderBy(x => x).ToList() : opening.Deck;
-
-            return patDeck
-                .Zip(deck, (first, second) => (first, second))
-                .All(x =>
-                {
-                    var (ids, id) = x;
-                    return ids.Contains(id);
-                });
-        }
-
-        IList<TableEntry> MakeOpeningTable(uint from, uint to, uint state, Player player, TSearchType searchType, uint incr)
-        {
-            var size = to + 1;
-            IList<uint> rngStateArr;
-            IList<int> offsetArr;
-
-            if (searchType == TSearchType.First)
-            {
-                var rng = new CardRng(state);
-
-                rngStateArr = new uint[size].Select(_ =>
-                {
-                    var stateCopy = rng.State;
-                    rng.Next();
-                    return stateCopy;
-                }).ToList();
-
-                var offsetArrSize = (int)(60f / _options.AutofireSpeed);
-
-                offsetArr = new int[offsetArrSize].Select((_, i) =>
-                {
-                    return (int)_options.ForcedIncr + i;
-                }).ToList();
-            }
-            else if (searchType == TSearchType.Counting)
-            {
-                var (firstState, _, count, _) = ReadArgs(_args, silent: true);
-                var rng = new CardRng(firstState);
-                var maxIdx = count + _options.CountingWidth;
-
-                rngStateArr = new uint[maxIdx].Select(_ =>
-                {
-                    var stateCopy = rng.State;
-                    rng.Next();
-                    return stateCopy + incr;
-                }).ToList();
-
-                offsetArr = new int[_options.CountingFrameWidth].Select((_, i) =>
-                {
-                    return i - (int)_options.CountingFrameWidth / 2;
-                }).ToList();
-            }
-            else
-            {
-                rngStateArr = new uint[size].Select((_, i) =>
-                {
-                    return (state + (uint)i) & 0xffff_ffff;
-                }).ToList();
-
-                offsetArr = new[] { 0 };
-            }
-
-            var table = new List<TableEntry>();
-
-            for (var idx = 0; idx <= to; idx++)
-            {
-                if (!(idx >= from && idx <= to))
-                {
-                    continue;
-                }
-
-                foreach (var offset in offsetArr)
-                {
-                    var rngState = (rngStateArr[idx] + offset) & 0xffff_ffff;
-
-                    table.Add(new TableEntry()
-                    {
-                        Index = idx,
-                        Offset = offset,
-                        Opening = OpeningSituation((uint)rngState, player),
-                    });
-                }
-            }
-
-            return table;
-        }
-
-        static Situation OpeningSituation(uint state, Player player, bool noRare = false)
-        {
-            const int DECK_MAX = 5;
-
+            var player = PlayerProfiles[playerKey];
             var rng = new CardRng(state);
             var deck = new List<int>();
 
@@ -634,263 +75,235 @@ namespace CardManipulation
                 foreach (var rareId in player.Rares)
                 {
                     var limit = deck.Count == 0 ? player.RareLimit : player.RareLimit / 2;
-
                     if (rng.Next() % 100 < limit)
-                    {
                         deck.Add(rareId);
-                    }
-
-                    if (deck.Count >= DECK_MAX)
-                    {
-                        break;
-                    }
+                    if (deck.Count >= 5) break;
                 }
             }
 
-            var pupuId = CardTable.FindIdByName("PuPu");
-
-            while (deck.Count < DECK_MAX)
+            while (deck.Count < 5)
             {
-                var lv = player.Levels[rng.Next() % player.Levels.Length];
+                var lv = player.Levels[rng.Next() % player.Levels.Count];
                 var row = rng.Next() % 11;
-                var cardId = (lv - 1) * 11 + (int)row;
-
-                if (cardId == pupuId || deck.Contains(cardId))
-                {
-                    continue;
-                }
-
+                var cardId = (lv - 1) * 11 + row;
+                if (deck.Contains(cardId)) continue;
                 deck.Add(cardId);
             }
 
             var initiative = (rng.Next() & 1) != 0;
 
-            return new Situation()
+            return new OpeningSituation
             {
                 Deck = deck,
                 Initiative = initiative,
                 FirstState = state,
-                LastState = rng.State,
+                LastState = rng.State
             };
         }
 
-        void OutputSearchResults(IEnumerable<ScanEntry> r)
+        public PatternParseResult ParsePattern(string input, string playerKey, bool fuzzyRanks = false)
         {
-            var nearestIndex = r.OrderBy(x => Math.Abs(x.Index)).First().Index;
-            _handler.WriteLine("diff\tindex\toffset\tlast_state\tinitia\tdeck");
+            var player = PlayerProfiles[playerKey];
+            var rare = player.Rares.FirstOrDefault();
+            var ranksArr = Regex.Matches(input, @"[0-9aA]{4}")
+                                .Cast<Match>().Select(m => m.Value).Take(5).ToList();
 
-            foreach (var v in r)
+            if (ranksArr.Count < (rare == 0 ? 5 : 4))
+                return new PatternParseResult { Error = $"There are not 4 or more cards: {input}" };
+
+            // Initiative: last + or - in string
+            bool? initiative = null;
+            foreach (Match m in Regex.Matches(input, @"[+-]"))
+                initiative = m.Value == "+";
+
+            // Custom ranks order (default: "urdl")
+            var order = Options.RanksOrder ?? "ulrd";
+            var customOrder = "urdl".Select(c => order.IndexOf(c)).ToArray();
+
+            // Convert to urdl arrays
+            var urdlArr = ranksArr.Select(ranks =>
             {
-                var diff = v.Diff;
-                var idx = v.Index;
-                var data = v.Data;
-                var nearest = idx == nearestIndex;
-                var idxStr = string.Format(nearest ? "*{0:d3}*" : "{0:d3}", idx);
-                var offset = data.Offset;
-                var initiative = data.Opening.Initiative;
-                var deck = data.Opening.Deck.Select(id =>
+                var nums = ranks.ToLower().Select(c =>
                 {
-                    var s = id.ToString();
+                    int n = Convert.ToInt32(c.ToString(), 16);
+                    return n == 0 ? 10 : n;
+                }).ToArray();
+                return customOrder.Select(idx => nums[idx]).ToArray();
+            }).ToList();
 
-                    if (_options.HighlightCards.Contains(id))
-                    {
-                        s = $"*{s}*";
-                    }
+            // Find matching card IDs for each urdl
+            List<List<int>> idsArr = urdlArr.Select(urdl =>
+                CardTable.Where(card =>
+                    fuzzyRanks
+                        ? card.Urdl.OrderBy(x => x).SequenceEqual(urdl.OrderBy(x => x))
+                        : card.Urdl.SequenceEqual(urdl)
+                ).Select(card => card.Id).ToList()
+            ).ToList();
 
-                    if (_options.StrongHighlightCards.Contains(id))
-                    {
-                        s = $"**{s}**";
-                    }
-
-                    return s;
-                });
-                var deckS = "[" + string.Join(", ", deck) + "]";
-                var state = data.Opening.LastState;
-                var msg = string.Format("{0,3:+#;-#;#}\t{1}\t{2}\t{3:x8}\t{4}\t{5}", diff, idxStr, offset, state, initiative, deckS);
-                _handler.WriteLine(msg);
-            }
-        }
-
-        (uint firstState, uint state, uint count, TSearchType searchType) ReadArgs(string[] args, bool silent = false)
-        {
-            var s = args[0];
-            var firstState = 0U;
-            var searchType = TSearchType.First;
-            var msg = "";
-
-            firstState = Convert.ToUInt32(s, fromBase: 16) & 0xffff_ffff;
-            searchType = TSearchType.Recovery;
-            msg = string.Format(Translate.Get("read_argv.direct_rng_state_fmt"), firstState);
-
-            if (searchType == TSearchType.First)
+            // Error if any are empty
+            if (idsArr.Any(ids => ids.Count == 0))
             {
-                msg = string.Format(Translate.Get("read_argv.select_fmt"), msg);
-                msg = string.Format("{0}: 0x{1:x8}", msg, firstState);
+                var emptyIdx = idsArr.FindIndex(ids => ids.Count == 0);
+                return new PatternParseResult
+                {
+                    Error = $"There is no card corresponding to ranks: #{emptyIdx + 1}:{ranksArr[emptyIdx]}"
+                };
             }
 
-            var state = firstState;
-            var count = 0U;
-
-            if (args.Length > 1)
+            // Error if duplicates (non-fuzzy)
+            if (!fuzzyRanks)
             {
-                count = uint.Parse(args[1]);
-                var rng = new CardRng(firstState);
-
-                for (var i = 0; i < count; i++)
+                var seen = new HashSet<string>();
+                foreach (var ids in idsArr)
                 {
-                    rng.Next();
+                    var key = string.Join(",", ids);
+                    if (!seen.Add(key))
+                        return new PatternParseResult { Error = $"Duplicated Cards: {key}" };
                 }
-
-                msg += "\n" + string.Format(Translate.Get("read_argv.advanced_rng_fmt"), count, rng.State);
-
-                state = rng.State;
-                searchType = TSearchType.Counting;
             }
 
-            if (!silent)
+            // If only 4, insert rare at front
+            if (idsArr.Count == 4)
+                idsArr.Insert(0, new List<int> { rare });
+
+            return new PatternParseResult
             {
-                _handler.WriteLine(msg);
-            }
-
-            return (firstState, state, count, searchType);
+                Raw = input,
+                Deck = idsArr,
+                Initiative = initiative
+            };
         }
 
-        string FuzzyToString(string fuzzy)
+        /// <summary>
+        /// Simulates the rare card timer. Returns the increment and rare table for UI display.
+        /// </summary>
+        public RareTimerResult RunRareTimer(uint state, string playerKey, int width = 60, int? overrideFps = null, int? overrideDelayMs = null, CancellationToken? cancel = null)
         {
-            var r = new List<string>();
+            var player = PlayerProfiles[playerKey];
+            int rareLimit = player.RareLimit;
+            int fps = overrideFps ?? Options.ConsoleFps;
+            double delay = Options.DelayFrame / Options.GameFps;
+            int forcedIncr = (int)Options.ForcedIncr;
+            int acceptDelay = (int)Options.AcceptDelayFrame;
+            int timerWidth = 8;
+            int tableWidth = width;
 
-            if (fuzzy.Contains('r'))
+            var start = DateTime.UtcNow;
+            int incr = 0;
+            double incrStart = delay - (forcedIncr / Options.GameFps);
+
+            List<bool> rareTbl = new List<bool>();
+            double duration = 0;
+
+            // For WPF, you can call this in a Task and update UI on each tick if desired.
+            while (true)
             {
-                r.Add(Translate.Get("fuzzy.ranks"));
+                duration = (DateTime.UtcNow - start).TotalSeconds;
+                incr = Math.Max(
+                    (int)Math.Round((duration - incrStart) * Options.GameFps),
+                    forcedIncr + acceptDelay
+                );
+                if (incr <= forcedIncr + acceptDelay)
+                    incr = forcedIncr;
+
+                rareTbl = Enumerable.Range(0, tableWidth)
+                    .Select(i => NextRare(state + (uint)incr + (uint)i, rareLimit))
+                    .ToList();
+
+                // For WPF: break on cancellation or user input
+                if (cancel?.IsCancellationRequested == true)
+                    break;
+
+                if (overrideDelayMs.HasValue)
+                    Thread.Sleep(overrideDelayMs.Value);
+                else
+                    Thread.Sleep(1000 / fps);
             }
 
-            if (fuzzy.Contains('o'))
+            return new RareTimerResult
             {
-                r.Add(Translate.Get("fuzzy.order"));
-            }
-
-            if (r.Count == 0)
-            {
-                return Translate.Get("fuzzy.strict");
-            }
-
-            return string.Join(", ", r);
+                Incr = incr,
+                RareTable = rareTbl,
+                DurationSeconds = duration
+            };
         }
 
-        string PatternToString(Pattern pattern)
+        private bool NextRare(uint state, int rareLimit)
         {
-            var deckNames = pattern.Deck.Select(ids =>
+            var nextRnd = ((state * 0x10dcd + 1) & 0xffffffff) >> 17;
+            return nextRnd % 100 < rareLimit;
+        }
+
+        /// <summary>
+        /// Returns a list of possible opening situations matching the pattern.
+        /// </summary>
+        public List<SearchResult> SearchOpenings(uint state, string playerKey, PatternParseResult pattern, bool fuzzyOrder = false, int? startIndexOverride = null, int? widthOverride = null, int? offsetOverride = null)
+        {
+            var player = PlayerProfiles[playerKey];
+            int startIndex = startIndexOverride ?? (int)Options.Base;
+            int width = widthOverride ?? (int)Options.Width;
+            int offset = offsetOverride ?? 0;
+
+            // Build search order (centered, then +/-1, +/-2, ...)
+            var order = new List<int> { startIndex };
+            for (int i = 1; i <= width / 2; i++)
             {
-                var names = ids.Select(id =>
+                order.Add(startIndex + i);
+                order.Add(startIndex - i);
+            }
+            order = order.Where(x => x >= 0).ToList();
+            if (width % 2 == 0 && order.Count > 0)
+                order.Remove(order.Max());
+
+            // Build opening table
+            var table = new List<(int Index, int Offset, OpeningSituation Opening)>();
+            foreach (var idx in order)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < idx; i++) rng.Next();
+                var opening = GenerateOpeningSituation(rng.State, playerKey);
+                table.Add((idx, 0, opening));
+            }
+
+            // Match pattern
+            var results = new List<SearchResult>();
+            foreach (var entry in table)
+            {
+                if (PatternMatches(pattern, entry.Opening, fuzzyOrder))
                 {
-                    var s = CardTable.FindNameById(id);
-
-                    if (_options.HighlightCards.Contains(id))
+                    results.Add(new SearchResult
                     {
-                        s = $"*{s}*";
-                    }
-
-                    if (_options.StrongHighlightCards.Contains(id))
-                    {
-                        s = $"**{s}**";
-                    }
-
-                    return s;
-                });
-
-                var namesS = string.Join("|", names);
-
-                return ids.Count == 1 ? namesS : $"({namesS})";
-            });
-
-            var deckS = string.Join(", ", deckNames);
-
-            string initiativeS;
-
-            if (pattern.Initiative == null)
-            {
-                initiativeS = Translate.Get("initiative.any");
+                        Diff = entry.Index - startIndex,
+                        Index = entry.Index,
+                        Offset = entry.Offset,
+                        LastState = entry.Opening.LastState,
+                        Initiative = entry.Opening.Initiative,
+                        Deck = entry.Opening.Deck
+                    });
+                }
             }
-            else if (pattern.Initiative == true)
+            return results;
+        }
+
+        private bool PatternMatches(PatternParseResult pattern, OpeningSituation opening, bool fuzzyOrder)
+        {
+            if (pattern.Initiative.HasValue && pattern.Initiative.Value != opening.Initiative)
+                return false;
+
+            var patDeck = fuzzyOrder
+                ? pattern.Deck.OrderBy(x => string.Join(",", x)).ToList()
+                : pattern.Deck;
+            var deck = fuzzyOrder
+                ? opening.Deck.OrderBy(x => x).ToList()
+                : opening.Deck;
+
+            // Each pattern entry is a list of possible card IDs (from fuzzy parsing)
+            for (int i = 0; i < patDeck.Count && i < deck.Count; i++)
             {
-                initiativeS = Translate.Get("initiative.player");
+                if (!patDeck[i].Contains(deck[i]))
+                    return false;
             }
-            else
-            {
-                initiativeS = Translate.Get("initiative.cpu");
-            }
-
-            return string.Format(Translate.Get("pattern2str_fmt"), initiativeS, deckS);
-        }
-
-        void ShowHelp()
-        {
-            _handler.WriteLine(Translate.Get("help.first"));
-            _handler.WriteLine();
-            _handler.WriteLine(Translate.Get("help.last"));
-        }
-
-        void ShowPatternHelp()
-        {
-            _handler.WriteLine(Translate.Get("help.pattern"));
-        }
-
-        string[] PromptArgs()
-        {
-            _handler.WriteLine(Translate.Get("prompt_args.first"));
-            var first = Prompt();
-            _handler.WriteLine(Translate.Get("prompt_args.second"));
-            var second = Prompt();
-            _handler.WriteLine();
-
-            if (string.IsNullOrWhiteSpace(second))
-            {
-                return new string[] { first };
-            }
-
-            return new string[] { first, second };
-        }
-
-        string Prompt()
-        {
-            _handler.Write(_options.Prompt);
-            return _handler.ReadLine();
-        }
-
-        enum TSearchType
-        {
-            First,
-            Recovery,
-            Counting,
-        }
-
-        class Pattern
-        {
-            public string Str { get; set; }
-            public IList<IList<int>> Deck { get; set; }
-            public bool? Initiative { get; set; }
-        }
-
-        class ScanEntry
-        {
-            public int Diff { get; set; }
-            public uint Index { get; set; }
-            public TableEntry Data { get; set; }
-        }
-
-        class TableEntry
-        {
-            public int Index { get; set; }
-            public int Offset { get; set; }
-            public Situation Opening { get; set; }
-        }
-
-        class Situation
-        {
-            public IList<int> Deck { get; set; }
-            public bool Initiative { get; set; }
-            public uint FirstState { get; set; }
-            public uint LastState { get; set; }
+            return true;
         }
     }
 }

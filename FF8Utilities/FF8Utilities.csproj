@@ -258,6 +258,10 @@
       <Project>{e354accb-41c5-4ecb-9e1f-0ba274d78c1b}</Project>
       <Name>CarawayCode</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CardManipulation\CardManipulation.csproj">
+      <Project>{D2B3549B-6A5E-47BB-9027-8538B60BD738}</Project>
+      <Name>CardManipulation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FF8Utilities.Data\FF8Utilities.Common.csproj">
       <Project>{6ffa01c4-ca0a-4752-8b26-daf0b9867dad}</Project>
       <Name>FF8Utilities.Common</Name>

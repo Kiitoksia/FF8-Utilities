@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CarawayCode.Entities;
+using CardManipulation;
 using FF8Utilities.Common;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
@@ -618,6 +619,21 @@ namespace FF8Utilities.Models
             File.WriteAllText(jsonFilePath, jsonSettings);
 
             string arguments = $"{patternString} {rngModifier}".Trim();
+
+            CardManip manip = new CardManip();
+            Task runningTask = Task.Run(async() =>
+            {
+                var result = manip.RareTimerAsync(Convert.ToUInt32(patternString, 16), "zellmama", (currentTimer) =>
+                {
+                    if (currentTimer.RareTable.Any(t => t))
+                    {
+                        Debug.WriteLine($"Incr: {currentTimer.Incr}, {currentTimer.DurationSeconds}, {string.Join(",", currentTimer.RareTable)}");
+                    }
+                }, System.Threading.CancellationToken.None);            
+            });
+
+
+
 
             _zellProcess = new Process();
             _zellProcess.StartInfo.Arguments = arguments;
