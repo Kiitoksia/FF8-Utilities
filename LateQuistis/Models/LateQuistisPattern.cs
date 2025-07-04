@@ -35,6 +35,5 @@ namespace LateQuistisManipulation.Models
 
         public List<LateQuistisStrategy> Strategies { get; }
 
-
     }
 }

@@ -76,7 +76,6 @@ namespace FF8Utilities.Models
             
 
             _loadedBeepSound = SettingsModel.Instance.BeepSound;
-            StartTimer();
         }
 
 

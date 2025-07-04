@@ -715,5 +715,23 @@ namespace FF8Utilities.Models
             return DriveManager.IsNewCSRVersionAvailable();
         }
 
+
+        public int GetZellDelayFrame()
+        {
+            if (CustomZellDelayFrame.HasValue) return CustomZellDelayFrame.Value;
+
+            switch (Platform)
+            {
+                case Platform.PS2:
+                case Platform.PS2JP:
+                    return 285;
+                    break;
+                case Platform.PC:
+                case Platform.PCLite:
+                    return 69; // nice
+                    break;
+                default: throw new ArgumentOutOfRangeException("Contact Kiitoksia because this should not have happened");
+            }
+        }
     }
 }

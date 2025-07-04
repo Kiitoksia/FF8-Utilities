@@ -1,4 +1,5 @@
-﻿using FF8Utilities.Entities;
+﻿using CardManipulation;
+using FF8Utilities.Entities;
 using FF8Utilities.Models;
 using LateQuistisManipulation.Models;
 using MahApps.Metro.Controls;
@@ -31,6 +32,10 @@ namespace FF8Utilities.Dialogs
             InitializeComponent();
             DataContext = pattern;
 
+            CardManip manip = new CardManip();
+            _manipModel = new CardManipulationModel(manip, 1, "fc01", SettingsModel.Instance.GetZellDelayFrame(), pattern.RNGIndex);
+
+            CardManipControl.DataContext = _manipModel;
             _strategies = pattern.Strategies;
             SubmitCommand = new Command<LateQuistisStrategy>(() => true, (s, e) =>
             {
@@ -47,6 +52,8 @@ namespace FF8Utilities.Dialogs
 
             OrderList();
         }
+
+        private CardManipulationModel _manipModel;
 
         private void OrderList()
         {
