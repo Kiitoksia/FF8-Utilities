@@ -132,6 +132,12 @@ namespace FF8Utilities.Models
                 if (bool.TryParse(showCarawayNPCMovementXml.Value, out bool showCarawayNPCMovement)) ShowCarawayNPCMovement = showCarawayNPCMovement;
             }
 
+            XElement beepSoundXml = xml?.Element(nameof(ShowCarawayNPCMovement));
+            if (showCarawayNPCMovementXml != null)
+            {
+                if (bool.TryParse(showCarawayNPCMovementXml.Value, out bool showCarawayNPCMovement)) ShowCarawayNPCMovement = showCarawayNPCMovement;
+            }
+
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
             {
@@ -696,6 +702,12 @@ namespace FF8Utilities.Models
         public QuistisPatternsOrderBy QuistisPatternsOrderBy { get; set; } = QuistisPatternsOrderBy.Frame;
 
         public bool ShowCarawayNPCMovement { get; set; }
+
+        public BeepSound BeepSound { get; set; } = BeepSound.Ping1;
+
+        public BeepInterval BeepInterval { get; set; } = BeepInterval.Medium;
+
+        public int BeepCount { get; set; } = 4;
 
         public Task<bool> IsCSRUpdateAvailable()
         {

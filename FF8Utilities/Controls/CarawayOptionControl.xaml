@@ -49,7 +49,7 @@
             <TextBlock Text="{Binding Input}" FontSize="16" VerticalAlignment="Center" Grid.Column="2" HorizontalAlignment="Center"/>
 
             <TextBlock Text="Backup" Grid.Row="1" HorizontalAlignment="Center"/>
-            <Button IsHitTestVisible="False"  Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}" Grid.Row="1" Grid.Column="1" Background="Transparent">
+            <Button IsHitTestVisible="False"  Style="{StaticResource MahApps.Styles.Button.Dialogs.Accent}" Grid.Row="1" Grid.Column="1" Background="Transparent"  BorderThickness="2,0,2,2">
                 <TextBlock Text="{Binding BackupCode}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
             </Button>
             <TextBlock Text="{Binding BackupInput}" FontSize="16" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"/>

@@ -115,6 +115,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SDL2\AudioContext.cs" />
+    <Compile Include="SDL2\Extensions.cs" />
+    <Compile Include="SDL2\MMDeviceAPI.cs" />
+    <Compile Include="SDL2\SDL.cs" />
     <Page Include="Controls\CarawayOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -231,6 +235,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="SDL2\Readme.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -243,6 +248,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Resources\SDL2.dll" />
+    <None Include="Resources\clack.wav" />
+    <None Include="Resources\click1.wav" />
+    <None Include="Resources\ping1.wav" />
+    <None Include="Resources\ping2.wav" />
     <Content Include="Scripts\fins.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

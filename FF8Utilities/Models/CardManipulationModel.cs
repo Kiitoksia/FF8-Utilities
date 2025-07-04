@@ -1,10 +1,14 @@
 ﻿using CardManipulation;
 using CardManipulation.Models;
 using FF8Utilities.Entities;
+using FlowTimer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +35,12 @@ namespace FF8Utilities.Models
         private int _count;        
         private CancellationTokenSource _cts;
         private string _errorText;
-
+        private uint? _lastState;
+        private string _foundCards;
+        private string _explanation;
+        private AudioContext _audioContext;
+        private BeepSound _loadedBeepSound;
+        private byte[] _pcm;
 
 
         /// <summary>
@@ -55,8 +64,21 @@ namespace FF8Utilities.Models
             // Model updates need to happen smoothly in the UI Thread, use CompositionTarget for this
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
+            if (_count > 0)
+            {
+                Explanation = "Confirm to start timer";
+            }
+            else
+            {
+                Explanation = "Mash first game and input cards";
+            }
+
+            
+
+            _loadedBeepSound = SettingsModel.Instance.BeepSound;
             StartTimer();
         }
+
 
 
         public Command SubmitCommand { get; }
@@ -65,20 +87,22 @@ namespace FF8Utilities.Models
 
         private void StartTimer()
         {
-            if (_count == 0 && string.IsNullOrWhiteSpace(RecoveryPattern))
+            if (_count == 0 && string.IsNullOrWhiteSpace(RecoveryPattern) && _lastState == null)
             {
-                ErrorText = "Mash first game and input cards";
+                          
             }
             else
             {
+                Explanation = "Confirm to start timer";
                 _cts = new CancellationTokenSource();
                 SearchType searchType = SearchType.First;
                 if (_count != 0) searchType = SearchType.Counting;
                 else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
                 
-                _ = _manip.RareTimerAsync(_state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _count);
+                _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _count);
             }            
         }
+
 
         private void Submit(object sender, EventArgs args)
         {
@@ -96,8 +120,15 @@ namespace FF8Utilities.Models
                     PatternParseResult pattern = _manip.ParsePattern(RecoveryPattern, _player);
                     if (pattern.Error == null)
                     {
-                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, offsetOverride: _currentResult?.Incr, 
-                            count: _count, searchType: SearchType.Recovery);
+                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, searchType: SearchType.First);
+                        if (results.Any())
+                        {
+                            SearchResult result = results[0];
+                            _lastState = result.LastState;
+                            RecoveryPattern = null;
+                            FoundCards = $"Index: {result.Index}: {string.Join(", ", result.Cards)}";
+                            Explanation = "Pattern found.  Confirm to start timer";
+                        }
                     }
                 }
             }
@@ -110,8 +141,72 @@ namespace FF8Utilities.Models
 
         private void Pause(object sender, EventArgs args)
         {
+            _audioContext?.ClearQueuedAudio();
             _cts.Cancel();
         }
+
+
+        private Timer _currentlyPlayingTimer;
+
+        private bool _isPlayingBeeps;
+        private void PlayBeeps()
+        {
+            if (_isPlayingBeeps) return;
+            _isPlayingBeeps = true;
+            if (_loadedBeepSound != SettingsModel.Instance.BeepSound)
+            {
+                // Reload audio context
+                _audioContext?.Destroy();
+                _audioContext = null;
+            }
+
+            if (_audioContext == null)
+            {
+                Stream waveStream;
+                switch (SettingsModel.Instance.BeepSound)
+                {
+                    case BeepSound.Ping1: waveStream = Properties.Resources.ping1; break;
+                    case BeepSound.Ping2: waveStream = Properties.Resources.ping2; break;
+                    case BeepSound.Click: waveStream = Properties.Resources.click1; break;
+                    case BeepSound.Clack: waveStream = Properties.Resources.clack; break;
+                    default: throw new ArgumentOutOfRangeException(nameof(SettingsModel.Instance.BeepSound), "Unknown beep sound setting");
+                }
+                using (waveStream)
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        waveStream.CopyTo(memoryStream);
+                        Wave.LoadWAV(memoryStream.ToArray(), out _pcm, out SDL.SDL_AudioSpec spec);
+                        _audioContext = new AudioContext(spec.freq, spec.format, spec.channels);
+                    }
+                }
+            }
+
+
+            int interval = (int)SettingsModel.Instance.BeepInterval;
+            int desiredBeeps = SettingsModel.Instance.BeepCount;
+            int maxNaturalInterval = (int)Math.Floor(_timeTillNextCard.TotalMilliseconds / desiredBeeps);
+
+            interval = Math.Min(interval, maxNaturalInterval);
+
+            int totalBeepDuration = interval * desiredBeeps;
+            int delay = Math.Max((int)_timeTillNextCard.TotalMilliseconds - totalBeepDuration, 0);
+
+            int playedBeeps = 0;
+            // Play at normal speed
+            _currentlyPlayingTimer = new Timer((state) =>
+            {
+                _audioContext.QueueAudio(_pcm);
+                playedBeeps++;
+                if (playedBeeps >= desiredBeeps)
+                {
+                    _currentlyPlayingTimer?.Dispose();
+                    return;
+                }
+            }, null, delay, interval);
+        }
+
+        private TimeSpan _timeTillNextCard;
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
@@ -121,7 +216,6 @@ namespace FF8Utilities.Models
 
             _lastRenderTime = args.RenderingTime;
 
-            // Perform your UI-safe per-frame logic here
             RareCardAvailable = _currentResult.RareTable[0];
             RareCardSoon = !_currentResult.RareTable[0] && _currentResult.RareTable.Take(10).Any(t => t);
             Snake = string.Join("", _currentResult.RareTable.Select(t => t ? "*" : "-"));
@@ -147,8 +241,19 @@ namespace FF8Utilities.Models
                     }
                 }
 
-                TimeSpan timeTillAvailable = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // Assuming 60 FPS
-                RareCardTimer = $"{timeTillAvailable.TotalSeconds:F2}s";
+                _timeTillNextCard = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // Assuming 60 FPS
+                RareCardTimer = $"{_timeTillNextCard.TotalSeconds:F2}s";
+                Debug.WriteLine($"Time till available: {_timeTillNextCard.TotalSeconds:F2}s");
+                if (_timeTillNextCard.TotalSeconds > 2.8)
+                {
+                    _currentlyPlayingTimer?.Dispose();
+                    _audioContext?.ClearQueuedAudio();
+                    _isPlayingBeeps = false;
+                }
+                else
+                {
+                    PlayBeeps();
+                }
             }
         }
 
@@ -256,6 +361,36 @@ namespace FF8Utilities.Models
                 if (_errorText == value)
                     return;
                 _errorText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string FoundCards
+        {
+            get => _foundCards;
+            private set
+            {
+                if (_foundCards == value)
+                {
+                    return;
+                }
+
+                _foundCards = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Explanation
+        {
+            get => _explanation;
+            private set
+            {
+                if (_explanation == value)
+                {
+                    return;
+                }
+
+                _explanation = value;
                 OnPropertyChanged();
             }
         }

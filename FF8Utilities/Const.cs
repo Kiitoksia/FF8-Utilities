@@ -156,4 +156,19 @@ namespace FF8Utilities
         Alphabetical,
         Frame
     }
+
+    public enum BeepSound
+    {
+        Ping1,
+        Ping2,
+        Click,
+        Clack
+    }
+
+    public enum BeepInterval
+    {
+        Long = 430,
+        Medium = 400,
+        Short = 340,
+    }
 }

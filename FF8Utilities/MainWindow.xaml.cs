@@ -38,6 +38,8 @@ namespace FF8Utilities
             ConfigureAttackButtons(FirstSquallButton, FirstSquallCrossButton, FirstQuistisButton, FirstQuistisCrossButton, FirstDamageRoll, 0);
             ConfigureAttackButtons(SecondSquallButton, SecondSquallCrossButton, SecondQuistisButton, SecondQuistisCrossButton, SecondDamageRoll, 1);
             ConfigureAttackButtons(ThirdSquallButton, ThirdSquallCrossButton, ThirdQuistisButton, ThirdQuistisCrossButton, ThirdDamageRoll, 2);
+
+            FlowTimer.Extensions.Init(Const.PackagesFolder);
         }
 
         private MainModel Model => (MainModel)DataContext;

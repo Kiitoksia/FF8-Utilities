@@ -216,6 +216,83 @@ namespace CardManipulation
             return nextRnd % 100 < rareLimit;
         }
 
+        IList<TableEntry> MakeOpeningTable(uint from, uint to, uint state, PlayerProfile player, SearchType searchType, uint firstState, int count, uint incr)
+        {
+            var size = to + 1;
+            IList<uint> rngStateArr;
+            IList<int> offsetArr;
+
+            if (searchType == SearchType.First)
+            {
+                var rng = new CardRng(state);
+
+                rngStateArr = new uint[size].Select(_ =>
+                {
+                    var stateCopy = rng.State;
+                    rng.Next();
+                    return stateCopy;
+                }).ToList();
+
+                var offsetArrSize = (int)(60f / Options.AutofireSpeed);
+
+                offsetArr = new int[offsetArrSize].Select((_, i) =>
+                {
+                    return (int)Options.ForcedIncr + i;
+                }).ToList();
+            }
+            else if (searchType == SearchType.Counting)
+            {
+                var rng = new CardRng(firstState);
+                var maxIdx = count + Options.CountingWidth;
+
+                rngStateArr = new uint[maxIdx].Select(_ =>
+                {
+                    var stateCopy = rng.State;
+                    rng.Next();
+                    return stateCopy + incr;
+                }).ToList();
+
+                offsetArr = new int[Options.CountingFrameWidth].Select((_, i) =>
+                {
+                    return i - (int)Options.CountingFrameWidth / 2;
+                }).ToList();
+            }
+            else
+            {
+                rngStateArr = new uint[size].Select((_, i) =>
+                {
+                    return (state + (uint)i) & 0xffff_ffff;
+                }).ToList();
+
+                offsetArr = new[] { 0 };
+            }
+
+            var table = new List<TableEntry>();
+
+            for (var idx = 0; idx <= to; idx++)
+            {
+                if (!(idx >= from && idx <= to))
+                {
+                    continue;
+                }
+
+                foreach (var offset in offsetArr)
+                {
+                    var rngState = (rngStateArr[idx] + offset) & 0xffff_ffff;
+
+                    table.Add(new TableEntry()
+                    {
+                        Index = idx,
+                        Offset = offset,
+                        Opening = OpeningSituation((uint)rngState, player),
+                    });
+                }
+            }
+
+            return table;
+        }
+
+
         /// <summary>
         /// Returns a list of possible opening situations matching the pattern.
         /// </summary>
@@ -226,18 +303,11 @@ namespace CardManipulation
             bool fuzzyOrder = false,
             int? startIndexOverride = null,
             int? widthOverride = null,
-            int? offsetOverride = null,
             int count = 0,
-            SearchType searchType = SearchType.First)
+            SearchType searchType = SearchType.First,
+            uint incr = 0)
         {
             // Advance RNG by count if needed
-            if (count > 0)
-            {
-                var rng = new CardRng(state);
-                for (int i = 0; i < count; i++) rng.Next();
-                state = rng.State;
-            }
-
             var player = PlayerProfiles[playerKey];
 
             // Select width and startIndex based on searchType
@@ -260,28 +330,39 @@ namespace CardManipulation
                     startIndex = startIndexOverride ?? (int)Options.Base;
                     break;
             }
-            int offset = offsetOverride ?? 0;
 
             // Build search order (centered, then +/-1, +/-2, ...)
-            var order = new List<int> { startIndex };
-            for (int i = 1; i <= width / 2; i++)
-            {
-                order.Add(startIndex + i);
-                order.Add(startIndex - i);
-            }
+            var order = Enumerable.Range(1, (int)(width / 2))
+                .Select(offset => new[] { startIndex + offset, startIndex - offset })
+                .SelectMany(x => x)
+                .ToList();
+
+            order.Insert(0, startIndex);
+
             order = order.Where(x => x >= 0).ToList();
-            if (width % 2 == 0 && order.Count > 0)
+
+            if (width % 2 == 0)
+            {
                 order.Remove(order.Max());
+            }
+
+            switch (Options.Order)
+            {
+                case TOrder.Reverse:
+                    order.Reverse();
+                    break;
+                case TOrder.Ascending:
+                    order.Sort();
+                    break;
+                case TOrder.Descending:
+                    order.Sort();
+                    order.Reverse();
+                    break;
+            }
 
             // Build opening table
-            var table = new List<(int Index, int Offset, OpeningSituation Opening)>();
-            foreach (var idx in order)
-            {
-                var rng = new CardRng(state);
-                for (int i = 0; i < idx; i++) rng.Next();
-                var opening = GenerateOpeningSituation(rng.State, playerKey);
-                table.Add((idx, 0, opening));
-            }
+
+            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, state, count, incr);
 
             // Match pattern
             var results = new List<SearchResult>();
@@ -296,7 +377,8 @@ namespace CardManipulation
                         Offset = entry.Offset,
                         LastState = entry.Opening.LastState,
                         Initiative = entry.Opening.Initiative,
-                        Deck = entry.Opening.Deck
+                        Deck = entry.Opening.Deck,
+                        Cards = entry.Opening.Deck.Select(id => CardTable.Single(c => c.Id == id).NameEn).ToList()
                     });
                 }
             }
@@ -322,6 +404,65 @@ namespace CardManipulation
                     return false;
             }
             return true;
+        }
+
+        private OpeningSituation OpeningSituation(uint state, PlayerProfile player, bool noRare = false)
+        {
+            const int DECK_MAX = 5;
+
+            var rng = new CardRng(state);
+            var deck = new List<int>();
+
+            if (!noRare)
+            {
+                foreach (var rareId in player.Rares)
+                {
+                    var limit = deck.Count == 0 ? player.RareLimit : player.RareLimit / 2;
+
+                    if (rng.Next() % 100 < limit)
+                    {
+                        deck.Add(rareId);
+                    }
+
+                    if (deck.Count >= DECK_MAX)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var pupuId = CardTable.Single(t => t.NameEn == "PuPu").Id;
+
+            while (deck.Count < DECK_MAX)
+            {
+                var lv = player.Levels[rng.Next() % player.Levels.Count];
+                var row = rng.Next() % 11;
+                var cardId = (lv - 1) * 11 + (int)row;
+
+                if (cardId == pupuId || deck.Contains(cardId))
+                {
+                    continue;
+                }
+
+                deck.Add(cardId);
+            }
+
+            var initiative = (rng.Next() & 1) != 0;
+
+            return new OpeningSituation()
+            {
+                Deck = deck,
+                Initiative = initiative,
+                FirstState = state,
+                LastState = rng.State,
+            };
+        }
+
+        class TableEntry
+        {
+            public int Index { get; set; }
+            public int Offset { get; set; }
+            public OpeningSituation Opening { get; set; }
         }
     }
 }

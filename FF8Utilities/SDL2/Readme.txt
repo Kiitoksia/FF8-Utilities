@@ -1,0 +1,1 @@
+﻿This code is stolen/repurposed from https://github.com/stringflow/FlowTimer

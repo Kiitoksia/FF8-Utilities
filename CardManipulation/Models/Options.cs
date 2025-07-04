@@ -20,7 +20,7 @@ namespace CardManipulation.Models
         public string RanksOrder { get; set; }
         public List<int> StrongHighlightCards { get; set; }
         public List<int> HighlightCards { get; set; }
-        public string Order { get; set; }
+        public TOrder Order { get; set; }
         public int ConsoleFps { get; set; }
         public float GameFps { get; set; }
         public string Player { get; set; }
@@ -35,8 +35,8 @@ namespace CardManipulation.Models
             Language = "en",
             Base = 550,
             Width = 400,
-            RecoveryWidth = 360,
-            CountingWidth = 100,
+            RecoveryWidth = 600,
+            CountingWidth = 600,
             CountingFrameWidth = 40,
             EarlyQuistis = "pingval",
             AutofireSpeed = 12,
@@ -44,7 +44,7 @@ namespace CardManipulation.Models
             RanksOrder = "ulrd",
             StrongHighlightCards = new List<int> { 103, 105 },
             HighlightCards = new List<int> { 21, 48, 53 },
-            Order = "reverse",
+            Order = TOrder.Reverse,
             ConsoleFps = 60,
             GameFps = 60,
             Player = "zellmama",
@@ -54,5 +54,12 @@ namespace CardManipulation.Models
             Prompt = "> ",
             Interactive = false
         };
+    }
+
+    public enum TOrder
+    {
+        Reverse,
+        Descending,
+        Ascending,
     }
 }

@@ -14,5 +14,6 @@ namespace CardManipulation.Models
         public uint LastState { get; set; }
         public bool Initiative { get; set; }
         public List<int> Deck { get; set; }
+        public List<string> Cards { get; set; }
     }
 }
