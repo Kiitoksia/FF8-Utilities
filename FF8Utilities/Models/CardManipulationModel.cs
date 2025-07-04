@@ -20,6 +20,8 @@ namespace FF8Utilities.Models
         private decimal _timeElapsedSeconds;
         private SolidColorBrush textColor = Brushes.White;
         private TimeSpan _lastRenderTime = TimeSpan.Zero;
+        private string _rareCardTimer;
+        private string recoveryPattern;
 
 
         public CardManipulationModel()
@@ -34,19 +36,36 @@ namespace FF8Utilities.Models
             var args = (RenderingEventArgs)e;
             var deltaTime = args.RenderingTime - _lastRenderTime;
 
-            if (deltaTime.TotalMilliseconds >= 16.66) // ~60 FPS
+            _lastRenderTime = args.RenderingTime;
+
+            // Perform your UI-safe per-frame logic here
+            RareCardAvailable = _currentResult.RareTable[0];
+            RareCardSoon = !_currentResult.RareTable[0] && _currentResult.RareTable.Take(10).Any(t => t);
+            Snake = string.Join("", _currentResult.RareTable.Select(t => t ? "*" : "-"));
+            TimeElapsedSeconds = (decimal)_currentResult.DurationSeconds;
+
+            if (RareCardAvailable) TextColor = Brushes.Green;
+            else if (RareCardSoon) TextColor = Brushes.Orange;
+            else TextColor = Brushes.White;
+
+            if (RareCardAvailable)
             {
-                _lastRenderTime = args.RenderingTime;
+                RareCardTimer = "NOW";
+            }
+            else
+            {
+                int framesTillAvailable = 0;
+                for (int i = 0; i < _currentResult.RareTable.Count; i++)
+                {
+                    if (_currentResult.RareTable[i])
+                    {
+                        framesTillAvailable = i;
+                        break;
+                    }
+                }
 
-                // Perform your UI-safe per-frame logic here
-                RareCardAvailable = _currentResult.RareTable[0];
-                RareCardSoon = !_currentResult.RareTable[0] && _currentResult.RareTable.Take(10).Any(t => t);
-                Snake = string.Join("", _currentResult.RareTable.Select(t => t ? "*" : "-"));
-                TimeElapsedSeconds = (decimal)_currentResult.DurationSeconds;
-
-                if (RareCardAvailable) TextColor = Brushes.Green;
-                else if (RareCardSoon) TextColor = Brushes.Orange;
-                else TextColor = Brushes.White;
+                TimeSpan timeTillAvailable = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // Assuming 60 FPS
+                RareCardTimer = $"{timeTillAvailable.TotalSeconds:F2}s";
             }
         }
 
@@ -114,6 +133,30 @@ namespace FF8Utilities.Models
         public void UpdateFromResult(RareTimerResult result)
         {
             _currentResult = result;           
+        }
+
+        public string RareCardTimer
+        {
+            get => _rareCardTimer;
+            private set
+            {
+                if (_rareCardTimer == value)
+                    return;
+                _rareCardTimer = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string RecoveryPattern
+        {
+            get => recoveryPattern;
+            set
+            {
+                if (recoveryPattern == value)
+                    return;
+                recoveryPattern = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

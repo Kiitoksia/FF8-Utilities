@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -28,6 +29,7 @@ using Newtonsoft.Json.Linq;
 using UltimeciaManip;
 using UltimeciaManip.Entities;
 using Manipulation = UltimeciaManip.Manipulation;
+using Timer = System.Timers.Timer;
 
 namespace FF8Utilities.Models
 {
@@ -543,6 +545,24 @@ namespace FF8Utilities.Models
             _countdownRunning = false;
         }
 
+        public void PauseZellScript()
+        {
+            _cardCancellationTokenSource.Cancel();
+        }
+
+        private CancellationTokenSource _cardCancellationTokenSource;
+
+        private void StartCardManip(uint state, bool isZell, int delayFrames, int? rngModifier)
+        {
+            _cardCancellationTokenSource = new CancellationTokenSource();
+            _cardManip.Options.DelayFrame = delayFrames;
+
+            _ = _cardManip.RareTimerAsync(state, isZell ? "zellmama" : "fc01", (currentTimer) =>
+            {
+                CardManipModel.UpdateFromResult(currentTimer);
+            }, _cardCancellationTokenSource.Token, count: rngModifier ?? 0);            
+        }
+
 
         public void LaunchCardScript(bool isZell, int? rngModifier)
         {
@@ -615,19 +635,7 @@ namespace FF8Utilities.Models
             File.WriteAllText(jsonFilePath, jsonSettings);
 
             string arguments = $"{patternString} {rngModifier}".Trim();
-
-
-            Task runningTask = Task.Run(async() =>
-            {
-                var result = _cardManip.RareTimerAsync(Convert.ToUInt32(patternString, 16), "zellmama", (currentTimer) =>
-                {
-                    this.CardManipModel.UpdateFromResult(currentTimer);
-
-                    //Debug.WriteLine($"Incr: {currentTimer.Incr}, {currentTimer.DurationSeconds}, {string.Join("", currentTimer.RareTable.Select(t => t ? "*" : "-"))}");
-                }, System.Threading.CancellationToken.None, count: rngModifier ?? 0);            
-            });
-
-
+            StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
 
 
             _zellProcess = new Process();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FF8Utilities.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,14 @@ namespace FF8Utilities.Controls
         public CardManipulationOutputControl()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                MainModel.Instance.PauseZellScript();
+            }
         }
     }
 }
