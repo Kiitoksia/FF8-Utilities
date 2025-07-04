@@ -65,6 +65,7 @@ namespace FF8Utilities.Models
         private bool _useCustomQuistisPattern;
         private string _customQuistisPattern;
         private bool _showCarawayNPCMovement;
+        private CardManip _cardManip;
 
 
 
@@ -141,6 +142,8 @@ namespace FF8Utilities.Models
             }           
             
             Instance = this;
+            _cardManip = new CardManip();
+            CardManipModel = new CardManipulationModel();
 
             PropertyChanged += (s, e) =>
             {
@@ -157,7 +160,10 @@ namespace FF8Utilities.Models
                     }
                 }
             };
+
         }
+
+        public CardManipulationModel CardManipModel { get; }
 
         public static MainModel Instance { get; private set; }
 
@@ -513,16 +519,6 @@ namespace FF8Utilities.Models
             OnPropertyChanged(nameof(UltimeciaFormations));
         }
 
-        private void UltimeciaTimerLaunch(object sender, EventArgs args)
-        {
-            Direction[] directions = UltimeciaRng.Select(s => s.ToDirection()).ToArray();
-
-            if (Settings.Platform == Platform.PC) return;
-
-            string path = Settings.Platform == Platform.PS2 ? "ultimeciaNA.exe" : "ultimeciaJP.exe";
-            Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts", path), UltimeciaRng.ToString());
-        }
-
         private bool _countdownRunning = false;
 
         private async void ZellCountdownLaunch(object sender, EventArgs eventArgs)
@@ -620,16 +616,15 @@ namespace FF8Utilities.Models
 
             string arguments = $"{patternString} {rngModifier}".Trim();
 
-            CardManip manip = new CardManip();
+
             Task runningTask = Task.Run(async() =>
             {
-                var result = manip.RareTimerAsync(Convert.ToUInt32(patternString, 16), "zellmama", (currentTimer) =>
+                var result = _cardManip.RareTimerAsync(Convert.ToUInt32(patternString, 16), "zellmama", (currentTimer) =>
                 {
-                    if (currentTimer.RareTable.Any(t => t))
-                    {
-                        Debug.WriteLine($"Incr: {currentTimer.Incr}, {currentTimer.DurationSeconds}, {string.Join(",", currentTimer.RareTable)}");
-                    }
-                }, System.Threading.CancellationToken.None);            
+                    this.CardManipModel.UpdateFromResult(currentTimer);
+
+                    //Debug.WriteLine($"Incr: {currentTimer.Incr}, {currentTimer.DurationSeconds}, {string.Join("", currentTimer.RareTable.Select(t => t ? "*" : "-"))}");
+                }, System.Threading.CancellationToken.None, count: rngModifier ?? 0);            
             });
 
 
@@ -1070,6 +1065,7 @@ namespace FF8Utilities.Models
                 }
             }
         }
+
 
         private Timer _filterTimer;
 

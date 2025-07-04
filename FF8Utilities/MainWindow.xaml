@@ -113,6 +113,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  Width="0.4*"/>
@@ -193,6 +194,10 @@
 
                     <GroupBox Grid.ColumnSpan="3" Grid.Row="5" Margin="20,20,20,0" Header="(Zell Card) Cards to select">
                         <TextBlock FontSize="14" Text="Geezard, Red Bat, Gayla, Quistis, Ifrit"/>
+                    </GroupBox>
+
+                    <GroupBox Header="Timing" Grid.Row="6" Grid.ColumnSpan="3" Margin="20,20,20,0">
+                        <controls:CardManipulationOutputControl DataContext="{Binding CardManipModel}"/>
                     </GroupBox>
                 </Grid>
             </TabItem>

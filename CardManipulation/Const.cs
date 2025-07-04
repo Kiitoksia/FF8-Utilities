@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CardManipulation
 {
-    public static class DataFactory
+    internal static class Const
     {
-        public static List<Card> CreateCardTable()
+        internal static List<Card> CreateCardTable()
         {
             return new List<Card>
             {
@@ -127,7 +127,7 @@ namespace CardManipulation
             };
         }
 
-        public static Dictionary<string, PlayerProfile> CreatePlayerProfiles()
+        internal static Dictionary<string, PlayerProfile> CreatePlayerProfiles()
         {
             return new Dictionary<string, PlayerProfile>
             {

@@ -7,15 +7,6 @@ namespace FF8Utilities.Entities.Encounters.Dollet
 {
     public class AnacondaurEncounter : BaseEncounterModel
     {
-        private int _squallPhysicals;
-        private int _seiferAttacks;
-        private int _zellAttacks;
-        private int _limits = 1;
-        private int _rolls;
-        private int _blind;
-        private ThreePersonFanfareCamera? _camera;
-        private bool _allCharactersSurvived = true;
-
         public AnacondaurEncounter() : base("Anacondaur", 14, typeof(ThreePersonFanfareCamera))
         {
             Abilities.Add(new SquallAttack());

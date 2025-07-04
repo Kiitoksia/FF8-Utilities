@@ -119,6 +119,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CardManipulationOutputControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\EncounterControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -146,6 +150,9 @@
     <Compile Include="Const.cs" />
     <Compile Include="Controls\CarawayOptionControl.xaml.cs">
       <DependentUpon>CarawayOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CardManipulationOutputControl.xaml.cs">
+      <DependentUpon>CardManipulationOutputControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EncounterControl.xaml.cs">
       <DependentUpon>EncounterControl.xaml</DependentUpon>
@@ -198,6 +205,7 @@
     <Compile Include="Models\AbilityModels\ZellAttack.cs" />
     <Compile Include="Models\BaseEncounterModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CardManipulationModel.cs" />
     <Compile Include="Models\CardNotesModel.cs" />
     <Compile Include="Models\DownloadModel.cs" />
     <Compile Include="Models\EncounterAbilityModel.cs" />

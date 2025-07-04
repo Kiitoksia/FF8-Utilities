@@ -17,13 +17,21 @@ namespace CardManipulation
 
         public CardManip()
         {
-            CardTable = DataFactory.CreateCardTable();
-            PlayerProfiles = DataFactory.CreatePlayerProfiles();
+            CardTable = Const.CreateCardTable();
+            PlayerProfiles = Const.CreatePlayerProfiles();
             Options = Options.Default();
         }
 
-        public async Task RareTimerAsync(uint state, string playerKey, Action<RareTimerResult> onTick, CancellationToken token, int fps = 60)
+        public async Task RareTimerAsync(uint state, string playerKey, Action<RareTimerResult> onTick, CancellationToken token, int fps = 60, int count = 0)
         {
+            // Advance RNG by count if needed
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++) rng.Next();
+                state = rng.State;
+            }
+
             var start = DateTime.UtcNow;
             while (!token.IsCancellationRequested)
             {
@@ -34,8 +42,16 @@ namespace CardManipulation
             }
         }
 
-        public RareTimerResult GetRareTimerStep(uint state, string playerKey, double elapsedSeconds, int width = 60)
+        private RareTimerResult GetRareTimerStep(uint state, string playerKey, double elapsedSeconds, int width = 60, int count = 0)
         {
+            // Advance RNG by count if needed
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++) rng.Next();
+                state = rng.State;
+            }
+
             var player = PlayerProfiles[playerKey];
             int rareLimit = player.RareLimit;
             double delay = Options.DelayFrame / Options.GameFps;
@@ -64,7 +80,7 @@ namespace CardManipulation
             };
         }
 
-        public OpeningSituation GenerateOpeningSituation(uint state, string playerKey, bool noRare = false)
+        private OpeningSituation GenerateOpeningSituation(uint state, string playerKey, bool noRare = false)
         {
             var player = PlayerProfiles[playerKey];
             var rng = new CardRng(state);
@@ -101,7 +117,7 @@ namespace CardManipulation
             };
         }
 
-        public PatternParseResult ParsePattern(string input, string playerKey, bool fuzzyRanks = false)
+        private PatternParseResult ParsePattern(string input, string playerKey, bool fuzzyRanks = false)
         {
             var player = PlayerProfiles[playerKey];
             var rare = player.Rares.FirstOrDefault();
@@ -177,8 +193,16 @@ namespace CardManipulation
         /// <summary>
         /// Simulates the rare card timer. Returns the increment and rare table for UI display.
         /// </summary>
-        public RareTimerResult RunRareTimer(uint state, string playerKey, int width = 60, int? overrideFps = null, int? overrideDelayMs = null, CancellationToken? cancel = null)
+        private RareTimerResult RunRareTimer(uint state, string playerKey, int width = 60, int? overrideFps = null, int? overrideDelayMs = null, CancellationToken? cancel = null, int count = 0)
         {
+            // Advance RNG by count if needed
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++) rng.Next();
+                state = rng.State;
+            }
+
             var player = PlayerProfiles[playerKey];
             int rareLimit = player.RareLimit;
             int fps = overrideFps ?? Options.ConsoleFps;
@@ -237,8 +261,16 @@ namespace CardManipulation
         /// <summary>
         /// Returns a list of possible opening situations matching the pattern.
         /// </summary>
-        public List<SearchResult> SearchOpenings(uint state, string playerKey, PatternParseResult pattern, bool fuzzyOrder = false, int? startIndexOverride = null, int? widthOverride = null, int? offsetOverride = null)
+        public List<SearchResult> SearchOpenings(uint state, string playerKey, PatternParseResult pattern, bool fuzzyOrder = false, int? startIndexOverride = null, int? widthOverride = null, int? offsetOverride = null, int count = 0)
         {
+            // Advance RNG by count if needed
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++) rng.Next();
+                state = rng.State;
+            }
+
             var player = PlayerProfiles[playerKey];
             int startIndex = startIndexOverride ?? (int)Options.Base;
             int width = widthOverride ?? (int)Options.Width;
