@@ -197,7 +197,7 @@
                     </GroupBox>
 
                     <GroupBox Header="Timing" Grid.Row="6" Grid.ColumnSpan="3" Margin="20,20,20,0">
-                        <controls:CardManipulationOutputControl DataContext="{Binding CardManipModel}"/>
+                        <controls:CardManipulationOutputControl DataContext="{Binding ZellCardManip}"/>
                     </GroupBox>
                 </Grid>
             </TabItem>

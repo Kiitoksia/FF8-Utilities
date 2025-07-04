@@ -26,11 +26,13 @@ namespace FF8Utilities.Controls
             InitializeComponent();
         }
 
+        private CardManipulationModel Model => (CardManipulationModel)DataContext;
+
         private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                MainModel.Instance.PauseZellScript();
+                Model.SubmitCommand.Execute(null);
             }
         }
     }

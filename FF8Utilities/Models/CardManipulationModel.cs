@@ -1,9 +1,12 @@
-﻿using CardManipulation.Models;
+﻿using CardManipulation;
+using CardManipulation.Models;
+using FF8Utilities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -22,12 +25,68 @@ namespace FF8Utilities.Models
         private TimeSpan _lastRenderTime = TimeSpan.Zero;
         private string _rareCardTimer;
         private string recoveryPattern;
+        private CardManip _manip;
+        private uint _state;
+        private string _player;
+        private int _count;        
+        private CancellationTokenSource _cts;
 
 
-        public CardManipulationModel()
-        {
+        public CardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier)
+        {            
+            _manip = manip;
+            _state = state;
+            _player = player;
+            _count = rngModifier ?? 0;
             // Model updates need to happen smoothly in the UI Thread, use CompositionTarget for this
             CompositionTarget.Rendering += CompositionTarget_Rendering;
+
+            SubmitCommand = new Command(() => true, Submit);
+
+            manip.Options.DelayFrame = delayFrames;
+            StartTimer();
+        }
+
+        public Command SubmitCommand { get; }
+
+        public Command PauseCommand { get; }
+
+        private void StartTimer()
+        {
+            _cts = new CancellationTokenSource();
+            _ = _manip.RareTimerAsync(_state, _player, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _count);
+        }
+
+        private void Submit(object sender, EventArgs args)
+        {
+            if (_cts.Token.IsCancellationRequested)
+            {
+                // Already cancelled and they submit, restart!
+                if (string.IsNullOrWhiteSpace(RecoveryPattern))
+                {
+                    // Redo the current timer
+                    StartTimer();
+                }
+                else
+                {
+                    // Recovery search
+                    PatternParseResult pattern = _manip.ParsePattern(RecoveryPattern, _player);
+                    if (pattern.Error == null)
+                    {
+                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, offsetOverride: _currentResult?.Incr, count: _count);
+                    }
+                }
+            }
+            else
+            {
+                _cts.Cancel();
+            }
+            
+        }
+
+        private void Pause(object sender, EventArgs args)
+        {
+            _cts.Cancel();
         }
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)

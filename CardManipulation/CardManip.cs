@@ -117,7 +117,7 @@ namespace CardManipulation
             };
         }
 
-        private PatternParseResult ParsePattern(string input, string playerKey, bool fuzzyRanks = false)
+        public PatternParseResult ParsePattern(string input, string playerKey, bool fuzzyRanks = false)
         {
             var player = PlayerProfiles[playerKey];
             var rare = player.Rares.FirstOrDefault();

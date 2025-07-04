@@ -67,9 +67,7 @@ namespace FF8Utilities.Models
         private bool _useCustomQuistisPattern;
         private string _customQuistisPattern;
         private bool _showCarawayNPCMovement;
-        private CardManip _cardManip;
-
-
+        private CardManipulationModel _zellCardManip;
 
 
 
@@ -144,8 +142,7 @@ namespace FF8Utilities.Models
             }           
             
             Instance = this;
-            _cardManip = new CardManip();
-            CardManipModel = new CardManipulationModel();
+            CardManipulation = new CardManip();
 
             PropertyChanged += (s, e) =>
             {
@@ -165,7 +162,8 @@ namespace FF8Utilities.Models
 
         }
 
-        public CardManipulationModel CardManipModel { get; }
+
+        public CardManip CardManipulation { get; }
 
         public static MainModel Instance { get; private set; }
 
@@ -545,22 +543,23 @@ namespace FF8Utilities.Models
             _countdownRunning = false;
         }
 
-        public void PauseZellScript()
+
+
+        private CardManipulationModel StartCardManip(uint state, bool isZell, int delayFrames, int? rngModifier)
         {
-            _cardCancellationTokenSource.Cancel();
+            return new CardManipulationModel(CardManipulation, state, isZell ? "zellmama" : "fc01", delayFrames, rngModifier);          
         }
 
-        private CancellationTokenSource _cardCancellationTokenSource;
-
-        private void StartCardManip(uint state, bool isZell, int delayFrames, int? rngModifier)
+        public CardManipulationModel ZellCardManip
         {
-            _cardCancellationTokenSource = new CancellationTokenSource();
-            _cardManip.Options.DelayFrame = delayFrames;
-
-            _ = _cardManip.RareTimerAsync(state, isZell ? "zellmama" : "fc01", (currentTimer) =>
+            get => _zellCardManip;
+            private set
             {
-                CardManipModel.UpdateFromResult(currentTimer);
-            }, _cardCancellationTokenSource.Token, count: rngModifier ?? 0);            
+                if (_zellCardManip == value)
+                    return;
+                _zellCardManip = value;
+                OnPropertyChanged();
+            }
         }
 
 
@@ -635,7 +634,7 @@ namespace FF8Utilities.Models
             File.WriteAllText(jsonFilePath, jsonSettings);
 
             string arguments = $"{patternString} {rngModifier}".Trim();
-            StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
+            ZellCardManip = StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
 
 
             _zellProcess = new Process();
