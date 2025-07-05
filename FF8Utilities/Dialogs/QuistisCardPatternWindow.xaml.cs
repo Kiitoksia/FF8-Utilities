@@ -51,6 +51,11 @@ namespace FF8Utilities.Dialogs
             });
 
             OrderList();
+
+            this.Closed += (s, e) =>
+            {
+                _manipModel.Dispose();
+            };
         }
 
         private CardManipulationModel _manipModel;
