@@ -156,6 +156,12 @@ namespace FF8Utilities.Models
                 if (bool.TryParse(legacyCardModelXml.Value, out bool legacyCardModel)) LegacyCardMode = legacyCardModel;
             }
 
+            XElement beepOffsetFramesXml = xml?.Element(nameof(BeepOffsetFrames));
+            if (beepOffsetFramesXml != null)
+            {
+                if (int.TryParse(beepOffsetFramesXml.Value, out int beepOffsetFrames)) BeepOffsetFrames = beepOffsetFrames;
+            }
+
 
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
@@ -192,7 +198,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(BeepInterval), BeepInterval));
             xml.Add(new XElement(nameof(BeepCount), BeepCount));
             xml.Add(new XElement(nameof(LegacyCardMode), LegacyCardMode.ToString()));
-
+            xml.Add(new XElement(nameof(BeepOffsetFrames), BeepOffsetFrames.ToString()));
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
 
@@ -743,6 +749,8 @@ namespace FF8Utilities.Models
         public int BeepInterval { get; set; } = 400;
 
         public int BeepCount { get; set; } = 4;
+
+        public int BeepOffsetFrames { get; set; }
 
         public bool LegacyCardMode { get; set; }
 

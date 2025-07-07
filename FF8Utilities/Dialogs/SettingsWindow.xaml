@@ -17,7 +17,7 @@
         xmlns:controls="clr-namespace:FF8Utilities.Controls"
         xmlns:ff8utilities="clr-namespace:FF8Utilities"
         d:DataContext="{d:DesignInstance models:SettingsModel}"
-        Title="Settings" Height="450" Width="400">
+        Title="Settings" Height="480" Width="400">
     <DockPanel LastChildFill="True" Margin="10,0,10,5">
         <Grid Height="50" DockPanel.Dock="Bottom">
             <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding SaveSettingsCommand}" Click="Button_Click">
@@ -95,6 +95,15 @@
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>
                             <Controls:NumericUpDown Minimum="50" Value="{Binding BeepInterval}" ValueChanged="NumericUpDown_ValueChanged"  />
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Beep Offset Frames"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:NumericUpDown Minimum="0" Maximum="10" Value="{Binding BeepOffsetFrames}" />
                         </controls:SettingsInputControl.InputContent>
                     </controls:SettingsInputControl>
                 </StackPanel>

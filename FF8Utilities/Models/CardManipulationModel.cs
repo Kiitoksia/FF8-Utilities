@@ -288,6 +288,7 @@ namespace FF8Utilities.Models
                 frameOffset = 32; // Roughly 2 frames
             }
 
+            frameOffset += SettingsModel.Instance.BeepOffsetFrames * 16; // Convert frames to milliseconds
             
             int totalBeepDuration = interval * (desiredBeeps - 1);
             int delay = Math.Max((int)_timeTillNextCard.TotalMilliseconds - totalBeepDuration + frameOffset, 0);
@@ -442,7 +443,8 @@ namespace FF8Utilities.Models
 
         public void Dispose()
         {
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
+            this._cts?.Dispose();
+            CompositionTarget.Rendering -= CompositionTarget_Rendering;
             GC.SuppressFinalize(this);
         }
 
