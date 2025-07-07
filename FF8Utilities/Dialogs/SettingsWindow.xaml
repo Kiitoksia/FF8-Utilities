@@ -17,7 +17,7 @@
         xmlns:controls="clr-namespace:FF8Utilities.Controls"
         xmlns:ff8utilities="clr-namespace:FF8Utilities"
         d:DataContext="{d:DesignInstance models:SettingsModel}"
-        Title="Settings" Height="400" Width="400">
+        Title="Settings" Height="450" Width="400">
     <DockPanel LastChildFill="True" Margin="10,0,10,5">
         <Grid Height="50" DockPanel.Dock="Bottom">
             <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding SaveSettingsCommand}" Click="Button_Click">
@@ -46,7 +46,7 @@
                     
                     <controls:SettingsInputControl>
                         <controls:SettingsInputControl.LabelContent>
-                            <TextBlock Text="Card Delay Frames (Blank for default)"/>
+                            <TextBlock Text="Card Delay Frames (Blank for default)" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>
                             <Controls:NumericUpDown Minimum="0" Value="{Binding CustomZellDelayFrame}" />

@@ -27,6 +27,8 @@ namespace FF8Utilities.Dialogs
     {
         private List<LateQuistisStrategy> _strategies;
 
+        private bool _didSubmit;
+
         public QuistisCardPatternWindow(ZellCardCalculatorWindow window, LateQuistisPattern pattern)
         {
             InitializeComponent();
@@ -40,6 +42,7 @@ namespace FF8Utilities.Dialogs
             SubmitCommand = new Command<LateQuistisStrategy>(() => true, (s, e) =>
             {
                 ResultHex = e.ResultHex;
+                _didSubmit = true;
                 Close();
             });
             
@@ -87,5 +90,16 @@ namespace FF8Utilities.Dialogs
 
         public Command<QuistisPatternsOrderBy> ChangeOrderingCommand { get; }
 
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (!_didSubmit)
+            {
+                if (MessageBox.Show("No outcome was submitted, are you sure you want to close?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+        }
     }
 }

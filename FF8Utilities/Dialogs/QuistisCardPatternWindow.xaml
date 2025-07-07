@@ -27,6 +27,7 @@
     ResizeMode="NoResize"
     Title="{Binding RNGIndex, StringFormat='Quistis Card Pattern (RNG Index: {0})'}"
     Topmost="True"
+    Closing="Window_Closing"
     WindowStartupLocation="CenterOwner">
     <mah:MetroWindow.Resources>
         <ff8Utilities:ByteArrayToImageConverter x:Key="ImageConverter" />

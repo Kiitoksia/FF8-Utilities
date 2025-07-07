@@ -7,8 +7,7 @@
              xmlns:models="clr-namespace:CardManipulation.Models;assembly=CardManipulation"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:behaviours="clr-namespace:FF8Utilities.Behaviours"
-             PreviewKeyDown="UserControl_PreviewKeyDown"
+             PreviewKeyDown="UserControl_PreviewKeyDown"             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance models:CardManipulationModel}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -19,13 +18,14 @@
         </Grid.ColumnDefinitions>
         <StackPanel>
             <TextBlock Text="{Binding Explanation}" FontSize="18" HorizontalAlignment="Center"/>
+            <TextBlock Text="Initial audio cue not available as too soon" Controls:VisibilityHelper.IsHidden="{Binding WillBeepsPlay}"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding ErrorText}"/>
                 <TextBlock Text="{Binding RareCardTimer}" Foreground="{Binding TextColor}" FontSize="18" FontWeight="Bold" Width="50"/>
                 <TextBlock Text="{Binding Snake}" Foreground="{Binding TextColor}" FontSize="18" FontWeight="Bold" Grid.Column="1"/>
             </StackPanel>
-            <TextBox Text="{Binding RecoveryPattern, UpdateSourceTrigger=PropertyChanged}" Controls:TextBoxHelper.AutoWatermark="True" Controls:TextBoxHelper.Watermark="Hit enter to confirm" x:Name="RecoveryTextBox" Grid.ColumnSpan="2" Grid.Row="1"
-                     Controls:TextBoxHelper.ButtonContent="SUBMIT" Controls:TextBoxHelper.ButtonCommand="{Binding SubmitCommand}" />
+            <TextBox Text="{Binding RecoveryPattern, UpdateSourceTrigger=PropertyChanged}" Controls:TextBoxHelper.AutoWatermark="True" Controls:TextBoxHelper.Watermark="Hit enter to confirm or type in cards for recovery/search" x:Name="RecoveryTextBox" Grid.ColumnSpan="2" Grid.Row="1"
+                     Controls:TextBoxHelper.ButtonContent="SUBMIT" Controls:TextBoxHelper.ButtonCommand="{Binding SubmitCommand}" Controls:TextBoxHelper.ButtonsAlignment="Right" PreviewTextInput="RecoveryTextBox_PreviewTextInput" PreviewKeyDown="RecoveryTextBox_PreviewKeyDown" />
 
             <TextBlock Text="{Binding FoundCards}"/>
         </StackPanel>

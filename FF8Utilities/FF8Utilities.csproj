@@ -115,7 +115,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Behaviours\MaskedInputTextBoxBehaviour.cs" />
     <Compile Include="Controls\SettingsInputControl.xaml.cs">
       <DependentUpon>SettingsInputControl.xaml</DependentUpon>
     </Compile>

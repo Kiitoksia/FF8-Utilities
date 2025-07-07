@@ -46,6 +46,8 @@ namespace FF8Utilities.Models
         private string _firstFrameAvailableFramesDisplay;
         private Timer _currentlyPlayingTimer;
         private bool _isPlayingBeeps;
+        private bool _willBeepsPlay;
+
 
         /// <summary>
         /// It is important this is disposed of afterwards as it subscribes to the CompositionTarget.Rendering event
@@ -109,6 +111,22 @@ namespace FF8Utilities.Models
             }
 
             FirstFrameAvailableFramesDisplay = $"{(firstAvailableFrame == 0 ? "YES" : "NO")} = {firstAvailableFrame}";
+            WillBeepsPlay = firstAvailableFrame > 85;
+        }
+
+        public bool WillBeepsPlay
+        {
+            get => _willBeepsPlay;
+            private set
+            {
+                if (_willBeepsPlay == value)
+                {
+                    return;
+                }
+
+                _willBeepsPlay = value;
+                OnPropertyChanged();
+            }
         }
 
         public Brush InstantMashBackgroundColor
@@ -256,7 +274,6 @@ namespace FF8Utilities.Models
 
             int interval = SettingsModel.Instance.BeepInterval;
             int desiredBeeps = SettingsModel.Instance.BeepCount;
-            int maxNaturalInterval = (int)Math.Floor(_timeTillNextCard.TotalMilliseconds / desiredBeeps);
 
             int frameOffset = 0;
             if (_player == "zellmama")
@@ -271,24 +288,28 @@ namespace FF8Utilities.Models
                 frameOffset = 32; // Roughly 2 frames
             }
 
-            interval = Math.Min(interval, maxNaturalInterval);
-
+            
             int totalBeepDuration = interval * (desiredBeeps - 1);
             int delay = Math.Max((int)_timeTillNextCard.TotalMilliseconds - totalBeepDuration + frameOffset, 0);
 
-            int playedBeeps = 0;
-            // Play at normal speed
-            _currentlyPlayingTimer = new Timer((state) =>
+            if (_timeTillNextCard.TotalSeconds >= 1.5)
             {
-                _audioContext.QueueAudio(_pcm);
-                playedBeeps++;
-                if (playedBeeps >= desiredBeeps)
+                int playedBeeps = 0;
+                // Play at normal speed
+                _currentlyPlayingTimer = new Timer((state) =>
                 {
-                    _currentlyPlayingTimer?.Dispose();
-                    return;
-                }
-            }, null, delay, interval);
+                    _audioContext.QueueAudio(_pcm);
+                    playedBeeps++;
+                    if (playedBeeps >= desiredBeeps)
+                    {
+                        _currentlyPlayingTimer?.Dispose();
+                        _isPlayingBeeps = false;
+                        return;
+                    }
+                }, null, delay, interval);
+            }            
         }
+
 
         private TimeSpan _timeTillNextCard;
         private TimeSpan _timeTillNextCardEnd;
@@ -339,16 +360,16 @@ namespace FF8Utilities.Models
                 _timeTillNextCard = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // Assuming 60 FPS
                 _timeTillNextCardEnd = TimeSpan.FromSeconds(framesTillAvailableEnd * 0.01666); // Assuming 60 FPS
                 RareCardTimer = $"{_timeTillNextCard.TotalSeconds:F2}s";
-                Debug.WriteLine($"Time till available: {_timeTillNextCard.TotalSeconds:F2}s");
-                if (_timeTillNextCard.TotalSeconds > 2.8)
+                if (_timeTillNextCard.TotalSeconds >= 1.5)
                 {
-                    _currentlyPlayingTimer?.Dispose();
-                    _audioContext?.ClearQueuedAudio();
-                    _isPlayingBeeps = false;
+                    PlayBeeps();
+                    //_currentlyPlayingTimer?.Dispose();
+                    //_audioContext?.ClearQueuedAudio();
+                    //_isPlayingBeeps = false;
                 }
                 else
                 {
-                    PlayBeeps();
+                    //PlayBeeps();
                 }
             }
         }
