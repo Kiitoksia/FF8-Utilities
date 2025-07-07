@@ -47,6 +47,8 @@ namespace FF8Utilities.Models
         private SolidColorBrush _quistisMashTextBackgroundBrush = new SolidColorBrush(Colors.Transparent);
         private bool _quistisCardObtained;
         private bool _designMode;
+        private CardManipulationModel _zellCardManipModel;
+        private bool _zellCardSubmitted;
 
         private const string TrackingSettingsFilename = "TrackingSettings.xml";
 
@@ -135,6 +137,7 @@ namespace FF8Utilities.Models
             DidGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
             DidGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
 
+
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(Output))
@@ -148,6 +151,8 @@ namespace FF8Utilities.Models
             };
 
             _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
+
+            ZellCardManipModel = new CardManipulationModel(MainModel.Instance.CardManipulation, 1, "zellmama", SettingsModel.Instance.GetZellDelayFrame(), Output);
             _initialised = true;
 
             try
@@ -165,6 +170,36 @@ namespace FF8Utilities.Models
                 MessageBox.Show($"Could not load tracking settings, defaults have been set\r\n{ex.Message}", "Error", MessageBoxButton.OK);
             }
             
+        }
+
+        public CardManipulationModel ZellCardManipModel
+        {
+            get => _zellCardManipModel;
+            private set
+            {
+                if (_zellCardManipModel == value)
+                {
+                    return;
+                }
+
+                _zellCardManipModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ZellCardSubmitted
+        {
+            get => _zellCardSubmitted;
+            private set
+            {
+                if (_zellCardSubmitted == value)
+                {
+                    return;
+                }
+
+                _zellCardSubmitted = value;
+                OnPropertyChanged();
+            }
         }
 
         private void FromXml(XElement xml)
@@ -291,8 +326,10 @@ namespace FF8Utilities.Models
 
         private void LaunchZell(object sender, EventArgs eventArgs)
         {
+            ZellCardSubmitted = true;
             MainModel.Instance.LaunchCardScript(true, Output);
         }
+
 
         public BindingList<WorldMapEncounter> WorldMapEncounters
         {
@@ -531,6 +568,8 @@ namespace FF8Utilities.Models
             }
         }
 
+        private int _previouslyCalculatedOutput;
+
         public int Output
         {
             get
@@ -561,6 +600,13 @@ namespace FF8Utilities.Models
                 output += SpiderTankEncounter.Output;
 
                 if (DidGetRedSoldierEncounter) output += RedSoldierEncounter.Output;
+
+                if (_previouslyCalculatedOutput != output)
+                {
+                    _previouslyCalculatedOutput = output;
+                    ZellCardManipModel?.Dispose();
+                    ZellCardManipModel = new CardManipulationModel(MainModel.Instance.CardManipulation, 1, "zellmama", SettingsModel.Instance.GetZellDelayFrame(), output);
+                }
                 
                 return output;
             }

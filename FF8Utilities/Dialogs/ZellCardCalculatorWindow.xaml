@@ -20,9 +20,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:FF8Utilities.Models"
     Width="768"
-    Height="870"
+    Height="880"
     MinWidth="768"
-    MinHeight="970"
+    MinHeight="995"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance models:ZellCardTrackerModel}"
     GlowBrush="{DynamicResource AccentColorBrush}"
@@ -377,27 +377,55 @@
                                 DataContext="{Binding SpiderTankEncounter}" />
                         </Grid>
 
+                        <DockPanel HorizontalAlignment="Left" LastChildFill="True">
+                            <mah:ToggleSwitch
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Right"
+                                HorizontalContentAlignment="Right"
+                                ContentDirection="LeftToRight"
+                                DockPanel.Dock="Right"
+                                IsOn="{Binding DidGetRedSoldierEncounter}"
+                                OffContent="No"
+                                OnContent="Yes" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                DockPanel.Dock="Left"
+                                Padding="10,0,30,0"
+                                Text="Include Red Soldier Encounter" />
+                        </DockPanel>
 
-                        <StackPanel HorizontalAlignment="Center">
-                            <DockPanel LastChildFill="True">
-                                <mah:ToggleSwitch
-                                    Margin="0,0,10,0"
-                                    HorizontalAlignment="Right"
-                                    HorizontalContentAlignment="Right"
-                                    ContentDirection="LeftToRight"
-                                    DockPanel.Dock="Right"
-                                    IsOn="{Binding DidGetRedSoldierEncounter}"
-                                    OffContent="No"
-                                    OnContent="Yes" />
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    DockPanel.Dock="Left"
-                                    Padding="10,0,30,0"
-                                    Text="Include Red Soldier Encounter" />
-                            </DockPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
                             <controls1:EncounterControl controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" DataContext="{Binding RedSoldierEncounter}" />
-                        </StackPanel>
+                            <Button
+                                Width="200"
+                                Height="65"
+                                Grid.ColumnSpan="2"
+                                Margin="10"
+                                Command="{Binding LaunchZellCommand}"
+                                controls:VisibilityHelper.IsVisible="{Binding ShowZellButton}"
+                                Padding="10">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                <Setter Property="Grid.Column" Value="1"/>
+                                                <Setter Property="Grid.ColumnSpan" Value="1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <TextBlock FontSize="16" Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}"/>
+                            </Button>
+                        </Grid>
+
+                        <controls1:CardManipulationOutputControl Margin="10,10,10,0" DataContext="{Binding ZellCardManipModel}" controls:VisibilityHelper.IsVisible="{Binding DataContext.ZellCardSubmitted, RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+
                     </StackPanel>
 
                 </TabItem>
@@ -405,12 +433,12 @@
             <Grid Margin="10" HorizontalAlignment="Stretch">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
+                        Height="65"
                         Command="{Binding LaunchQuistisPatternsCommand}"
                         controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
                         Padding="10"
-                        Height="65"
                         Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
-                        <TextBlock Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}" FontSize="16" />
+                        <TextBlock FontSize="16" Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}" />
                     </Button>
 
                     <Border
@@ -419,10 +447,10 @@
                         Background="{Binding QuistisMashTextBackgroundBrush}"
                         BorderBrush="White"
                         BorderThickness="0,2,2,2"
-                        Padding="10"
-                        controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}">
+                        controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
+                        Padding="10">
                         <StackPanel>
-                            <TextBlock Text="Instant Mash" HorizontalAlignment="Center"/>
+                            <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -433,16 +461,7 @@
                     </Border>
                 </StackPanel>
 
-                <Button
-                    Grid.Column="2"
-                    Width="200"
-                    Command="{Binding LaunchZellCommand}"
-                    Padding="10"
-                    Height="65"
-                    controls:VisibilityHelper.IsVisible="{Binding ShowZellButton}"
-                    Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
-                    <TextBlock FontSize="16" Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}" />
-                </Button>
+
             </Grid>
         </StackPanel>
     </ScrollViewer>

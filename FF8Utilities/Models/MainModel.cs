@@ -633,37 +633,42 @@ namespace FF8Utilities.Models
             File.WriteAllText(jsonFilePath, jsonSettings);
 
             string arguments = $"{patternString} {rngModifier}".Trim();
-            ZellCardManip = StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
 
-
-            _zellProcess = new Process();
-            _zellProcess.StartInfo.Arguments = arguments;
-            _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/ff8-card-manip.exe");
-            _zellProcess.StartInfo.WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Scripts");
-            _zellProcess.Exited += (s, e) =>
+            if (Settings.LegacyCardMode)
             {
-                _zellProcess = null;
-            };
-            _zellProcess.Disposed += (s, e) =>
-            {
-                _zellProcess = null;
-            };
-
-            try
-            {
-                _zellProcess.Start();
-            }
-            catch (Exception)
-            {
-                Window.Invoke(() =>
+                _zellProcess = new Process();
+                _zellProcess.StartInfo.Arguments = arguments;
+                _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/ff8-card-manip.exe");
+                _zellProcess.StartInfo.WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Scripts");
+                _zellProcess.Exited += (s, e) =>
                 {
-                    Window.ShowMessageAsync("Permissions error", "There was a problem starting the zell application.  To unblock" +
-                   "\r\n1) Navigate to scripts folder" +
-                   "\r\n2) Find zell.exe, right click > properties" +
-                   "\r\n3) Check the \"unblock\" box and OK" +
-                   "\r\n4) Submit again");
-                });
+                    _zellProcess = null;
+                };
+                _zellProcess.Disposed += (s, e) =>
+                {
+                    _zellProcess = null;
+                };
 
+                try
+                {
+                    _zellProcess.Start();
+                }
+                catch (Exception)
+                {
+                    Window.Invoke(() =>
+                    {
+                        Window.ShowMessageAsync("Permissions error", "There was a problem starting the zell application.  To unblock" +
+                       "\r\n1) Navigate to scripts folder" +
+                       "\r\n2) Find zell.exe, right click > properties" +
+                       "\r\n3) Check the \"unblock\" box and OK" +
+                       "\r\n4) Submit again");
+                    });
+
+                }
+            }
+            else
+            {
+                ZellCardManip = StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
             }
         }
 

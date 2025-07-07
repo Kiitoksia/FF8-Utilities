@@ -15,8 +15,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Brushes = System.Windows.Media.Brushes;
+using static System.Windows.Forms.AxHost;
 using Brush = System.Windows.Media.Brush;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace FF8Utilities.Models
 {
@@ -47,6 +48,8 @@ namespace FF8Utilities.Models
         private Timer _currentlyPlayingTimer;
         private bool _isPlayingBeeps;
         private bool _willBeepsPlay;
+        private bool _showInstantMashText;
+
 
 
         /// <summary>
@@ -73,10 +76,12 @@ namespace FF8Utilities.Models
             if (_count > 0)
             {
                 Explanation = "Confirm to start timer";
+                ShowInstantMashText = true;
             }
             else
             {
                 Explanation = "Mash first game and input cards";
+                ShowInstantMashText = false;
             }
 
             
@@ -86,6 +91,21 @@ namespace FF8Utilities.Models
             GetInstantMashText();
         }
 
+        public bool ShowInstantMashText
+        {
+            get => _showInstantMashText;
+            private set
+            {
+                if (_showInstantMashText == value)
+                {
+                    return;
+                }
+
+                _showInstantMashText = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public void GetInstantMashText()
         {
@@ -93,7 +113,14 @@ namespace FF8Utilities.Models
             if (_count != 0) searchType = SearchType.Counting;
             else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
 
-            RareTimerResult result = _manip.GetRareTimerStep(_state, _player, 0, searchType, _count);
+
+            double delay = _manip.Options.DelayFrame / _manip.Options.GameFps;
+            int forcedIncr = (int)_manip.Options.ForcedIncr;
+            int acceptDelay = (int)_manip.Options.AcceptDelayFrame;
+            double incrStart = delay - (forcedIncr / _manip.Options.GameFps);
+            double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
+
+            RareTimerResult result = _manip.GetRareTimerStep(_state, _player, minTime, searchType, _count);
             int firstAvailableFrame = result.RareTable.FindIndex(i => i);
 
             if (firstAvailableFrame == 0)
@@ -211,15 +238,18 @@ namespace FF8Utilities.Models
                             FoundCards = $"Index: {result.Index}: {string.Join(", ", result.Cards)}";
                             Explanation = "Pattern found.  Confirm to start timer";
                             ErrorText = null;
+                            ShowInstantMashText = true;
                         }
                         else
                         {
                             ErrorText = "No cards found with this pattern";
+                            ShowInstantMashText = false;
                         }
                     }
                     else
                     {
                         ErrorText = pattern.Error;
+                        ShowInstantMashText = false;
                     }
                 }
             }
