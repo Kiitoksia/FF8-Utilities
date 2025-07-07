@@ -42,7 +42,7 @@ namespace CardManipulation
             }
         }
 
-        private RareTimerResult GetRareTimerStep(
+        public RareTimerResult GetRareTimerStep(
             uint state,
             string playerKey,
             double elapsedSeconds,
@@ -93,49 +93,33 @@ namespace CardManipulation
                 .Select(i => NextRare(state + (uint)incr + (uint)i, rareLimit))
                 .ToList();
 
+            if (playerKey == "fc01")
+            {
+                // Only support the first 10 frames, so skip everything after 10
+                int rareCardsFound = 0;
+                for (int i = 0; i < rareTbl.Count; i++)
+                {
+                    if (rareTbl[i])
+                    {
+                        rareCardsFound++;
+                        if (rareCardsFound >= 10)
+                        {
+                            // Make the rest of the table false as we can't use it
+                            for (int y = i + 1; y < rareTbl.Count; y++)
+                            {
+                                rareTbl[y] = false;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
             return new RareTimerResult
             {
                 Incr = incr,
                 RareTable = rareTbl,
                 DurationSeconds = elapsedSeconds
-            };
-        }
-
-        private OpeningSituation GenerateOpeningSituation(uint state, string playerKey, bool noRare = false)
-        {
-            var player = PlayerProfiles[playerKey];
-            var rng = new CardRng(state);
-            var deck = new List<int>();
-            const int PupuId = 47; // Match Ruby's Pupu_ID
-
-            if (!noRare)
-            {
-                foreach (var rareId in player.Rares)
-                {
-                    var limit = deck.Count == 0 ? player.RareLimit : player.RareLimit / 2;
-                    if (rng.Next() % 100 < limit)
-                        deck.Add(rareId);
-                    if (deck.Count >= 5) break;
-                }
-            }
-
-            while (deck.Count < 5)
-            {
-                var lv = player.Levels[rng.Next() % player.Levels.Count];
-                var row = rng.Next() % 11;
-                var cardId = (lv - 1) * 11 + row;
-                if (cardId == PupuId || deck.Contains(cardId)) continue; // Skip Pupu and duplicates
-                deck.Add(cardId);
-            }
-
-            var initiative = (rng.Next() & 1) != 0;
-
-            return new OpeningSituation
-            {
-                Deck = deck,
-                Initiative = initiative,
-                FirstState = state,
-                LastState = rng.State
             };
         }
 

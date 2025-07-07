@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Brushes = System.Windows.Media.Brushes;
+using Brush = System.Windows.Media.Brush;
 
 namespace FF8Utilities.Models
 {
@@ -41,7 +42,10 @@ namespace FF8Utilities.Models
         private AudioContext _audioContext;
         private BeepSound _loadedBeepSound;
         private byte[] _pcm;
-
+        private Brush _instantMashBackgroundColor;
+        private string _firstFrameAvailableFramesDisplay;
+        private Timer _currentlyPlayingTimer;
+        private bool _isPlayingBeeps;
 
         /// <summary>
         /// It is important this is disposed of afterwards as it subscribes to the CompositionTarget.Rendering event
@@ -76,9 +80,66 @@ namespace FF8Utilities.Models
             
 
             _loadedBeepSound = SettingsModel.Instance.BeepSound;
+            // Get the first item so we can see the instant mash timing
+            GetInstantMashText();
         }
 
 
+        public void GetInstantMashText()
+        {
+            SearchType searchType = SearchType.First;
+            if (_count != 0) searchType = SearchType.Counting;
+            else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
+
+            RareTimerResult result = _manip.GetRareTimerStep(_state, _player, 0, searchType, _count);
+            int firstAvailableFrame = result.RareTable.FindIndex(i => i);
+
+            if (firstAvailableFrame == 0)
+            {
+                // Instant Mash
+                InstantMashBackgroundColor = Brushes.DarkRed;
+            }
+            else if (firstAvailableFrame <= 85)
+            {
+                InstantMashBackgroundColor = Brushes.DarkOrange;
+            }
+            else
+            {
+                InstantMashBackgroundColor = Brushes.Transparent;
+            }
+
+            FirstFrameAvailableFramesDisplay = $"{(firstAvailableFrame == 0 ? "YES" : "NO")} = {firstAvailableFrame}";
+        }
+
+        public Brush InstantMashBackgroundColor
+        {
+            get => _instantMashBackgroundColor;
+            private set
+            {
+                if (_instantMashBackgroundColor == value)
+                {
+                    return;
+                }
+
+                _instantMashBackgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string FirstFrameAvailableFramesDisplay
+        {
+            get => _firstFrameAvailableFramesDisplay;
+            private set
+            {
+                if (_firstFrameAvailableFramesDisplay == value)
+                {
+                    return;
+                }
+
+                _firstFrameAvailableFramesDisplay = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Command SubmitCommand { get; }
 
@@ -96,7 +157,11 @@ namespace FF8Utilities.Models
                 _cts = new CancellationTokenSource();
                 SearchType searchType = SearchType.First;
                 if (_count != 0) searchType = SearchType.Counting;
-                else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
+                else if (string.IsNullOrWhiteSpace(RecoveryPattern))
+                {
+                    searchType = SearchType.Recovery;
+                    GetInstantMashText();
+                }
                 
                 _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _count);
             }            
@@ -154,9 +219,7 @@ namespace FF8Utilities.Models
         }
 
 
-        private Timer _currentlyPlayingTimer;
-
-        private bool _isPlayingBeeps;
+        
         private void PlayBeeps()
         {
             if (_isPlayingBeeps) return;
@@ -191,7 +254,7 @@ namespace FF8Utilities.Models
             }
 
 
-            int interval = (int)SettingsModel.Instance.BeepInterval;
+            int interval = SettingsModel.Instance.BeepInterval;
             int desiredBeeps = SettingsModel.Instance.BeepCount;
             int maxNaturalInterval = (int)Math.Floor(_timeTillNextCard.TotalMilliseconds / desiredBeeps);
 

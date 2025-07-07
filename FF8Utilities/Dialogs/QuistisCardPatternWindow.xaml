@@ -51,7 +51,7 @@
         </controls:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     <DockPanel LastChildFill="True">
-        <GroupBox Header="Timer" DockPanel.Dock="Bottom" Margin="10">
+        <GroupBox Header="Timer" DockPanel.Dock="Bottom" Margin="10,10,10,2">
             <controls1:CardManipulationOutputControl x:Name="CardManipControl"/>
         </GroupBox>
         <TabControl
@@ -135,7 +135,7 @@
                     <Grid Width="460">
                         <Grid.RowDefinitions>
                             <RowDefinition />
-                            <RowDefinition Height="600" />
+                            <RowDefinition Height="580" />
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
                         <ItemsControl

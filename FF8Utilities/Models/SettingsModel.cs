@@ -150,6 +150,12 @@ namespace FF8Utilities.Models
                 if (int.TryParse(beepCountXml.Value, out int beepCount)) BeepCount = beepCount;
             }
 
+            XElement legacyCardModelXml = xml?.Element(nameof(LegacyCardMode));
+            if (legacyCardModelXml != null)
+            {
+                if (bool.TryParse(legacyCardModelXml.Value, out bool legacyCardModel)) LegacyCardMode = legacyCardModel;
+            }
+
 
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
@@ -185,6 +191,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(BeepSound), BeepSound.ToString()));
             xml.Add(new XElement(nameof(BeepInterval), BeepInterval));
             xml.Add(new XElement(nameof(BeepCount), BeepCount));
+            xml.Add(new XElement(nameof(LegacyCardMode), LegacyCardMode.ToString()));
 
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
@@ -736,6 +743,8 @@ namespace FF8Utilities.Models
         public int BeepInterval { get; set; } = 400;
 
         public int BeepCount { get; set; } = 4;
+
+        public bool LegacyCardMode { get; set; }
 
         public Task<bool> IsCSRUpdateAvailable()
         {

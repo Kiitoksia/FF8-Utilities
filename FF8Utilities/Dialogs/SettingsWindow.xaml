@@ -55,10 +55,19 @@
                     
                     <controls:SettingsInputControl>
                         <controls:SettingsInputControl.LabelContent>
-                            <TextBlock Text="Zell Countdown Timer"/>
+                            <TextBlock Text="Legacy Card Mode"/>
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>
-                            <Controls:NumericUpDown Minimum="0" Value="{Binding CustomZellDelayFrame}" />
+                            <Controls:ToggleSwitch IsOn="{Binding LegacyCardMode}" OnContent="Yes" OffContent="No"/>
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Beep Interval (ms)"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:NumericUpDown Minimum="50" Value="{Binding BeepInterval}" ValueChanged="NumericUpDown_ValueChanged"  />
                         </controls:SettingsInputControl.InputContent>
                     </controls:SettingsInputControl>
 
