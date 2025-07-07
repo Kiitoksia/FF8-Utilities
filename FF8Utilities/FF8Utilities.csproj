@@ -122,6 +122,9 @@
     <Compile Include="Dialogs\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ZellCardPatternWindow.xaml.cs">
+      <DependentUpon>ZellCardPatternWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SDL2\AudioContext.cs" />
     <Compile Include="SDL2\Extensions.cs" />
     <Compile Include="SDL2\MMDeviceAPI.cs" />
@@ -155,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\ZellCardCalculatorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ZellCardPatternWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
