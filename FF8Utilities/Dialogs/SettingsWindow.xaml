@@ -1,0 +1,138 @@
+﻿<mah:MetroWindow x:Class="FF8Utilities.Dialogs.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
+        xmlns:data="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:local="clr-namespace:FF8Utilities.Dialogs"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d"        
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
+        xmlns:models="clr-namespace:FF8Utilities.Models"
+        xmlns:controls="clr-namespace:FF8Utilities.Controls"
+        xmlns:ff8utilities="clr-namespace:FF8Utilities"
+        d:DataContext="{d:DesignInstance models:SettingsModel}"
+        Title="Settings" Height="400" Width="400">
+    <DockPanel LastChildFill="True" Margin="10,0,10,5">
+        <Grid Height="50" DockPanel.Dock="Bottom">
+            <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding SaveSettingsCommand}" Click="Button_Click">
+                <StackPanel Orientation="Horizontal" Height="20">
+                    <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="Save Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <mah:MetroAnimatedTabControl DockPanel.Dock="Top">
+            <Controls:MetroAnimatedTabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </Controls:MetroAnimatedTabControl.Resources>
+            <TabItem Header="General">
+                <StackPanel>
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Platform"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <ComboBox ItemsSource="{Binding Source={extensions:Enum {x:Type data:Platform}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Platform}"/>
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+                    
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Card Delay Frames (Blank for default)"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:NumericUpDown Minimum="0" Value="{Binding CustomZellDelayFrame}" />
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+                    
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Zell Countdown Timer"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:NumericUpDown Minimum="0" Value="{Binding CustomZellDelayFrame}" />
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Beep Sound"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <ComboBox ItemsSource="{Binding Source={extensions:Enum {x:Type ff8utilities:BeepSound}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding BeepSound}" SelectionChanged="ComboBox_SelectionChanged"/>
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="No. of Beeps"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:NumericUpDown Minimum="2" Value="{Binding BeepCount}" ValueChanged="NumericUpDown_ValueChanged" />
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Beep Interval (ms)"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:NumericUpDown Minimum="50" Value="{Binding BeepInterval}" ValueChanged="NumericUpDown_ValueChanged"  />
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="PC Specific">
+                <StackPanel>
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Game Installation Folder"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <DockPanel LastChildFill="True" Grid.Column="1" Height="28">
+                                <Button Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{Binding GameInstallFolderSelectionCommand}" Content="..." DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
+                            </DockPanel>
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="120">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Grid.Column="0" Command="{Binding InstallCSRCommand}" Margin="2,2,0,0">
+                            <TextBlock Text="Install CSR"/>
+                        </Button>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Background="DarkRed" Grid.Column="1" Grid.RowSpan="2" Command="{Binding UninstallCSRCommand}" Margin="0,2,0,0" BorderThickness="0,2,2,0" >
+                            <TextBlock Text="Revert"/>
+                        </Button>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Grid.Row="1" Grid.Column="0" Command="{Binding InstallPracticeModCommand}" Margin="2,0,0,0" BorderThickness="2,0,2,0">
+                            <TextBlock Text="Install Practice%"/>
+                        </Button>
+
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Grid.Column="0" Grid.Row="2" Command="{Binding InstallPSXMusicFilesCommand}" Margin="2,0,0,0">
+                            <TextBlock Text="Install PSX Music"/>
+                        </Button>
+                        <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Background="DarkRed" Grid.Row="2" Grid.Column="1" Command="{Binding UninstallPSXMusicFilesCommand}" BorderThickness="0,2,2,2">
+                            <TextBlock Text="Uninstall PSX Music"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+        </mah:MetroAnimatedTabControl>
+    </DockPanel>
+    
+</mah:MetroWindow>

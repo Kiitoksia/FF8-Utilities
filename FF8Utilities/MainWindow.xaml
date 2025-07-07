@@ -18,7 +18,7 @@
         x:Name="Window"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip"
-        Title="FF8 Utilities" Height="500" Width="700"
+        Title="{Binding Settings.PlatformDisplay, StringFormat='FF8 Utilities: {0}'}" Height="500" Width="700"
     GlowBrush="{DynamicResource AccentColorBrush}"
     WindowStartupLocation="CenterScreen"
     MinHeight="700"
@@ -136,7 +136,7 @@
                             <TextBlock FontSize="14" Text="Geezard, Funguar, Gayla, Fastitocalon-F, Caterchipallar" Grid.Column="1"/>
                             <TextBlock FontSize="14" Text="Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit" Grid.Row="1" Grid.Column="1"/>
                         </Grid>
-                        
+
                     </GroupBox>
                     <TextBlock Grid.Row="1" Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
                     <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,0,20">
@@ -147,7 +147,7 @@
                                     HorizontalAlignment="Stretch"
                                     SelectedValuePath="Value"/>
                     </Grid>
-                    
+
                     <ToggleButton Grid.Row="1" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}" Controls:VisibilityHelper.IsHidden="{Binding UseCustomQuistisPattern}">
                         <fa:ImageAwesome Icon="ListOl" Margin="5" Height="15" Foreground="White"/>
                     </ToggleButton>
@@ -197,6 +197,13 @@
                     </GroupBox>
 
                     <GroupBox Header="Timing" Grid.Row="6" Grid.ColumnSpan="3" Margin="20,20,20,0">
+                        <Controls:VisibilityHelper.IsVisible>
+                            <Binding Path="ZellCardManip">
+                                <Binding.Converter>
+                                    <converters:ExistenceToBoolConverter/>
+                                </Binding.Converter>
+                            </Binding>
+                        </Controls:VisibilityHelper.IsVisible>
                         <controls:CardManipulationOutputControl DataContext="{Binding ZellCardManip}"/>
                     </GroupBox>
                 </Grid>
@@ -273,7 +280,7 @@
                                     </Grid>
                                 </GroupBox>
                             </Grid>
-                            
+
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="Pattern" DockPanel.Dock="Top" Margin="0,10,0,10" Height="60">
@@ -414,7 +421,7 @@
                                     <TextBlock Text="Tally" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
-                            
+
                             <StackPanel Orientation="Horizontal" Margin="5" Height="30">
                                 <TextBlock Text="Hide Unlikely Results"  VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <Controls:ToggleSwitch IsOn="{Binding HideUnlikelyCarawayResults}" OnContent="Yes" OffContent="No"/>
@@ -424,7 +431,7 @@
                                 <TextBlock Text="Show NPC Movement" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <Controls:ToggleSwitch IsOn="{Binding ShowCarawayNPCMovement}" OnContent="Yes" OffContent="No"/>
                             </StackPanel>
-                            
+
                             <GroupBox Header="Legend" Margin="0,5,0,0" BorderThickness="0,0,0,0">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
@@ -436,7 +443,7 @@
                                         <TextBlock Text="Regular" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </StackPanel>
-                                
+
                             </GroupBox>
                         </StackPanel>
                     </GroupBox>
@@ -472,7 +479,7 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
-                        
+
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -493,12 +500,12 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Include Rinoa Parties" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 10, 0"/>
                                 <Controls:ToggleSwitch IsOn="{Binding IncludeRinoaParties}" OnContent="Yes" OffContent="No" Grid.Column="1" />
-                                
+
                                 <TextBlock Text="Hard Reset" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5, 0, 10, 0" Grid.Row="1"/>
                                 <Controls:ToggleSwitch IsOn="{Binding UltimeciaHardReset}" OnContent="Yes" OffContent="No" Grid.Row="1" Grid.Column="1" />
                             </Grid>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                
+
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Width="200" Height="50" Command="{Binding UltimeciaLaunchCommand}" Margin="0"                                >
@@ -509,7 +516,7 @@
                                 </Button>
                                 <Controls:MetroProgressBar Width="200" Value="{Binding UltimeciaTimer.Progress}" Visibility="Collapsed"/>
                             </StackPanel>
-                            
+
                         </StackPanel>
                     </GroupBox>
                     <GroupBox DockPanel.Dock="Top" Margin="20" Visibility="{Binding NoFormationsFound, Converter={x:Static converters:KiiVisibilityConverter.FalseToCollapsed}}"
@@ -529,94 +536,4 @@
             </TabItem>
         </Controls:MetroAnimatedTabControl>
     </StackPanel>
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl>
-            <Controls:Flyout IsOpen="{Binding FlyoutSettingsOpen}" Header="Settings" Position="Bottom" Height="420">
-                <Grid Margin="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.4*"/>
-                        <ColumnDefinition Width="0.6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </Grid.Resources>
-
-                    
-                    <TextBlock Grid.Column="0" Text="Platform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding Source={extensions:Enum {x:Type data:Platform}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding Settings.Platform}"/>
-
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Zell Delay Frame (Blank for default)" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Controls:NumericUpDown Minimum="0" Value="{Binding Settings.CustomZellDelayFrame}" Grid.Row="1" Grid.Column="1" />
-
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Zell Countdown Timer" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Controls:NumericUpDown Minimum="0" Maximum="60" Value="{Binding Settings.ZellCountdownTimer}" Grid.Row="2" Grid.Column="1" />
-
-                    <TextBlock Text="PC Specific Settings" FontSize="18" FontWeight="Bold" Grid.Row="3"/>
-
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Game Install Folder" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <DockPanel Grid.Row="4" LastChildFill="True" Grid.Column="1" Height="28">
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{Binding Settings.GameInstallFolderSelectionCommand}" Content="..." DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding Settings.GameInstallationFolder}" HorizontalAlignment="Stretch" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
-                    </DockPanel>
-
-                    <Grid Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" Height="80">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="35" Grid.Column="0" Command="{Binding Settings.InstallCSRCommand}">
-                            <TextBlock Text="Install CSR"/>
-                        </Button>
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Background="DarkRed" Height="75" Margin="2,0,0,0" Grid.Column="1" Grid.RowSpan="2" Command="{Binding Settings.UninstallCSRCommand}" >
-                            <TextBlock Text="Revert"/>
-                        </Button>
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="35" Grid.Row="1" Grid.Column="0" Command="{Binding Settings.InstallPracticeModCommand}">
-                            <TextBlock Text="Install Practice%"/>
-                        </Button>
-
-
-                    </Grid>
-
-                    <Grid Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="35" Grid.Column="0" Command="{Binding Settings.InstallPSXMusicFilesCommand}">
-                            <TextBlock Text="Install PSX Music"/>
-                        </Button>
-                        <Button Style="{DynamicResource MahApps.Styles.Button.Square}" Background="DarkRed" Height="35" Grid.Column="1" Command="{Binding Settings.UninstallPSXMusicFilesCommand}">
-                            <TextBlock Text="Uninstall PSX Music"/>
-                        </Button>
-                    </Grid>
-
-
-
-                    <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding Settings.SaveSettingsCommand}">
-                        <StackPanel Orientation="Horizontal" Height="20">
-                            <fa:ImageAwesome Icon="Check" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Text="Save Settings" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    
-                </Grid>
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts>
 </Controls:MetroWindow>

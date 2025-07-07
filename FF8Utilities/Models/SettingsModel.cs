@@ -613,7 +613,7 @@ namespace FF8Utilities.Models
 
         private void SaveSettings(object sender, EventArgs eventArgs)
         {
-            int totalDelay = BeepInterval * BeepCount;
+            int totalDelay = BeepInterval * (BeepCount - 1);
             if (totalDelay > 1500)
             {
                 _mainWindowModel.Window.Invoke(() =>
@@ -631,7 +631,6 @@ namespace FF8Utilities.Models
             XElement xml = CopyTo();
             if (!Directory.Exists(Path.GetDirectoryName(SettingsPath))) Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
             xml.Save(SettingsPath);
-            _mainWindowModel.FlyoutSettingsOpen = false;
         }
 
         public Platform Platform
@@ -645,8 +644,11 @@ namespace FF8Utilities.Models
                 if (value == _platform) return;
                 _platform = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(PlatformDisplay));
             }
         }
+
+        public string PlatformDisplay => Platform.GetDescription();
 
         public int? CustomZellDelayFrame
         {

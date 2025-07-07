@@ -127,7 +127,16 @@ namespace FF8Utilities.Models
                             RecoveryPattern = null;
                             FoundCards = $"Index: {result.Index}: {string.Join(", ", result.Cards)}";
                             Explanation = "Pattern found.  Confirm to start timer";
+                            ErrorText = null;
                         }
+                        else
+                        {
+                            ErrorText = "No cards found with this pattern";
+                        }
+                    }
+                    else
+                    {
+                        ErrorText = pattern.Error;
                     }
                 }
             }

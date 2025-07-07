@@ -52,7 +52,7 @@ namespace FF8Utilities.Dialogs
 
             OrderList();
 
-            this.Closed += (s, e) =>
+            Closed += (s, e) =>
             {
                 _manipModel.Dispose();
             };

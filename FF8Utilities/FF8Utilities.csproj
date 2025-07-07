@@ -115,6 +115,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SettingsInputControl.xaml.cs">
+      <DependentUpon>SettingsInputControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\ExistenceToBoolConverter.cs" />
+    <Compile Include="Dialogs\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SDL2\AudioContext.cs" />
     <Compile Include="SDL2\Extensions.cs" />
     <Compile Include="SDL2\MMDeviceAPI.cs" />
@@ -135,7 +142,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SettingsInputControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\QuistisCardPatternWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

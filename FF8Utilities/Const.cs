@@ -159,9 +159,13 @@ namespace FF8Utilities
 
     public enum BeepSound
     {
+        [Description("Ping 1")]
         Ping1,
+        [Description("Ping 2")]
         Ping2,
+        [Description("Click")]
         Click,
+        [Description("Clack")]
         Clack
     }
 }

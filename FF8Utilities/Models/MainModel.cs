@@ -41,7 +41,6 @@ namespace FF8Utilities.Models
         private BindingList<CarawayCodeOutput> _carawayOutput;
         private BindingList<CardNotesModel> _cardNotes;
         private bool _currentlyTalling;
-        private bool _flyoutSettingsOpen;
         private bool _includeRinoaParties;
         private QuistisPattern _pattern = QuistisPattern.Elastoid_JellyEye;
         private BindingList<PoleModel> _poles;
@@ -107,7 +106,7 @@ namespace FF8Utilities.Models
             PoleTallyCommand = new Command(() => !CurrentlyTalling, TallyCommand);
             ShowAboutCommand = new Command(() => true, ShowAbout);
             UpdateAvailableCommand = new Command(() => UpdateAvailable, DownloadUpdate);
-            ShowSettingsCommand = new Command(() => true, (s, e) => FlyoutSettingsOpen = !FlyoutSettingsOpen);
+            ShowSettingsCommand = new Command(() => true, (s, e) => LaunchSettings(false));
 
             CardNotes = new BindingList<CardNotesModel>();
             Settings = new SettingsModel(this);
@@ -716,20 +715,6 @@ namespace FF8Utilities.Models
             }
         }
 
-        public bool FlyoutSettingsOpen
-        {
-            get
-            {
-                return _flyoutSettingsOpen;
-            }
-            set
-            {
-                if (value == _flyoutSettingsOpen) return;
-                _flyoutSettingsOpen = value;
-                OnPropertyChanged();
-            }
-        }
-
         public bool IncludeRinoaParties
         {
             get => _includeRinoaParties;
@@ -891,6 +876,27 @@ namespace FF8Utilities.Models
 
         public string Version => $"v{Assembly.GetEntryAssembly().GetName().Version}";
 
+        private void LaunchSettings(bool showFirstLaunch)
+        {
+            SettingsWindow settingsWindow = new SettingsWindow(Settings);
+            settingsWindow.Owner = Window;
+            if (showFirstLaunch)
+            {
+                settingsWindow.Loaded += (s, e) =>
+                {
+                    settingsWindow.Invoke(() =>
+                    {
+                        settingsWindow.ShowMessageAsync("First launch", "Please enter your settings\r\nIf you have CSR already installed, please reverify files for correct functionality");
+                    });
+                };
+            }
+            
+            Window.BeginInvoke(() =>
+            {
+                settingsWindow.ShowDialog();
+            });
+        }
+
         public MainWindow Window
         {
             get
@@ -906,14 +912,7 @@ namespace FF8Utilities.Models
                     ConfigureTally();
                     if (Settings.IsFirstLaunch)
                     {
-                        FlyoutSettingsOpen = true;
-                        Window.Loaded += (s, e) =>
-                        {
-                            Window.Invoke(() =>
-                            {
-                                Window.ShowMessageAsync("First launch", "Please enter your settings\r\nIf you have CSR already installed, please reverify files for correct functionality");
-                            });
-                        };
+                        LaunchSettings(true);
                     }
                 }
                 
