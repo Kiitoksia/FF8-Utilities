@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
+using Brush = System.Windows.Media.Brush;
 
 namespace FF8Utilities.Models
 {
@@ -49,6 +50,10 @@ namespace FF8Utilities.Models
         private bool _designMode;
         private CardManipulationModel _zellCardManipModel;
         private bool _zellCardSubmitted;
+        private Brush _zellMashTextBackgroundBrush;
+        private string _quistisPatternMashDisplay;
+        private string zellPatternMashDisplay;
+
 
         private const string TrackingSettingsFilename = "TrackingSettings.xml";
 
@@ -606,6 +611,8 @@ namespace FF8Utilities.Models
                     _previouslyCalculatedOutput = output;
                     ZellCardManipModel?.Dispose();
                     ZellCardManipModel = new CardManipulationModel(MainModel.Instance.CardManipulation, 1, "zellmama", SettingsModel.Instance.GetZellDelayFrame(), output);
+                    ZellMashTextBackgroundBrush = ZellCardManipModel.InstantMashBackgroundColor;
+                    ZellPatternMashDisplay = ZellCardManipModel.FirstFrameAvailableFramesDisplay;
                 }
                 
                 return output;
@@ -769,7 +776,8 @@ namespace FF8Utilities.Models
         public bool ShowQuistisPatternButton => FocusedTabIndex == 0;
 
 
-        private string _quistisPatternMashDisplay;
+       
+
 
         public string QuistisPatternMashDisplay
         {
@@ -779,6 +787,21 @@ namespace FF8Utilities.Models
                 if (_quistisPatternMashDisplay == value)
                     return;
                 _quistisPatternMashDisplay = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ZellPatternMashDisplay
+        {
+            get => zellPatternMashDisplay;
+            private set
+            {
+                if (zellPatternMashDisplay == value)
+                {
+                    return;
+                }
+
+                zellPatternMashDisplay = value;
                 OnPropertyChanged();
             }
         }
@@ -793,6 +816,21 @@ namespace FF8Utilities.Models
                 if (_quistisMashTextBackgroundBrush == value)
                     return;
                 _quistisMashTextBackgroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Brush ZellMashTextBackgroundBrush
+        {
+            get => _zellMashTextBackgroundBrush;
+            private set
+            {
+                if (_zellMashTextBackgroundBrush == value)
+                {
+                    return;
+                }
+
+                _zellMashTextBackgroundBrush = value;
                 OnPropertyChanged();
             }
         }
