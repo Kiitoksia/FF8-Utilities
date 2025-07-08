@@ -47,7 +47,7 @@ namespace LateQuistisManipulation.Models
         internal bool IsValid => !string.IsNullOrEmpty(string.Concat(Frame1, Frame2, Frame3, Frame4, Frame5, Frame6, Frame7, Frame8, Frame9, Frame10, ExtraFrame));
 
 
-        internal static byte[] GetCardImage(string card)
+        public static byte[] GetCardImage(string card)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream($"LateQuistisManipulation.CardImages.{card.ToLower()}.png"))

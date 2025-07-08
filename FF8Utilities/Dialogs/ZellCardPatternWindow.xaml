@@ -5,9 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:FF8Utilities.Dialogs"
+        xmlns:controls="clr-namespace:FF8Utilities.Controls"
         mc:Ignorable="d"
-        Title="ZellCardPatternWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        Title="Zell Card Patterns" Height="660" Width="660">
+    <DockPanel LastChildFill="True">
+        <controls:CardManipulationOutputControl x:Name="CardControl" DockPanel.Dock="Bottom"/>
+        <TabControl>
+            <TabItem Header="Player Starts">
+                <ItemsControl x:Name="PlayerFormation" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:QuistisCardPatternCardPosition DataContext="{Binding .}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </TabItem>
+            <TabItem Header="Mom Starts">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox>
+                        <GroupBox.Header>
+                            <TextBlock Text="Option 1" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14"/>
+                        </GroupBox.Header>
+                        <ItemsControl x:Name="MomFormation">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:QuistisCardPatternCardPosition DataContext="{Binding .}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="1">
+                        <GroupBox.Header>
+                            <TextBlock Text="Option 2" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14"/>
+                        </GroupBox.Header>
+                        <ItemsControl x:Name="MomFormation2">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:QuistisCardPatternCardPosition DataContext="{Binding .}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </GroupBox>
+                    
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </mah:MetroWindow>

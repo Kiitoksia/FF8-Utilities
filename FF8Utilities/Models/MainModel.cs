@@ -669,6 +669,10 @@ namespace FF8Utilities.Models
             else
             {
                 ZellCardManip = StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
+                ZellCardPatternWindow window = new ZellCardPatternWindow(ZellCardManip);
+                window.Owner = App.Current.MainWindow;
+                window.ShowDialog();
+
             }
         }
 

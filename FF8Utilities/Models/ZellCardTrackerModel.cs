@@ -331,6 +331,8 @@ namespace FF8Utilities.Models
 
         private void LaunchZell(object sender, EventArgs eventArgs)
         {
+
+
             ZellCardSubmitted = true;
             MainModel.Instance.LaunchCardScript(true, Output);
         }

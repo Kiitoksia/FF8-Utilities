@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:FF8Utilities.Controls"
              xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:converters="clr-namespace:FF8Utilities.Converters"
              xmlns:l="clr-namespace:FF8Utilities"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance quistis:LateQuistisPosition}"
@@ -14,18 +15,45 @@
         <l:ByteArrayToImageConverter x:Key="ImageConverter"/>
     </UserControl.Resources>
     <Grid>
-        <Image Source="{Binding Card, Converter={StaticResource ImageConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <Border Controls:VisibilityHelper.IsHidden="{Binding IsPlayerTurn}" Background="Black" Opacity="0.5"/>
-        <TextBlock Text="{Binding Turn}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="128" FontWeight="Bold" Margin="0,0,5,0">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsPlayerTurn}" Value="False">
-                            <Setter Property="Foreground" Value="Red"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image Source="{Binding Card, Converter={StaticResource ImageConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <Border Controls:VisibilityHelper.IsHidden="{Binding IsPlayerTurn}" Background="Black" Opacity="0.5" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <Viewbox HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="1" Margin="0,0,10,10">
+            <TextBlock Text="{Binding Turn}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="128" FontWeight="Bold" Controls:VisibilityHelper.IsVisible="{Binding ShowTurnNumber}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPlayerTurn}" Value="False">
+                                <Setter Property="Foreground" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Viewbox>
+        
+        <Grid Margin="20" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding CustomTopInfo}" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding CustomRightInfo}" Grid.Row="1" Grid.Column="2" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding CustomBotInfo}" Grid.Row="2" Grid.Column="1" FontSize="16" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding CustomLeftInfo}" Grid.Row="1" FontSize="16" VerticalAlignment="Center"/>
+        </Grid>
     </Grid>
 </UserControl>

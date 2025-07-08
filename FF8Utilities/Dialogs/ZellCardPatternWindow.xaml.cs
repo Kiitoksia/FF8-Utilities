@@ -1,4 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿using FF8Utilities.Models;
+using LateQuistisManipulation.Models;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +22,56 @@ namespace FF8Utilities.Dialogs
     /// </summary>
     public partial class ZellCardPatternWindow : MetroWindow
     {
-        public ZellCardPatternWindow()
+        public ZellCardPatternWindow(CardManipulationModel manip)
         {
             InitializeComponent();
+
+            CardControl.DataContext = manip;
+
+            // Hardcoded positions
+            List<LateQuistisPosition> playerPositions = new List<LateQuistisPosition>
+            {
+                new LateQuistisPosition(1, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(2, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(3, true, 5, GameScenario.GetCardImage("q")),
+                new LateQuistisPosition(4, true, 4, GameScenario.GetCardImage("m")),
+                new LateQuistisPosition(5, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(6, false, 1, GameScenario.GetCardImage("z")),
+                new LateQuistisPosition(7, true, 3, GameScenario.GetCardImage("i")),
+                new LateQuistisPosition(8, true, 2, GameScenario.GetCardImage("g")),
+                new LateQuistisPosition(9, true, 1, GameScenario.GetCardImage("b")),
+            };
+            PlayerFormation.ItemsSource = playerPositions;
+
+            List<LateQuistisPosition> opponentPositions1 = new List<LateQuistisPosition>
+            {
+                new LateQuistisPosition(1, false, 1, GameScenario.GetCardImage("z")),
+                new LateQuistisPosition(2, false, 0, GameScenario.GetCardImage("empty"), "#", "= 1", "#", "#"),
+                new LateQuistisPosition(3, true, 4, GameScenario.GetCardImage("q")),
+                new LateQuistisPosition(4, true, 3, GameScenario.GetCardImage("m")),
+                new LateQuistisPosition(5, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(6, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(7, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(8, true, 2, GameScenario.GetCardImage("i")),
+                new LateQuistisPosition(9, true, 1, GameScenario.GetCardImage("g")),
+            };
+            MomFormation.ItemsSource = opponentPositions1;
+
+            List<LateQuistisPosition> opponentPositions2 = new List<LateQuistisPosition>
+            {
+                new LateQuistisPosition(1, false, 1, GameScenario.GetCardImage("z")),
+                new LateQuistisPosition(2, false, 0, GameScenario.GetCardImage("empty"), "#", "2+", "#", "#"),
+                new LateQuistisPosition(3, true, 3, GameScenario.GetCardImage("b")),
+                new LateQuistisPosition(4, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(5, true, 4, GameScenario.GetCardImage("q")),
+                new LateQuistisPosition(6, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(7, false, 0, GameScenario.GetCardImage("empty")),
+                new LateQuistisPosition(8, true, 2, GameScenario.GetCardImage("i")),
+                new LateQuistisPosition(9, true, 1, GameScenario.GetCardImage("g")),
+            };
+
+            MomFormation2.ItemsSource = opponentPositions2;
+
         }
     }
 }
