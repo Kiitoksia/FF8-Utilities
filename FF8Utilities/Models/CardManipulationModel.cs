@@ -271,6 +271,7 @@ namespace FF8Utilities.Models
         private void PlayBeeps()
         {
             if (_isPlayingBeeps) return;
+            if (_cts.IsCancellationRequested) return;
             _isPlayingBeeps = true;
             if (_loadedBeepSound != SettingsModel.Instance.BeepSound)
             {
