@@ -6,13 +6,20 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:FF8Utilities.Dialogs"
         xmlns:controls="clr-namespace:FF8Utilities.Controls"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow"
-        Title="Zell Card Patterns" Height="660" Width="660">
-    <DockPanel LastChildFill="True">
-        <controls:CardManipulationOutputControl x:Name="CardControl" DockPanel.Dock="Bottom"/>
-        <TabControl>
+        Title="Zell Card Patterns" Height="680" Width="670">
+    <DockPanel LastChildFill="True" Margin="10,0,10,10">
+        <controls:CardManipulationOutputControl x:Name="CardControl" DockPanel.Dock="Bottom" Margin="0,10,0,0"/>
+        <Controls:MetroAnimatedTabControl>
+            <Controls:MetroAnimatedTabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </Controls:MetroAnimatedTabControl.Resources>
             <TabItem Header="Player Starts">
                 <ItemsControl x:Name="PlayerFormation" HorizontalAlignment="Center">
                     <ItemsControl.ItemsPanel>
@@ -68,9 +75,8 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </GroupBox>
-                    
                 </Grid>
             </TabItem>
-        </TabControl>
+        </Controls:MetroAnimatedTabControl>
     </DockPanel>
 </mah:MetroWindow>
