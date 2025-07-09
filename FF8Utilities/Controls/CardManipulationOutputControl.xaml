@@ -1,56 +1,94 @@
-﻿<UserControl x:Class="FF8Utilities.Controls.CardManipulationOutputControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FF8Utilities.Controls"
-             xmlns:models="clr-namespace:CardManipulation.Models;assembly=CardManipulation"
-             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             PreviewKeyDown="UserControl_PreviewKeyDown"             
-             xmlns:c="clr-namespace:FF8Utilities.Converters"
-             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance models:CardManipulationModel}"
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="FF8Utilities.Controls.CardManipulationOutputControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:FF8Utilities.Converters"
+    xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:FF8Utilities.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:CardManipulation.Models;assembly=CardManipulation"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance models:CardManipulationModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    PreviewKeyDown="UserControl_PreviewKeyDown">
     <GroupBox>
         <GroupBox.Header>
-            <TextBlock Text="CARD TIMER" FontSize="14" FontWeight="Bold"/>
+            <TextBlock
+                FontSize="14"
+                FontWeight="Bold"
+                Text="CARD TIMER" />
         </GroupBox.Header>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
             <StackPanel>
-                <TextBlock Text="{Binding Explanation}" FontSize="18" HorizontalAlignment="Center"/>
-                <TextBlock Text="*Initial audio cue not available as too soon*" HorizontalAlignment="Center">
-             <Controls:VisibilityHelper.IsVisible>
-                 <MultiBinding>
-                     <MultiBinding.Converter>
-                         <c:BooleanAndConverter/>
-                     </MultiBinding.Converter>
-                         <Binding Path="WillBeepsPlay">
-                             <Binding.Converter>
-                                 <c:InverseBooleanConverter/>
-                             </Binding.Converter>
-                         </Binding>                        
-                         <Binding Path="ShowInstantMashText"/>
-                 </MultiBinding>
-             </Controls:VisibilityHelper.IsVisible>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    Text="{Binding Explanation}" />
+                <TextBlock HorizontalAlignment="Center" Text="*Initial audio cue not available as too soon*">
+                    <Controls:VisibilityHelper.IsVisible>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <c:BooleanAndConverter />
+                            </MultiBinding.Converter>
+                            <Binding Path="WillBeepsPlay">
+                                <Binding.Converter>
+                                    <c:InverseBooleanConverter />
+                                </Binding.Converter>
+                            </Binding>
+                            <Binding Path="ShowInstantMashText" />
+                        </MultiBinding>
+                    </Controls:VisibilityHelper.IsVisible>
                 </TextBlock>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding ErrorText}"/>
-                    <TextBlock Text="{Binding RareCardTimer}" Foreground="{Binding TextColor}" FontSize="18" FontWeight="Bold" Width="50"/>
-                    <TextBlock Text="{Binding Snake}" TextWrapping="NoWrap" ClipToBounds="True" Width="550" Foreground="{Binding TextColor}" FontSize="18" FontWeight="Bold" Grid.Column="1"/>
+                    <TextBlock Text="{Binding ErrorText}" />
+                    <TextBlock
+                        Width="50"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="{Binding TextColor}"
+                        Text="{Binding RareCardTimer}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Width="550"
+                        ClipToBounds="True"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="{Binding TextColor}"
+                        Text="{Binding Snake}"
+                        TextWrapping="NoWrap" />
                 </StackPanel>
-                <TextBox Text="{Binding RecoveryPattern, UpdateSourceTrigger=PropertyChanged}" Controls:TextBoxHelper.Watermark="Hit enter to confirm or type in cards for recovery/search" x:Name="RecoveryTextBox" Grid.ColumnSpan="2" Grid.Row="1"
-                   PreviewTextInput="RecoveryTextBox_PreviewTextInput" PreviewKeyDown="RecoveryTextBox_PreviewKeyDown" />
-                <TextBlock Text="{Binding FoundCards}" FontStyle="Italic"/>
+                <TextBox
+                    x:Name="RecoveryTextBox"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Controls:TextBoxHelper.Watermark="Hit enter to confirm or type in cards for recovery/search"
+                    MaxLength="25"
+                    PreviewKeyDown="RecoveryTextBox_PreviewKeyDown"
+                    PreviewTextInput="RecoveryTextBox_PreviewTextInput"
+                    Text="{Binding RecoveryPattern, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock FontStyle="Italic" Text="{Binding FoundCards}" />
             </StackPanel>
-            <Border Grid.Column="1" Background="{Binding InstantMashBackgroundColor}" BorderBrush="White" BorderThickness="2" Margin="10,0,0,0" Controls:VisibilityHelper.IsVisible="{Binding ShowInstantMashText}">
+            <Border
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                Background="{Binding InstantMashBackgroundColor}"
+                BorderBrush="White"
+                BorderThickness="2"
+                Controls:VisibilityHelper.IsVisible="{Binding ShowInstantMashText}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Instant Mash" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding FirstFrameAvailableFramesDisplay}" TextWrapping="Wrap" HorizontalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="{Binding FirstFrameAvailableFramesDisplay}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
         </Grid>

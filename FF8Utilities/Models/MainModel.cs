@@ -562,7 +562,7 @@ namespace FF8Utilities.Models
         }
 
 
-        public void LaunchCardScript(bool isZell, int? rngModifier)
+        public void LaunchCardScript(bool isZell, int? rngModifier, bool openInWindow)
         {
             int delayFrames;
 
@@ -623,19 +623,21 @@ namespace FF8Utilities.Models
 
             if (!isZell) patternString = "0x00000001";
             
-            string jsonFilePath = Path.Combine(AppContext.BaseDirectory, "Scripts", "settings.json");
-            string jsonSettings = File.ReadAllText(jsonFilePath);
-            dynamic jObj = JsonConvert.DeserializeObject(jsonSettings);
-            jObj["DelayFrame"] = delayFrames;
-            jObj["player"] = isZell ? "zellmama" : "fc01"; // Quistis
-
-            jsonSettings = JsonConvert.SerializeObject(jObj);
-            File.WriteAllText(jsonFilePath, jsonSettings);
-
-            string arguments = $"{patternString} {rngModifier}".Trim();
+            
 
             if (Settings.LegacyCardMode)
             {
+                string jsonFilePath = Path.Combine(AppContext.BaseDirectory, "Scripts", "settings.json");
+                string jsonSettings = File.ReadAllText(jsonFilePath);
+                dynamic jObj = JsonConvert.DeserializeObject(jsonSettings);
+                jObj["DelayFrame"] = delayFrames;
+                jObj["player"] = isZell ? "zellmama" : "fc01"; // Quistis
+
+                jsonSettings = JsonConvert.SerializeObject(jObj);
+                File.WriteAllText(jsonFilePath, jsonSettings);
+
+                string arguments = $"{patternString} {rngModifier}".Trim();
+
                 _zellProcess = new Process();
                 _zellProcess.StartInfo.Arguments = arguments;
                 _zellProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), $"Scripts/ff8-card-manip.exe");
@@ -663,22 +665,27 @@ namespace FF8Utilities.Models
                        "\r\n3) Check the \"unblock\" box and OK" +
                        "\r\n4) Submit again");
                     });
-
                 }
             }
             else
             {
-                ZellCardManip = StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
-                ZellCardPatternWindow window = new ZellCardPatternWindow(ZellCardManip);
-                window.Owner = App.Current.MainWindow;
-                window.ShowDialog();
-
+                CardManipulationModel model = StartCardManip(Convert.ToUInt32(patternString, 16), isZell, delayFrames, rngModifier);
+                if (openInWindow)
+                {
+                    ZellCardPatternWindow window = new ZellCardPatternWindow(model);
+                    window.Owner = App.Current.MainWindow;
+                    window.ShowDialog();
+                }
+                else
+                {
+                    ZellCardManip = model;
+                }
             }
         }
 
         private void ZellLaunch(object sender, EventArgs eventArgs)
         {
-            LaunchCardScript(true, RngPattern);
+            LaunchCardScript(true, RngPattern, false);
         }
 
         public BindingList<CarawayCodeOutput> CarawayOutput

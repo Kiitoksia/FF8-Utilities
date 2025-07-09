@@ -52,9 +52,7 @@
         </controls:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     <DockPanel LastChildFill="True">
-        <GroupBox Header="Timer" DockPanel.Dock="Bottom" Margin="10,10,10,2">
-            <controls1:CardManipulationOutputControl x:Name="CardManipControl"/>
-        </GroupBox>
+        <controls1:CardManipulationOutputControl x:Name="CardManipControl" DockPanel.Dock="Bottom" Margin="10"/>
         <TabControl
             DockPanel.Dock="Top"
         x:Name="Tabs"
@@ -71,6 +69,7 @@
                                 x:Name="Border"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
+                                    HorizontalAlignment="Center"
                                 BorderThickness="5">
                                     <Grid>
                                         <ItemsControl ItemsSource="{Binding OpponentCards}">
@@ -82,7 +81,7 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid>
-                                                        <Image Height="68" Source="{Binding ., Converter={StaticResource ImageConverter}}" />
+                                                        <Image Height="65" Source="{Binding ., Converter={StaticResource ImageConverter}}" />
                                                         <Border x:Name="ImageBorder" Background="Black">
                                                             <Border.Style>
                                                                 <Style TargetType="Border">
@@ -135,8 +134,8 @@
                 <DataTemplate>
                     <Grid Width="460">
                         <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="580" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="570" />
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
                         <ItemsControl

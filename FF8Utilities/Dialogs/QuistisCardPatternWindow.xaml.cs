@@ -3,6 +3,7 @@ using FF8Utilities.Entities;
 using FF8Utilities.Models;
 using LateQuistisManipulation.Models;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,7 +44,11 @@ namespace FF8Utilities.Dialogs
             {
                 ResultHex = e.ResultHex;
                 _didSubmit = true;
-                Close();
+                this.Invoke(async () =>
+                {
+                    await this.ShowMessageAsync("Outcome saved", "Continue as normal for zell tracking");
+                    Close();
+                });
             });
             
             ChangeOrderingCommand = new Command<QuistisPatternsOrderBy>(() => true, (s, e) =>

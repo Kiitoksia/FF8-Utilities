@@ -311,7 +311,6 @@ namespace FF8Utilities.Models
         {
             QuistisCardPatternWindow window = new QuistisCardPatternWindow(Window, _lateQuistisManip.GetPattern(LateQuistisOutput, true));
             window.Owner = Window;
-            MainModel.Instance.LaunchCardScript(false, LateQuistisOutput);
             window.ShowDialog();
             if (!string.IsNullOrEmpty(window.ResultHex))
             {
@@ -331,10 +330,8 @@ namespace FF8Utilities.Models
 
         private void LaunchZell(object sender, EventArgs eventArgs)
         {
-
-
             ZellCardSubmitted = true;
-            MainModel.Instance.LaunchCardScript(true, Output);
+            MainModel.Instance.LaunchCardScript(true, Output, true);
         }
 
 

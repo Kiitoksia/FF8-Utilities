@@ -123,6 +123,25 @@ namespace FF8Utilities.Models
             RareTimerResult result = _manip.GetRareTimerStep(_state, _player, minTime, searchType, _count);
             int firstAvailableFrame = result.RareTable.FindIndex(i => i);
 
+            if (_player == "zellmama")
+            {
+                // LQ is already locked in to the first 10 frames regardless
+                if (firstAvailableFrame == 0 && !result.RareTable[3])
+                {
+                    // There are less than 3 available frames to mash
+                    // Say its not an instant mash so the user loops around for a more consistent manip
+                    for (int i = 3; i < result.RareTable.Count; i++)
+                    {
+                        if (result.RareTable[i])
+                        {
+                            firstAvailableFrame = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+
             if (firstAvailableFrame == 0)
             {
                 // Instant Mash
@@ -198,6 +217,8 @@ namespace FF8Utilities.Models
             }
             else
             {
+                // Valid to start
+                ErrorText = null;
                 Explanation = "Confirm to start timer";
                 _cts = new CancellationTokenSource();
                 SearchType searchType = SearchType.First;
@@ -395,13 +416,7 @@ namespace FF8Utilities.Models
                 if (_timeTillNextCard.TotalSeconds >= 1.5)
                 {
                     PlayBeeps();
-                    //_currentlyPlayingTimer?.Dispose();
-                    //_audioContext?.ClearQueuedAudio();
-                    //_isPlayingBeeps = false;
-                }
-                else
-                {
-                    //PlayBeeps();
+
                 }
             }
         }
