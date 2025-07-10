@@ -144,7 +144,7 @@ namespace FF8Utilities.Models
 
             
 
-            if (firstAvailableFrame == 0)
+            if (firstAvailableFrame <= 2)
             {
                 // Instant Mash
                 InstantMashBackgroundColor = Brushes.DarkRed;
@@ -162,9 +162,13 @@ namespace FF8Utilities.Models
             {
                 // Also output how many frames its available for
                 InstantMashFramesAvailable = result.RareTable.FindIndex(i => !i);
-
             }
-            FirstFrameAvailableFramesDisplay = $"{(firstAvailableFrame == 0 ? "YES" : "NO")} = {firstAvailableFrame}";
+            else if (firstAvailableFrame <= 2)
+            {
+                // Not hit yet, so there will always be 10 frames
+                InstantMashFramesAvailable = 10;
+            }
+            FirstFrameAvailableFramesDisplay = $"{(firstAvailableFrame <= 2 ? "YES" : "NO")} = {firstAvailableFrame}";
             WillBeepsPlay = firstAvailableFrame > 85;
         }
 
