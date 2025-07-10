@@ -122,27 +122,23 @@ namespace FF8Utilities.Models
             double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
 
             RareTimerResult result = _manip.GetRareTimerStep(_state, _player, minTime, searchType, _count);
-            int firstAvailableFrame = result.RareTable.FindIndex(i => i);
 
-            if (_player == "zellmama")
+
+            int firstAvailableFrame = 0;
+            for (int i = 0; i < result.RareTable.Count; i++)
             {
-                // LQ is already locked in to the first 10 frames regardless
-                if (firstAvailableFrame == 0 && !result.RareTable[3])
+                if (result.RareTable[i])
                 {
-                    // There are less than 3 available frames to mash
-                    // Say its not an instant mash so the user loops around for a more consistent manip
-                    for (int i = 3; i < result.RareTable.Count; i++)
+                    firstAvailableFrame = i;
+                    IEnumerable<bool> nextFrames = result.RareTable.Skip(i).Take(4);
+                    if (nextFrames.All(t => t))
                     {
-                        if (result.RareTable[i])
-                        {
-                            firstAvailableFrame = i;
-                            break;
-                        }
+                        // Only allow if there are 4 mashable frames
+                        firstAvailableFrame = i;
+                        break;
                     }
                 }
-            }
-
-            
+            }            
 
             if (firstAvailableFrame <= 2)
             {
