@@ -82,6 +82,7 @@
                 BorderBrush="White"
                 BorderThickness="2"
                 Controls:VisibilityHelper.IsVisible="{Binding ShowInstantMashText}">
+
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
                     <TextBlock
@@ -89,6 +90,12 @@
                         FontWeight="Bold"
                         Text="{Binding FirstFrameAvailableFramesDisplay}"
                         TextWrapping="Wrap" />
+                    <TextBlock
+HorizontalAlignment="Center"
+VerticalAlignment="Bottom"
+Controls:VisibilityHelper.IsVisible="{Binding ShowInstantMashFramesAvailableText}"
+Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)'}"
+TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
         </Grid>

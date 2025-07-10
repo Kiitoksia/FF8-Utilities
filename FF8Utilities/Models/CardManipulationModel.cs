@@ -49,6 +49,7 @@ namespace FF8Utilities.Models
         private bool _isPlayingBeeps;
         private bool _willBeepsPlay;
         private bool _showInstantMashText;
+        private int _instantMashFramesAvailable;
 
 
 
@@ -140,6 +141,7 @@ namespace FF8Utilities.Models
                     }
                 }
             }
+
             
 
             if (firstAvailableFrame == 0)
@@ -156,9 +158,30 @@ namespace FF8Utilities.Models
                 InstantMashBackgroundColor = Brushes.Transparent;
             }
 
+            if (firstAvailableFrame == 0)
+            {
+                // Also output how many frames its available for
+                InstantMashFramesAvailable = result.RareTable.FindIndex(i => !i);
+
+            }
             FirstFrameAvailableFramesDisplay = $"{(firstAvailableFrame == 0 ? "YES" : "NO")} = {firstAvailableFrame}";
             WillBeepsPlay = firstAvailableFrame > 85;
         }
+
+        public int InstantMashFramesAvailable
+        {
+            get => _instantMashFramesAvailable;
+            set
+            {
+                if (_instantMashFramesAvailable == value)
+                    return;
+                _instantMashFramesAvailable = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowInstantMashFramesAvailableText));
+            }
+        }
+
+        public bool ShowInstantMashFramesAvailableText => InstantMashFramesAvailable != 0;
 
         public bool WillBeepsPlay
         {

@@ -466,8 +466,6 @@
                             </DockPanel>
                             <controls1:EncounterControl controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" DataContext="{Binding RedSoldierEncounter}" />
                         </StackPanel>
-
-
                     </StackPanel>
                 </TabItem>
             </mah:MetroAnimatedSingleRowTabControl>
