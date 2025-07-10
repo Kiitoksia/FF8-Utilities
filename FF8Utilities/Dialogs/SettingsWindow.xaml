@@ -91,15 +91,6 @@
 
                     <controls:SettingsInputControl>
                         <controls:SettingsInputControl.LabelContent>
-                            <TextBlock Text="Beep Interval (ms)"/>
-                        </controls:SettingsInputControl.LabelContent>
-                        <controls:SettingsInputControl.InputContent>
-                            <Controls:NumericUpDown Minimum="50" Value="{Binding BeepInterval}" ValueChanged="NumericUpDown_ValueChanged"  />
-                        </controls:SettingsInputControl.InputContent>
-                    </controls:SettingsInputControl>
-
-                    <controls:SettingsInputControl>
-                        <controls:SettingsInputControl.LabelContent>
                             <TextBlock Text="Beep Offset Frames"/>
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>

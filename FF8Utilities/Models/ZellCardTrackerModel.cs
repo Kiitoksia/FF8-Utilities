@@ -668,7 +668,7 @@ namespace FF8Utilities.Models
                         else
                         {
                             int framesTillMash = int.Parse(match.Groups[2].Value);
-                            if (framesTillMash < 85)
+                            if (framesTillMash <= 85)
                             {
                                 // Almost instant mash but not quite
                                 QuistisMashTextBackgroundBrush = new SolidColorBrush(Colors.DarkOrange);

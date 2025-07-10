@@ -52,8 +52,75 @@
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <StackPanel>
-            <mah:MetroAnimatedSingleRowTabControl SelectedIndex="{Binding FocusedTabIndex}">
+        <DockPanel LastChildFill="True">
+            <Grid
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                DockPanel.Dock="Bottom">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button
+                        Height="65"
+                        Command="{Binding LaunchQuistisPatternsCommand}"
+                        controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
+                        Padding="10"
+                        Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
+                        <TextBlock FontSize="16" Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}" />
+                    </Button>
+
+                    <Border
+                        Grid.Column="1"
+                        Width="100"
+                        Background="{Binding QuistisMashTextBackgroundBrush}"
+                        BorderBrush="White"
+                        BorderThickness="0,2,2,2"
+                        controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
+                        Padding="10">
+                        <StackPanel>
+                            <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Text="{Binding QuistisPatternMashDisplay}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Margin="10" HorizontalAlignment="Stretch" controls:VisibilityHelper.IsVisible="{Binding ShowZellButton}">
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button
+                                Height="65"
+                                Command="{Binding LaunchZellCommand}"
+                                Padding="10"
+                                Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
+                                <TextBlock FontSize="16" Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}" />
+                            </Button>
+
+                            <Border
+                                Grid.Column="1"
+                                Width="100"
+                                Background="{Binding ZellMashTextBackgroundBrush}"
+                                BorderBrush="White"
+                                BorderThickness="0,2,2,2"
+                                Padding="10">
+                                <StackPanel>
+                                    <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        FontWeight="Bold"
+                                        Text="{Binding ZellPatternMashDisplay}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+
+            </Grid>
+            <mah:MetroAnimatedSingleRowTabControl DockPanel.Dock="Top" SelectedIndex="{Binding FocusedTabIndex}">
                 <mah:MetroAnimatedSingleRowTabControl.Resources>
                     <Style TargetType="{x:Type TabPanel}">
                         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -398,75 +465,12 @@
                                     Text="Include Red Soldier Encounter" />
                             </DockPanel>
                             <controls1:EncounterControl controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" DataContext="{Binding RedSoldierEncounter}" />
-
-                            <Grid Margin="10" HorizontalAlignment="Stretch">
-                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <Button
-                                        Height="65"
-                                        Command="{Binding LaunchZellCommand}"
-                                        Padding="10"
-                                        Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
-                                        <TextBlock FontSize="16" Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}" />
-                                    </Button>
-
-                                    <Border
-                                        Grid.Column="1"
-                                        Width="100"
-                                        Background="{Binding ZellMashTextBackgroundBrush}"
-                                        BorderBrush="White"
-                                        BorderThickness="0,2,2,2"
-                                        Padding="10">
-                                        <StackPanel>
-                                            <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
-                                            <TextBlock
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                FontSize="16"
-                                                FontWeight="Bold"
-                                                Text="{Binding ZellPatternMashDisplay}" />
-                                        </StackPanel>
-                                    </Border>
-                                </StackPanel>
-                            </Grid>
                         </StackPanel>
 
 
                     </StackPanel>
                 </TabItem>
             </mah:MetroAnimatedSingleRowTabControl>
-            <Grid Margin="10" HorizontalAlignment="Stretch">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button
-                        Height="65"
-                        Command="{Binding LaunchQuistisPatternsCommand}"
-                        controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
-                        Padding="10"
-                        Style="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
-                        <TextBlock FontSize="16" Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}" />
-                    </Button>
-
-                    <Border
-                        Grid.Column="1"
-                        Width="100"
-                        Background="{Binding QuistisMashTextBackgroundBrush}"
-                        BorderBrush="White"
-                        BorderThickness="0,2,2,2"
-                        controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
-                        Padding="10">
-                        <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="{Binding QuistisPatternMashDisplay}" />
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-
-
-            </Grid>
-        </StackPanel>
+        </DockPanel>
     </ScrollViewer>
 </mah:MetroWindow>
