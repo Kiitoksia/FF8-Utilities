@@ -9,7 +9,7 @@ namespace CardManipulation.Models
     public class SearchResult
     {
         public int Diff { get; set; }
-        public int Index { get; set; }
+        public uint Index { get; set; }
         public int Offset { get; set; }
         public uint LastState { get; set; }
         public bool Initiative { get; set; }

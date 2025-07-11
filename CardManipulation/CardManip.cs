@@ -140,8 +140,9 @@ namespace CardManipulation
 
             // Initiative: last + or - in string
             bool? initiative = null;
-            foreach (Match m in Regex.Matches(input, @"[+-]"))
-                initiative = m.Value == "+";
+            //foreach (Match m in Regex.Matches(input, @"[+-]"))
+            //    initiative = m.Value == "+";
+
 
             // Custom ranks order (default: "urdl")
             var order = Options.RanksOrder ?? "ulrd";
@@ -292,33 +293,49 @@ namespace CardManipulation
             string playerKey,
             PatternParseResult pattern,
             bool fuzzyOrder = false,
-            int? startIndexOverride = null,
-            int? widthOverride = null,
+            uint? startIndexOverride = null,
+            uint? widthOverride = null,
             int count = 0,
             SearchType searchType = SearchType.First,
+            double? elapsedSeconds = null,
             uint incr = 0)
         {
             // Advance RNG by count if needed
             var player = PlayerProfiles[playerKey];
 
+            if (elapsedSeconds != null)
+            {
+                double delay = Options.DelayFrame / Options.GameFps;
+                int forcedIncr = (int)Options.ForcedIncr;
+                int acceptDelay = (int)Options.AcceptDelayFrame;
+                double incrStart = delay - (forcedIncr / Options.GameFps);
+                int calcIncr = Math.Max(
+                    (int)Math.Round((elapsedSeconds.Value - incrStart) * Options.GameFps),
+                    forcedIncr + acceptDelay
+                );
+                if (calcIncr <= forcedIncr + acceptDelay)
+                    calcIncr = forcedIncr;
+                incr = (uint)calcIncr;
+            }
+
+
             // Select width and startIndex based on searchType
-            int width;
-            int startIndex;
+            uint width;
+            uint startIndex;
             switch (searchType)
             {
                 case SearchType.Counting:
-                    width = (int)Options.CountingWidth;
-                    startIndex = startIndexOverride ?? (int)Options.Base;
+                    width = Options.CountingWidth;
+                    startIndex = Convert.ToUInt32(count);
                     break;
                 case SearchType.Recovery:
-                    width = (int)Options.RecoveryWidth;
-                    // For recovery, you may want to center the search around the middle of the recovery width
-                    startIndex = startIndexOverride ?? (int)(Options.RecoveryWidth / 2);
+                    width = Options.RecoveryWidth;
+                    startIndex = startIndexOverride ?? (Options.RecoveryWidth / 2);
                     break;
                 case SearchType.First:
                 default:
-                    width = widthOverride ?? (int)Options.Width;
-                    startIndex = startIndexOverride ?? (int)Options.Base;
+                    width = widthOverride ?? Options.Width;
+                    startIndex = startIndexOverride ?? Options.Base;
                     break;
             }
 
@@ -351,50 +368,106 @@ namespace CardManipulation
                     break;
             }
 
-            // Build opening table
+            uint firstState = state;
 
-            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, state, count, incr);
+            // Build opening table
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++)
+                {
+                    rng.Next();
+                }
+
+                state = rng.State;
+            }
+
+
+            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, firstState, count, incr);
 
             // Match pattern
             var results = new List<SearchResult>();
-            foreach (var entry in table)
+
+            return order.Select(idx =>
             {
-                if (PatternMatches(pattern, entry.Opening, fuzzyOrder))
+                var dataArr = table.Where(x => x.Index == idx);
+                return dataArr.Select(data =>
                 {
-                    results.Add(new SearchResult
+                    if (PatternMatches(pattern, data.Opening, fuzzyOrder))
                     {
-                        Diff = entry.Index - startIndex,
-                        Index = entry.Index,
-                        Offset = entry.Offset,
-                        LastState = entry.Opening.LastState,
-                        Initiative = entry.Opening.Initiative,
-                        Deck = entry.Opening.Deck,
-                        Cards = entry.Opening.Deck.Select(id => CardTable.Single(c => c.Id == id).NameEn).ToList()
-                    });
-                }
-            }
-            return results;
+                        return new SearchResult
+                        {
+                            Diff = (int)idx - (int)startIndex,
+                            Index = (uint)idx,
+                            Offset =  data.Offset,
+                            LastState = data.Opening.LastState,
+                            Initiative = data.Opening.Initiative,
+                            Deck = data.Opening.Deck,
+                            Cards = data.Opening.Deck.Select(id => CardTable.Single(c => c.Id == id).NameEn).ToList()
+                        };
+                    }
+
+                    return null;
+                });
+            }).SelectMany(x => x)
+            .Where(x => x != null).ToList();
+
+            //foreach (var entry in table)
+            //{
+            //    if (PatternMatches(pattern, entry.Opening, fuzzyOrder))
+            //    {
+            //        results.Add(new SearchResult
+            //        {
+            //            Diff = entry.Index - startIndex,
+            //            Index = entry.Index,
+            //            Offset = entry.Offset,
+            //            LastState = entry.Opening.LastState,
+            //            Initiative = entry.Opening.Initiative,
+            //            Deck = entry.Opening.Deck,
+            //            Cards = entry.Opening.Deck.Select(id => CardTable.Single(c => c.Id == id).NameEn).ToList()
+            //        });
+            //    }
+            //}
+            //return results;
         }
 
-        private bool PatternMatches(PatternParseResult pattern, OpeningSituation opening, bool fuzzyOrder)
+        private bool PatternMatches(PatternParseResult pattern, OpeningSituation data, bool fuzzyOrder)
         {
+            var opening = data;
+
             if (pattern.Initiative.HasValue && pattern.Initiative.Value != opening.Initiative)
-                return false;
-
-            var patDeck = fuzzyOrder
-                ? pattern.Deck.OrderBy(x => string.Join(",", x)).ToList()
-                : pattern.Deck;
-            var deck = fuzzyOrder
-                ? opening.Deck.OrderBy(x => x).ToList()
-                : opening.Deck;
-
-            // Each pattern entry is a list of possible card IDs (from fuzzy parsing)
-            for (int i = 0; i < patDeck.Count && i < deck.Count; i++)
             {
-                if (!patDeck[i].Contains(deck[i]))
-                    return false;
+                return false;
             }
-            return true;
+
+            var patDeck = fuzzyOrder ? pattern.Deck.OrderBy(x => x, new ListComparer()).ToList() : pattern.Deck;
+            var deck = fuzzyOrder ? opening.Deck.OrderBy(x => x).ToList() : opening.Deck;
+
+            return patDeck
+                .Zip(deck, (first, second) => (first, second))
+                .All(x =>
+                {
+                    var (ids, id) = x;
+                    return ids.Contains(id);
+                });
+
+            //if (pattern.Initiative.HasValue && pattern.Initiative.Value != opening.Initiative)
+            //    return false;
+
+            //var patDeck = fuzzyOrder
+            //    ? pattern.Deck.OrderBy(x => string.Join(",", x)).ToList()
+            //    : pattern.Deck;
+            //var deck = fuzzyOrder
+            //    ? opening.Deck.OrderBy(x => x).ToList()
+            //    : opening.Deck;
+
+            //// Each pattern entry is a list of possible card IDs (from fuzzy parsing)
+            //for (int i = 0; i < patDeck.Count && i < deck.Count; i++)
+            //{
+            //    if (!patDeck[i].Contains(deck[i]))
+            //        return false;
+            //}
+            //return true;
         }
 
         private OpeningSituation OpeningSituation(uint state, PlayerProfile player, bool noRare = false)
@@ -454,6 +527,37 @@ namespace CardManipulation
             public int Index { get; set; }
             public int Offset { get; set; }
             public OpeningSituation Opening { get; set; }
+        }
+
+        class ListComparer : IComparer<IList<int>>
+        {
+            public int Compare(IList<int> a, IList<int> b)
+            {
+                if (a.Count == 0 && b.Count == 0)
+                {
+                    return 0;
+                }
+                else if (a.Count == 0)
+                {
+                    return -1;
+                }
+                else if (b.Count == 0)
+                {
+                    return 1;
+                }
+                else if (a[0] == b[0])
+                {
+                    return Compare(a.Skip(1).ToList(), b.Skip(1).ToList());
+                }
+                else if (a[0] < b[0])
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
         }
     }
 }

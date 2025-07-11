@@ -273,7 +273,7 @@ namespace FF8Utilities.Models
                     PatternParseResult pattern = _manip.ParsePattern(RecoveryPattern, _player);
                     if (pattern.Error == null)
                     {
-                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, searchType: SearchType.First);
+                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, searchType: SearchType.Counting, elapsedSeconds: _currentResult.DurationSeconds);
                         if (results.Any())
                         {
                             SearchResult result = results[0];
@@ -507,7 +507,7 @@ namespace FF8Utilities.Models
 
         public void UpdateFromResult(RareTimerResult result)
         {
-            _currentResult = result;           
+            _currentResult = result;     
         }
 
         public void Dispose()
