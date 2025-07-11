@@ -251,6 +251,7 @@ namespace CardManipulation
             }
             else
             {
+                state = (state + incr - from) & 0xffff_ffff;
                 rngStateArr = new uint[size].Select((_, i) =>
                 {
                     return (state + (uint)i) & 0xffff_ffff;
@@ -451,24 +452,6 @@ namespace CardManipulation
                     var (ids, id) = x;
                     return ids.Contains(id);
                 });
-
-            //if (pattern.Initiative.HasValue && pattern.Initiative.Value != opening.Initiative)
-            //    return false;
-
-            //var patDeck = fuzzyOrder
-            //    ? pattern.Deck.OrderBy(x => string.Join(",", x)).ToList()
-            //    : pattern.Deck;
-            //var deck = fuzzyOrder
-            //    ? opening.Deck.OrderBy(x => x).ToList()
-            //    : opening.Deck;
-
-            //// Each pattern entry is a list of possible card IDs (from fuzzy parsing)
-            //for (int i = 0; i < patDeck.Count && i < deck.Count; i++)
-            //{
-            //    if (!patDeck[i].Contains(deck[i]))
-            //        return false;
-            //}
-            //return true;
         }
 
         private OpeningSituation OpeningSituation(uint state, PlayerProfile player, bool noRare = false)
