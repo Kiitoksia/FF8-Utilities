@@ -339,6 +339,7 @@ namespace CardManipulation
                     break;
             }
 
+            width = 600;
             // Build search order (centered, then +/-1, +/-2, ...)
             var order = Enumerable.Range(1, (int)(width / 2))
                 .Select(offset => new[] { startIndex + offset, startIndex - offset })

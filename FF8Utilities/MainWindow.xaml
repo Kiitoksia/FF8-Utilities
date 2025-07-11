@@ -196,7 +196,7 @@
                         <TextBlock FontSize="14" Text="Geezard, Red Bat, Gayla, Quistis, Ifrit"/>
                     </GroupBox>
 
-                    <GroupBox Header="Timing" Grid.Row="6" Grid.ColumnSpan="3" Margin="20,20,20,0">
+                    <controls:CardManipulationOutputControl DataContext="{Binding ZellCardManip}" Grid.Row="6" Grid.ColumnSpan="3" Margin="20,20,20,0">
                         <Controls:VisibilityHelper.IsVisible>
                             <Binding Path="ZellCardManip">
                                 <Binding.Converter>
@@ -204,8 +204,7 @@
                                 </Binding.Converter>
                             </Binding>
                         </Controls:VisibilityHelper.IsVisible>
-                        <controls:CardManipulationOutputControl DataContext="{Binding ZellCardManip}"/>
-                    </GroupBox>
+                    </controls:CardManipulationOutputControl>
                 </Grid>
             </TabItem>
             <TabItem Header="Fish Fins" Controls:VisibilityHelper.IsVisible="{Binding FishFinManipEnabled}">

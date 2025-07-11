@@ -21,13 +21,12 @@
     xmlns:models="clr-namespace:FF8Utilities.Models"
     xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
     Width="620"
-    Height="860"
+    Height="870"
     mc:Ignorable="d"
+    Closing="Window_Closing"
     d:DataContext="{d:DesignInstance quistis:LateQuistisPattern}"
     ResizeMode="NoResize"
     Title="{Binding RNGIndex, StringFormat='Quistis Card Pattern (RNG Index: {0})'}"
-    Topmost="True"
-    Closing="Window_Closing"
     WindowStartupLocation="CenterOwner">
     <mah:MetroWindow.Resources>
         <ff8Utilities:ByteArrayToImageConverter x:Key="ImageConverter" />
@@ -52,25 +51,30 @@
         </controls:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     <DockPanel LastChildFill="True">
-        <controls1:CardManipulationOutputControl x:Name="CardManipControl" DockPanel.Dock="Bottom" Margin="10"/>
+        <controls1:CardManipulationOutputControl
+            x:Name="CardManipControl"
+            Height="150"
+            Margin="10"
+            DockPanel.Dock="Bottom" />
         <TabControl
+            x:Name="Tabs"
             DockPanel.Dock="Top"
-        x:Name="Tabs"
-        ItemsSource="{Binding Strategies}"
-        SelectedIndex="0"
-        Style="{DynamicResource MahApps.Styles.TabControl.Animated}"
-        TabStripPlacement="Left">
+            ItemsSource="{Binding Strategies}"
+            SelectedIndex="0"
+            Style="{DynamicResource MahApps.Styles.TabControl.Animated}"
+            TabStripPlacement="Left">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="TabItem">
                                 <Border
-                                x:Name="Border"
-                                Background="Transparent"
-                                BorderBrush="Transparent"
+                                    x:Name="Border"
                                     HorizontalAlignment="Center"
-                                BorderThickness="5">
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Margin="10,0,0,0"
+                                    BorderThickness="5">
                                     <Grid>
                                         <ItemsControl ItemsSource="{Binding OpponentCards}">
                                             <ItemsControl.ItemsPanel>
@@ -102,16 +106,16 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                         <TextBlock
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Bottom"
-                                        Background="#7F000000"
-                                        FontSize="13"
-                                        Foreground="White"
-                                        Padding="2"
-                                        Text="{Binding Frame, StringFormat={}Frame {0}}">
-                                        <controls:VisibilityHelper.IsVisible>
-                                            <Binding Path="IsChecked" Source="{x:Reference RadioButtonFrame}"/>                                                                                            
-                                        </controls:VisibilityHelper.IsVisible>
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            Background="#7F000000"
+                                            FontSize="13"
+                                            Foreground="White"
+                                            Padding="2"
+                                            Text="{Binding Frame, StringFormat={}Frame {0}}">
+                                            <controls:VisibilityHelper.IsVisible>
+                                                <Binding Path="IsChecked" Source="{x:Reference RadioButtonFrame}" />
+                                            </controls:VisibilityHelper.IsVisible>
                                         </TextBlock>
                                     </Grid>
                                 </Border>
@@ -132,16 +136,22 @@
             </TabControl.ItemContainerStyle>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Grid Width="460">
+                    <Grid Width="430" Margin="0,5,0,0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="40" />
-                            <RowDefinition Height="570" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="550" />
                             <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
+                        <GroupBox Margin="0,0,0,5">
+                            <GroupBox.Header>
+                                <TextBlock Text="{Binding Frame, StringFormat='(Frame {0}) Cards to use'}" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            </GroupBox.Header>
+                            <TextBlock FontSize="14" Text="Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit" HorizontalAlignment="Center"/>
+                        </GroupBox>
                         <ItemsControl
-                        Grid.Row="1"
-                        AlternationCount="20"
-                        ItemsSource="{Binding Positions}">
+                            Grid.Row="1"
+                            AlternationCount="20"
+                            ItemsSource="{Binding Positions}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <UniformGrid Columns="3" />
@@ -153,17 +163,13 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock
-                        HorizontalAlignment="Center"
-                        FontSize="28"
-                        FontWeight="Bold"
-                        Text="{Binding Frame, StringFormat={}Frame {0}}" />
+
                         <Button
-                        Grid.Row="2"
-                        Command="{Binding SubmitCommand, ElementName=Window}"
-                        CommandParameter="{Binding .}"
-                        Content="SUBMIT"
-                        Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
+                            Grid.Row="2"
+                            Command="{Binding SubmitCommand, ElementName=Window}"
+                            CommandParameter="{Binding .}"
+                            Content="SUBMIT"
+                            Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>

@@ -46,8 +46,8 @@
                         </MultiBinding>
                     </Controls:VisibilityHelper.IsVisible>
                 </TextBlock>
+                <TextBlock Text="{Binding ErrorText}" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding ErrorText}" />
                     <TextBlock
                         Width="50"
                         FontSize="18"
