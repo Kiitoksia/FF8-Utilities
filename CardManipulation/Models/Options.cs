@@ -36,7 +36,7 @@ namespace CardManipulation.Models
             Base = 550,
             Width = 400,
             RecoveryWidth = 600,
-            CountingWidth = 600,
+            CountingWidth = 100,
             CountingFrameWidth = 40,
             EarlyQuistis = "pingval",
             AutofireSpeed = 12,

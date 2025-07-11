@@ -685,7 +685,7 @@ namespace FF8Utilities.Models
 
         private void ZellLaunch(object sender, EventArgs eventArgs)
         {
-            LaunchCardScript(true, RngPattern, false);
+            LaunchCardScript(true, RngPattern, true);
         }
 
         public BindingList<CarawayCodeOutput> CarawayOutput

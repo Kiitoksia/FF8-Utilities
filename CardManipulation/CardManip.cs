@@ -332,6 +332,7 @@ namespace CardManipulation
                 case SearchType.Recovery:
                     width = Options.RecoveryWidth;
                     startIndex = startIndexOverride ?? (Options.RecoveryWidth / 2);
+                    state = (state + incr - startIndex) & 0xffff_ffff;
                     break;
                 case SearchType.First:
                 default:
@@ -340,7 +341,6 @@ namespace CardManipulation
                     break;
             }
 
-            width = 600;
             // Build search order (centered, then +/-1, +/-2, ...)
             var order = Enumerable.Range(1, (int)(width / 2))
                 .Select(offset => new[] { startIndex + offset, startIndex - offset })
@@ -373,16 +373,16 @@ namespace CardManipulation
             uint firstState = state;
 
             // Build opening table
-            if (count > 0)
-            {
-                var rng = new CardRng(state);
-                for (int i = 0; i < count; i++)
-                {
-                    rng.Next();
-                }
+            //if (count > 0)
+            //{
+            //    var rng = new CardRng(state);
+            //    for (int i = 0; i < count; i++)
+            //    {
+            //        rng.Next();
+            //    }
 
-                state = rng.State;
-            }
+            //    state = rng.State;
+            //}
 
 
             var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, firstState, count, incr);

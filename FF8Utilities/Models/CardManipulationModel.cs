@@ -121,7 +121,8 @@ namespace FF8Utilities.Models
             double incrStart = delay - (forcedIncr / _manip.Options.GameFps);
             double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
 
-            RareTimerResult result = _manip.GetRareTimerStep(_state, _player, minTime, searchType, _count);
+
+            RareTimerResult result = _manip.GetRareTimerStep(_state, _player, minTime, searchType, _recoveryCount ?? _count);
 
 
             int firstAvailableFrame = 0;
@@ -252,9 +253,11 @@ namespace FF8Utilities.Models
                     GetInstantMashText();
                 }
                 
-                _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _count);
+                _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _recoveryCount ?? _count);
             }            
         }
+
+        private int? _recoveryCount;
 
 
         private void Submit(object sender, EventArgs args)
@@ -273,15 +276,20 @@ namespace FF8Utilities.Models
                     PatternParseResult pattern = _manip.ParsePattern(RecoveryPattern, _player);
                     if (pattern.Error == null)
                     {
-                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, searchType: SearchType.Counting, elapsedSeconds: _currentResult?.DurationSeconds);
+                        SearchType searchType = _recoveryCount == null ? SearchType.Recovery : (_count == 0 ? SearchType.First : SearchType.Counting);
+                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, 
+                            searchType: searchType, 
+                            elapsedSeconds: _currentResult?.DurationSeconds);
                         if (results.Any())
                         {
                             SearchResult result = results[0];
                             _lastState = result.LastState;
+                            _recoveryCount = (int)result.Index;
                             RecoveryPattern = null;
-                            FoundCards = $"Index: {result.Index}: {string.Join(", ", result.Cards)}";
+                            FoundCards = $"Index {result.Index}: {string.Join(", ", result.Cards)}";
                             Explanation = "Pattern found.  Confirm to start timer";
                             ErrorText = null;
+                            GetInstantMashText();
                             ShowInstantMashText = true;
                         }
                         else
