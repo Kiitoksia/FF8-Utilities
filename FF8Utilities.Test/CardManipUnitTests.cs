@@ -50,8 +50,10 @@ namespace FF8Utilities.Test
             model.GetInstantMashText();
             RareTimerResult result = model.GetFirstFrameResult();
 
-            // Backup should be 2.5s in
-
+            // Backup should be 2.2s in
+            StartTimerAndWait(model, 2200);
+            model.GetInstantMashText();
+            result = model.GetFirstFrameResult();
         }
     }
 }
