@@ -127,6 +127,7 @@ namespace FF8Utilities.Models
 
         public void GetInstantMashText()
         {
+
             RareTimerResult result = GetFirstFrameResult();
 
             int firstAvailableFrame = 0;
@@ -293,6 +294,10 @@ namespace FF8Utilities.Models
                         if (results.Any())
                         {
                             SearchResult result = results[0];
+                            if (_lastState != null)
+                            {
+                                _state = _lastState.Value;
+                            }
                             _lastState = result.LastState;
                             _recoveryCount = (int)result.Index;
                             RecoveryPattern = null;

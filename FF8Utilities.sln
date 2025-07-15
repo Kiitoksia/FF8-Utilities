@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaivelFins", "KaivelFins\Ka
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Test", "FF8Utilities.Test\FF8Utilities.Test.csproj", "{F25EDE6B-ECC9-4E6F-813D-EDEDE0B8C025}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ff8-card-manip", "..\ff8-card-manip\ff8-card-manip.csproj", "{698DE34C-28EF-A648-B294-0AD4A7561F16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{F25EDE6B-ECC9-4E6F-813D-EDEDE0B8C025}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F25EDE6B-ECC9-4E6F-813D-EDEDE0B8C025}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F25EDE6B-ECC9-4E6F-813D-EDEDE0B8C025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

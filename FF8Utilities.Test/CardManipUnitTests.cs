@@ -52,8 +52,8 @@ namespace FF8Utilities.Test
 
             // Backup should be 2.2s in
             StartTimerAndWait(model, 2200);
-            model.GetInstantMashText();
-            result = model.GetFirstFrameResult();
+            result = model.CurrentResult;
+            Assert.IsTrue(result.RareTable[0]);
         }
     }
 }

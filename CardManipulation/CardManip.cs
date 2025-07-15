@@ -208,8 +208,9 @@ namespace CardManipulation
             return nextRnd % 100 < rareLimit;
         }
 
-        IList<TableEntry> MakeOpeningTable(uint from, uint to, uint state, PlayerProfile player, SearchType searchType, uint firstState, int count, uint incr)
+        IList<TableEntry> MakeOpeningTable(uint from, uint to, uint state, PlayerProfile player, SearchType searchType, uint incr, uint count = 0, Options optionsOverride = null)
         {
+            var options = optionsOverride ?? this.Options;
             var size = to + 1;
             IList<uint> rngStateArr;
             IList<int> offsetArr;
@@ -217,74 +218,57 @@ namespace CardManipulation
             if (searchType == SearchType.First)
             {
                 var rng = new CardRng(state);
-
-                rngStateArr = new uint[size].Select(_ =>
+                rngStateArr = new uint[size];
+                for (int i = 0; i < size; i++)
                 {
-                    var stateCopy = rng.State;
+                    rngStateArr[i] = rng.State;
                     rng.Next();
-                    return stateCopy;
-                }).ToList();
-
-                var offsetArrSize = (int)(60f / Options.AutofireSpeed);
-
-                offsetArr = new int[offsetArrSize].Select((_, i) =>
-                {
-                    return (int)Options.ForcedIncr + i;
-                }).ToList();
+                }
+                int offsetArrSize = (int)(60f / options.AutofireSpeed);
+                offsetArr = Enumerable.Range(0, offsetArrSize)
+                    .Select(i => (int)options.ForcedIncr + i)
+                    .ToList();
             }
             else if (searchType == SearchType.Counting)
             {
-                var rng = new CardRng(firstState);
-                var maxIdx = count + Options.CountingWidth;
-
-                rngStateArr = new uint[maxIdx].Select(_ =>
+                var rng = new CardRng(state);
+                int maxIdx = (int)(count + options.CountingWidth);
+                rngStateArr = new uint[maxIdx];
+                for (int i = 0; i < maxIdx; i++)
                 {
-                    var stateCopy = rng.State;
+                    rngStateArr[i] = (rng.State + incr) & 0xffff_ffff;
                     rng.Next();
-                    return stateCopy + incr;
-                }).ToList();
-
-                offsetArr = new int[Options.CountingFrameWidth].Select((_, i) =>
-                {
-                    return i - (int)Options.CountingFrameWidth / 2;
-                }).ToList();
+                }
+                offsetArr = Enumerable.Range(0, (int)options.CountingFrameWidth)
+                    .Select(i => i - (int)options.CountingFrameWidth / 2)
+                    .ToList();
             }
-            else
+            else // Recovery
             {
-                state = (state + incr - from) & 0xffff_ffff;
-                rngStateArr = new uint[size].Select((_, i) =>
+                rngStateArr = new uint[size];
+                for (int i = 0; i < size; i++)
                 {
-                    return (state + (uint)i) & 0xffff_ffff;
-                }).ToList();
-
-                offsetArr = new[] { 0 };
+                    rngStateArr[i] = (state + (uint)i) & 0xffff_ffff;
+                }
+                offsetArr = new List<int> { 0 };
             }
 
             var table = new List<TableEntry>();
-
-            for (var idx = 0; idx <= to; idx++)
+            for (int idx = (int)from; idx <= (int)to; idx++)
             {
-                if (!(idx >= from && idx <= to))
-                {
-                    continue;
-                }
-
                 foreach (var offset in offsetArr)
                 {
-                    var rngState = (rngStateArr[idx] + offset) & 0xffff_ffff;
-
-                    table.Add(new TableEntry()
+                    var rngState = (rngStateArr[idx] + (uint)offset) & 0xffff_ffff;
+                    table.Add(new TableEntry
                     {
                         Index = idx,
                         Offset = offset,
-                        Opening = OpeningSituation((uint)rngState, player),
+                        Opening = OpeningSituation((uint)rngState, player)
                     });
                 }
             }
-
             return table;
         }
-
 
         /// <summary>
         /// Returns a list of possible opening situations matching the pattern.
@@ -373,19 +357,19 @@ namespace CardManipulation
             uint firstState = state;
 
             // Build opening table
-            //if (count > 0)
-            //{
-            //    var rng = new CardRng(state);
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        rng.Next();
-            //    }
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++)
+                {
+                    rng.Next();
+                }
 
-            //    state = rng.State;
-            //}
+                state = rng.State;
+            }
 
 
-            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, firstState, count, incr);
+            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, incr, (uint)count, Options);
 
             // Match pattern
             var results = new List<SearchResult>();
@@ -413,24 +397,6 @@ namespace CardManipulation
                 });
             }).SelectMany(x => x)
             .Where(x => x != null).ToList();
-
-            //foreach (var entry in table)
-            //{
-            //    if (PatternMatches(pattern, entry.Opening, fuzzyOrder))
-            //    {
-            //        results.Add(new SearchResult
-            //        {
-            //            Diff = entry.Index - startIndex,
-            //            Index = entry.Index,
-            //            Offset = entry.Offset,
-            //            LastState = entry.Opening.LastState,
-            //            Initiative = entry.Opening.Initiative,
-            //            Deck = entry.Opening.Deck,
-            //            Cards = entry.Opening.Deck.Select(id => CardTable.Single(c => c.Id == id).NameEn).ToList()
-            //        });
-            //    }
-            //}
-            //return results;
         }
 
         private bool PatternMatches(PatternParseResult pattern, OpeningSituation data, bool fuzzyOrder)
