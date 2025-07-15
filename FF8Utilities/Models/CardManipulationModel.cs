@@ -107,8 +107,7 @@ namespace FF8Utilities.Models
             }
         }
 
-
-        public void GetInstantMashText()
+        public RareTimerResult GetFirstFrameResult()
         {
             SearchType searchType = SearchType.First;
             if (_count != 0) searchType = SearchType.Counting;
@@ -122,8 +121,13 @@ namespace FF8Utilities.Models
             double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
 
 
-            RareTimerResult result = _manip.GetRareTimerStep(_state, _player, minTime, searchType, _recoveryCount ?? _count);
+            return _manip.GetRareTimerStep(_state, _player, minTime, searchType, _recoveryCount ?? _count);
+        }
 
+
+        public void GetInstantMashText()
+        {
+            RareTimerResult result = GetFirstFrameResult();
 
             int firstAvailableFrame = 0;
             for (int i = 0; i < result.RareTable.Count; i++)
@@ -139,8 +143,9 @@ namespace FF8Utilities.Models
                         break;
                     }
                 }
-            }            
+            }
 
+            FirstAvailableFrame = firstAvailableFrame;
             if (firstAvailableFrame <= 2)
             {
                 // Instant Mash
@@ -168,6 +173,11 @@ namespace FF8Utilities.Models
             FirstFrameAvailableFramesDisplay = $"{(firstAvailableFrame <= 2 ? "YES" : "NO")} = {firstAvailableFrame}";
             WillBeepsPlay = firstAvailableFrame > 85;
         }
+
+        /// <summary>
+        /// Do not bind to in UI, does not use INotifyPropertyChanged
+        /// </summary>
+        public int FirstAvailableFrame { get; set; }
 
         public int InstantMashFramesAvailable
         {
@@ -447,7 +457,6 @@ namespace FF8Utilities.Models
                 if (_timeTillNextCard.TotalSeconds >= 1.5)
                 {
                     PlayBeeps();
-
                 }
             }
         }
