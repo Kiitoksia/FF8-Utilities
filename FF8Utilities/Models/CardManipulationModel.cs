@@ -289,7 +289,7 @@ namespace FF8Utilities.Models
                         SearchType searchType = _recoveryCount == null ? SearchType.Recovery : (_count == 0 ? SearchType.First : SearchType.Counting);
                         List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, 
                             searchType: searchType, 
-                            elapsedSeconds: _currentResult?.DurationSeconds);
+                            elapsedSeconds: CurrentResult?.DurationSeconds);
                         if (results.Any())
                         {
                             SearchResult result = results[0];
@@ -410,16 +410,16 @@ namespace FF8Utilities.Models
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
-            if (_currentResult == null) return;
+            if (CurrentResult == null) return;
             var args = (RenderingEventArgs)e;
             var deltaTime = args.RenderingTime - _lastRenderTime;
 
             _lastRenderTime = args.RenderingTime;
 
-            RareCardAvailable = _currentResult.RareTable[0];
-            RareCardSoon = !_currentResult.RareTable[0] && _currentResult.RareTable.Take(10).Any(t => t);
-            Snake = string.Join("", _currentResult.RareTable.Select(t => t ? "*" : "-"));
-            TimeElapsedSeconds = (decimal)_currentResult.DurationSeconds;
+            RareCardAvailable = CurrentResult.RareTable[0];
+            RareCardSoon = !CurrentResult.RareTable[0] && CurrentResult.RareTable.Take(10).Any(t => t);
+            Snake = string.Join("", CurrentResult.RareTable.Select(t => t ? "*" : "-"));
+            TimeElapsedSeconds = (decimal)CurrentResult.DurationSeconds;
 
             if (RareCardAvailable) TextColor = Brushes.Green;
             else if (RareCardSoon) TextColor = Brushes.Orange;
@@ -433,18 +433,18 @@ namespace FF8Utilities.Models
             {
                 int framesTillAvailable = 0;
                 int framesTillAvailableEnd = 0;
-                for (int i = 0; i < _currentResult.RareTable.Count; i++)
+                for (int i = 0; i < CurrentResult.RareTable.Count; i++)
                 {
-                    if (_currentResult.RareTable[i])
+                    if (CurrentResult.RareTable[i])
                     {
                         framesTillAvailable = i;
                         break;
                     }
                 }
 
-                for (int i = framesTillAvailable; i < _currentResult.RareTable.Count; i++)
+                for (int i = framesTillAvailable; i < CurrentResult.RareTable.Count; i++)
                 {
-                    if (!_currentResult.RareTable[i])
+                    if (!CurrentResult.RareTable[i])
                     {
                         framesTillAvailableEnd = i;
                         break;
@@ -520,11 +520,11 @@ namespace FF8Utilities.Models
             }
         }
 
-        private RareTimerResult _currentResult;
+        public RareTimerResult CurrentResult { get; private set; }
 
         public void UpdateFromResult(RareTimerResult result)
         {
-            _currentResult = result;     
+            CurrentResult = result;     
         }
 
         public void Dispose()
