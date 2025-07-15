@@ -118,6 +118,7 @@
     <Compile Include="Controls\SettingsInputControl.xaml.cs">
       <DependentUpon>SettingsInputControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SnakeRenderer.cs" />
     <Compile Include="Converters\ExistenceToBoolConverter.cs" />
     <Compile Include="Dialogs\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

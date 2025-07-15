@@ -47,23 +47,8 @@
                     </Controls:VisibilityHelper.IsVisible>
                 </TextBlock>
                 <TextBlock Text="{Binding ErrorText}" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        Width="50"
-                        FontSize="18"
-                        FontWeight="Bold"
-                        Foreground="{Binding TextColor}"
-                        Text="{Binding RareCardTimer}" />
-                    <TextBlock
-                        Grid.Column="1"
-                        Width="550"
-                        ClipToBounds="True"
-                        FontSize="18"
-                        FontWeight="Bold"
-                        Foreground="{Binding TextColor}"
-                        Text="{Binding Snake}"
-                        TextWrapping="NoWrap" />
-                </StackPanel>
+                <local:SnakeRenderer x:Name="SnakeControl" DataContext="{Binding .}"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="30" ClipToBounds="True"/>
+
                 <TextBox
                     x:Name="RecoveryTextBox"
                     Grid.Row="1"
