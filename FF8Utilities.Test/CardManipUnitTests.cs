@@ -117,5 +117,13 @@ namespace FF8Utilities.Test
             result = model.CurrentResult;
             Assert.IsTrue(result.RareTable[0], "Did not find card");
         }
+
+        public void TestChaining()
+        {
+            // TODO
+            // Start on a a particular EQ/LQ index and get the zell card frame
+            // Then recursively submit until middle of snake, and do recovery with the found cards
+            // Repeat this 5 times, ensure zell card always appears
+        }
     }
 }
