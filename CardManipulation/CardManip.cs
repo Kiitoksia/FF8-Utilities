@@ -233,15 +233,16 @@ namespace CardManipulation
             {
                 var rng = new CardRng(state);
                 int maxIdx = (int)(count + options.CountingWidth);
-                rngStateArr = new uint[maxIdx];
-                for (int i = 0; i < maxIdx; i++)
+                rngStateArr = new uint[maxIdx].Select(_ =>
                 {
-                    rngStateArr[i] = (rng.State + incr) & 0xffff_ffff;
+                    var stateCopy = rng.State;
                     rng.Next();
-                }
-                offsetArr = Enumerable.Range(0, (int)options.CountingFrameWidth)
-                    .Select(i => i - (int)options.CountingFrameWidth / 2)
-                    .ToList();
+                    return stateCopy + incr;
+                }).ToList();
+                offsetArr = new int[options.CountingFrameWidth].Select((_, i) =>
+                {
+                    return i - (int)options.CountingFrameWidth / 2;
+                }).ToList();
             }
             else // Recovery
             {
@@ -357,16 +358,16 @@ namespace CardManipulation
             uint firstState = state;
 
             // Build opening table
-            if (count > 0)
-            {
-                var rng = new CardRng(state);
-                for (int i = 0; i < count; i++)
-                {
-                    rng.Next();
-                }
+            //if (count > 0)
+            //{
+            //    var rng = new CardRng(state);
+            //    for (int i = 0; i < count; i++)
+            //    {
+            //        rng.Next();
+            //    }
 
-                state = rng.State;
-            }
+            //    state = rng.State;
+            //}
 
 
             var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, incr, (uint)count, Options);
@@ -509,5 +510,6 @@ namespace CardManipulation
                 }
             }
         }
+
     }
 }

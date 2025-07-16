@@ -33,8 +33,8 @@ namespace FF8Utilities.Test
             model.RecoveryPattern = "74441154176425316556";
             model.GetInstantMashText();
             RareTimerResult result = model.GetFirstFrameResult();
-            Assert.IsTrue(result.RareTable.FindIndex(t => t) == model.FirstAvailableFrame);
-            Assert.IsTrue(result.RareTable.FindIndex(t => t) == 18);            
+            Assert.IsTrue(result.RareTable.FindIndex(t => t) == model.FirstAvailableFrame, "First available frame doesnt match");
+            Assert.IsTrue(result.RareTable.FindIndex(t => t) == 18, "Invalid first available frame");            
         }
 
         [TestMethod]
@@ -44,16 +44,18 @@ namespace FF8Utilities.Test
             CardManipulationModel model = new CardManipulationModel(manip, 0x9725c716, "zellmama", 9, 241);
             StartTimerAndWait(model, 750); // Wait 750ms, this is roughly middle of snake
             
-            // Index is actually 239, run recovery pattern
+            // Index is actually 238, run recovery pattern
             model.RecoveryPattern = "26123345763154335311";
             model.SubmitCommand.Execute(null);
+            Assert.IsTrue(model.ErrorText == null, "It should find cards");
             model.GetInstantMashText();
             RareTimerResult result = model.GetFirstFrameResult();
+            Assert.IsTrue(!result.RareTable[0], "Invalid frame, is not instant mash");
 
             // Backup should be 2.2s in
             StartTimerAndWait(model, 2200);
             result = model.CurrentResult;
-            Assert.IsTrue(result.RareTable[0]);
+            Assert.IsTrue(result.RareTable[0], "Did not find card");
         }
     }
 }
