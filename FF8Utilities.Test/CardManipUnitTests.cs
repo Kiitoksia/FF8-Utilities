@@ -1,9 +1,12 @@
 ﻿using CardManipulation;
 using CardManipulation.Models;
 using FF8Utilities.Models;
+using LateQuistisManipulation;
+using LateQuistisManipulation.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace FF8Utilities.Test
 {
@@ -57,10 +60,21 @@ namespace FF8Utilities.Test
             Assert.IsTrue(result.RareTable[0], "Did not find card");
         }
 
+        [TestMethod]
         public void TestLQFrames()
         {
             CardManip manip = new CardManip();
-            // TODO, compare our own manip calculations to the pre-computed calculations in Kaivels LQ
+            LateQuistis lq = new LateQuistis(FF8Utilities.Const.PackagesFolder);
+            for (int i = 130; i < 190; i++)
+            {
+                // Safe region
+                LateQuistisPattern pattern = lq.GetPattern(i, false);
+                string mashText = pattern.Deck.InstantMash;
+                CardManipulationModel model = new CardManipulationModel(manip, 1, "fc01", 9, i);
+                Match framesMatch = Regex.Match(mashText, @"(\d+)$");
+                int firstFrame = int.Parse(framesMatch.Groups[1].Value);
+                Assert.IsTrue(firstFrame == model.FirstAvailableFrame);
+            }
         }
     }
 }

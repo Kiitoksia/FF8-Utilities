@@ -64,6 +64,10 @@
       <Project>{100B1BE4-EED1-48E4-9DA8-5A411ECB5896}</Project>
       <Name>FF8Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LateQuistis\LateQuistis.csproj">
+      <Project>{82CB8657-475A-4223-A6BE-54BBA965AD23}</Project>
+      <Name>LateQuistis</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
