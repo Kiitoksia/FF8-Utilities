@@ -15,10 +15,12 @@ namespace FF8Utilities.Test
     {
         private const uint Frame4Quistis = 0x65c6be07;
 
+        private const int _delaytFrames = 9;
 
         static CardManipUnitTests()
         {
             new SettingsModel(new MainModel());
+
         }
 
         private void StartTimerAndWait(CardManipulationModel model, int millisecondsToWait)
@@ -32,13 +34,36 @@ namespace FF8Utilities.Test
         public void TestSecondTryMash()
         {
             CardManip manip = new CardManip();
+
+
+            // Nonaru PB.  4th Quistis, Index 449
             CardManipulationModel model = new CardManipulationModel(manip, Frame4Quistis, "zellmama", 9, null);
             model.RecoveryPattern = "74441154176425316556";
-            model.GetInstantMashText();
+            model.SubmitCommand.Execute(null);
+
             RareTimerResult result = model.GetFirstFrameResult();
             Assert.IsTrue(result.RareTable.FindIndex(t => t) == model.FirstAvailableFrame, "First available frame doesnt match");
-            Assert.IsTrue(result.RareTable.FindIndex(t => t) == 18, "Invalid first available frame");            
+            Assert.IsTrue(result.RareTable.FindIndex(t => t) == 101, "Invalid first available frame");         
+            
+            StartTimerAndWait(model, 1850); // Roughly 1.85s in
+            result = model.CurrentResult;
+            Assert.IsTrue(result.RareTable[0], "Should be an instant mash");
+
+            // Habkeinename PB.  4th Quistis, Index 513
+
+            model = new CardManipulationModel(manip, Frame4Quistis, "zellmama", 9, null);
+            model.RecoveryPattern = "55324324465533456554";
+            model.SubmitCommand.Execute(null);
+
+            result = model.GetFirstFrameResult();
+            Assert.IsTrue(result.RareTable.FindIndex(t => t) == model.FirstAvailableFrame, "First available frame doesnt match");
+            Assert.IsTrue(result.RareTable.FindIndex(t => t) == 109, "Invalid first available frame");
+
+            StartTimerAndWait(model, 2000); // Roughly 2s in
+            result = model.CurrentResult;
+            Assert.IsTrue(result.RareTable[0], "Should be an instant mash");
         }
+
 
         [TestMethod]
         public void TestLQ130Frame4Zell241()
