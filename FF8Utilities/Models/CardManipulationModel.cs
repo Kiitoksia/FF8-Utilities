@@ -264,7 +264,7 @@ namespace FF8Utilities.Models
                     GetInstantMashText();
                 }
                 
-                _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _recoveryCount ?? _count);
+                _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _lastState == null ? _count : 0);
             }            
         }
 

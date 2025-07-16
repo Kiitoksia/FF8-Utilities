@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="CardManip.cs" />
     <Compile Include="Const.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\CardRng.cs" />
     <Compile Include="Models\OpeningSituation.cs" />
