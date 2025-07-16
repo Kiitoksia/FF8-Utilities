@@ -286,7 +286,7 @@ namespace FF8Utilities.Models
                     PatternParseResult pattern = _manip.ParsePattern(RecoveryPattern, _player);
                     if (pattern.Error == null)
                     {
-                        SearchType searchType = (_count == 0 ? SearchType.Recovery : SearchType.Counting);
+                        SearchType searchType = (_count == 0 ? SearchType.First : SearchType.Counting);
                         List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, 
                             searchType: searchType, 
                             elapsedSeconds: CurrentResult?.DurationSeconds);
