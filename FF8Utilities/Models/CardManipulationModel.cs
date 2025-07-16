@@ -114,14 +114,14 @@ namespace FF8Utilities.Models
             else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
 
 
-            double delay = _manip.Options.DelayFrame / _manip.Options.GameFps;
-            int forcedIncr = (int)_manip.Options.ForcedIncr;
-            int acceptDelay = (int)_manip.Options.AcceptDelayFrame;
-            double incrStart = delay - (forcedIncr / _manip.Options.GameFps);
-            double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
+            //double delay = _manip.Options.DelayFrame / _manip.Options.GameFps;
+            //int forcedIncr = (int)_manip.Options.ForcedIncr;
+            //int acceptDelay = (int)_manip.Options.AcceptDelayFrame;
+            //double incrStart = delay - (forcedIncr / _manip.Options.GameFps);
+            //double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
 
 
-            return _manip.GetRareTimerStep(_state, _player, minTime, searchType, _recoveryCount ?? _count);
+            return _manip.GetRareTimerStep(_lastState ?? _state, _player, 0, searchType, count: _lastState == null ? _count : 0);
         }
 
 
@@ -268,7 +268,6 @@ namespace FF8Utilities.Models
             }            
         }
 
-        private int? _recoveryCount;
 
 
         private void Submit(object sender, EventArgs args)
@@ -299,7 +298,6 @@ namespace FF8Utilities.Models
                                 _state = _lastState.Value;
                             }
                             _lastState = result.LastState;
-                            _recoveryCount = (int)result.Index;
                             RecoveryPattern = null;
                             FoundCards = $"Index {result.Index}: {string.Join(", ", result.Cards)}";
                             Explanation = "Pattern found.  Confirm to start timer";

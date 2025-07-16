@@ -56,23 +56,15 @@ namespace CardManipulation
             SearchType searchType = SearchType.First,
             int count = 0)
         {
-            // Select width based on searchType
-            int tableWidth;
-            switch (searchType)
-            {
-                case SearchType.Counting:
-                    tableWidth = (int)Options.CountingFrameWidth;
-                    break;
-                case SearchType.Recovery:
-                    tableWidth = (int)Options.RecoveryWidth;
-                    break;
-                case SearchType.First:
-                default:
-                    tableWidth = 60; // Or (int)Options.Width, or (int)Math.Ceiling(60.0 / Options.AutofireSpeed)
-                    break;
-            }
 
-            tableWidth = 600;
+            // Advance RNG by count if needed
+            if (count > 0)
+            {
+                var rng = new CardRng(state);
+                for (int i = 0; i < count; i++) rng.Next();
+                state = rng.State;
+            }
+            int tableWidth = 600;
             var fps = Options.ConsoleFps;
 
             var delay = Options.DelayFrame / Options.GameFps;
@@ -101,73 +93,6 @@ namespace CardManipulation
                 RareTable = rareTbl.ToList(),
                 DurationSeconds = elapsedSeconds
             };
-
-            //Console.Write(durationS.PadRight(timerWidth) + tableS + "\r");
-
-            //Thread.Sleep(1000 / fps);
-
-            //if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Enter)
-            //{
-            //    Console.WriteLine();
-            //    Console.CursorVisible = true;
-            //    return incr;
-            //}
-
-            //// Advance RNG by count if needed
-
-            ////tableWidth = 600; // I feel like this can always be 600, let's test
-            //if (count > 0)
-            //{
-            //    var rng = new CardRng(state);
-            //    for (int i = 0; i < count; i++) rng.Next();
-            //    state = rng.State;
-            //}
-
-            //int rareLimit = player.RareLimit;
-            //double delay = Options.DelayFrame / Options.GameFps;
-            //int forcedIncr = (int)Options.ForcedIncr;
-            //int acceptDelay = (int)Options.AcceptDelayFrame;
-
-            //double incrStart = delay - (forcedIncr / Options.GameFps);
-            //int incr = Math.Max(
-            //    (int)Math.Round((elapsedSeconds - incrStart) * Options.GameFps),
-            //    forcedIncr + acceptDelay
-            //);
-            //if (incr <= forcedIncr + acceptDelay)
-            //    incr = forcedIncr;
-
-            //var rareTbl = Enumerable.Range(0, tableWidth)
-            //    .Select(i => NextRare(state + (uint)incr + (uint)i, rareLimit))
-            //    .ToList();
-
-            //if (playerKey == "fc01")
-            //{
-            //    // Only support the first 10 frames, so skip everything after 10
-            //    int rareCardsFound = 0;
-            //    for (int i = 0; i < rareTbl.Count; i++)
-            //    {
-            //        if (rareTbl[i])
-            //        {
-            //            rareCardsFound++;
-            //            if (rareCardsFound >= 10)
-            //            {
-            //                // Make the rest of the table false as we can't use it
-            //                for (int y = i + 1; y < rareTbl.Count; y++)
-            //                {
-            //                    rareTbl[y] = false;
-            //                }
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //return new RareTimerResult
-            //{
-            //    Incr = incr,
-            //    RareTable = rareTbl,
-            //    DurationSeconds = elapsedSeconds
-            //};
         }
 
         public PatternParseResult ParsePattern(string input, string playerKey, bool fuzzyRanks = false)
