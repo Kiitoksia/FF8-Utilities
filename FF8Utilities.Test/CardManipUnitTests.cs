@@ -47,8 +47,7 @@ namespace FF8Utilities.Test
             // Index is actually 238, run recovery pattern
             model.RecoveryPattern = "26123345763154335311";
             model.SubmitCommand.Execute(null);
-            Assert.IsTrue(model.ErrorText == null, "It should find cards");
-            model.GetInstantMashText();
+            Assert.IsTrue(model.ErrorText == null, "A recovery pattern should be found");
             RareTimerResult result = model.GetFirstFrameResult();
             Assert.IsTrue(!result.RareTable[0], "Invalid frame, is not instant mash");
 
@@ -56,6 +55,12 @@ namespace FF8Utilities.Test
             StartTimerAndWait(model, 2200);
             result = model.CurrentResult;
             Assert.IsTrue(result.RareTable[0], "Did not find card");
+        }
+
+        public void TestLQFrames()
+        {
+            CardManip manip = new CardManip();
+            // TODO, compare our own manip calculations to the pre-computed calculations in Kaivels LQ
         }
     }
 }

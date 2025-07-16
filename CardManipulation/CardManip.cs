@@ -19,11 +19,6 @@ namespace CardManipulation
         public CardManip()
         {
             CardTable = Const.CreateCardTable();
-
-            int[] levels = { 1, 2, 4, 5 };
-            List<Card> rightCards = CardTable.Where(t => t.Urdl[1] == 1 && levels.Contains(t.Level)).ToList();
-            List<Card> nonRightCards = CardTable.Where(t => t.Urdl[1] > 1 && levels.Contains(t.Level)).ToList();
-
             PlayerProfiles = Const.CreatePlayerProfiles();
             Options = Options.Default();
         }
