@@ -26,7 +26,7 @@ namespace FF8Utilities.Test
         private void StartTimerAndWait(CardManipulationModel model, int millisecondsToWait)
         {
             model.SubmitCommand.Execute(null);
-            System.Threading.Thread.Sleep(millisecondsToWait);
+            System.Threading.Thread.Sleep(millisecondsToWait + 150);
             model.SubmitCommand.Execute(null);
         }
 
@@ -45,7 +45,7 @@ namespace FF8Utilities.Test
             Assert.IsTrue(result.RareTable.FindIndex(t => t) == model.FirstAvailableFrame, "First available frame doesnt match");
             Assert.IsTrue(result.RareTable.FindIndex(t => t) == 101, "Invalid first available frame");         
             
-            StartTimerAndWait(model, 1850); // Roughly 1.85s in
+            StartTimerAndWait(model, 1750); // Roughly 1.75s in
             result = model.CurrentResult;
             Assert.IsTrue(result.RareTable[0], "Should be an instant mash");
 
@@ -100,6 +100,22 @@ namespace FF8Utilities.Test
                 int firstFrame = int.Parse(framesMatch.Groups[1].Value);
                 Assert.IsTrue(firstFrame == model.FirstAvailableFrame);
             }
+        }
+
+        [TestMethod]
+        public void TestLQMashZell()
+        {
+            CardManip manip = new CardManip();
+            CardManipulationModel model = new CardManipulationModel(manip, 0xa00ba819, "zellmama", 9, null);
+            model.RecoveryPattern = "7274-7365-6762-5532-5637";
+            model.SubmitCommand.Execute(null);
+            Assert.IsTrue(model.ErrorText == null, "A recovery pattern should be found");
+            RareTimerResult result = model.GetFirstFrameResult();
+            Assert.IsTrue(!result.RareTable[0], "Invalid frame, is not instant mash");
+
+            StartTimerAndWait(model, 220);
+            result = model.CurrentResult;
+            Assert.IsTrue(result.RareTable[0], "Did not find card");
         }
     }
 }

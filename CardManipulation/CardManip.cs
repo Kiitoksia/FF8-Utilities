@@ -219,6 +219,7 @@ namespace CardManipulation
             var table = new List<TableEntry>();
             for (int idx = (int)from; idx <= (int)to; idx++)
             {
+                if (idx >= rngStateArr.Count) continue;
                 foreach (var offset in offsetArr)
                 {
                     var rngState = (rngStateArr[idx] + (uint)offset) & 0xffff_ffff;
@@ -284,10 +285,23 @@ namespace CardManipulation
                 case SearchType.First:
                 default:
                     width = widthOverride ?? Options.Width;
-                    startIndex = startIndexOverride ?? Options.Base;
+
+                    //if (playerKey == "fc01")
+                    //{
+                    //    // Start of game, assume 0
+                    //    startIndex = 0;
+                    //}
+                    //else
+                    //{
+                    //    // At least up to zell card
+                    //    startIndex = Options.Base;
+                    //}
+                    startIndex = 0;
                     break;
             }
 
+
+            width = 1500;
             // Build search order (centered, then +/-1, +/-2, ...)
             var order = Enumerable.Range(1, (int)(width / 2))
                 .Select(offset => new[] { startIndex + offset, startIndex - offset })

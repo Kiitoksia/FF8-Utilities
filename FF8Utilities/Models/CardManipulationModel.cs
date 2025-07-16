@@ -112,15 +112,6 @@ namespace FF8Utilities.Models
             SearchType searchType = SearchType.First;
             if (_count != 0) searchType = SearchType.Counting;
             else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
-
-
-            //double delay = _manip.Options.DelayFrame / _manip.Options.GameFps;
-            //int forcedIncr = (int)_manip.Options.ForcedIncr;
-            //int acceptDelay = (int)_manip.Options.AcceptDelayFrame;
-            //double incrStart = delay - (forcedIncr / _manip.Options.GameFps);
-            //double minTime = incrStart + ((forcedIncr + acceptDelay) / _manip.Options.GameFps);
-
-
             return _manip.GetRareTimerStep(_lastState ?? _state, _player, 0, searchType, count: _lastState == null ? _count : 0);
         }
 
@@ -287,16 +278,17 @@ namespace FF8Utilities.Models
                     if (pattern.Error == null)
                     {
                         SearchType searchType = (_count == 0 ? SearchType.First : SearchType.Counting);
-                        List<SearchResult> results = _manip.SearchOpenings(_state, _player, pattern, false, count: _count, 
+                        if (_lastState != null)
+                        {
+                            // We are recovering from a 2nd try
+                            searchType = SearchType.Recovery;
+                        }
+                        List<SearchResult> results = _manip.SearchOpenings(_lastState ?? _state, _player, pattern, false, count: _count, 
                             searchType: searchType, 
-                            elapsedSeconds: CurrentResult?.DurationSeconds);
+                            elapsedSeconds: CurrentResult?.DurationSeconds ?? 0);
                         if (results.Any())
                         {
                             SearchResult result = results[0];
-                            if (_lastState != null)
-                            {
-                                _state = _lastState.Value;
-                            }
                             _lastState = result.LastState;
                             RecoveryPattern = null;
                             FoundCards = $"Index {result.Index}: {string.Join(", ", result.Cards)}";
