@@ -65,6 +65,24 @@ namespace FF8Utilities.Models
         {            
             _manip = manip;
             _state = state;
+            
+            // Handle early quistis frames that are not hex indexes
+            switch (state)
+            {
+
+                case 1:
+                    _state = 0x1de5_b942;
+                    break;
+                case 2:
+                    _state = 0x963c_b5e4;
+                    break;
+                case 3:
+                    _state = 0x1f13_2481;
+                    break;
+                default:
+                    // Already a hex state
+                    break;
+            }
             _player = player;
             _count = rngModifier ?? 0;
 
