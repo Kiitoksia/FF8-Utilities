@@ -39,6 +39,7 @@ namespace FF8Utilities.Dialogs
             _manipModel = new CardManipulationModel(manip, 1, "fc01", SettingsModel.Instance.GetZellDelayFrame(), pattern.RNGIndex);
 
             CardManipControl.DataContext = _manipModel;
+            CardManipControl.RecoveryTextBox.Focus();
             _strategies = pattern.Strategies;
             SubmitCommand = new Command<LateQuistisStrategy>(() => true, (s, e) =>
             {
@@ -46,7 +47,7 @@ namespace FF8Utilities.Dialogs
                 _didSubmit = true;
                 this.Invoke(async () =>
                 {
-                    await this.ShowMessageAsync("Outcome saved", "Continue as normal for zell tracking");
+                    await this.ShowMessageAsync("Outcome saved", "Continue as normal for zell tracking\r\nOr close tracker entirely for 2nd try zell");
                     Close();
                 });
             });

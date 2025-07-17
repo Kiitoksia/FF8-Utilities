@@ -15,7 +15,6 @@ namespace FF8Utilities.Test
     {
         private const uint Frame4Quistis = 0x65c6be07;
 
-        private const int _delaytFrames = 9;
 
         static CardManipUnitTests()
         {
