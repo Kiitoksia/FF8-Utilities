@@ -123,6 +123,21 @@ namespace FF8Utilities.Test
             // Start on a a particular EQ/LQ index and get the zell card frame
             // Then recursively submit until middle of snake, and do recovery with the found cards
             // Repeat this 5 times, ensure zell card always appears
+
+            CardManip manip = new CardManip();
+            CardManipulationModel model = new CardManipulationModel(manip, 0xa00ba819, "zellmama", 9, null);
+
+
+            model.RecoveryPattern = "7274-7365-6762-5532-5637";
+            model.SubmitCommand.Execute(null);
+            Assert.IsTrue(model.ErrorText == null, "A recovery pattern should be found");
+            RareTimerResult result = model.GetFirstFrameResult();
+            Assert.IsTrue(!result.RareTable[0], "Invalid frame, is not instant mash");
+
+
+            StartTimerAndWait(model, 220);
+            result = model.CurrentResult;
+            Assert.IsTrue(result.RareTable[0], "Did not find card");
         }
     }
 }

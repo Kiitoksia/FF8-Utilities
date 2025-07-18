@@ -25,8 +25,13 @@ namespace FF8Utilities.Dialogs
         public ZellCardPatternWindow(CardManipulationModel manip)
         {
             InitializeComponent();
-
+            string title = $"Zell Card Patterns (Quistis Outcome: {manip.State.ToString("X")}";
+            if (manip.Count > 0) title += $" - RNG Index: {manip.Count}";
+            title += ")";
+            this.Title = title;
             CardControl.DataContext = manip;
+
+            CardControl.RecoveryTextBox.Focus();
 
             // Hardcoded positions
             List<LateQuistisPosition> playerPositions = new List<LateQuistisPosition>
