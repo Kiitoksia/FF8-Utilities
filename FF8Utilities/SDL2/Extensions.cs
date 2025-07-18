@@ -58,7 +58,7 @@ namespace FlowTimer {
 
         public static void Init(string appDataFolder)
         {
-            string extractedDllPath = Path.Combine(appDataFolder, "SDL2.dll");
+            string extractedDllPath = Path.Combine(AppContext.BaseDirectory, "SDL2.dll");
             if (!File.Exists(extractedDllPath))
             {
                 var assembly = Assembly.GetExecutingAssembly();
