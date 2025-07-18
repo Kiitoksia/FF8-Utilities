@@ -36,7 +36,7 @@ namespace FF8Utilities.Dialogs
             DataContext = pattern;
 
             CardManip manip = new CardManip();
-            _manipModel = new CardManipulationModel(manip, 1, "fc01", SettingsModel.Instance.GetZellDelayFrame(), pattern.RNGIndex);
+            _manipModel = new CardManipulationModel(manip, 0, "fc01", SettingsModel.Instance.GetZellDelayFrame(), pattern.RNGIndex);
 
             CardManipControl.DataContext = _manipModel;
             CardManipControl.RecoveryTextBox.Focus();

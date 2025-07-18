@@ -62,7 +62,12 @@ namespace FF8Utilities.Models
         public CardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier)
         {            
             _manip = manip;
-            State = state;
+
+            // This isnt the best way to handle this, but hey-ho
+            // Essentially 1-3 are known EQ states, 4+ are hex indexes
+            // BUT 1 is also the starting index if you are counting and havent done any card battles
+            // The only time this matters is LQ, and this is only called on QuistisCardPatternWindow which passes in a 0 to solve
+            State = Math.Max(state, 1);
             
             // Handle early quistis frames that are not hex indexes
             switch (state)
