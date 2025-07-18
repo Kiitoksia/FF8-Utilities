@@ -273,7 +273,7 @@ namespace FF8Utilities.Models
                     {
                         if (isPreRelease && Settings.UpdateBranch == UpdateBranch.Stable) continue; // On stable branch, ignore pre-releases
                         UpdateAvailable = true;
-                        string patchNotes = json.Value<string>("body");
+                        string patchNotes = updateJson.Value<string>("body");
 
                         if (!string.IsNullOrWhiteSpace(patchNotes))
                         {
