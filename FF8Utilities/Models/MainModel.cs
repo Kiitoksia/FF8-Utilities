@@ -286,7 +286,7 @@ namespace FF8Utilities.Models
                                 MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { AffirmativeButtonText = "Yes", NegativeButtonText = "No", DefaultButtonFocus = MessageDialogResult.Affirmative });
                             if (result == MessageDialogResult.Affirmative)
                             {
-                                DownloadUpdate(this, EventArgs.Empty);
+                                await DownloadUpdate(updateJson);
                             }
                         });
                         break;
@@ -511,6 +511,37 @@ namespace FF8Utilities.Models
         }
 
 
+        private async Task DownloadUpdate(JObject json)
+        {
+            ProgressDialogController progress = await Window.ShowProgressAsync("Updating", "Automatically updating, please wait");
+
+            HttpClient client = new HttpClient();
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
+                JArray assets = (JArray)json["assets"];
+                JToken downloadAsset = assets[0];
+                string downloadUrl = downloadAsset["browser_download_url"]?.ToString();
+
+                byte[] fileBytes = await client.GetByteArrayAsync(downloadUrl);
+
+                string filePath = Path.GetTempFileName();
+                File.WriteAllBytes(filePath, fileBytes);
+
+                Process updateProcess = new Process();
+                updateProcess.StartInfo.Arguments = $"\"{AppContext.BaseDirectory.TrimEnd('\\')}\" \"{filePath}\"";
+                updateProcess.StartInfo.FileName = Path.Combine(Const.PackagesFolder, "FF8Utilities.Updater.exe");
+                updateProcess.Start();
+                Environment.Exit(0);
+            }
+            catch (Exception)
+            {
+                await Window.ShowMessageAsync("Error", "Could not manually update, please manually update by clicking OK", MessageDialogStyle.Affirmative);
+                Process.Start("https://github.com/Kiitoksia/FF8-Utilities/releases/latest");
+            }
+        }
+
         private async void DownloadUpdate(object sender, EventArgs eventArgs)
         {
             ProgressDialogController progress = await Window.ShowProgressAsync("Updating", "Automatically updating, please wait");
@@ -522,21 +553,7 @@ namespace FF8Utilities.Models
                 client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
                 string jsonString = await client.GetStringAsync("https://api.github.com/repos/kiitoksia/FF8-Utilities/releases/latest");
                 JObject json = JObject.Parse(jsonString);
-
-                JArray assets = (JArray)json["assets"];
-                JToken downloadAsset = assets[0];
-                string downloadUrl = downloadAsset["browser_download_url"]?.ToString();
-                
-                byte[] fileBytes = await client.GetByteArrayAsync(downloadUrl);
-
-                string filePath = Path.GetTempFileName();
-                File.WriteAllBytes(filePath, fileBytes);
-
-                Process updateProcess = new Process();
-                updateProcess.StartInfo.Arguments = $"\"{AppContext.BaseDirectory.TrimEnd('\\')}\" \"{filePath}\"";
-                updateProcess.StartInfo.FileName = Path.Combine(Const.PackagesFolder, "FF8Utilities.Updater.exe");
-                updateProcess.Start();
-                Environment.Exit(0);
+                await DownloadUpdate(json);
             }
             catch (Exception)
             {

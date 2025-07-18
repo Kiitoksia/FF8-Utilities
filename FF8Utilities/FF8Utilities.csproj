@@ -38,8 +38,8 @@
     <Title>FF8 Utilities</Title>
     <Copyright>Copyright ©  2018</Copyright>
     <PackageProjectUrl>github.com/Kiitoksia/FF8-Utilities</PackageProjectUrl>
-    <AssemblyVersion>1.0.3.101</AssemblyVersion>
-    <FileVersion>1.0.3.101</FileVersion>
+    <AssemblyVersion>1.0.3.100</AssemblyVersion>
+    <FileVersion>1.0.3.100</FileVersion>
     <Authors>Kiitoksia</Authors>
     <Description>A program to collate FF8 manipulation tools</Description>
     <PlatformTarget>x86</PlatformTarget>
