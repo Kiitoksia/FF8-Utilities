@@ -281,7 +281,8 @@ namespace FF8Utilities.Models
                         }
                         Window.BeginInvoke(async () =>
                         {
-                            MessageDialogResult result = await Window.ShowMessageAsync("Update Available", $"FF8 Utilities version {parsedVersion} is available. Do you want to update?{patchNotes}",
+                            string prereleaseText = isPreRelease ? " (pre-release)" : string.Empty;
+                            MessageDialogResult result = await Window.ShowMessageAsync("Update Available", $"FF8 Utilities{prereleaseText} version {parsedVersion} is available. Do you want to update?{patchNotes}",
                                 MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { AffirmativeButtonText = "Yes", NegativeButtonText = "No", DefaultButtonFocus = MessageDialogResult.Affirmative });
                             if (result == MessageDialogResult.Affirmative)
                             {
