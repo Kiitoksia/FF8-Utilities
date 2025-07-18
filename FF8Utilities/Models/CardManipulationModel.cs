@@ -32,9 +32,7 @@ namespace FF8Utilities.Models
         private string _rareCardTimer;
         private string recoveryPattern;
         private CardManip _manip;
-        private uint _state;
-        private string _player;
-        private int _count;        
+        private string _player;        
         private CancellationTokenSource _cts;
         private string _errorText;
         private uint? _lastState;
@@ -64,27 +62,27 @@ namespace FF8Utilities.Models
         public CardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier)
         {            
             _manip = manip;
-            _state = state;
+            State = state;
             
             // Handle early quistis frames that are not hex indexes
             switch (state)
             {
 
                 case 1:
-                    _state = 0x1de5_b942;
+                    State = 0x1de5_b942;
                     break;
                 case 2:
-                    _state = 0x963c_b5e4;
+                    State = 0x963c_b5e4;
                     break;
                 case 3:
-                    _state = 0x1f13_2481;
+                    State = 0x1f13_2481;
                     break;
                 default:
                     // Already a hex state
                     break;
             }
             _player = player;
-            _count = rngModifier ?? 0;
+            Count = rngModifier ?? 0;
 
             SubmitCommand = new Command(() => true, Submit);
             manip.Options.DelayFrame = delayFrames;
@@ -92,7 +90,7 @@ namespace FF8Utilities.Models
             // Model updates need to happen smoothly in the UI Thread, use CompositionTarget for this
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            if (_count > 0)
+            if (Count > 0)
             {
                 Explanation = "Confirm to start timer";
                 ShowInstantMashText = true;
@@ -125,12 +123,16 @@ namespace FF8Utilities.Models
             }
         }
 
+        public uint State { get; private set; }
+        public int Count { get; private set; }
+
+
         public RareTimerResult GetFirstFrameResult()
         {
             SearchType searchType = SearchType.First;
-            if (_count != 0) searchType = SearchType.Counting;
+            if (Count != 0) searchType = SearchType.Counting;
             else if (string.IsNullOrWhiteSpace(RecoveryPattern)) searchType = SearchType.Recovery;
-            return _manip.GetRareTimerStep(_lastState ?? _state, _player, 0, searchType, count: _lastState == null ? _count : 0);
+            return _manip.GetRareTimerStep(_lastState ?? State, _player, 0, searchType, count: _lastState == null ? Count : 0);
         }
 
 
@@ -255,7 +257,7 @@ namespace FF8Utilities.Models
 
         private void StartTimer()
         {
-            if (_count == 0 && string.IsNullOrWhiteSpace(RecoveryPattern) && _lastState == null)
+            if (Count == 0 && string.IsNullOrWhiteSpace(RecoveryPattern) && _lastState == null)
             {
                           
             }
@@ -266,14 +268,14 @@ namespace FF8Utilities.Models
                 Explanation = "Confirm to start timer";
                 _cts = new CancellationTokenSource();
                 SearchType searchType = SearchType.First;
-                if (_count != 0) searchType = SearchType.Counting;
+                if (Count != 0) searchType = SearchType.Counting;
                 else if (string.IsNullOrWhiteSpace(RecoveryPattern))
                 {
                     searchType = SearchType.Recovery;
                     GetInstantMashText();
                 }
                 
-                _ = _manip.RareTimerAsync(_lastState ?? _state, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _lastState == null ? _count : 0);
+                _ = _manip.RareTimerAsync(_lastState ?? State, _player, searchType, (currentTimer) => UpdateFromResult(currentTimer), _cts.Token, count: _lastState == null ? Count : 0);
             }            
         }
 
@@ -295,13 +297,13 @@ namespace FF8Utilities.Models
                     PatternParseResult pattern = _manip.ParsePattern(RecoveryPattern, _player);
                     if (pattern.Error == null)
                     {
-                        SearchType searchType = (_count == 0 ? SearchType.First : SearchType.Counting);
+                        SearchType searchType = (Count == 0 ? SearchType.First : SearchType.Counting);
                         if (_lastState != null)
                         {
                             // We are recovering from a 2nd try
                             searchType = SearchType.Recovery;
                         }
-                        List<SearchResult> results = _manip.SearchOpenings(_lastState ?? _state, _player, pattern, false, count: _count, 
+                        List<SearchResult> results = _manip.SearchOpenings(_lastState ?? State, _player, pattern, false, count: Count, 
                             searchType: searchType, 
                             elapsedSeconds: CurrentResult?.DurationSeconds ?? 0);
                         if (results.Any())

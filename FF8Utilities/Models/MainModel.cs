@@ -251,9 +251,18 @@ namespace FF8Utilities.Models
 
                 Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
 
-                if (parsedVersion > currentVersion)
+                if (parsedVersion > currentVersion || true)
                 {
                     UpdateAvailable = true;
+                    Window.BeginInvoke(async () =>
+                    {
+                       MessageDialogResult result = await Window.ShowMessageAsync("Update Available", $"FF8 Utilities version {parsedVersion} is available. Do you want to update?", 
+                           MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { AffirmativeButtonText = "Yes", NegativeButtonText = "No", DefaultButtonFocus = MessageDialogResult.Affirmative });
+                        if (result == MessageDialogResult.Affirmative)
+                        {
+                            DownloadUpdate(this, EventArgs.Empty);
+                        }
+                    });
                 }
             }
             catch (Exception)
