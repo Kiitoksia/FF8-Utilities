@@ -84,89 +84,27 @@ namespace FF8Utilities.Models
                 if (Enum.TryParse(platformNode.Value, out Platform platform)) Platform = platform;
             }
 
-            XElement ifritEncounter = xml?.Element(nameof(IfritEncounterType));
-            if (ifritEncounter != null)
-            {
-                if (Enum.TryParse(ifritEncounter.Value, out IfritEncounterType ifritEncounterType)) IfritEncounterType = ifritEncounterType;
-            }
+            TryGetXmlValue<IfritEncounterType>(xml, nameof(IfritEncounterType), t => IfritEncounterType = t);
+            TryGetXmlValue<bool>(xml, nameof(Get2ndBridgeEncounter), t => Get2ndBridgeEncounter = t);
+            TryGetXmlValue<bool>(xml, nameof(GetRedSoldierEncounter), t => GetRedSoldierEncounter = t);
+            TryGetXmlValue<int>(xml, nameof(CustomZellDelayFrame), t => CustomZellDelayFrame = t);
+            TryGetXmlValue<int>(xml, nameof(ZellCountdownTimer), t => ZellCountdownTimer = t);
+            TryGetXmlValue<string>(xml, nameof(GameInstallationFolder), t => GameInstallationFolder = t);
+            TryGetXmlValue<QuistisPatternsOrderBy>(xml, nameof(QuistisPatternsOrderBy), t => QuistisPatternsOrderBy = t);
+            TryGetXmlValue<bool>(xml, nameof(ShowCarawayNPCMovement), t => ShowCarawayNPCMovement = t);
+            TryGetXmlValue<BeepSound>(xml, nameof(BeepSound), t => BeepSound = t);
+            TryGetXmlValue<int>(xml, nameof(BeepInterval), t => BeepInterval = t);
+            TryGetXmlValue<int>(xml, nameof(BeepCount), t => BeepCount = t);
+            TryGetXmlValue<bool>(xml, nameof(LegacyCardMode), t => LegacyCardMode = t);
+            TryGetXmlValue<int>(xml, nameof(BeepOffsetFrames), t => BeepOffsetFrames = t);
+            TryGetXmlValue<UpdateBranch>(xml, nameof(UpdateBranch), t => UpdateBranch = t);
 
-            XElement get2ndBridgeEncounter = xml?.Element(nameof(Get2ndBridgeEncounter));
-            if (get2ndBridgeEncounter != null)
-            {
-                if (bool.TryParse(get2ndBridgeEncounter.Value, out bool bridgeEncounter)) Get2ndBridgeEncounter = bridgeEncounter;
-            }
-
-            XElement getRedSoldierEncounter = xml?.Element(nameof(GetRedSoldierEncounter));
-            if (getRedSoldierEncounter != null)
-            {
-                if (bool.TryParse(getRedSoldierEncounter.Value, out bool bridgeEncounter)) GetRedSoldierEncounter = bridgeEncounter;
-            }
-
-
-            XElement customZellDelayFrameXml = xml?.Element(nameof(CustomZellDelayFrame));
-            if (customZellDelayFrameXml != null)
-            {
-                if (int.TryParse(customZellDelayFrameXml.Value, out int frames)) CustomZellDelayFrame = frames;
-            }
-
-            XElement zellCountdownTimerXml = xml?.Element(nameof(ZellCountdownTimer));
-            if (zellCountdownTimerXml != null)
-            {
-                if (int.TryParse(zellCountdownTimerXml.Value, out int timer)) ZellCountdownTimer = timer;
-            }
-
-            XElement gameInstallFolder = xml?.Element(nameof(GameInstallationFolder));
-            GameInstallationFolder = gameInstallFolder?.Value;
-
-
-            XElement quistisPatternOrderByXml = xml?.Element(nameof(QuistisPatternsOrderBy));
-            if (quistisPatternOrderByXml != null)
-            {
-                if (Enum.TryParse(quistisPatternOrderByXml.Value, out QuistisPatternsOrderBy quistisPatternsOrderBy)) QuistisPatternsOrderBy = quistisPatternsOrderBy;
-            }
-
-
-            XElement showCarawayNPCMovementXml = xml?.Element(nameof(ShowCarawayNPCMovement));
-            if (showCarawayNPCMovementXml != null)
-            {
-                if (bool.TryParse(showCarawayNPCMovementXml.Value, out bool showCarawayNPCMovement)) ShowCarawayNPCMovement = showCarawayNPCMovement;
-            }
-
-            XElement beepSoundXml = xml?.Element(nameof(BeepSound));
-            if (beepSoundXml != null)
-            {
-                if (Enum.TryParse(beepSoundXml.Value, out BeepSound beepSound)) BeepSound = beepSound;
-            }
-
-            XElement beepIntervalXml = xml?.Element(nameof(BeepInterval));
-            if (beepIntervalXml != null)
-            {
-                if (int.TryParse(beepSoundXml.Value, out int beepInterval)) BeepInterval = beepInterval;
-            }
-
-            XElement beepCountXml = xml?.Element(nameof(BeepCount));
-            if (beepCountXml != null)
-            {
-                if (int.TryParse(beepCountXml.Value, out int beepCount)) BeepCount = beepCount;
-            }
-
-            XElement legacyCardModelXml = xml?.Element(nameof(LegacyCardMode));
-            if (legacyCardModelXml != null)
-            {
-                if (bool.TryParse(legacyCardModelXml.Value, out bool legacyCardModel)) LegacyCardMode = legacyCardModel;
-            }
-
-            XElement beepOffsetFramesXml = xml?.Element(nameof(BeepOffsetFrames));
-            if (beepOffsetFramesXml != null)
-            {
-                if (int.TryParse(beepOffsetFramesXml.Value, out int beepOffsetFrames)) BeepOffsetFrames = beepOffsetFrames;
-            }
 
 
             XElement lastLaunchedVersion = xml?.Element("LastLaunchedVersion");
             if (lastLaunchedVersion != null)
             {
-                if (Version.TryParse(zellCountdownTimerXml.Value, out Version oldVersion))
+                if (Version.TryParse(lastLaunchedVersion.Value, out Version oldVersion))
                 {
                     Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
                     if (oldVersion < currentVersion)
@@ -199,11 +137,48 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(BeepCount), BeepCount));
             xml.Add(new XElement(nameof(LegacyCardMode), LegacyCardMode.ToString()));
             xml.Add(new XElement(nameof(BeepOffsetFrames), BeepOffsetFrames.ToString()));
+            xml.Add(new XElement(nameof(UpdateBranch), UpdateBranch.ToString()));
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
 
             return xml;
         }
+
+        private void TryGetXmlValue<T>(XElement xml, string propertyName, Action<T> valueFound)
+        {
+            XElement propertyXml = xml?.Element(propertyName);
+            if (propertyXml == null) return;
+            object value = null;
+            if (typeof(T) == typeof(int))
+            {
+                if (int.TryParse(propertyXml.Value, out int intValue)) value = intValue;
+            }
+            else if (typeof(T) == typeof(bool))
+            {
+                if (bool.TryParse(propertyXml.Value, out bool boolValue)) value = boolValue;
+            }
+            else if (typeof(T) == typeof(string))
+            {
+                value = propertyXml.Value;
+            }
+            else if (typeof(T).IsEnum)
+            {
+                try
+                {
+                    T enumValue = (T)Enum.Parse(typeof(T), propertyXml.Value);
+                    valueFound(enumValue);
+                }
+                catch
+                {
+                    // Parsing fails, ignore which naturally will return the default
+                }
+            }
+            
+            if (value == null) return;
+            valueFound((T)Convert.ChangeType(value, typeof(T)));
+        }
+
+        
 
         private void ShowGameInstallSelection(object sender, EventArgs args)
         {
@@ -753,6 +728,8 @@ namespace FF8Utilities.Models
         public int BeepOffsetFrames { get; set; }
 
         public bool LegacyCardMode { get; set; }
+
+        public UpdateBranch UpdateBranch { get; set; } = UpdateBranch.Stable;
 
         public Task<bool> IsCSRUpdateAvailable()
         {

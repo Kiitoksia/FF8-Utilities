@@ -168,4 +168,10 @@ namespace FF8Utilities
         [Description("Clack")]
         Clack
     }
+
+    public enum UpdateBranch
+    {
+        Stable,
+        Beta
+    }
 }

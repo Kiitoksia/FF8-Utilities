@@ -37,6 +37,14 @@
                 <StackPanel>
                     <controls:SettingsInputControl>
                         <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Update Branch"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <ComboBox ItemsSource="{Binding Source={extensions:Enum {x:Type ff8utilities:UpdateBranch}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding UpdateBranch}"/>
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
                             <TextBlock Text="Platform"/>
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>

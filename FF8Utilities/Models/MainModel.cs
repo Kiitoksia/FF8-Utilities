@@ -244,25 +244,57 @@ namespace FF8Utilities.Models
             {
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
-                string jsonString = await client.GetStringAsync("https://api.github.com/repos/kiitoksia/FF8-Utilities/releases/latest");
-                JObject json = JObject.Parse(jsonString);
-
-                Version parsedVersion = new Version(json.Value<string>("tag_name"));
+                string jsonString = await client.GetStringAsync("https://api.github.com/repos/kiitoksia/FF8-Utilities/releases");
+                JArray json = JArray.Parse(jsonString);
 
                 Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
 
-                if (parsedVersion > currentVersion || true)
+                foreach (JObject updateJson in json)
                 {
-                    UpdateAvailable = true;
-                    Window.BeginInvoke(async () =>
+                    string tagName = updateJson.Value<string>("tag_name");
+                    if (tagName.Contains("-pre"))
                     {
-                       MessageDialogResult result = await Window.ShowMessageAsync("Update Available", $"FF8 Utilities version {parsedVersion} is available. Do you want to update?", 
-                           MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { AffirmativeButtonText = "Yes", NegativeButtonText = "No", DefaultButtonFocus = MessageDialogResult.Affirmative });
-                        if (result == MessageDialogResult.Affirmative)
+                        // Older approach, ignore
+                        continue;
+                    }
+                    bool isPreRelease = updateJson.Value<bool>("prerelease");
+                    Version parsedVersion;
+                    try
+                    {
+                        parsedVersion = new Version(updateJson.Value<string>("tag_name"));
+                    }
+                    catch
+                    {
+                        // Cannot parse version, ignore
+                        continue;
+                    }
+
+                    if (parsedVersion > currentVersion)
+                    {
+                        if (isPreRelease && Settings.UpdateBranch == UpdateBranch.Stable) continue; // On stable branch, ignore pre-releases
+                        UpdateAvailable = true;
+                        string patchNotes = json.Value<string>("body");
+
+                        if (!string.IsNullOrWhiteSpace(patchNotes))
                         {
-                            DownloadUpdate(this, EventArgs.Empty);
+                            patchNotes = $"\r\nPatch Notes:\r\n{patchNotes}";
                         }
-                    });
+                        Window.BeginInvoke(async () =>
+                        {
+                            MessageDialogResult result = await Window.ShowMessageAsync("Update Available", $"FF8 Utilities version {parsedVersion} is available. Do you want to update?{patchNotes}",
+                                MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { AffirmativeButtonText = "Yes", NegativeButtonText = "No", DefaultButtonFocus = MessageDialogResult.Affirmative });
+                            if (result == MessageDialogResult.Affirmative)
+                            {
+                                DownloadUpdate(this, EventArgs.Empty);
+                            }
+                        });
+                        break;
+                    }
+                    else
+                    {
+                        // Listings are in descending order, so at this point there are no more updates and can break early
+                        break;
+                    }
                 }
             }
             catch (Exception)
