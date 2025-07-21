@@ -28,7 +28,7 @@ namespace UltimeciaManip
                             break;
                         default: 
                             MessageBox.Show("Language not supported for this platform.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            break;
+                            return null;
                     }
                     break;
                 case Platform.PC:
@@ -44,7 +44,9 @@ namespace UltimeciaManip
                         case UltimeciaManipLanguage.French:
                             options.LastMapDuration = 22;
                             break;
-                        default: throw new NotImplementedException();
+                        default:
+                            MessageBox.Show("Language not supported for this platform.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return null;
                     }
                     break;
                 default: throw new NotImplementedException();

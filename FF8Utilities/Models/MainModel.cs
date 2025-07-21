@@ -571,6 +571,7 @@ namespace FF8Utilities.Models
             //Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts/ultimecia.exe"), UltimeciaRng.ToString());
             PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform, UltimeciaManipLanguage);
             UltimeciaFormations.Clear();
+            if (formations == null) return;
 
 
             foreach (PartyFormation formation in formations)
