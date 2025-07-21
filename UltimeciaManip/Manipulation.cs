@@ -13,33 +13,56 @@ namespace UltimeciaManip
         public static PartyFormation[] GetUltimeciaFormations(Direction[] directions, Platform platform, bool hardReset)
         {
             PartyFormation[] formations = null;
+            //switch (platform)
+            //{
+            //    case Platform.PS2:
+            //        formations = Const.PartyFormationsNA;
+            //        break;
+            //    case Platform.PS2JP:
+            //        formations = Const.PartyFormationsJP;
+            //        break;
+            //    case Platform.PC:
+            //    case Platform.PCLite:
+            //        formations = Const.PartyFormationsPC;
+            //        break;
+            //}
+
+            //int from = hardReset ? 0 : 1800;
+            //int to = hardReset ? 1999 : 3799;
+            //if (platform == Platform.PCLite && !hardReset)
+            //{
+            //    from = 800;
+            //    to = 2799;
+            //}
+
+            var options = new Models.FinalPartyManipOptions();
             switch (platform)
             {
                 case Platform.PS2:
-                    formations = Const.PartyFormationsNA;
+                    options.LastMapDuration = 22.7;
                     break;
                 case Platform.PS2JP:
-                    formations = Const.PartyFormationsJP;
+                    options.LastMapDuration = 22;
+                    break;
+                case Platform.PCRemasterJP:
+                    options.LastMapDuration = 21.2;
                     break;
                 case Platform.PC:
                 case Platform.PCLite:
-                    formations = Const.PartyFormationsPC;
+                    options.LastMapDuration = 21.5;
                     break;
+                default: throw new NotImplementedException();
             }
 
-            int from = hardReset ? 0 : 1800;
-            int to = hardReset ? 1999 : 3799;
-            if (platform == Platform.PCLite && !hardReset)
-            {
-                from = 800;
-                to = 2799;
-            }
+            UltiManip manip = new UltiManip(options);
+            return manip.SearchLastParty(directions);
+
 
             IEnumerable<PartyFormation> queriedFormations = formations;
-            if (from != -1) queriedFormations = queriedFormations.Where(t => t.Index >= from);
-            if (to != -1) queriedFormations = queriedFormations.Where(t => t.Index <= to);
-            queriedFormations = queriedFormations.Where(t => t.IsMatch(directions));
-            
+            //if (from != -1) queriedFormations = queriedFormations.Where(t => t.Index >= from);
+            //if (to != -1) queriedFormations = queriedFormations.Where(t => t.Index <= to);
+            //queriedFormations = queriedFormations.Where(t => t.IsMatch(directions));
+
             return queriedFormations.ToArray();
         }
 

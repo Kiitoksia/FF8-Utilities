@@ -13,10 +13,11 @@ namespace FF8Utilities.Models
     {
         public PartyFormationModel(PartyFormation formation, bool includeRinoaParties)
         {
-            Movements = string.Join(", ", formation.Movements.Select(s => s.ToDirection().ToString()));
+            Movements = string.Join(", ", formation.Movements.Select(s => s.ToString()));
             Rng = formation.RngState;
 
-            List<Lineup> lineUps = formation.Lineups;
+            List<Lineup> lineUps = formation.TargetOffsetTbl.Select(t => new Lineup(t.Party[0].ToString(), t.Party[1].ToString(), t.Party[2].ToString(), t.Offset)).ToList();
+
             if (!includeRinoaParties) lineUps = lineUps.Where(t => t.FirstCharacter != "Rinoa" && t.SecondCharacter != "Rinoa" && t.ThirdCharacter != "Rinoa").ToList();
 
             lineUps = lineUps.OrderBy(t => t.Count).ToList();

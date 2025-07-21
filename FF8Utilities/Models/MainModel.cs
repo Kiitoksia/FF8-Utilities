@@ -569,6 +569,9 @@ namespace FF8Utilities.Models
             PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform, UltimeciaHardReset);
             UltimeciaFormations.Clear();
 
+
+
+
             foreach (PartyFormation formation in formations)
             {
                 UltimeciaFormations.Add(new PartyFormationModel(formation, IncludeRinoaParties));

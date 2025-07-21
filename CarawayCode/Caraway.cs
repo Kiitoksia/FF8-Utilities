@@ -26,7 +26,6 @@ namespace CarawayCode
 
         internal class RNG
         {
-            private static int Initial_State = 0x00000001;
 
             internal uint Current_Rng { get; private set; }
 
