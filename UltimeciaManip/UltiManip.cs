@@ -34,7 +34,7 @@ namespace UltimeciaManip
 
         private void Init()
         {
-            int startIndex = _options.HardReset ? 15 : _options.Base;
+            int startIndex = _options.Base;
             var orderArr = Range(0, _options.Width / 2).ToArray();
 
             var order = orderArr.Select(offset => new[] { startIndex + offset, startIndex - offset })

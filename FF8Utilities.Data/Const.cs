@@ -17,7 +17,5 @@ namespace FF8Utilities.Common
         PC,
         [Description("PC (CSR)")]
         PCLite,
-        [Description("Remaster (JP)")]
-        PCRemasterJP
     }
 }

@@ -13,6 +13,7 @@ using FF8Utilities.Properties;
 using MahApps.Metro.Controls;
 using System.Xml.Linq;
 using System.Security.Cryptography;
+using UltimeciaManip;
 
 namespace FF8Utilities.Models
 {
@@ -98,6 +99,7 @@ namespace FF8Utilities.Models
             TryGetXmlValue<bool>(xml, nameof(LegacyCardMode), t => LegacyCardMode = t);
             TryGetXmlValue<int>(xml, nameof(BeepOffsetFrames), t => BeepOffsetFrames = t);
             TryGetXmlValue<UpdateBranch>(xml, nameof(UpdateBranch), t => UpdateBranch = t);
+            TryGetXmlValue<UltimeciaManipLanguage>(xml, nameof(UltimeciaManipLanguage), t => UltimeciaManipLanguage = t);
 
 
 
@@ -138,6 +140,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(LegacyCardMode), LegacyCardMode.ToString()));
             xml.Add(new XElement(nameof(BeepOffsetFrames), BeepOffsetFrames.ToString()));
             xml.Add(new XElement(nameof(UpdateBranch), UpdateBranch.ToString()));
+            xml.Add(new XElement(nameof(UltimeciaManipLanguage), UltimeciaManipLanguage.ToString()));
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
 
@@ -730,6 +733,8 @@ namespace FF8Utilities.Models
         public bool LegacyCardMode { get; set; }
 
         public UpdateBranch UpdateBranch { get; set; } = UpdateBranch.Stable;
+
+        public UltimeciaManipLanguage UltimeciaManipLanguage { get; set; } = UltimeciaManipLanguage.English;
 
         public Task<bool> IsCSRUpdateAvailable()
         {

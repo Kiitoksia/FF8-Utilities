@@ -67,6 +67,8 @@ namespace FF8Utilities.Models
         private string _customQuistisPattern;
         private bool _showCarawayNPCMovement;
         private CardManipulationModel _zellCardManip;
+        private UltimeciaManipLanguage _ultimeciaManipLanguage = UltimeciaManipLanguage.English;
+
 
 
 
@@ -110,6 +112,7 @@ namespace FF8Utilities.Models
 
             CardNotes = new BindingList<CardNotesModel>();
             Settings = new SettingsModel(this);
+            UltimeciaManipLanguage = Settings.UltimeciaManipLanguage;
             ShowCarawayNPCMovement = Settings.ShowCarawayNPCMovement;
             PopulateCardNotes();
             UltimeciaFormations = new BindingList<PartyFormationModel>();
@@ -566,10 +569,8 @@ namespace FF8Utilities.Models
         {
             Direction[] directions = UltimeciaRng.Select(s => s.ToDirection()).ToArray();
             //Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts/ultimecia.exe"), UltimeciaRng.ToString());
-            PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform, UltimeciaHardReset);
+            PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform, UltimeciaManipLanguage);
             UltimeciaFormations.Clear();
-
-
 
 
             foreach (PartyFormation formation in formations)
@@ -805,17 +806,6 @@ namespace FF8Utilities.Models
             }
         }
 
-        private bool ultimeciaHardReset;
-        public bool UltimeciaHardReset
-        {
-            get => ultimeciaHardReset; set
-            {
-                if (ultimeciaHardReset == value)
-                    return;
-                ultimeciaHardReset = value;
-                OnPropertyChanged();
-            }
-        }
         public Command LaunchZellCalculatorCommand { get; }
 
         public bool NoFormationsFound => UltimeciaFormations.Count == 0;
@@ -1066,7 +1056,7 @@ namespace FF8Utilities.Models
                 _customQuistisPattern = value;
                 OnPropertyChanged();
             }
-        }
+        }        
 
 
         #region Fish Fin Manip
@@ -1095,17 +1085,6 @@ namespace FF8Utilities.Models
                 FilterFishPatterns();
             }
         }
-
-        //public TextBox UltimeciaTextBox
-        //{
-        //    get => _ultimeciaTextBox;
-        //    set
-        //    {
-        //        _ultimeciaTextBox = value;
-        //        OnPropertyChanged();
-        //        if (value != null) InitialiseUltimeciaTextBox();
-        //    }
-        //}
 
         public bool FishPatternsPopulating
         {
@@ -1145,6 +1124,26 @@ namespace FF8Utilities.Models
                 if (Settings != null && Settings.ShowCarawayNPCMovement != value)
                 {
                     Settings.ShowCarawayNPCMovement = value;
+                    Settings.Save();
+                }
+            }
+        }
+
+        public UltimeciaManipLanguage UltimeciaManipLanguage
+        {
+            get => _ultimeciaManipLanguage;
+            set
+            {
+                if (_ultimeciaManipLanguage == value)
+                {
+                    return;
+                }
+
+                _ultimeciaManipLanguage = value;
+                OnPropertyChanged();
+                if (Settings != null && Settings.UltimeciaManipLanguage != value)
+                {
+                    Settings.UltimeciaManipLanguage = value;
                     Settings.Save();
                 }
             }
