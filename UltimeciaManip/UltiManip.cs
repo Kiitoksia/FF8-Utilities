@@ -103,7 +103,7 @@ namespace UltimeciaManip
                     TargetOffsetTbl = _options.Targets.Select(targetParty => new TargetOffset
                     {
                         Party = targetParty,
-                        Offset = targetOffsetTblArr[idx].ContainsKey(targetParty) ? targetOffsetTblArr[idx][targetParty] : int.MaxValue
+                        Offset = targetOffsetTblArr[idx].ContainsKey(targetParty) ? targetOffsetTblArr[idx][targetParty] : 0
                     }).ToList()
                 };
 
@@ -124,20 +124,23 @@ namespace UltimeciaManip
 
             for (int i = 0; i < reversedPartyArr.Length; i++)
             {
+                PartyMember[] currentParty = reversedPartyArr[i];
                 r.Add(new Dictionary<PartyMember[], int>(new PartyComparer()));
                 if (i > 0)
                 {
-                    foreach (var key in r[i - 1].Keys)
+                    // Increment the number for each party from the last index
+                    Dictionary<PartyMember[], int> lastValue = r[i - 1];
+                    foreach (var key in lastValue.Keys)
                     {
-                        r[i][key] = r[i - 1][key] + 1;
+                        r[i][key] = lastValue[key] + 1;
                     }
                 }
 
                 foreach (var elem in targets)
                 {
-                    if (ArrayCompare(reversedPartyArr[i], elem))
+                    if (ArrayCompare(currentParty, elem))
                     {
-                        r[i][elem] = 0;
+                        r[i][currentParty] = 0;
                     }
                 }
             }
@@ -163,25 +166,25 @@ namespace UltimeciaManip
         {
             PartyMember[][] tbl = new PartyMember[][]
             {
-                new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Quistis }, 
-                new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Rinoa}, 
-                new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Selphie }, 
+                new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Irvine },
+                new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Rinoa },
+                new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Selphie },
                 new[] { PartyMember.Squall, PartyMember.Zell, PartyMember.Quistis },
-                new[] { PartyMember.Squall, PartyMember.Irvine,PartyMember.Rinoa }, 
-                new[] { PartyMember.Squall, PartyMember.Irvine,PartyMember.Selphie }, 
-                new[] { PartyMember.Squall, PartyMember.Irvine,PartyMember.Quistis }, 
+                new[] { PartyMember.Squall, PartyMember.Irvine, PartyMember.Rinoa },
+                new[] { PartyMember.Squall, PartyMember.Irvine, PartyMember.Selphie },
+                new[] { PartyMember.Squall, PartyMember.Irvine, PartyMember.Quistis },
                 new[] { PartyMember.Squall, PartyMember.Rinoa, PartyMember.Selphie },
                 new[] { PartyMember.Squall, PartyMember.Rinoa, PartyMember.Quistis },
-                new[] { PartyMember.Squall, PartyMember.Selphie, PartyMember.Quistis }, 
-                new[] { PartyMember.Zell, PartyMember.Irvine, PartyMember.Rinoa }, 
+                new[] { PartyMember.Squall, PartyMember.Selphie, PartyMember.Quistis },
+                new[] { PartyMember.Zell, PartyMember.Irvine, PartyMember.Rinoa },
                 new[] { PartyMember.Zell, PartyMember.Irvine, PartyMember.Selphie },
-                new[] { PartyMember.Zell, PartyMember.Irvine, PartyMember.Quistis }, 
-                new[] { PartyMember.Zell, PartyMember.Rinoa, PartyMember.Selphie }, 
-                new[] { PartyMember.Zell, PartyMember.Rinoa, PartyMember.Quistis }, 
+                new[] { PartyMember.Zell, PartyMember.Irvine, PartyMember.Quistis },
+                new[] { PartyMember.Zell, PartyMember.Rinoa, PartyMember.Selphie },
+                new[] { PartyMember.Zell, PartyMember.Rinoa, PartyMember.Quistis },
                 new[] { PartyMember.Zell, PartyMember.Selphie, PartyMember.Quistis },
-                new[] { PartyMember.Irvine, PartyMember.Rinoa, PartyMember.Selphie }, 
-                new[] { PartyMember.Irvine, PartyMember.Rinoa, PartyMember.Quistis }, 
-                new[] { PartyMember.Irvine, PartyMember.Selphie, PartyMember.Quistis }, 
+                new[] { PartyMember.Irvine, PartyMember.Rinoa, PartyMember.Selphie },
+                new[] { PartyMember.Irvine, PartyMember.Rinoa, PartyMember.Quistis },
+                new[] { PartyMember.Irvine, PartyMember.Selphie, PartyMember.Quistis },
                 new[] { PartyMember.Rinoa, PartyMember.Selphie, PartyMember.Quistis }
             };
             int idx = rnd / 13;
@@ -196,14 +199,16 @@ namespace UltimeciaManip
 
         public static bool IsEven(int num) => num % 2 == 0;
 
-        public static bool ArrayCompare<T>(IEnumerable<T> a, IEnumerable<T> b)
+        public static bool ArrayCompare(IEnumerable<PartyMember> a, IEnumerable<PartyMember> b)
         {
-            var aSorted = a.OrderBy(x => x).ToArray();
-            var bSorted = b.OrderBy(x => x).ToArray();
+            var aSorted = a.OrderBy(x => x.ToString()).ToArray();
+            var bSorted = b.OrderBy(x => x.ToString()).ToArray();
             if (aSorted.Length != bSorted.Length) return false;
-            for (int i = 0; i < aSorted.Length; i++)
-                if (!EqualityComparer<T>.Default.Equals(aSorted[i], bSorted[i]))
-                    return false;
+            for (int i = aSorted.Length; i > 0; i--)
+            {
+                if (aSorted[i - 1] != bSorted[i - 1]) return false;
+                i--;
+            }
             return true;
         }
 
