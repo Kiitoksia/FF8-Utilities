@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Test", "FF8Uti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ff8-card-manip", "..\ff8-card-manip\ff8-card-manip.csproj", "{698DE34C-28EF-A648-B294-0AD4A7561F16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.MAUI", "FF8Utilities.MAUI\FF8Utilities.MAUI.csproj", "{CC3D61AA-62D0-4E58-A578-59EB933DA3D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{698DE34C-28EF-A648-B294-0AD4A7561F16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3D61AA-62D0-4E58-A578-59EB933DA3D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3D61AA-62D0-4E58-A578-59EB933DA3D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3D61AA-62D0-4E58-A578-59EB933DA3D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3D61AA-62D0-4E58-A578-59EB933DA3D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

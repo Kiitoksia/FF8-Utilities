@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using UltimeciaManip.Entities;
 
 namespace UltimeciaManip
@@ -26,9 +25,8 @@ namespace UltimeciaManip
                         case UltimeciaManipLanguage.Japanese:
                             options.LastMapDuration = 22;
                             break;
-                        default: 
-                            MessageBox.Show("Language not supported for this platform.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return null;
+                        default:
+                            throw new NotImplementedException("Language not supported for this platform.");
                     }
                     break;
                 case Platform.PC:
@@ -45,8 +43,7 @@ namespace UltimeciaManip
                             options.LastMapDuration = 21.5;
                             break;
                         default:
-                            MessageBox.Show("Language not supported for this platform.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return null;
+                            throw new NotImplementedException("Language not supported for this platform.");
                     }
                     break;
                 default: throw new NotImplementedException();
@@ -54,6 +51,20 @@ namespace UltimeciaManip
 
             UltiManip manip = new UltiManip(options);
             return manip.SearchLastParty(directions);
+        }
+
+        public static UltimeciaManipLanguage[] GetSupportedLanguages(Platform platform)
+        {
+            switch (platform)
+            {
+                case Platform.PS2:
+                case Platform.PS2JP:
+                    return new[] { UltimeciaManipLanguage.English, UltimeciaManipLanguage.Japanese };
+                case Platform.PC:
+                case Platform.PCLite:
+                    return new[] { UltimeciaManipLanguage.English, UltimeciaManipLanguage.Japanese, UltimeciaManipLanguage.French };
+                default: throw new NotImplementedException();
+            };
         }
 
         public static Direction ToDirection(this char key)

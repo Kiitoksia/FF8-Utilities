@@ -70,30 +70,30 @@ namespace UltimeciaManip
 
         private List<PartyFormation> MakeLastPartyTable(int from, int to)
         {
-            var rng = new RNG();
+            RNG rng = new RNG();
             int margin = 250;
             int size = to + margin;
 
-            var rngStateArr = Range(0, size).Select(x => rng.NextRng()).ToArray();
+            uint[] rngStateArr = Range(0, size).Select(x => rng.NextRng()).ToArray();
 
-            var sourceRng = new RNG();
-            var sourceArr = Range(0, size).Select(x => sourceRng.Next_1b()).ToArray();
+            RNG sourceRng = new RNG();
+            long[] sourceArr = Range(0, size).Select(x => sourceRng.Next_1b()).ToArray();
 
-            var directionArr = sourceArr.Select(v => new[] { "8", "2", "4", "6" }[v & 3]).ToArray();
+            string[] directionArr = sourceArr.Select(v => new[] { "8", "2", "4", "6" }[v & 3]).ToArray();
 
             int lastPartySize = size - PartyRndOffset;
-            var partyArr = Enumerable.Range(0, lastPartySize)
+            PartyMember[][] partyArr = Enumerable.Range(0, lastPartySize)
                 .Select(idx => LastParty((int)sourceArr[idx + PartyRndOffset]))
                 .ToArray();
 
-            var targetOffsetTblArr = GenerateOffsetTable(partyArr);
+            List<Dictionary<PartyMember[], int>> targetOffsetTblArr = GenerateOffsetTable(partyArr);
 
-            var table = new List<PartyFormation>();
+            List<PartyFormation> table = new List<PartyFormation>();
             for (int idx = from; idx <= to; idx++)
             {
                 if (idx < from || idx > to) continue;
 
-                var row = new PartyFormation
+                PartyFormation row = new PartyFormation
                 {
                     Index = idx,
                     Source = (int)sourceArr[idx],
@@ -281,12 +281,16 @@ namespace UltimeciaManip
             uint b = 0x3039;
             uint m = 0xffffffff;
 
-            uint randomSeed;
-            using (var rng = RandomNumberGenerator.Create())
+
+            uint randomSeed = 0;
+            if (seed == null)
             {
-                byte[] bytes = new byte[4];
-                rng.GetBytes(bytes);
-                randomSeed = BitConverter.ToUInt32(bytes, 0);
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    byte[] bytes = new byte[4];
+                    rng.GetBytes(bytes);
+                    randomSeed = BitConverter.ToUInt32(bytes, 0);
+                }
             }
 
             long z = seed ?? randomSeed;

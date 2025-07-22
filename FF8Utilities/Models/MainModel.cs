@@ -568,7 +568,16 @@ namespace FF8Utilities.Models
         private void UltimeciaLaunch(object sender, EventArgs eventArgs)
         {
             Direction[] directions = UltimeciaRng.Select(s => s.ToDirection()).ToArray();
-            //Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "Scripts/ultimecia.exe"), UltimeciaRng.ToString());
+
+            if (!Manipulation.GetSupportedLanguages(Settings.Platform).Contains(UltimeciaManipLanguage))
+            {
+                Window.BeginInvoke(() =>
+                {
+                    Window.ShowMessageAsync("Error", "Language not supported for this platform.", MessageDialogStyle.Affirmative);
+                });
+                return;
+            }
+
             PartyFormation[] formations = Manipulation.GetUltimeciaFormations(directions, Settings.Platform, UltimeciaManipLanguage);
             UltimeciaFormations.Clear();
             if (formations == null) return;
