@@ -9,13 +9,9 @@ namespace FF8Utilities.Common
 {    
     public enum Platform
     {
-        [Description("PS2 (NA)")]
+        [Description("PS2")]
         PS2,
-        [Description("PS2 (JP)")]
-        PS2JP,
         [Description("PC")]
         PC,
-        [Description("PC (CSR)")]
-        PCLite,
     }
 }

@@ -16,7 +16,6 @@ namespace UltimeciaManip
             switch (platform)
             {
                 case Platform.PS2:
-                case Platform.PS2JP:
                     switch (language)
                     {
                         case UltimeciaManipLanguage.English:
@@ -30,7 +29,6 @@ namespace UltimeciaManip
                     }
                     break;
                 case Platform.PC:
-                case Platform.PCLite:
                     switch (language)
                     {
                         case UltimeciaManipLanguage.English:
@@ -58,10 +56,8 @@ namespace UltimeciaManip
             switch (platform)
             {
                 case Platform.PS2:
-                case Platform.PS2JP:
                     return new[] { UltimeciaManipLanguage.English, UltimeciaManipLanguage.Japanese };
                 case Platform.PC:
-                case Platform.PCLite:
                     return new[] { UltimeciaManipLanguage.English, UltimeciaManipLanguage.Japanese, UltimeciaManipLanguage.French };
                 default: throw new NotImplementedException();
             };

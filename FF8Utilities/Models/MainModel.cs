@@ -642,11 +642,9 @@ namespace FF8Utilities.Models
             switch (Settings.Platform)
             {
                 case Platform.PS2:
-                case Platform.PS2JP:
                     delayFrames = 285;
                     break;
                 case Platform.PC:
-                case Platform.PCLite:
                     delayFrames = 69; // nice
                     break;
                 default: throw new ArgumentOutOfRangeException("Contact Kiitoksia because this should not have happened");

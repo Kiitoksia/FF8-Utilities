@@ -81,7 +81,11 @@ namespace FF8Utilities.Models
 
             if (platformNode != null)
             {
+                // Convert obsolete values
                 if (platformNode.Value == "BadPort") platformNode.Value = "PC";
+                if (platformNode.Value == "PS2JP") platformNode.Value = "PS2";
+                if (platformNode.Value == "PCLite") platformNode.Value = "PC";
+
                 if (Enum.TryParse(platformNode.Value, out Platform platform)) Platform = platform;
             }
 
@@ -750,13 +754,9 @@ namespace FF8Utilities.Models
             switch (Platform)
             {
                 case Platform.PS2:
-                case Platform.PS2JP:
                     return 285;
-                    break;
                 case Platform.PC:
-                case Platform.PCLite:
                     return 69; // nice
-                    break;
                 default: throw new ArgumentOutOfRangeException("Contact Kiitoksia because this should not have happened");
             }
         }
