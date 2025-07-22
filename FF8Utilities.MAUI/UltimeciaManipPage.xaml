@@ -8,8 +8,11 @@
              Title="UltimeciaManipPage">
     <VerticalStackLayout>
         <Label Text="Ultimecia Manipulation"/>
-
+        
         <Label Text="Directions"/>
+        <CollectionView ItemsSource="{Binding Directions}">
+           
+        </CollectionView>
 
         <Grid>
             <Grid.RowDefinitions>
