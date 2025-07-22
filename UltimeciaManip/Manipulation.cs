@@ -36,13 +36,13 @@ namespace UltimeciaManip
                     switch (language)
                     {
                         case UltimeciaManipLanguage.English:
-                            options.LastMapDuration = 21.5;
+                            options.LastMapDuration = 22;
                             break;
                         case UltimeciaManipLanguage.Japanese:
                             options.LastMapDuration = 21.2; // PC Remaster only
                             break;
                         case UltimeciaManipLanguage.French:
-                            options.LastMapDuration = 22;
+                            options.LastMapDuration = 21.5;
                             break;
                         default:
                             MessageBox.Show("Language not supported for this platform.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
