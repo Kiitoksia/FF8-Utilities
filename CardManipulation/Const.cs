@@ -191,8 +191,17 @@ namespace CardManipulation
 
     public enum SearchType
     {
+        /// <summary>
+        /// Instant Mash and 2nd try attempt
+        /// </summary>
         First,
+        /// <summary>
+        /// Tracking RNG for 1st try
+        /// </summary>
         Counting,
+        /// <summary>
+        /// Oopsie, something went wrong.  Re-attempt
+        /// </summary>
         Recovery
     }
 }
