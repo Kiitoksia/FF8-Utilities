@@ -9,6 +9,10 @@ namespace CardManipulation.Models
     public class RareTimerResult
     {
         public int Incr { get; set; }
+
+        /// <summary>
+        /// Rare table essentially forms the snake.  false -, * true
+        /// </summary>
         public List<bool> RareTable { get; set; }
         public double DurationSeconds { get; set; }
     }

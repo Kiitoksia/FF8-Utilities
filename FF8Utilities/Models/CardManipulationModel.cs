@@ -264,7 +264,7 @@ namespace FF8Utilities.Models
         {
             if (Count == 0 && string.IsNullOrWhiteSpace(RecoveryPattern) && _lastState == null)
             {
-                          
+                // We are waiting for 2nd try, ignore input
             }
             else
             {
