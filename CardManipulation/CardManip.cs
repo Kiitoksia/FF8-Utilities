@@ -23,6 +23,17 @@ namespace CardManipulation
             Options = Options.Default();
         }
 
+        /// <summary>
+        /// Starts a card timer, onTick returns every frame with the current frame data.
+        /// </summary>
+        /// <param name="state">The RNG before the battle.</param>
+        /// <param name="playerKey">zellmama/fc01 working, everything else untested</param>
+        /// <param name="searchType">Can affect the state, so required</param>
+        /// <param name="onTick">Returns each frame with data about the clock</param>
+        /// <param name="token"></param>
+        /// <param name="fps"></param>
+        /// <param name="count">RNG count</param>
+        /// <returns></returns>
         public async Task RareTimerAsync(uint state, string playerKey, SearchType searchType, Action<RareTimerResult> onTick, CancellationToken token, int fps = 60, int count = 0)
         {
             // Advance RNG by count if needed
@@ -100,6 +111,7 @@ namespace CardManipulation
             if (ranksArr.Count < (rare == 0 ? 5 : 4))
                 return new PatternParseResult { Error = $"There are not 4 or more cards: {input}" };
 
+            // Initiative is unused and unncessary, just left it in
             // Initiative: last + or - in string
             bool? initiative = null;
             //foreach (Match m in Regex.Matches(input, @"[+-]"))
@@ -170,9 +182,8 @@ namespace CardManipulation
             return nextRnd % 100 < rareLimit;
         }
 
-        IList<TableEntry> MakeOpeningTable(uint from, uint to, uint state, PlayerProfile player, SearchType searchType, uint incr, uint count = 0, Options optionsOverride = null)
+        private IList<TableEntry> MakeOpeningTable(uint from, uint to, uint state, PlayerProfile player, SearchType searchType, uint incr, uint count = 0)
         {
-            var options = optionsOverride ?? this.Options;
             var size = to + 1;
             IList<uint> rngStateArr;
             IList<int> offsetArr;
@@ -186,24 +197,24 @@ namespace CardManipulation
                     rngStateArr[i] = rng.State;
                     rng.Next();
                 }
-                int offsetArrSize = (int)(60f / options.AutofireSpeed);
+                int offsetArrSize = (int)(60f / Options.AutofireSpeed);
                 offsetArr = Enumerable.Range(0, offsetArrSize)
-                    .Select(i => (int)options.ForcedIncr + i)
+                    .Select(i => (int)Options.ForcedIncr + i)
                     .ToList();
             }
             else if (searchType == SearchType.Counting)
             {
                 var rng = new CardRng(state);
-                int maxIdx = (int)(count + options.CountingWidth);
+                int maxIdx = (int)(count + Options.CountingWidth);
                 rngStateArr = new uint[maxIdx].Select(_ =>
                 {
                     var stateCopy = rng.State;
                     rng.Next();
                     return stateCopy + incr;
                 }).ToList();
-                offsetArr = new int[options.CountingFrameWidth].Select((_, i) =>
+                offsetArr = new int[Options.CountingFrameWidth].Select((_, i) =>
                 {
-                    return i - (int)options.CountingFrameWidth / 2;
+                    return i - (int)Options.CountingFrameWidth / 2;
                 }).ToList();
             }
             else // Recovery
@@ -254,6 +265,7 @@ namespace CardManipulation
 
             if (elapsedSeconds != null)
             {
+                // Calculate the incremene based on elapsed time
                 double delay = Options.DelayFrame / Options.GameFps;
                 int forcedIncr = (int)Options.ForcedIncr;
                 int acceptDelay = (int)Options.AcceptDelayFrame;
@@ -274,33 +286,20 @@ namespace CardManipulation
             switch (searchType)
             {
                 case SearchType.Counting:
-                    width = Options.CountingWidth;
                     startIndex = Convert.ToUInt32(count);
                     break;
                 case SearchType.Recovery:
-                    width = Options.RecoveryWidth;
                     startIndex = startIndexOverride ?? (Options.RecoveryWidth / 2);
                     state = (state + incr - startIndex) & 0xffff_ffff;
                     break;
                 case SearchType.First:
                 default:
-                    width = widthOverride ?? Options.Width;
-
-                    //if (playerKey == "fc01")
-                    //{
-                    //    // Start of game, assume 0
-                    //    startIndex = 0;
-                    //}
-                    //else
-                    //{
-                    //    // At least up to zell card
-                    //    startIndex = Options.Base;
-                    //}
                     startIndex = 0;
                     break;
             }
 
 
+            // Set a very large width to cover for all the eventualities
             width = 1500;
             // Build search order (centered, then +/-1, +/-2, ...)
             var order = Enumerable.Range(1, (int)(width / 2))
@@ -333,20 +332,7 @@ namespace CardManipulation
 
             uint firstState = state;
 
-            // Build opening table
-            //if (count > 0)
-            //{
-            //    var rng = new CardRng(state);
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        rng.Next();
-            //    }
-
-            //    state = rng.State;
-            //}
-
-
-            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, incr, (uint)count, Options);
+            var table = MakeOpeningTable((uint)order.Min(), (uint)order.Max(), state, player, searchType, incr, (uint)count);
 
             // Match pattern
             var results = new List<SearchResult>();
@@ -385,6 +371,8 @@ namespace CardManipulation
                 return false;
             }
 
+            // Note that fuzzy order is never used by default, so this can be simplified
+
             var patDeck = fuzzyOrder ? pattern.Deck.OrderBy(x => x, new ListComparer()).ToList() : pattern.Deck;
             var deck = fuzzyOrder ? opening.Deck.OrderBy(x => x).ToList() : opening.Deck;
 
@@ -422,6 +410,7 @@ namespace CardManipulation
                 }
             }
 
+            // Idk, Pupu is special somehow
             var pupuId = CardTable.Single(t => t.NameEn == "PuPu").Id;
 
             while (deck.Count < DECK_MAX)
@@ -449,14 +438,14 @@ namespace CardManipulation
             };
         }
 
-        class TableEntry
+        private class TableEntry
         {
             public int Index { get; set; }
             public int Offset { get; set; }
             public OpeningSituation Opening { get; set; }
         }
 
-        class ListComparer : IComparer<IList<int>>
+        private class ListComparer : IComparer<IList<int>>
         {
             public int Compare(IList<int> a, IList<int> b)
             {
