@@ -44,7 +44,7 @@ namespace FF8Utilities.Test
             Assert.IsTrue(result.RareTable.FindIndex(t => t) == model.FirstAvailableFrame, "First available frame doesnt match");
             Assert.IsTrue(result.RareTable.FindIndex(t => t) == 101, "Invalid first available frame");         
             
-            StartTimerAndWait(model, 1750); // Roughly 1.75s in
+            StartTimerAndWait(model, 1880); // Roughly 1.7s in
             result = model.CurrentResult;
             Assert.IsTrue(result.RareTable[0], "Should be an instant mash");
 
@@ -88,13 +88,13 @@ namespace FF8Utilities.Test
         public void TestLQFrames()
         {
             CardManip manip = new CardManip();
-            LateQuistis lq = new LateQuistis(FF8Utilities.Const.PackagesFolder);
+            LateQuistis lq = new LateQuistis(Const.PackagesFolder);
             for (int i = 130; i < 190; i++)
             {
                 // Safe region
                 LateQuistisPattern pattern = lq.GetPattern(i, false);
                 string mashText = pattern.Deck.InstantMash;
-                CardManipulationModel model = new CardManipulationModel(manip, 1, "fc01", 9, i);
+                CardManipulationModel model = new CardManipulationModel(manip, 0, "fc01", 9, i);
                 Match framesMatch = Regex.Match(mashText, @"(\d+)$");
                 int firstFrame = int.Parse(framesMatch.Groups[1].Value);
                 Assert.IsTrue(firstFrame == model.FirstAvailableFrame);
