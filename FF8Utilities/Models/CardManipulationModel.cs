@@ -90,6 +90,7 @@ namespace FF8Utilities.Models
             Count = rngModifier ?? 0;
 
             SubmitCommand = new Command(() => true, Submit);
+            CountdownCommand = new Command(() => true, LaunchCountdown);
             manip.Options.DelayFrame = delayFrames;
 
             // Model updates need to happen smoothly in the UI Thread, use CompositionTarget for this
@@ -106,7 +107,7 @@ namespace FF8Utilities.Models
                 ShowInstantMashText = false;
             }
 
-            
+            CountdownText = "Start Countdown";
 
             _loadedBeepSound = SettingsModel.Instance.BeepSound;
             // Get the first item so we can see the instant mash timing
@@ -258,7 +259,7 @@ namespace FF8Utilities.Models
 
         public Command SubmitCommand { get; }
 
-        public Command PauseCommand { get; }
+        public Command CountdownCommand { get; }
 
         private void StartTimer()
         {
@@ -284,7 +285,24 @@ namespace FF8Utilities.Models
             }            
         }
 
+        private async void LaunchCountdown(object sender, EventArgs args)
+        {
+            DateTime now = DateTime.Now;
+            DateTime timeToWaitTill = now.AddSeconds(SettingsModel.Instance.ZellCountdownTimer);
 
+            while (DateTime.Now < timeToWaitTill)
+            {
+                await Task.Delay(5);
+
+                TimeSpan span = DateTime.Now - now;
+                double timeLeft = SettingsModel.Instance.ZellCountdownTimer - span.TotalSeconds;
+                CountdownText = timeLeft.ToString("##0.00");
+            }
+
+            CountdownText = "Start Countdown";
+            Submit(sender, args);
+
+        }
 
         private void Submit(object sender, EventArgs args)
         {
@@ -427,6 +445,7 @@ namespace FF8Utilities.Models
 
         private TimeSpan _timeTillNextCard;
         private TimeSpan _timeTillNextCardEnd;
+        private string _countdownText;
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
@@ -616,6 +635,17 @@ namespace FF8Utilities.Models
                 }
 
                 _explanation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CountdownText 
+        { 
+            get => _countdownText; 
+            private set
+            { 
+                if (_countdownText == value) return;
+                _countdownText = value; 
                 OnPropertyChanged();
             }
         }

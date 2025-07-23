@@ -10,6 +10,9 @@ using System.Windows.Media;
 
 namespace FF8Utilities.Controls
 {
+    /// <summary>
+    /// This is the fastest way to render a snake in WPF
+    /// </summary>
     public class SnakeRenderer : FrameworkElement
     {
         private DrawingVisual _visual;

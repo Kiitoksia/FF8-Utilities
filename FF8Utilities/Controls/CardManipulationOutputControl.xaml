@@ -5,6 +5,7 @@
     xmlns:c="clr-namespace:FF8Utilities.Converters"
     xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:FF8Utilities.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,17 +17,39 @@
     PreviewKeyDown="UserControl_PreviewKeyDown">
     <GroupBox>
         <GroupBox.Header>
-            <TextBlock
-                FontSize="14"
-                FontWeight="Bold"
-                Text="CARD TIMER" />
+            <DockPanel>
+                <Button
+                    Width="100"
+                    Grid.Column="1"
+                    Command="{Binding CountdownCommand}"
+                    DockPanel.Dock="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding CountdownText}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock
+                    DockPanel.Dock="Left"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Text="CARD TIMER" />
+            </DockPanel>
+
         </GroupBox.Header>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition>
+                    <ColumnDefinition.Width>
+                        <Binding Path="ShowInstantMashText">
+                            <Binding.Converter>
+                                <c:BoolToGridLengthConverter False="0" True="100" />
+                            </Binding.Converter>
+                        </Binding>
+                    </ColumnDefinition.Width>
+                </ColumnDefinition>
+
             </Grid.ColumnDefinitions>
-            <StackPanel>
+            <StackPanel Grid.RowSpan="2">
                 <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="18"
@@ -47,7 +70,13 @@
                     </Controls:VisibilityHelper.IsVisible>
                 </TextBlock>
                 <TextBlock Text="{Binding ErrorText}" />
-                <local:SnakeRenderer x:Name="SnakeControl" DataContext="{Binding .}"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="30" ClipToBounds="True"/>
+                <local:SnakeRenderer
+                    x:Name="SnakeControl"
+                    Height="30"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    ClipToBounds="True"
+                    DataContext="{Binding .}" />
 
                 <TextBox
                     x:Name="RecoveryTextBox"
@@ -60,6 +89,7 @@
                     Text="{Binding RecoveryPattern, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock FontStyle="Italic" Text="{Binding FoundCards}" />
             </StackPanel>
+
             <Button
                 Grid.Column="1"
                 Margin="10,0,0,0"
@@ -70,7 +100,12 @@
                 Controls:VisibilityHelper.IsVisible="{Binding ShowInstantMashText}">
 
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="SUBMIT" FontSize="16" HorizontalAlignment="Center" Margin="0,0,0,10" FontWeight="Bold"/>
+                    <TextBlock
+                        Margin="0,0,0,10"
+                        HorizontalAlignment="Center"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Text="SUBMIT" />
                     <TextBlock HorizontalAlignment="Center" Text="Instant Mash" />
                     <TextBlock
                         HorizontalAlignment="Center"
