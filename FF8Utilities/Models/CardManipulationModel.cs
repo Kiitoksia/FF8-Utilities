@@ -285,6 +285,8 @@ namespace FF8Utilities.Models
             }            
         }
 
+        private bool _launchedFromCountdown;
+
         private async void LaunchCountdown(object sender, EventArgs args)
         {
             DateTime now = DateTime.Now;
@@ -300,8 +302,8 @@ namespace FF8Utilities.Models
             }
 
             CountdownText = "Start Countdown";
+            _launchedFromCountdown = true;
             Submit(sender, args);
-
         }
 
         private void Submit(object sender, EventArgs args)
@@ -493,7 +495,7 @@ namespace FF8Utilities.Models
                 _timeTillNextCard = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // Assuming 60 FPS
                 _timeTillNextCardEnd = TimeSpan.FromSeconds(framesTillAvailableEnd * 0.01666); // Assuming 60 FPS
                 RareCardTimer = $"{_timeTillNextCard.TotalSeconds:F2}s";
-                if (_timeTillNextCard.TotalSeconds >= 1.5)
+                if (_timeTillNextCard.TotalSeconds >= 1.5 && !_launchedFromCountdown)
                 {
                     PlayBeeps();
                 }
