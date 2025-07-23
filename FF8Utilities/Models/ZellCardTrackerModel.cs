@@ -309,6 +309,11 @@ namespace FF8Utilities.Models
 
         private void LaunchQuistisPatterns(object sender, EventArgs eventArgs)
         {
+            if (SettingsModel.Instance.LegacyCardMode)
+            {
+                MainModel.Instance.LaunchCardScript(false, LateQuistisOutput, false);
+            }
+
             QuistisCardPatternWindow window = new QuistisCardPatternWindow(Window, _lateQuistisManip.GetPattern(LateQuistisOutput, true));
             window.Owner = Window;
             window.ShowDialog();

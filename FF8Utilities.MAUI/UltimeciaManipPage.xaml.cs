@@ -50,7 +50,7 @@ public partial class UltimeciaManipPage : ContentPage
 
 
         PartyFormation[] formations = Manipulation.GetUltimeciaFormations(Directions.ToArray(), Platform, Language);
-
+        Formations = new BindingList<PartyFormation>(formations);
     }
 
 	private void SubmitDirection(Direction direction)
