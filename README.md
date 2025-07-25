@@ -24,14 +24,29 @@ Utilities supports
 
 ![image](https://github.com/user-attachments/assets/de431263-6f8e-4ccb-ab39-e2e62549cdcc)
 
-#### Quistis Pattern
-If you are going for Early Quistis, you can select the appropriate frame that you got.  Clicking the button to the right of the dropdown will also show you the moves to play in order to win!
-#### Custom
-This can mostly be left blank as it is handled by other tools, but you have the ability to enter the RNG Hex code of the result of the quistis game
+### Usage
+#### Early Quistis, 2nd Try Zell
+- Enter the appropriate quistis pattern in the main window dropdown
+- Hit "Submit" whenever suits
 
-#### RNG Modifier
-If you are attempting 1st try Zell Card, entering the RNG count into this box will allow you to attempt 1st try
-If left blank, will assume you are doing 2nd try
+#### Early Quistis, 1st Try Zell
+- Enter the appropriate quistis pattern in the main window dropdown
+- Click the calculator button next to RNG Modifier to launch the tracker
+  - Optionally, can type the RNG count directly into the box if using an external tracker
+- Ignore the "Launch Quistis Patterns" button on the first page of tracker, continue as normal and then click "Launch Zell" or type the count directly into the main window
+
+#### Late Quistis, 2nd Try Zell
+**NOTE:** This does not work in "Legacy Card Mode" due to index ranges
+- Click the calculator button next to RNG Modifier to launch the tracker
+- Track first page and click "Get Quistis Patterns"
+- Submit the obtained frame and close the tracker.  The main window should now show "Late Quistis" as the pattern
+- Hit "Submit" whenever suits.
+
+#### Late Quistis, 1st Try Zell
+- Click the calculator button next to RNG Modifier to launch the tracker
+- Track first page and click "Get Quistis Patterns"
+- Submit the obtained frame, and continue with the next pages to track Zell and submit.
+
 
 ### Start Countdown
 **Only available on PC** Clicking this will start a countdown (Configurable in settings).  Once the countdown hits zero, this will automatically start the launched zell timer script.
