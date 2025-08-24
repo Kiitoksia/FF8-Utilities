@@ -955,7 +955,17 @@ namespace FF8Utilities.Models
         private void LaunchSettings(bool showFirstLaunch)
         {
             SettingsWindow settingsWindow = new SettingsWindow(Settings);
-            settingsWindow.Owner = Window;
+            if (Window.IsLoaded)
+            {
+                settingsWindow.Owner = Window;
+            }
+            else
+            {
+                Window.Loaded += (s, e) =>
+                {
+                    settingsWindow.Owner = Window;
+                };
+            }
             if (showFirstLaunch)
             {
                 settingsWindow.Loaded += (s, e) =>
