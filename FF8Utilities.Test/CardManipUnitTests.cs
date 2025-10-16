@@ -19,7 +19,6 @@ namespace FF8Utilities.Test
         static CardManipUnitTests()
         {
             new SettingsModel(new MainModel());
-
         }
 
         private void StartTimerAndWait(CardManipulationModel model, int millisecondsToWait)
