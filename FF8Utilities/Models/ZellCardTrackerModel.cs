@@ -614,7 +614,14 @@ namespace FF8Utilities.Models
                 {
                     _previouslyCalculatedOutput = output;
                     ZellCardManipModel?.Dispose();
-                    ZellCardManipModel = new CardManipulationModel(MainModel.Instance.CardManipulation, 1, "zellmama", SettingsModel.Instance.GetZellDelayFrame(), output);
+
+                    uint state = 1;
+                    if (QuistisCardObtained)
+                    {
+                        state = Convert.ToUInt32(MainModel.Instance.CustomQuistisPattern, 16);
+                    }
+
+                    ZellCardManipModel = new CardManipulationModel(MainModel.Instance.CardManipulation, state, "zellmama", SettingsModel.Instance.GetZellDelayFrame(), output);
                     ZellMashTextBackgroundBrush = ZellCardManipModel.InstantMashBackgroundColor;
                     ZellPatternMashDisplay = ZellCardManipModel.FirstFrameAvailableFramesDisplay;
                 }
