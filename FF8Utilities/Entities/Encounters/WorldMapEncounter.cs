@@ -37,7 +37,7 @@ namespace FF8Utilities.Entities.Encounters
                 switch (Formation)
                 {
                     case null:
-                        return 0 * Quantity;
+                        return 0;
                     case WorldMapFormation.Caterchipillar:
                     case WorldMapFormation.TRex:
                         return 10 * Quantity;
