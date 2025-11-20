@@ -12,7 +12,7 @@ namespace CarawayCode
     internal static class Options
     {
         public static int DefaultStartIndex { get; set; } = 350;
-        public static int SearchWidth { get; set; } = 600;
+        public static int SearchWidth { get; set; } = 800;
         public static  int PolesArraySize { get; set; } = 6;
 
     }
@@ -117,10 +117,10 @@ namespace CarawayCode
                 string code = rawCode.ToString().PadLeft(3, '0');
 
                 // The number of utility poles is rand (0..255)% 16
-                int polesMinIdx = idx - (Options.PolesArraySize + 3);
+                int polesMinIdx = Math.Max(0, idx - (Options.PolesArraySize + 3));
 
                 int[] polesArray = polesMinIdx < 0 ? null : sourceArray.Skip(polesMinIdx).Take(idx - 4 + 1 - polesMinIdx).Select(t => t % 16).ToArray();
-
+                if (polesArray == null || polesArray.Length == 0) return null;
                 string polesHex = string.Join("", polesArray.Select(t => t.ToString("X")));
 
                 string bus = null;
