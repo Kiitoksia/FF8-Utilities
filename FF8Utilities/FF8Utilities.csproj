@@ -30,7 +30,7 @@
     <ConturaEnabled Condition="'$(Configuration)' == 'Release'">true</ConturaEnabled>
 
     <!-- Optional: Include PDB -->
-    <ConturaIncludeDebugSymbols>false</ConturaIncludeDebugSymbols>
+    <ConturaIncludeDebugSymbols>True</ConturaIncludeDebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Final Fantasy VIII.ico</ApplicationIcon>
@@ -38,14 +38,14 @@
     <Title>FF8 Utilities</Title>
     <Copyright>Copyright ©  2018</Copyright>
     <PackageProjectUrl>github.com/Kiitoksia/FF8-Utilities</PackageProjectUrl>
-    <AssemblyVersion>1.0.3.106</AssemblyVersion>
-    <FileVersion>1.0.3.106</FileVersion>
+    <AssemblyVersion>1.0.3.107</AssemblyVersion>
+    <FileVersion>1.0.3.107</FileVersion>
     <Authors>Kiitoksia</Authors>
     <Description>A program to collate FF8 manipulation tools</Description>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Prefer32Bit>True</Prefer32Bit>
+    <Prefer32Bit>False</Prefer32Bit>
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>

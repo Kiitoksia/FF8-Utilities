@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static System.Windows.Forms.AxHost;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 
@@ -23,8 +22,8 @@ namespace FF8Utilities.Models
 {
     public class CardManipulationModel : BaseModel, IDisposable
     {
-        private bool rareCardAvailable;
-        private bool rareCardSoon;
+        private bool _rareCardAvailable;
+        private bool _rareCardSoon;
         private string _snake;
         private decimal _timeElapsedSeconds;
         private SolidColorBrush textColor = Brushes.White;
@@ -504,23 +503,23 @@ namespace FF8Utilities.Models
 
         public bool RareCardAvailable
         {
-            get => rareCardAvailable;
+            get => _rareCardAvailable;
             private set
             {
-                if (rareCardAvailable == value)
+                if (_rareCardAvailable == value)
                     return;
-                rareCardAvailable = value;
+                _rareCardAvailable = value;
                 OnPropertyChanged();
             }
         }
         public bool RareCardSoon
         {
-            get => rareCardSoon;
+            get => _rareCardSoon;
             private set
             {
-                if (rareCardSoon == value)
+                if (_rareCardSoon == value)
                     return;
-                rareCardSoon = value;
+                _rareCardSoon = value;
                 OnPropertyChanged();
             }
         }
