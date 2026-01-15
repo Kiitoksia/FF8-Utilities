@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FF8Utilities.Common;
+using FF8Utilities.Common.Cards;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -49,17 +51,7 @@ namespace LateQuistisManipulation.Models
 
         public static byte[] GetCardImage(string card)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream($"LateQuistisManipulation.CardImages.{card.ToLower()}.png"))
-            {
-                if (stream == null) return null;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    stream.CopyTo(ms);
-                    ms.Position = 0;
-                    return ms.ToArray();
-                }
-            }
+            return CardImage.GetCardImage(card);
         }
 
         internal static byte[] GetDeckCardImage(string card)

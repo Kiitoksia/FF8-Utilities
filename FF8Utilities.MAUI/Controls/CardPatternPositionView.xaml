@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:common="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             x:DataType="common:CardPosition"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Name="this"
+             x:Class="FF8Utilities.MAUI.Controls.CardPatternPositionView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image Source="{Binding Card, Mode=OneWay, Converter={StaticResource ImageConverter}}" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Fill"
+               Aspect="AspectFit"/>
+        <Border IsVisible="{Binding IsPlayerTurn}" Grid.RowSpan="2" Grid.ColumnSpan="2" BackgroundColor="Black" Opacity="0.5"/>
+
+        <Label Text="{Binding Turn}" HorizontalTextAlignment="End" VerticalTextAlignment="End" FontAttributes="Bold" IsVisible="{Binding ShowTurnNumber}" Grid.Row="1" Grid.Column="1" FontSize="64">
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsPlayerTurn}" Value="False" TargetType="Label">
+                            <Setter Property="TextColor" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+        </Label>
+
+        <Grid Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5">
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="VerticalTextAlignment" Value="Center"/>
+                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Text="{Binding CustomTopInfo}" Grid.Column="1"/>
+            <Label Text="{Binding CustomRightInfo}" Grid.Row="1" Grid.Column="2" FontAttributes="Bold"/>
+            <Label Text="{Binding CustomBotInfo}" Grid.Row="2" Grid.Column="1"/>
+            <Label Text="{Binding CustomLeftInfo}" Grid.Row="1"/>
+        </Grid>
+    </Grid>
+</ContentView>

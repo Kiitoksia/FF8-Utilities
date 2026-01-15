@@ -51,116 +51,15 @@
     <Compile Include="Models\PlayPattern.cs" />
     <Compile Include="Models\RNGResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\a.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\b.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\beast.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\biggs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\bird.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\buel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\c.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\chimera.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\creeps.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\elastoid.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\elnoyle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\f.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\g.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\giant.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\glacial.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\grat.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\grendel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\i.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\jelleye.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\king.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\m.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\malboro.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\mantis.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\mask.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\q.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\robot.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\ruby.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\snake.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\t.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\unicorn.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CardImages\z.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CardImages\empty.png" />
+    <ProjectReference Include="..\FF8Utilities.Common\FF8Utilities.Common.csproj">
+      <Project>{d7a149d0-5f8b-471a-a9b1-1efccf45a6f6}</Project>
+      <Name>FF8Utilities.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

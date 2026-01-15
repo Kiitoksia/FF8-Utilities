@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 
 namespace FF8Utilities.MAUI
 {
@@ -9,6 +10,7 @@ namespace FF8Utilities.MAUI
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -17,6 +19,7 @@ namespace FF8Utilities.MAUI
 
 #if DEBUG
     		builder.Logging.AddDebug();
+
 #endif
 
             return builder.Build();

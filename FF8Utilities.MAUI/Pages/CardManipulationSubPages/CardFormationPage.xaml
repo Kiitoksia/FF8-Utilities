@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:subPages="clr-namespace:FF8Utilities.MAUI.Pages.CardManipulationSubPages"
+             x:Class="FF8Utilities.MAUI.Pages.CardManipulationSubPages.CardFormationPage"
+             xmlns:c="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="subPages:CardFormationPage"
+             x:Name="this"
+             BindingContext="{x:Reference this}"
+             Title="Formations">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <VerticalStackLayout>
+        <HorizontalStackLayout>
+            <Label Text="Player goes first"/>
+            <CheckBox IsChecked="{Binding PlayerGoesFirst}"/>
+        </HorizontalStackLayout>
+
+        <CollectionView ItemsSource="{Binding CardPositions}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Horizontal" Span="3"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <c:CardPatternPositionView BindingContext="{Binding .}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <CollectionView ItemsSource="{Binding MomFirstStrongCardPositions}" IsVisible="{Binding PlayerGoesFirst, Converter={StaticResource InvertedConverter}}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Horizontal" Span="3"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <c:CardPatternPositionView BindingContext="{Binding .}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+    </VerticalStackLayout>
+</ContentPage>

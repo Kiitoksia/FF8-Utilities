@@ -80,7 +80,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CarawayCode\CarawayCode.csproj" />
     <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
-    <ProjectReference Include="..\FF8Utilities.Data\FF8Utilities.Common.csproj" />
     <ProjectReference Include="..\LateQuistis\LateQuistis.csproj" />
     <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
   </ItemGroup>

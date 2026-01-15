@@ -1,4 +1,6 @@
-﻿namespace FF8Utilities.MAUI
+﻿using FF8Utilities.MAUI.Pages;
+
+namespace FF8Utilities.MAUI
 {
     public partial class App : Application
     {
@@ -9,7 +11,7 @@
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new MainPage());
+            return new Window(new CardManipulationPage());
         }
     }
 }
