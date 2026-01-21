@@ -17,7 +17,7 @@ namespace FF8Utilities.MAUI.Models
         public CardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier) : base(manip, state, player, delayFrames, rngModifier)
         {
             _renderTimer = Application.Current.Dispatcher.CreateTimer();
-            _renderTimer.Interval = TimeSpan.FromMilliseconds(16); // 60FPS
+            _renderTimer.Interval = TimeSpan.FromMilliseconds(1); // 60FPS
             _renderStopWatch = new Stopwatch();
             _renderTimer.Tick += RenderTick;
 

@@ -22,16 +22,10 @@ public partial class TimingPage : ContentPage
             _model = null;
         }
 
-        _model = new CardManipulationModel(_manip, 1, "zellmama", DelayFrames, RNGModifier);
+        _model = new CardManipulationModel(_manip, 0x65c6be07, "zellmama", DelayFrames, RNGModifier);
+        _model.RecoveryPattern = "74441154176425316556";
 
-        SnakeLabel.RemoveBinding(Label.TextColorProperty);
-        SnakeLabel.RemoveBinding(Label.TextProperty);
-        SnakeLabel
-            .Bind(Label.TextProperty, nameof(CardManipulationModel.Snake), BindingMode.OneWay, source: _model)
-            .Bind(Label.TextColorProperty, nameof(CardManipulationModel.TextColourMaui), BindingMode.OneWay, source: _model);
-
-        RecoveryEntry.RemoveBinding(Entry.TextProperty);
-        RecoveryEntry.Bind(Entry.TextProperty, nameof(CardManipulationModel.RecoveryPattern), BindingMode.TwoWay, source: _model);
+        BindingContext = _model;        
     }
 
 
@@ -51,7 +45,7 @@ public partial class TimingPage : ContentPage
 
     public int? RNGModifier
     {
-        get => (int)GetValue(RNGModifierProperty);
+        get => (int?)GetValue(RNGModifierProperty);
         set
         {
             if (value == RNGModifier) return;
