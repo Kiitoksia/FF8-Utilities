@@ -14,15 +14,35 @@
         <Style TargetType="Label">
             <Setter Property="TextColor" Value="White"/>
         </Style>
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
     </ContentPage.Resources>
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
 
-        <VerticalStackLayout VerticalOptions="End">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Text="Delay Frames:"/>
+            <Entry Text="{Binding DelayFrames, Source={x:Reference this}}" Grid.Column="1" Keyboard="Numeric"/>
+
+            <Label Text="RNG Modifier:" Grid.Row="1"/>
+            <Entry Text="{Binding RNGModifier, Source={x:Reference this}}" Grid.Row="1" Grid.Column="1" Keyboard="Numeric" Placeholder="None"/>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1">
             <Label Text="{Binding Explanation}"/>
             <Entry
                 x:Name="RecoveryEntry"
@@ -31,6 +51,7 @@
                 Keyboard="Numeric"
                 Placeholder="Enter cards for recovery or 1st try search"
                 Text="{Binding RecoveryPattern}"
+                ReturnCommand="{Binding SubmitCommand}"
                 TextColor="White" />
             <Label Text="{Binding FoundCards}" />
             <Label Text="{Binding ErrorText}"/>
@@ -38,7 +59,7 @@
 
 
         
-        <VerticalStackLayout Grid.Row="1">
+        <VerticalStackLayout Grid.Row="2">
             <skia:SKCanvasView  PaintSurface="SKCanvasView_PaintSurface" HeightRequest="30" HorizontalOptions="Fill" x:Name="SnakeView"/>
             <Border BackgroundColor="{Binding InstantMashBackgroundMaui}" IsVisible="{Binding ShowInstantMashText}" Padding="5">
                 <HorizontalStackLayout HorizontalOptions="Center">
@@ -47,9 +68,8 @@
                     <Label Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)'}"/>
                 </HorizontalStackLayout>
             </Border>
-            
         </VerticalStackLayout>
-        <Button Command="{Binding SubmitCommand}"  Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large"/>
+        <Button Command="{Binding SubmitCommand}"  Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="3" FontSize="Large"/>
 
 
     </Grid>
