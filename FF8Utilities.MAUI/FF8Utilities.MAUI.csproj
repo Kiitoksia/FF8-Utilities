@@ -65,12 +65,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\CardManipulation2\CardManipulation.csproj" />
 	  <ProjectReference Include="..\FF8Utilities.Common\FF8Utilities.Common.csproj" />
 	  <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Models\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -81,6 +78,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\CardManipulationSubPages\CardFormationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\CardManipulationSubPages\TimingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="UltimeciaManipPage.xaml">

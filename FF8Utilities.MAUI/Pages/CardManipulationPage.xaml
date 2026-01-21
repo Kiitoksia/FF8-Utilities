@@ -6,4 +6,5 @@
              xmlns:p="clr-namespace:FF8Utilities.MAUI.Pages.CardManipulationSubPages"
              Title="CardManipulationPage">
     <p:CardFormationPage/>
+    <p:TimingPage/>
 </TabbedPage>

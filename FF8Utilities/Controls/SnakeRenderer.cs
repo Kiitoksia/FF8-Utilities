@@ -63,7 +63,7 @@ namespace FF8Utilities.Controls
                 FlowDirection.LeftToRight,
                 new Typeface("Consolas"),
                 18,
-                Model.TextColor,
+                new SolidColorBrush(Color.FromArgb(Model.TextColor.A, Model.TextColor.R, Model.TextColor.G, Model.TextColor.B)),
                 _pixelsPerDip.Value
                 );
 

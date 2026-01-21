@@ -9,6 +9,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+            <toolkit:InvertedBoolConverter x:Key="InverseConverter"/>
         </ResourceDictionary>
     </ContentView.Resources>
     <Grid>
@@ -22,9 +23,10 @@
         </Grid.ColumnDefinitions>
         <Image Source="{Binding Card, Mode=OneWay, Converter={StaticResource ImageConverter}}" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Fill"
                Aspect="AspectFit"/>
-        <Border IsVisible="{Binding IsPlayerTurn}" Grid.RowSpan="2" Grid.ColumnSpan="2" BackgroundColor="Black" Opacity="0.5"/>
+        
+        <Border IsVisible="{Binding IsPlayerTurn, Converter={StaticResource InverseConverter}}" Grid.RowSpan="2" Grid.ColumnSpan="2" BackgroundColor="Black" Opacity="0.5"/>
 
-        <Label Text="{Binding Turn}" HorizontalTextAlignment="End" VerticalTextAlignment="End" FontAttributes="Bold" IsVisible="{Binding ShowTurnNumber}" Grid.Row="1" Grid.Column="1" FontSize="64">
+        <Label Text="{Binding Turn}" HorizontalTextAlignment="End" VerticalTextAlignment="End" FontAttributes="Bold" IsVisible="{Binding ShowTurnNumber}" Grid.Row="1" Grid.Column="1" FontSize="64" TextColor="White">
             <Label.Style>
                 <Style TargetType="Label">
                     <Style.Triggers>
@@ -42,6 +44,7 @@
                     <Setter Property="FontSize" Value="20"/>
                     <Setter Property="VerticalTextAlignment" Value="Center"/>
                     <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                    <Setter Property="TextColor" Value="White"/>
                 </Style>
             </Grid.Resources>
             <Grid.RowDefinitions>

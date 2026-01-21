@@ -4,7 +4,6 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
     <ProjectReference Include="..\FF8Utilities\FF8Utilities.csproj" />
     <ProjectReference Include="..\LateQuistis\LateQuistis.csproj" />
   </ItemGroup>

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace FF8Utilities
@@ -48,7 +49,12 @@ namespace FF8Utilities
             }
 
             return null;
-        }        
+        }
+
+        public static Color ToWPFColor(this System.Drawing.Color color)
+        {
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
     }
 
     public class ByteArrayToImageConverter : IValueConverter

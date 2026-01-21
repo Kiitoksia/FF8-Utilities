@@ -15,6 +15,11 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     PreviewKeyDown="UserControl_PreviewKeyDown">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <c:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <GroupBox>
         <GroupBox.Header>
             <DockPanel>
@@ -93,7 +98,7 @@
             <Button
                 Grid.Column="1"
                 Margin="10,0,0,0"
-                Background="{Binding InstantMashBackgroundColor}"
+                Background="{Binding InstantMashBackgroundColor, Converter={StaticResource ColorToBrushConverter}}"
                 BorderBrush="White"
                 BorderThickness="2"
                 Command="{Binding SubmitCommand}"

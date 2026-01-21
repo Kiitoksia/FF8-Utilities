@@ -622,7 +622,7 @@ namespace FF8Utilities.Models
                     }
 
                     ZellCardManipModel = new CardManipulationModel(MainModel.Instance.CardManipulation, state, "zellmama", SettingsModel.Instance.GetZellDelayFrame(), output);
-                    ZellMashTextBackgroundBrush = ZellCardManipModel.InstantMashBackgroundColor;
+                    ZellMashTextBackgroundBrush = new SolidColorBrush(ZellCardManipModel.InstantMashBackgroundColor.ToWPFColor());
                     ZellPatternMashDisplay = ZellCardManipModel.FirstFrameAvailableFramesDisplay;
                 }
                 

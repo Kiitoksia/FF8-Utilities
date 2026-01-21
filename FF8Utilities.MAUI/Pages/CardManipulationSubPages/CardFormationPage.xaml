@@ -17,12 +17,12 @@
     <VerticalStackLayout>
         <HorizontalStackLayout>
             <Label Text="Player goes first"/>
-            <CheckBox IsChecked="{Binding PlayerGoesFirst}"/>
+            <Switch IsToggled="{Binding PlayerGoesFirst}"/>
         </HorizontalStackLayout>
 
         <CollectionView ItemsSource="{Binding CardPositions}">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Horizontal" Span="3"/>
+                <GridItemsLayout Orientation="Vertical" Span="3"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -33,7 +33,7 @@
 
         <CollectionView ItemsSource="{Binding MomFirstStrongCardPositions}" IsVisible="{Binding PlayerGoesFirst, Converter={StaticResource InvertedConverter}}">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Horizontal" Span="3"/>
+                <GridItemsLayout Orientation="Vertical" Span="3"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>

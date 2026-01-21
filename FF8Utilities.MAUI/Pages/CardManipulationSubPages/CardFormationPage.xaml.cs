@@ -26,7 +26,7 @@ public partial class CardFormationPage : ContentPage
 	public bool PlayerGoesFirst
 	{
 		get => (bool)GetValue(PlayerGoesFirstProperty);
-		private set => SetValue(PlayerGoesFirstProperty, value);
+		set => SetValue(PlayerGoesFirstProperty, value);
 	}
 
 	private static void OnPlayerGoesFirstChanged(BindableObject bindable, object oldValue, object newValue)
@@ -40,7 +40,7 @@ public partial class CardFormationPage : ContentPage
 	public ObservableCollection<CardPosition> CardPositions
 	{
 		get => (ObservableCollection<CardPosition>)GetValue(CardPositionsProperty);
-		private set => SetValue(CardPositionsProperty, value);
+		set => SetValue(CardPositionsProperty, value);
 	}
 
 	public static readonly BindableProperty MomFirstStrongCardPositionsProperty = BindableProperty.Create(nameof(MomFirstStrongCardPositions), typeof(ObservableCollection<CardPosition>), typeof(CardFormationPage), new ObservableCollection<CardPosition>());
