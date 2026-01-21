@@ -17,7 +17,7 @@ namespace FF8Utilities.MAUI.Models
         public CardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier) : base(manip, state, player, delayFrames, rngModifier)
         {
             _renderTimer = Application.Current.Dispatcher.CreateTimer();
-            _renderTimer.Interval = TimeSpan.FromMilliseconds(1); // 60FPS
+            _renderTimer.Interval = TimeSpan.FromMilliseconds(16); // 60FPS
             _renderStopWatch = new Stopwatch();
             _renderTimer.Tick += RenderTick;
 
@@ -31,8 +31,16 @@ namespace FF8Utilities.MAUI.Models
             };
         }
 
+        public event EventHandler RenderTimerTick;
+
+        public void Refresh()
+        {
+            RenderTick(this, EventArgs.Empty);
+        }
+
         private void RenderTick(object sender, EventArgs args)
         {
+            RenderTimerTick?.Invoke(this, EventArgs.Empty);
             OnRenderTick(_renderStopWatch.Elapsed);
         }
 

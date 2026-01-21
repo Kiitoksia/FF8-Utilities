@@ -329,7 +329,7 @@ namespace FF8Utilities.Common
             CurrentResult = result;
         }
 
-        private RareTimerResult GetFirstFrameResult()
+        public RareTimerResult GetFirstFrameResult()
         {
             var searchType = SearchType.First;
             if (Count != 0) searchType = SearchType.Counting;

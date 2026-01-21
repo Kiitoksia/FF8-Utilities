@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:FF8Utilities.MAUI.Models"
     xmlns:pages="clr-namespace:FF8Utilities.MAUI.Pages.CardManipulationSubPages"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
     BackgroundColor="Black"
     Title="Timing"
     x:DataType="m:CardManipulationModel">
@@ -14,14 +15,14 @@
             <Setter Property="TextColor" Value="White"/>
         </Style>
     </ContentPage.Resources>
-    <Grid>
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="150" />
         </Grid.RowDefinitions>
 
-        <VerticalStackLayout>
+        <VerticalStackLayout VerticalOptions="End">
             <Label Text="{Binding Explanation}"/>
             <Entry
                 x:Name="RecoveryEntry"
@@ -36,14 +37,20 @@
         </VerticalStackLayout>
 
 
-        <Label
-            x:Name="SnakeLabel"
-            Grid.Row="1"
-            MaxLines="1"
-            Text="{Binding Snake}" />
-        <Button
-            Grid.Row="2"
-            Command="{Binding SubmitCommand}"
-            Text="Submit" />
+        
+        <VerticalStackLayout Grid.Row="1">
+            <skia:SKCanvasView  PaintSurface="SKCanvasView_PaintSurface" HeightRequest="30" HorizontalOptions="Fill" x:Name="SnakeView"/>
+            <Border BackgroundColor="{Binding InstantMashBackgroundMaui}" IsVisible="{Binding ShowInstantMashText}" Padding="5">
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Label Text="Instant Mash:"/>
+                    <Label Text="{Binding FirstFrameAvailableFramesDisplay}"/>
+                    <Label Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)'}"/>
+                </HorizontalStackLayout>
+            </Border>
+            
+        </VerticalStackLayout>
+        <Button Command="{Binding SubmitCommand}"  Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large"/>
+
+
     </Grid>
 </ContentPage>
