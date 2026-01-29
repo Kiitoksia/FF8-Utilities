@@ -10,7 +10,7 @@ namespace FF8Utilities.Common.Cards
         public static byte[] GetCardImage(string card)
         {
             var assembly = typeof(CardImage).Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream($"FF8Utilities.Common.Resources.{card}.png"))
+            using (Stream stream = assembly.GetManifestResourceStream($"FF8Utilities.Common.Resources.{card.ToLower()}.png"))
             {
                 if (stream == null) return null;
                 using (MemoryStream ms = new MemoryStream())

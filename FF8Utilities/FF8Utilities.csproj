@@ -79,7 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CarawayCode\CarawayCode.csproj" />
-    <ProjectReference Include="..\LateQuistis\LateQuistis.csproj" />
     <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
   </ItemGroup>
   <ItemGroup>

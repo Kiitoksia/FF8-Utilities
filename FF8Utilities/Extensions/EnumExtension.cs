@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Markup;
+using FF8Utilities.Common;
 
 namespace FF8Utilities.Extensions
 {
@@ -41,24 +42,5 @@ namespace FF8Utilities.Extensions
             var enumValues = Enum.GetValues(EnumType);
             return enumValues.Cast<object>().Select(t => new EnumerationMember { Value = t, Description = ((Enum)t).GetDescription()});
         }              
-    }
-
-    public class EnumerationMember : BaseModel
-    {
-        public string Description { get; set; }
-        public object Value { get; set; }
-
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (_isSelected == value)
-                    return;
-                _isSelected = value;
-                OnPropertyChanged();
-            }
-        }
     }
 }

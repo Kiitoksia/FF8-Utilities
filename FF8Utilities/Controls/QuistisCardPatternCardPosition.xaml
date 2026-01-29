@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FF8Utilities.Controls"
-             xmlns:quistis="clr-namespace:LateQuistisManipulation.Models;assembly=LateQuistisManipulation"
+             xmlns:quistis="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:converters="clr-namespace:FF8Utilities.Converters"
              xmlns:l="clr-namespace:FF8Utilities"

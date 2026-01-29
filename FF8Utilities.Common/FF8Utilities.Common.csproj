@@ -76,6 +76,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CardManipulation2\CardManipulation.csproj" />
+    <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,6 +92,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
   </ItemGroup>
 
 </Project>

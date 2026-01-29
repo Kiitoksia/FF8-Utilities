@@ -1,4 +1,5 @@
-﻿using FF8Utilities.Entities;
+﻿using FF8Utilities.Common.Cards;
+using FF8Utilities.Entities;
 using FF8Utilities.Models;
 using System;
 using System.Collections.Generic;

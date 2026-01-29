@@ -1,7 +1,6 @@
 ﻿using FF8Utilities.Common;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Models;
-using LateQuistisManipulation;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;

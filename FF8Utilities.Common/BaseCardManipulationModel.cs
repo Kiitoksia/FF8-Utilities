@@ -39,7 +39,6 @@ namespace FF8Utilities.Common
         private TimeSpan _timeTillNextCardEnd;
         private string _countdownText;
 
-        // Command implementations kept neutral via a common RelayCommand
         public ICommand SubmitCommand { get; }
         public ICommand CountdownCommand { get; }
 
@@ -564,22 +563,34 @@ namespace FF8Utilities.Common
         public Action OnCompleted { get; set; }
     }
 
-    // Simple, platform-neutral ICommand implementation
-    public sealed class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
-        private readonly Action _execute;
-        private readonly Func<bool> _canExecute;
+        private readonly Action<object> _execute;
+        private readonly Func<object, bool> _canExecute;
 
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
-        public void Execute(object parameter) => _execute();
+        public RelayCommand(Action execute, Func<bool> canExecute = null) : this(_ => execute(), t => canExecute?.Invoke() ?? true)
+        {
+
+        }
+
+        public bool CanExecute(object parameter) => _canExecute?.Invoke(parameter) ?? true;
+        public void Execute(object parameter) => _execute(parameter);
 
         public event EventHandler CanExecuteChanged;
         public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public class RelayCommand<T> : RelayCommand
+    {
+        public RelayCommand(Action<T> execute, Func<object, bool> canExecute = null) : base(t => execute((T)t), canExecute)
+        {
+
+        }
     }
 }

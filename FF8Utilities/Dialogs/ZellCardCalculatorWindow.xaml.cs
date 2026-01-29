@@ -1,4 +1,5 @@
 ﻿using FF8Utilities.Entities;
+using FF8Utilities.Models;
 using MahApps.Metro.Controls;
 using System.Windows.Forms;
 
@@ -12,6 +13,7 @@ namespace FF8Utilities.Dialogs
         public ZellCardCalculatorWindow()
         {
             InitializeComponent();
+            DataContext = new CardTrackerModel {  Window = this };
         }
 
     }

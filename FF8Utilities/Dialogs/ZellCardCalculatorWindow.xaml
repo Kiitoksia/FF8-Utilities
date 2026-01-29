@@ -10,7 +10,7 @@
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-    xmlns:encs="clr-namespace:FF8Utilities.Entities.Encounters"
+    xmlns:encs="clr-namespace:FF8Utilities.Common.Cards.Encounters;assembly=FF8Utilities.Common"
     xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:ff8PingvalGui="clr-namespace:FF8Utilities"
@@ -19,25 +19,27 @@
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:FF8Utilities.Models"
+    xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
     Width="768"
     Height="880"
     MinWidth="768"
     MinHeight="995"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance models:ZellCardTrackerModel}"
+    d:DataContext="{d:DesignInstance models:CardTrackerModel}"
     GlowBrush="{DynamicResource AccentColorBrush}"
     ShowMaxRestoreButton="False"
     Title="Zell Card RNG Calculator"
     Topmost="False"
     WindowStartupLocation="CenterOwner">
     <mah:MetroWindow.Resources>
+        <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
         <Style TargetType="controls1:EncounterControl">
             <Setter Property="Margin" Value="10" />
         </Style>
     </mah:MetroWindow.Resources>
-    <mah:MetroWindow.DataContext>
-        <models:ZellCardTrackerModel Window="{x:Reference this}" />
-    </mah:MetroWindow.DataContext>
+    <!--<mah:MetroWindow.DataContext>
+        <models:CardTrackerModel Window="{x:Reference this}" />
+    </mah:MetroWindow.DataContext>-->
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <controls:ToggleSwitch
@@ -71,7 +73,7 @@
                     <Border
                         Grid.Column="1"
                         Width="100"
-                        Background="{Binding QuistisMashTextBackgroundBrush}"
+                        Background="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorToBrushConverter}}"
                         BorderBrush="White"
                         BorderThickness="0,2,2,2"
                         controls:VisibilityHelper.IsVisible="{Binding ShowQuistisPatternButton}"
@@ -100,7 +102,7 @@
                             <Border
                                 Grid.Column="1"
                                 Width="100"
-                                Background="{Binding ZellMashTextBackgroundBrush}"
+                                Background="{Binding ZellMashTextBackgroundColor, Converter={StaticResource ColorToBrushConverter}}"
                                 BorderBrush="White"
                                 BorderThickness="0,2,2,2"
                                 Padding="10">
@@ -155,7 +157,7 @@
                                             Width="190"
                                             DisplayMemberPath="Description"
                                             DockPanel.Dock="Right"
-                                            ItemsSource="{Binding Source={extensions:Enum ff8PingvalGui:IfritEncounterType}}"
+                                            ItemsSource="{Binding Source={extensions:Enum common:IfritEncounterType}}"
                                             SelectedValue="{Binding IfritsCavernEncounterType}"
                                             SelectedValuePath="Value" />
                                     </DockPanel>

@@ -7,9 +7,12 @@ namespace FF8Utilities.MAUI
         public App()
         {
             InitializeComponent();
+
+            // MAUI cant use LocalAppData, point it to the right path
+            Common.Const.PackagesFolder = FileSystem.AppDataDirectory;
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
+        protected override Window CreateWindow(IActivationState activationState)
         {
             return new Window(new CardManipulationPage());
         }

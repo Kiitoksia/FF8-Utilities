@@ -141,7 +141,7 @@
                     <TextBlock Grid.Row="1" Text="Quistis Pattern" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
                     <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,0,20">
                         <ComboBox 
-                                    ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:QuistisPattern}}}"  
+                                    ItemsSource="{Binding Source={extensions:Enum {x:Type data:QuistisPattern}}}"  
                                     SelectedValue="{Binding Pattern}"
                                     DisplayMemberPath="Description"
                                     HorizontalAlignment="Stretch"

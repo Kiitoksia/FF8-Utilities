@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\FF8Utilities\FF8Utilities.csproj" />
-    <ProjectReference Include="..\LateQuistis\LateQuistis.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.*" />

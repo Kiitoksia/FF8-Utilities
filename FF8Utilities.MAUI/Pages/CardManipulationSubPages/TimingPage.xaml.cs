@@ -1,7 +1,9 @@
 using CardManipulation;
+using FF8Utilities.Common;
 using FF8Utilities.MAUI.Controls;
 using FF8Utilities.MAUI.Models;
 using SkiaSharp;
+using System.Collections.ObjectModel;
 
 namespace FF8Utilities.MAUI.Pages.CardManipulationSubPages;
 
@@ -16,6 +18,15 @@ public partial class TimingPage : ContentPage
     public TimingPage()
 	{
 		InitializeComponent();
+
+        foreach (QuistisPattern enumValue in Enum.GetValues(typeof(QuistisPattern)))
+        {
+            if (enumValue == QuistisPattern.LateQuistis) continue; // Currently unsupported
+            QuistisCardPatterns.Add(new PickerItem(enumValue.GetDescription(), enumValue));
+        }
+
+        QuistisCardPattern = QuistisCardPatterns[3]; // 4th Frame, to change
+
         _font.Typeface = _typeface;
         _font.Size = 32;     
         CreateManip();
@@ -38,13 +49,15 @@ public partial class TimingPage : ContentPage
             Model = null;
         }
 
-        CardManipulationModel model = new CardManipulationModel(_manip, 0x65c6be07, "zellmama", DelayFrames, RNGModifier);
+        QuistisPattern pattern = (QuistisPattern)QuistisCardPattern.Value;
+
+        CardManipulationModel model = new CardManipulationModel(_manip, pattern.GetCardResult(), "zellmama", DelayFrames, RNGModifier);
         model.RenderTimerTick += Model_RenderTimerTick;
         model.RecoveryPattern = "74441154176425316556";
         Model = model;        
     }
 
-    private void Model_RenderTimerTick(object? sender, EventArgs e)
+    private void Model_RenderTimerTick(object sender, EventArgs e)
     {
         SnakeView.InvalidateSurface();
     }
@@ -79,12 +92,34 @@ public partial class TimingPage : ContentPage
         Model?.SubmitCommand.Execute(null);
     }
 
-    
+    public static readonly BindableProperty QuistisCardPatternsProperty = BindableProperty.Create(nameof(QuistisCardPatterns), typeof(ObservableCollection<PickerItem>), typeof(TimingPage), new ObservableCollection<PickerItem>());
+
+
+    public ObservableCollection<PickerItem> QuistisCardPatterns
+    {
+        get => (ObservableCollection<PickerItem>)GetValue(QuistisCardPatternsProperty);
+        set => SetValue(QuistisCardPatternsProperty, value);
+    }
+
+    public static readonly BindableProperty QuistisCardPatternProperty = BindableProperty.Create(nameof(QuistisCardPattern), typeof(PickerItem), typeof(TimingPage), null);
+
+
+    public PickerItem QuistisCardPattern
+    {
+        get => (PickerItem)GetValue(QuistisCardPatternProperty);
+        set
+        {
+            if (value == QuistisCardPattern) return;
+            SetValue(QuistisCardPatternProperty, value);
+            if (Model != null) CreateManip();
+        }
+    }
+
 
     private void SKCanvasView_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
-        var canvas = e.Surface.Canvas;
-        var info = e.Info;
+        SKCanvas canvas = e.Surface.Canvas;
+        SKImageInfo info = e.Info;
 
         canvas.Clear(SKColors.Transparent);
 
@@ -92,25 +127,13 @@ public partial class TimingPage : ContentPage
             return;
 
         // Compose single-line text and sanitize newlines
-        var text = $"{Model.RareCardTimer} {Model.Snake}";
+        string text = $"{Model.RareCardTimer} {Model.Snake}";
 
         canvas.Save();
         canvas.ClipRect(new SKRect(0, 0, info.Width, info.Height));
 
-        var c = Model.TextColourMaui;
-        _paint.Color = new SKColor(
-            (byte)(c.Red * 255),
-            (byte)(c.Green * 255),
-            (byte)(c.Blue * 255),
-            (byte)(c.Alpha * 255));
-
-        var metrics = _font.Metrics; // SKFontMetrics
-        var lineHeight = metrics.Descent - metrics.Ascent;
-        var baseline = (info.Height - lineHeight) * 0.5f - metrics.Ascent;
-
-        // Draw at left edge; alignment is controlled by x-coordinate
-        canvas.DrawText(text, 0, baseline, _font, _paint);
-
+        _paint.Color = Model.TextColourMaui.ToSKColor();
+        canvas.DrawText(text, 0, 0, _font, _paint);
         canvas.Restore();
     }
 }

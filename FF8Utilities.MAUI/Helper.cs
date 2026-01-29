@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,15 @@ namespace FF8Utilities.MAUI
                 });
 
             return bindable;
+        }
+
+        public static SKColor ToSKColor(this Color colour)
+        {
+            return new SKColor(
+            (byte)(colour.Red * 255),
+            (byte)(colour.Green * 255),
+            (byte)(colour.Blue * 255),
+            (byte)(colour.Alpha * 255));
         }
     }
 }

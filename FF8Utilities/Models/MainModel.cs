@@ -19,9 +19,9 @@ using System.Windows.Input;
 using CarawayCode.Entities;
 using CardManipulation;
 using FF8Utilities.Common;
+using FF8Utilities.Common.Cards;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
-using LateQuistisManipulation;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
@@ -29,6 +29,7 @@ using Newtonsoft.Json.Linq;
 using UltimeciaManip;
 using UltimeciaManip.Entities;
 using Manipulation = UltimeciaManip.Manipulation;
+using QuistisPattern = FF8Utilities.Common.QuistisPattern;
 using Timer = System.Timers.Timer;
 
 namespace FF8Utilities.Models
@@ -42,7 +43,7 @@ namespace FF8Utilities.Models
         private BindingList<CardNotesModel> _cardNotes;
         private bool _currentlyTalling;
         private bool _includeRinoaParties;
-        private QuistisPattern _pattern = QuistisPattern.Elastoid_JellyEye;
+        private Common.QuistisPattern _pattern = Common.QuistisPattern.Elastoid_JellyEye;
         private BindingList<PoleModel> _poles;
         private int? _rngPattern;
         private SettingsModel _settings;
@@ -150,12 +151,12 @@ namespace FF8Utilities.Models
             {
                 if (e.PropertyName == nameof(Pattern))
                 {
-                    if (Pattern == QuistisPattern.LateQuistis && string.IsNullOrWhiteSpace(CustomQuistisPattern))
+                    if (Pattern == Common.QuistisPattern.LateQuistis && string.IsNullOrWhiteSpace(CustomQuistisPattern))
                     {
                         // Don't let them select this
                         Window.BeginInvoke(() =>
                         {
-                            Pattern = QuistisPattern.Elastoid_JellyEye;
+                            Pattern = Common.QuistisPattern.Elastoid_JellyEye;
                             Window.ShowMessageAsync("Error", "Use tracker to set late quistis pattern");
                         });
                     }

@@ -1,5 +1,5 @@
-﻿using FF8Utilities.Models;
-using LateQuistisManipulation.Models;
+﻿using FF8Utilities.Common.Cards;
+using FF8Utilities.Models;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;

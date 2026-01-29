@@ -1,7 +1,7 @@
 ﻿using CardManipulation;
+using FF8Utilities.Common.Cards;
 using FF8Utilities.Entities;
 using FF8Utilities.Models;
-using LateQuistisManipulation.Models;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;

@@ -5,33 +5,6 @@ using System.IO;
 namespace FF8Utilities
 {
     [Flags]
-    public enum QuistisPattern
-    {
-        [Description("[Frame 1] - Elastoid (Jellyeye)")]
-        Elastoid_JellyEye = 1,
-        [Description("[Frame 2] - Malboro (Anacondaur)")]
-        Malboro_Snek = 2,
-        [Description("[Frame 3] - Biggs & Wedge (Jellyeye)")]
-        BiggsWedge_JellyEye = 3,
-        [Description("[Frame 4] - Elastoid (Grendel)")]
-        Elastoid_Grendel = 4,
-        [Description("[Frame 5] - Malboro (Grand Mantis) *Unwinnable*")]
-        Malboro_GrandMantis = 5,
-        [Description("[Frame 6] - Grand Mantis (Elastoid) *Unwinnable*")]
-        GrandMantis_Elastoid = 6,
-        [Description("[Frame 7] - Glacial Eye (Grand Mantis)")]
-        GlacialEye_GrandMantis = 7,
-        [Description("[Frame 8] - Anacondaur (GIM47N) *Unwinnable*")]
-        Snek_GIM = 8,
-        [Description("[Frame 9] - Jellyeye (Biggs & Wedge)")]
-        JellyEye_BiggsWedge = 9,
-        [Description("[Frame 10] - Chimera (Thrustaevis)")]
-        Chimera_Thrustaevis = 10,
-        [Description("Late Quistis")]
-        LateQuistis = -1
-    }
-
-    [Flags]
     public enum UltimeciaDirection
     {
         Up = 8,
@@ -137,13 +110,6 @@ namespace FF8Utilities
         Fastitocalon,
         Geezard
     }
-
-    public enum IfritEncounterType
-    {
-        [Description("2x Red Bats")]
-        RedBat,
-        Buel
-    }    
 
     public enum CSRLanguage
     {

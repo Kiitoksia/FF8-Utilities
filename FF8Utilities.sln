@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarawayCode", "CarawayCode\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimeciaManip", "UltimeciaManip\UltimeciaManip.csproj", "{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LateQuistis", "LateQuistis\LateQuistis.csproj", "{82CB8657-475A-4223-A6BE-54BBA965AD23}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Updater", "FF8Utilities.Updater\FF8Utilities.Updater.csproj", "{CC22D4C1-852D-4F8C-8968-135492BA37F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaivelFins", "KaivelFins\KaivelFins.csproj", "{F3F797FC-051E-46A3-9E6D-8D330D8B0544}"
@@ -23,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.MAUI", "FF8Uti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Common", "FF8Utilities.Common\FF8Utilities.Common.csproj", "{D7A149D0-5F8B-471A-A9B1-1EFCCF45A6F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardManipulation", "CardManipulation2\CardManipulation.csproj", "{D40CD4BC-C65A-41B9-AD65-1F3DA1848A20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardManipulation", "CardManipulation\CardManipulation.csproj", "{D40CD4BC-C65A-41B9-AD65-1F3DA1848A20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +41,6 @@ Global
 		{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82CB8657-475A-4223-A6BE-54BBA965AD23}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC22D4C1-852D-4F8C-8968-135492BA37F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
