@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -37,10 +38,19 @@ namespace FF8Utilities.Common.Cards
                 }
             }
 
+#if DEBUG
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+#endif
+
             LoadRNGResult();
             LoadOpponentDecks();
             LoadPlayPatterns();
             LoadGameScenarios();
+#if DEBUG
+            sw.Stop();
+            Console.WriteLine($"LateQuistis Init Time: {sw.Elapsed.TotalSeconds:N2}s");
+#endif
         }
 
         private List<OpponentDeck> OpponentDecks { get; set; }

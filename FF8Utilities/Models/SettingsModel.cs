@@ -45,7 +45,7 @@ namespace FF8Utilities.Models
             InstallPracticeModCommand = new Command(() => true, InstallPracticeMod);
             DownloadLateQuistisFiles = new Command(() => true, DownloadLateQuistis);
             _mainWindowModel = model;
-            DriveManager = new DriveManager(_mainWindowModel, this);
+            DriveManager = new DriveManager(this);
             Instance = this;
         }
 

@@ -37,7 +37,6 @@ namespace FF8Utilities.Common.Cards
         private RedSoldierEncounter _redSoldierEncounter;
         private int _focusedTabIndex;
         private LateQuistisPattern _currentPattern;            
-        private LateQuistis _lateQuistisManip;
         private bool _quistisCardObtained;
         private bool _designMode;
         private bool _zellCardSubmitted;
@@ -49,9 +48,29 @@ namespace FF8Utilities.Common.Cards
 
         private const string TrackingSettingsFilename = "TrackingSettings.xml";
 
-        private CardManip _cardManip;
+        private static CardManip _cardManip;
+        private static LateQuistis _lateQuistisManip;
+
 
         private bool _initialised;
+
+        public static CardManip CardManip
+        {
+            get
+            {
+                if (_cardManip == null) _cardManip = new CardManip();
+                return _cardManip;
+            }
+        }
+
+        public static LateQuistis LateQuistisManip
+        {
+            get
+            {
+                if (_lateQuistisManip == null) _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
+                return _lateQuistisManip;
+            }
+        }
 
         public BaseZellCardTrackerModel()
         {
@@ -144,9 +163,7 @@ namespace FF8Utilities.Common.Cards
                 }
             };
 
-            _lateQuistisManip = new LateQuistis(Const.PackagesFolder);
-            _cardManip = new CardManip();
-            ZellCardManipModel = CreateCardManipModel(_cardManip, 1, "zellmama", Output);
+            ZellCardManipModel = CreateCardManipModel(CardManip, 1, "zellmama", Output);
             _initialised = true;
 
             try
@@ -163,8 +180,46 @@ namespace FF8Utilities.Common.Cards
             {
                 ShowMessage($"Could not load tracking settings, defaults have been set\r\n{ex.Message}", "Error");
             }
-            
+
+            FishFinTabEncounters = new BindingList<BaseEncounterModel>
+            {
+                TwoBatsEncounter,
+                IfritEncounter,
+                BuelEncounter,
+                SecondBatsEncounter,
+            };
+
+            DolletTabEncounters = new BindingList<BaseEncounterModel>
+            {
+                FirstDolletEncounter,
+                SecondDolletEncounter,
+                ThirdDolletEncounter,
+                FourthDolletEncounter
+            };
+
+            AnacondaurTabEncounters = new BindingList<BaseEncounterModel>
+            {
+                BridgeEncounter,
+                SecondBridgeEncounter,
+                AnacondaurEncounter,
+                PostAnacondaurEncounter
+            };
+
+            ElvoretTabEncounters = new BindingList<BaseEncounterModel>
+            {
+                ElvoretEncounter,
+                SpiderTankEncounter,
+                RedSoldierEncounter
+            };
         }
+
+        public BindingList<BaseEncounterModel> FishFinTabEncounters { get; }
+
+        public BindingList<BaseEncounterModel> DolletTabEncounters { get; }
+
+        public BindingList<BaseEncounterModel> AnacondaurTabEncounters { get; }
+
+        public BindingList<BaseEncounterModel> ElvoretTabEncounters { get; }
 
         public abstract void ShowMessage(string message, string caption);
 
@@ -288,7 +343,7 @@ namespace FF8Utilities.Common.Cards
 
         private void LaunchQuistis()
         {
-            LaunchQuistisPatterns(_lateQuistisManip.GetPattern(Output, true));
+            LaunchQuistisPatterns(LateQuistisManip.GetPattern(Output, true));
         }
 
         public abstract void LaunchQuistisPatterns(LateQuistisPattern pattern);
@@ -587,7 +642,7 @@ namespace FF8Utilities.Common.Cards
                         state = QuistisCardResult.Value;
                     }
 
-                    ZellCardManipModel = CreateCardManipModel(_cardManip, state, "zellmama", output);
+                    ZellCardManipModel = CreateCardManipModel(CardManip, state, "zellmama", output);
                     ZellMashTextBackgroundColor = ZellCardManipModel.InstantMashBackgroundColor;
                     ZellPatternMashDisplay = ZellCardManipModel.FirstFrameAvailableFramesDisplay;
                 }
@@ -634,7 +689,7 @@ namespace FF8Utilities.Common.Cards
 
                 if (_currentPattern == null)
                 {
-                    _currentPattern = _lateQuistisManip.GetPattern(output, false);
+                    _currentPattern = LateQuistisManip.GetPattern(output, false);
                     QuistisPatternMashDisplay = _currentPattern?.Deck?.InstantMash;
                     Match match = Regex.Match(QuistisPatternMashDisplay ?? string.Empty, @"(YES|NO).*?(\d+)", RegexOptions.IgnoreCase);
                     if (match.Success)

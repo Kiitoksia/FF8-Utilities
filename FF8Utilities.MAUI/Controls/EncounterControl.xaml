@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
+             x:DataType="m:BaseEncounterModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"             
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             x:Name="this"
+             x:Class="FF8Utilities.MAUI.Controls.EncounterControl">
+    <ContentView.Resources>
+        <converters:BoolConverter x:Key="InDesignModeConverter" x:TypeArguments="Color" True="DarkGreen" False="Transparent"/>
+        <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+        <toolkit:InvertedBoolConverter x:Key="InverseBoolConverter"/>
+
+        <buttons:SfRadioGroupKey x:Key="FanfareRadioKey"/>
+    </ContentView.Resources>
+    <Grid Margin="10,3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="80"/>
+        </Grid.ColumnDefinitions>
+
+        <HorizontalStackLayout>
+            <Label Text="{Binding Description}" FontSize="14" FontAttributes="Bold" Margin="0,0,10,0"/>
+            <Label Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InverseBoolConverter}}"/>
+            <Entry Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}}"/>
+        </HorizontalStackLayout>
+
+        <Button Text="DESIGN" Grid.Column="1" 
+                BackgroundColor="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InDesignModeConverter}}" 
+                Command="{Binding DesignCommand, Source={x:Reference this}}"/>
+
+        <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="2">
+            <CollectionView ItemsSource="{Binding Abilities}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:EncounterAbilityModel">
+                        <Grid Margin="20,3,0,3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="2"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding Description}" FontAttributes="Bold"/>
+                            <editors:SfNumericEntry Value="{Binding Count}" ValueChangeMode="OnKeyFocus" SelectAllOnFocus="True" CustomFormat="0" UpDownPlacementMode="Inline" Grid.Column="1" ShowClearButton="False" Minimum="0" Maximum="99" MaximumNumberDecimalDigits="0"/>
+
+                            <Border BackgroundColor="Gray" Grid.Row="1" Grid.ColumnSpan="2"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <HorizontalStackLayout IsVisible="{Binding ShowToggleOption}">
+                <Label Text="{Binding ToggleOptionDescription}"/>
+                <Switch IsToggled="{Binding IsToggled}"/>
+            </HorizontalStackLayout>
+
+
+            <Label Text="Camera" FontAttributes="Bold" IsVisible="{Binding FanfareVisible}" HorizontalTextAlignment="Start" Margin="0,5"/>
+            <CollectionView IsVisible="{Binding FanfareVisible}" ItemsSource="{Binding FanfareTypeList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="common:EnumerationMember">
+                        <buttons:SfRadioButton Text="{Binding Description}" IsChecked="{Binding IsSelected}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding Value}" StateChanged="SfRadioButton_StateChanged"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+        
+    </Grid>
+</ContentView>

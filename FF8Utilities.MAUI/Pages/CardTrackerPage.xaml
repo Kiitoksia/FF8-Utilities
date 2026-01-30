@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FF8Utilities.MAUI.Pages.CardTrackerPage"
+             xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+             xmlns:models="clr-namespace:FF8Utilities.MAUI.Models"
+             xmlns:cards="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
+             xmlns:c="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             x:DataType="models:CardTrackerModel"
+             Title="CardTrackerPage">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="HeaderTemplate" x:DataType="cards:BaseEncounterModel">
+            <Label Text="{Binding Description}" MinimumWidthRequest="100" HorizontalTextAlignment="Center" Margin="0,10" TextColor="LightPink"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ItemTemplate" x:DataType="cards:BaseEncounterModel">
+            <c:EncounterControl BindingContext="{Binding .}"/>
+        </DataTemplate>
+
+        <toolkit:InvertedBoolConverter x:Key="InvertedBooleanConverter"/>
+        <converters:ColorConverter x:Key="ColorConverter"/>
+
+        <Style TargetType="tabView:SfTabView">
+            <Setter Property="EnableVirtualization" Value="True"/>
+        </Style>
+    </ContentPage.Resources>
+    <tabView:SfTabView TabBarPlacement="Top">
+        <tabView:SfTabView.Items>
+            
+            <tabView:SfTabItem Header="Fish Fins">
+                <tabView:SfTabItem.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="80"/>
+                        </Grid.RowDefinitions>
+                        <tabView:SfTabView TabBarPlacement="Bottom">
+                            <tabView:SfTabView.Items>
+                                <tabView:SfTabItem Header="2x Bats">
+                                    <tabView:SfTabItem.Content>
+                                        <c:EncounterControl BindingContext="{Binding TwoBatsEncounter}"/>
+                                    </tabView:SfTabItem.Content>
+                                </tabView:SfTabItem>
+                                <tabView:SfTabItem Header="Ifrit">
+                                    <tabView:SfTabItem.Content>
+                                        <VerticalStackLayout>
+                                            <c:EncounterControl BindingContext="{Binding IfritEncounter}"/>
+                                            <buttons:SfRadioGroup SelectedValue="{Binding IfritsCavernEncounterType}">
+                                                <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.RedBat}" Text="2x Red Bats"/>
+                                                <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.Buel}" Text="Buel"/>
+                                            </buttons:SfRadioGroup>
+                                        </VerticalStackLayout>
+                                    </tabView:SfTabItem.Content>
+                                </tabView:SfTabItem>
+                                <tabView:SfTabItem Header="Post Ifrit" x:Name="PostIfritTab"/>
+
+                            </tabView:SfTabView.Items>
+                        </tabView:SfTabView>
+                        <Grid Grid.Row="1" BackgroundColor="#00589F">
+                            <Grid.Resources>
+                                <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                    <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                    <Setter Property="FontAttributes" Value="Bold"/>
+                                    <Setter Property="FontSize" Value="16"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="0.3*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}"/>
+                            <Border Grid.Column="1" Stroke="White" StrokeThickness="4" >
+                                <VerticalStackLayout BackgroundColor="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorConverter}}" HorizontalOptions="Fill" VerticalOptions="Fill">
+                                    <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
+                                    <Label Text="{Binding QuistisPatternMashDisplay}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                            
+                        </Grid>
+                    </Grid>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
+
+            <!--<tabView:SfTabItem Header="Dollet">
+                <tabView:SfTabItem.Content>
+                    <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding DolletTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>-->
+
+            <!--<tabView:SfTabItem Header="Anacondaur">
+                <tabView:SfTabItem.Content>
+                    <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding AnacondaurTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
+
+            <tabView:SfTabItem Header="Elvoret">
+                <tabView:SfTabItem.Content>
+                    <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding ElvoretTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>-->
+        </tabView:SfTabView.Items>
+    </tabView:SfTabView>
+</ContentPage>

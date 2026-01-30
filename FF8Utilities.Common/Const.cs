@@ -133,4 +133,16 @@ namespace FF8Utilities.Common
         RedBat,
         Buel
     }
+
+    public enum CSRLanguage
+    {
+        English,
+        French
+    }
+
+    public enum DownloadResult
+    {
+        Downloaded,
+        Error
+    }
 }

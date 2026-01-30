@@ -93,13 +93,7 @@ namespace FF8Utilities
         BottomCentre,
         [Description("Bottom Right")]
         BottomRight
-    }
-
-    public enum DownloadResult
-    {
-        Downloaded,
-        Error
-    }
+    }   
 
     public enum Card
     {
@@ -109,12 +103,6 @@ namespace FF8Utilities
         [Description("Fastitocalon-F")]
         Fastitocalon,
         Geezard
-    }
-
-    public enum CSRLanguage
-    {
-        English,
-        French
     }
 
     public enum QuistisPatternsOrderBy
