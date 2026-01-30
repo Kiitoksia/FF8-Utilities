@@ -1,10 +1,12 @@
+using Android.Telecom;
 using FF8Utilities.Common.Cards;
+using FF8Utilities.MAUI.Models;
 
 namespace FF8Utilities.MAUI.Pages;
 
 public partial class LateQuistisManipulationPage : ContentPage
 {
-	public LateQuistisManipulationPage()
+	public LateQuistisManipulationPage(LateQuistisPattern model, CardManipulationModel cardManipModel)
 	{
 		InitializeComponent();
 
@@ -13,19 +15,31 @@ public partial class LateQuistisManipulationPage : ContentPage
 			SelectedStrategy = (LateQuistisStrategy)strategy;
 			NavigationDrawer.ToggleDrawer();
         });
-	}
+
+        CardControl.Model = cardManipModel;
+        Model = model;        
+    }
 
 	public LateQuistisPattern Model
 	{
 		get => (LateQuistisPattern)BindingContext;
-		set
+		private set
 		{
             BindingContext = value;
-			SelectedStrategy = Model.Strategies.FirstOrDefault();
+			SelectedStrategy = Model.Strategies.FirstOrDefault();			
         }
+    }	
+
+	public static readonly BindableProperty CardManipModelProperty = BindableProperty.Create(nameof(CardManipModel), typeof(CardManipulationModel), typeof(LateQuistisManipulationPage), null);
+
+	public CardManipulationModel CardManipModel
+	{
+		get => (CardManipulationModel)GetValue(CardManipModelProperty);
+		private set => SetValue(CardManipModelProperty, value);
     }
 
-	public static readonly BindableProperty SelectStrategyCommandProperty = BindableProperty.Create(nameof(SelectStrategyCommand), typeof(Command<LateQuistisPattern>), typeof(LateQuistisManipulationPage), null);
+
+    public static readonly BindableProperty SelectStrategyCommandProperty = BindableProperty.Create(nameof(SelectStrategyCommand), typeof(Command<LateQuistisPattern>), typeof(LateQuistisManipulationPage), null);
 
 	public AsyncCommand SelectStrategyCommand
 	{

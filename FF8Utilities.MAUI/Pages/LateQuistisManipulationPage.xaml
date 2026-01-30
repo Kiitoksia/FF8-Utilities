@@ -39,7 +39,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20"/>
                     <RowDefinition/>
-                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Label Text="{Binding SelectedStrategy.Frame, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}"/>
@@ -48,7 +48,7 @@
 
 
 
-                <controls:CardTimerControl Grid.Row="2"/>
+                <controls:CardTimerControl Grid.Row="2" x:Name="CardControl"/>
             </Grid>
         </navigationDrawer:SfNavigationDrawer.ContentView>
     </navigationDrawer:SfNavigationDrawer>

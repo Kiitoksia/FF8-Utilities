@@ -8,8 +8,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <VerticalStackLayout>
@@ -30,7 +30,8 @@
 
 
         <VerticalStackLayout Grid.Row="1">
-            <skia:SKCanvasView  PaintSurface="SKCanvasView_PaintSurface" HeightRequest="30" HorizontalOptions="Fill" x:Name="SnakeView"/>
+            <skia:SKCanvasView PaintSurface="SKCanvasView_PaintSurface" HeightRequest="30" HorizontalOptions="Fill" x:Name="SnakeView"/>
+
             <Border BackgroundColor="{Binding InstantMashBackgroundMaui}" IsVisible="{Binding ShowInstantMashText}" Padding="5">
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <Label Text="Instant Mash:"/>
@@ -38,8 +39,10 @@
                     <Label Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)'}"/>
                 </HorizontalStackLayout>
             </Border>
+
+            <Button Command="{Binding SubmitCommand}"  Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="3" FontSize="Large"/>
+
         </VerticalStackLayout>
-        <Button Command="{Binding SubmitCommand}"  Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="3" FontSize="Large"/>
     </Grid>
     
 </ContentView>

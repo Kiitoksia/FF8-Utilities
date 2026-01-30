@@ -54,8 +54,7 @@ namespace FF8Utilities.MAUI.Models
 
         public override void LaunchQuistisPatterns(LateQuistisPattern pattern)
         {
-            LateQuistisManipulationPage page = new LateQuistisManipulationPage();
-            page.Model = pattern;
+            LateQuistisManipulationPage page = new LateQuistisManipulationPage(pattern, (CardManipulationModel)CreateCardManipModel(CardManip, 0, "fc01", pattern.RNGIndex));            
             MainThread.BeginInvokeOnMainThread(() => App.Current.Windows[0].Page.Navigation.PushModalAsync(page));
         }
 
