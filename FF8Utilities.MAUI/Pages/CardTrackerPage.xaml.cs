@@ -1,3 +1,4 @@
+using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
 using FF8Utilities.MAUI.Controls;
 using FF8Utilities.MAUI.Models;
@@ -17,9 +18,14 @@ public partial class CardTrackerPage : ContentPage
 			{
                 CreatePostIfritEncounterContent();
             }
+			if (e.PropertyName == nameof(CardTrackerModel.DidGetSecondBridgeEncounter))
+			{
+                CreateAnacondaurEncounterContent();
+            }
 		};
 
         CreatePostIfritEncounterContent();
+        CreateAnacondaurEncounterContent();
     }
 
 	private void CreatePostIfritEncounterContent()
@@ -35,7 +41,34 @@ public partial class CardTrackerPage : ContentPage
 				break;
 			default: throw new NotImplementedException();
 		}
-		PostIfritTab.Content = new EncounterControl { BindingContext = postIfritEncounter };
+		MainThread.BeginInvokeOnMainThread(() =>
+		{
+			PostIfritTab.Header = Model.IfritsCavernEncounterType.GetDescription();
+            PostIfritTab.Content = new EncounterControl { BindingContext = postIfritEncounter };
+        });
+	}
+
+	private void CreateAnacondaurEncounterContent()
+	{
+		BaseEncounterModel secondEncounter, thirdEncounter;
+		if (Model.DidGetSecondBridgeEncounter)
+		{
+			secondEncounter = Model.SecondBridgeEncounter;
+			thirdEncounter = Model.AnacondaurEncounter;
+		}
+		else
+		{
+			secondEncounter = Model.AnacondaurEncounter;
+			thirdEncounter = Model.PostAnacondaurEncounter;
+		}
+
+		MainThread.BeginInvokeOnMainThread(() =>
+		{
+			Anacondaur2ndEncounter.Content = new EncounterControl { BindingContext = secondEncounter };
+			Anacondaur2ndEncounter.Header = secondEncounter.Description;
+			Anacondaur3rdEncounter.Content = new EncounterControl { BindingContext = thirdEncounter };
+            Anacondaur3rdEncounter.Header = thirdEncounter.Description;
+        });
 	}
 
 	public CardTrackerModel Model

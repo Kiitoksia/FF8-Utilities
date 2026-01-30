@@ -32,7 +32,7 @@
     </ContentPage.Resources>
     <tabView:SfTabView TabBarPlacement="Top">
         <tabView:SfTabView.Items>
-            
+
             <tabView:SfTabItem Header="Fish Fins">
                 <tabView:SfTabItem.Content>
                     <Grid>
@@ -76,31 +76,73 @@
                                 <ColumnDefinition Width="0.3*"/>
                             </Grid.ColumnDefinitions>
                             <Label Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}"/>
-                            <Border Grid.Column="1" Stroke="White" StrokeThickness="4" >
+                            <Border Grid.Column="1" Stroke="White" StrokeThickness="2" >
                                 <VerticalStackLayout BackgroundColor="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorConverter}}" HorizontalOptions="Fill" VerticalOptions="Fill">
                                     <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
                                     <Label Text="{Binding QuistisPatternMashDisplay}"/>
                                 </VerticalStackLayout>
                             </Border>
-                            
+
                         </Grid>
                     </Grid>
                 </tabView:SfTabItem.Content>
             </tabView:SfTabItem>
 
-            <!--<tabView:SfTabItem Header="Dollet">
+            <tabView:SfTabItem Header="Dollet">
                 <tabView:SfTabItem.Content>
-                    <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding DolletTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
-                </tabView:SfTabItem.Content>
-            </tabView:SfTabItem>-->
-
-            <!--<tabView:SfTabItem Header="Anacondaur">
-                <tabView:SfTabItem.Content>
-                    <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding AnacondaurTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
+                    <tabView:SfTabView TabBarPlacement="Bottom">
+                        <tabView:SfTabView.Items>
+                            <tabView:SfTabItem Header="[1st] 2x Soldier">
+                                <tabView:SfTabItem.Content>
+                                    <c:EncounterControl BindingContext="{Binding FirstDolletEncounter}"/>
+                                </tabView:SfTabItem.Content>
+                            </tabView:SfTabItem>
+                            <tabView:SfTabItem Header="[2nd] 2x Soldier">
+                                <tabView:SfTabItem.Content>
+                                    <c:EncounterControl BindingContext="{Binding SecondDolletEncounter}"/>
+                                </tabView:SfTabItem.Content>
+                            </tabView:SfTabItem>
+                            <tabView:SfTabItem Header="[3rd] 1x Soldier">
+                                <tabView:SfTabItem.Content>
+                                    <c:EncounterControl BindingContext="{Binding ThirdDolletEncounter}"/>
+                                </tabView:SfTabItem.Content>
+                            </tabView:SfTabItem>
+                            <tabView:SfTabItem Header="[4th] 1x Soldier">
+                                <tabView:SfTabItem.Content>
+                                    <c:EncounterControl BindingContext="{Binding FourthDolletEncounter}"/>
+                                </tabView:SfTabItem.Content>
+                            </tabView:SfTabItem>
+                        </tabView:SfTabView.Items>
+                    </tabView:SfTabView>
                 </tabView:SfTabItem.Content>
             </tabView:SfTabItem>
 
-            <tabView:SfTabItem Header="Elvoret">
+            <tabView:SfTabItem Header="Anacondaur">
+                <tabView:SfTabItem.Content>
+                    <tabView:SfTabView TabBarPlacement="Bottom">
+                        <tabView:SfTabView.Items>
+                            <tabView:SfTabItem Header="Bridge Soldier">
+                                <tabView:SfTabItem.Content>
+                                    <ScrollView>
+                                        <VerticalStackLayout>
+                                            <c:EncounterControl BindingContext="{Binding BridgeEncounter}"/>
+                                            <HorizontalStackLayout>
+                                                <Label Text="2nd Bridge Encounter"/>
+                                                <Switch IsToggled="{Binding DidGetSecondBridgeEncounter}" Margin="0,5"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </ScrollView>
+                                </tabView:SfTabItem.Content>
+                            </tabView:SfTabItem>
+                            <tabView:SfTabItem x:Name="Anacondaur2ndEncounter"/>
+                            <tabView:SfTabItem x:Name="Anacondaur3rdEncounter"/>
+
+                        </tabView:SfTabView.Items>
+                    </tabView:SfTabView>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
+
+            <!--<tabView:SfTabItem Header="Elvoret">
                 <tabView:SfTabItem.Content>
                     <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding ElvoretTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
                 </tabView:SfTabItem.Content>
