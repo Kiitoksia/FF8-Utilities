@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:common="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             xmlns:c="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Runtime"
+             MinimumHeightRequest="300"
+             MinimumWidthRequest="200"
+             x:Class="FF8Utilities.MAUI.Controls.CardPatternView">
+    <CollectionView ItemsSource="{Binding .}">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical" Span="3"/>
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <c:CardPatternPositionView BindingContext="{Binding .}"/>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentView>

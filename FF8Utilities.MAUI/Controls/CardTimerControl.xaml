@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:models="clr-namespace:FF8Utilities.MAUI.Models" 
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             x:DataType="models:CardManipulationModel"
+             x:Class="FF8Utilities.MAUI.Controls.CardTimerControl">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <VerticalStackLayout>
+            <Label Text="{Binding Explanation}"/>
+            <Entry
+            x:Name="RecoveryEntry"
+            ClearButtonVisibility="WhileEditing"
+            HorizontalOptions="Fill"
+            Keyboard="Numeric"
+            Placeholder="Enter cards for recovery or 1st try search"
+            Text="{Binding RecoveryPattern}"
+            ReturnCommand="{Binding SubmitCommand}"
+            TextColor="White" />
+            <Label Text="{Binding FoundCards}" />
+            <Label Text="{Binding ErrorText}"/>
+        </VerticalStackLayout>
+
+
+
+        <VerticalStackLayout Grid.Row="1">
+            <skia:SKCanvasView  PaintSurface="SKCanvasView_PaintSurface" HeightRequest="30" HorizontalOptions="Fill" x:Name="SnakeView"/>
+            <Border BackgroundColor="{Binding InstantMashBackgroundMaui}" IsVisible="{Binding ShowInstantMashText}" Padding="5">
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Label Text="Instant Mash:"/>
+                    <Label Text="{Binding FirstFrameAvailableFramesDisplay}"/>
+                    <Label Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)'}"/>
+                </HorizontalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+        <Button Command="{Binding SubmitCommand}"  Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="3" FontSize="Large"/>
+    </Grid>
+    
+</ContentView>

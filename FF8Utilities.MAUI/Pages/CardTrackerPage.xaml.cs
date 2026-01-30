@@ -2,6 +2,7 @@ using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
 using FF8Utilities.MAUI.Controls;
 using FF8Utilities.MAUI.Models;
+using System.Windows.Input;
 
 namespace FF8Utilities.MAUI.Pages;
 
@@ -26,6 +27,17 @@ public partial class CardTrackerPage : ContentPage
 
         CreatePostIfritEncounterContent();
         CreateAnacondaurEncounterContent();
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+		MainThread.BeginInvokeOnMainThread(async () =>
+		{
+			bool shouldContinue = await DisplayAlertAsync("Confirm", "Are you sure you want to go back? All tracking will be lost", "OK", "Cancel");
+			if (shouldContinue) await Navigation.PopModalAsync();
+		});
+
+        return true;
     }
 
 	private void CreatePostIfritEncounterContent()

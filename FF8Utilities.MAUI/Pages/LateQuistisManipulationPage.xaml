@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FF8Utilities.MAUI.Pages.LateQuistisManipulationPage"
+             xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView" 
+             xmlns:cards="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common" 
+             xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:navigationDrawer="clr-namespace:Syncfusion.Maui.NavigationDrawer;assembly=Syncfusion.Maui.NavigationDrawer"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="cards:LateQuistisPattern"
+             x:Name="this"
+             Title="LateQuistisManipulationPage">
+    <ContentPage.Resources>
+        <toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+    </ContentPage.Resources>
+
+    <navigationDrawer:SfNavigationDrawer Grid.RowSpan="2" x:Name="NavigationDrawer">
+        <navigationDrawer:SfNavigationDrawer.DrawerSettings>
+            <navigationDrawer:DrawerSettings IsOpen="True">
+                <navigationDrawer:DrawerSettings.DrawerContentView>
+                    <CollectionView ItemsSource="{Binding Strategies}" SelectionMode="Single" SelectionChanged="CollectionView_SelectionChanged" SelectedItem="{Binding SelectedStrategy, Source={x:Reference this}}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="cards:LateQuistisStrategy">
+                                <VerticalStackLayout HeightRequest="60">
+                                    <Label Text="{Binding Frame, StringFormat='Frame {0}'}" Margin="5,0"/>
+                                    <HorizontalStackLayout>
+                                        <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}}" HeightRequest="50" Aspect="AspectFit" />
+                                        <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}}" HeightRequest="50" Aspect="AspectFit" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </navigationDrawer:DrawerSettings.DrawerContentView>
+            </navigationDrawer:DrawerSettings>
+        </navigationDrawer:SfNavigationDrawer.DrawerSettings>
+        <navigationDrawer:SfNavigationDrawer.ContentView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.3*"/>
+                </Grid.RowDefinitions>
+
+                <Label Text="{Binding SelectedStrategy.Frame, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}"/>
+                <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1"
+                                          HorizontalOptions="Fill" VerticalOptions="Fill"/>
+
+
+
+                <controls:CardTimerControl Grid.Row="2"/>
+            </Grid>
+        </navigationDrawer:SfNavigationDrawer.ContentView>
+    </navigationDrawer:SfNavigationDrawer>
+    
+
+    
+</ContentPage>

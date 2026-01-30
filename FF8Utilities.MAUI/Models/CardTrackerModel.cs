@@ -1,6 +1,7 @@
 ﻿using CardManipulation;
 using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
+using FF8Utilities.MAUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -53,7 +54,9 @@ namespace FF8Utilities.MAUI.Models
 
         public override void LaunchQuistisPatterns(LateQuistisPattern pattern)
         {
-            throw new NotImplementedException();
+            LateQuistisManipulationPage page = new LateQuistisManipulationPage();
+            page.Model = pattern;
+            MainThread.BeginInvokeOnMainThread(() => App.Current.Windows[0].Page.Navigation.PushModalAsync(page));
         }
 
         public override void LaunchZellPatterns()

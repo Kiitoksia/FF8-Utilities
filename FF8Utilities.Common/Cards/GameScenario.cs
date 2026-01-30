@@ -99,7 +99,9 @@ namespace FF8Utilities.Common.Cards
                 case "elnoyle": return GetCardImage("elnoyle");
                 case "grendel": return GetCardImage("grendel");
                 case "tonberryking": return GetCardImage("king");
-                case "chimera": return GetCardImage("chimera");
+                case "chimera": 
+                case "himera":
+                    return GetCardImage("chimera");
                 case "grat": return GetCardImage("grat");
                 case "jelleye": return GetCardImage("jelleye");
                 case "anacondaur": return GetCardImage("snake");
@@ -134,9 +136,9 @@ namespace FF8Utilities.Common.Cards
             }
         }
 
-        internal List<LateQuistisPosition> CreatePositions(int frame, bool loadImages)
+        internal List<CardPosition> CreatePositions(int frame, bool loadImages)
         {
-            List<LateQuistisPosition> positions = new List<LateQuistisPosition>();
+            List<CardPosition> positions = new List<CardPosition>();
 
             string frameString = GetPattern(frame);
             if (string.IsNullOrWhiteSpace(frameString)) return null;
@@ -156,7 +158,7 @@ namespace FF8Utilities.Common.Cards
                 string card = patternMatch.Groups[1].Value;
                 int boardPosition = int.Parse(patternMatch.Groups[2].Value);
 
-                positions.Add(new LateQuistisPosition(boardPosition, isPlayerTurn, isPlayerTurn ? playerTurns : opponentTurns, loadImages ? GetCardImage(card) : null));
+                positions.Add(new CardPosition(boardPosition, isPlayerTurn, isPlayerTurn ? playerTurns : opponentTurns, loadImages ? GetCardImage(card) : null));
 
                 if (isPlayerTurn) playerTurns++;
                 else opponentTurns++;

@@ -74,6 +74,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
 		<PackageReference Include="Syncfusion.Maui.Inputs" Version="32.1.25" />
+		<PackageReference Include="Syncfusion.Maui.NavigationDrawer" Version="32.1.25" />
 		<PackageReference Include="Syncfusion.Maui.Picker" Version="32.1.25" />
 		<PackageReference Include="Syncfusion.Maui.TabView" Version="32.1.25" />
 	</ItemGroup>
@@ -94,6 +95,12 @@
 	  <MauiXaml Update="Controls\CardPatternPositionView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\CardPatternView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Controls\CardTimerControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\EncounterControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -107,6 +114,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\CardTrackerPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LateQuistisManipulationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\MainPage.xaml">
