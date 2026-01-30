@@ -29,6 +29,10 @@
         <Style TargetType="tabView:SfTabView">
             <Setter Property="EnableVirtualization" Value="True"/>
         </Style>
+
+        <Style TargetType="Switch">
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
     </ContentPage.Resources>
     <tabView:SfTabView TabBarPlacement="Top">
         <tabView:SfTabView.Items>
@@ -76,8 +80,8 @@
                                 <ColumnDefinition Width="0.3*"/>
                             </Grid.ColumnDefinitions>
                             <Label Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})'}"/>
-                            <Border Grid.Column="1" Stroke="White" StrokeThickness="2" >
-                                <VerticalStackLayout BackgroundColor="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorConverter}}" HorizontalOptions="Fill" VerticalOptions="Fill">
+                            <Border Grid.Column="1" Stroke="White" StrokeThickness="2" BackgroundColor="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorConverter}}" >
+                                <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
                                     <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
                                     <Label Text="{Binding QuistisPatternMashDisplay}"/>
                                 </VerticalStackLayout>
@@ -142,11 +146,69 @@
                 </tabView:SfTabItem.Content>
             </tabView:SfTabItem>
 
-            <!--<tabView:SfTabItem Header="Elvoret">
+            <tabView:SfTabItem Header="Elvoret">
                 <tabView:SfTabItem.Content>
-                    <tabView:SfTabView TabBarPlacement="Bottom" ItemsSource="{Binding ElvoretTabEncounters}" HeaderItemTemplate="{StaticResource HeaderTemplate}" ContentItemTemplate="{StaticResource ItemTemplate}"/>
+                    <tabView:SfTabView>
+                        <tabView:SfTabView.Items>
+                            <tabView:SfTabItem>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="80"/>
+                                    </Grid.RowDefinitions>
+                                    <tabView:SfTabView TabBarPlacement="Bottom">
+                                        <tabView:SfTabView.Items>
+                                            <tabView:SfTabItem Header="Elvoret">
+                                                <tabView:SfTabItem.Content>
+                                                    <c:EncounterControl BindingContext="{Binding ElvoretEncounter}"/>
+                                                </tabView:SfTabItem.Content>
+                                            </tabView:SfTabItem>
+                                            <tabView:SfTabItem Header="X-ATM092">
+                                                <tabView:SfTabItem.Content>
+                                                    <VerticalStackLayout>
+                                                        <c:EncounterControl BindingContext="{Binding SpiderTankEncounter}"/>
+                                                        <HorizontalStackLayout Margin="10,0">
+                                                            <Label Text="Include Red Soldier Encounter" VerticalOptions="Center"/>
+                                                            <Switch IsToggled="{Binding DidGetRedSoldierEncounter}" Margin="5,0"/>
+                                                        </HorizontalStackLayout>
+                                                    </VerticalStackLayout>
+                                                </tabView:SfTabItem.Content>
+                                            </tabView:SfTabItem>
+                                            <tabView:SfTabItem Header="Red Soldier">
+                                                <tabView:SfTabItem.Content>
+                                                    <c:EncounterControl BindingContext="{Binding RedSoldierEncounter}"/>
+                                                </tabView:SfTabItem.Content>
+                                            </tabView:SfTabItem>
+                                        </tabView:SfTabView.Items>
+                                    </tabView:SfTabView>
+                                    <Grid Grid.Row="1">
+                                        <Grid.Resources>
+                                            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                                <Setter Property="FontAttributes" Value="Bold"/>
+                                                <Setter Property="FontSize" Value="16"/>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="0.3*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Output, StringFormat='Launch Zell (Index: {0})'}"  BackgroundColor="#00589F"/>
+                                        <Border Grid.Column="1" Stroke="White" StrokeThickness="2" BackgroundColor="{Binding ZellMashTextBackgroundColor, Converter={StaticResource ColorConverter}}" >
+                                            <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                                                <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
+                                                <Label Text="{Binding ZellPatternMashDisplay}"/>
+                                            </VerticalStackLayout>
+                                        </Border>
+
+                                    </Grid>
+                                </Grid>
+                            </tabView:SfTabItem>
+                        </tabView:SfTabView.Items>
+                    </tabView:SfTabView>
                 </tabView:SfTabItem.Content>
-            </tabView:SfTabItem>-->
+            </tabView:SfTabItem>
         </tabView:SfTabView.Items>
     </tabView:SfTabView>
 </ContentPage>
