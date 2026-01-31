@@ -1,4 +1,3 @@
-using Android.Telecom;
 using FF8Utilities.Common.Cards;
 using FF8Utilities.MAUI.Models;
 
@@ -10,12 +9,6 @@ public partial class LateQuistisManipulationPage : ContentPage
 	{
 		InitializeComponent();
 
-		SelectStrategyCommand = new AsyncCommand(async strategy =>
-		{
-			SelectedStrategy = (LateQuistisStrategy)strategy;
-			NavigationDrawer.ToggleDrawer();
-        });
-
         CardControl.Model = cardManipModel;
         Model = model;        
     }
@@ -23,7 +16,7 @@ public partial class LateQuistisManipulationPage : ContentPage
 	public LateQuistisPattern Model
 	{
 		get => (LateQuistisPattern)BindingContext;
-		private set
+		set
 		{
             BindingContext = value;
 			SelectedStrategy = Model.Strategies.FirstOrDefault();			
@@ -35,16 +28,7 @@ public partial class LateQuistisManipulationPage : ContentPage
 	public CardManipulationModel CardManipModel
 	{
 		get => (CardManipulationModel)GetValue(CardManipModelProperty);
-		private set => SetValue(CardManipModelProperty, value);
-    }
-
-
-    public static readonly BindableProperty SelectStrategyCommandProperty = BindableProperty.Create(nameof(SelectStrategyCommand), typeof(Command<LateQuistisPattern>), typeof(LateQuistisManipulationPage), null);
-
-	public AsyncCommand SelectStrategyCommand
-	{
-		get => (AsyncCommand)GetValue(SelectStrategyCommandProperty);
-		private set => SetValue(SelectStrategyCommandProperty, value);
+		set => SetValue(CardManipModelProperty, value);
     }
 
 	public static readonly BindableProperty SelectedStrategyProperty = BindableProperty.Create(nameof(SelectedStrategy), typeof(LateQuistisStrategy), typeof(LateQuistisManipulationPage), null, BindingMode.TwoWay);
@@ -57,6 +41,11 @@ public partial class LateQuistisManipulationPage : ContentPage
 
     private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-		//CollectionView view
+		NavigationDrawer.ToggleDrawer(); // Hide after selection
+    }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        NavigationDrawer.ToggleDrawer();
     }
 }

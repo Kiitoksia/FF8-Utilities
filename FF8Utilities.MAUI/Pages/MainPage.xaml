@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FF8Utilities.MAUI.Pages.MainPage"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Name="this"             
              BindingContext="{x:Reference this}"
              Title="MainPage">
@@ -15,10 +16,10 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Button Text="Card Tracker" Command="{Binding CardTrackerCommand}"/>
-        <Button Text="Fish Fins" Grid.Column="1"/>
-        <Button Text="Caraway Code" Grid.Row="1"/>
-        <Button Text="Ultimecia Party" Grid.Row="1" Grid.Column="1"/>
+        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}"/>
+        <buttons:SfButton Text="Fish Fins" Grid.Column="1"/>
+        <buttons:SfButton Text="Caraway Code" Grid.Row="1"/>
+        <buttons:SfButton Text="Ultimecia Party" Grid.Row="1" Grid.Column="1"/>
 
         <ActivityIndicator IsRunning="{Binding ShowLoadingBar}" IsVisible="{Binding ShowLoadingBar}" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
     </Grid>

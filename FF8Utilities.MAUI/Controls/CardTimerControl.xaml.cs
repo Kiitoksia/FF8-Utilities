@@ -14,8 +14,19 @@ public partial class CardTimerControl : ContentView
 		InitializeComponent();
 
         _font.Typeface = _typeface;
-        _font.Size = 32;
+        _font.Size = 48;
+        _font.Embolden = true;
+
+        Unloaded += (s, e) =>
+        {
+            if (Model != null)
+            {
+                Model.RenderTimerTick -= Value_RenderTimerTick;
+            }
+        };
     }
+
+
 
 	public CardManipulationModel Model
 	{
@@ -24,6 +35,7 @@ public partial class CardTimerControl : ContentView
         {
             if (Model != null)
             {
+                //Cleanup
                 Model.RenderTimerTick -= Value_RenderTimerTick;
             }
 

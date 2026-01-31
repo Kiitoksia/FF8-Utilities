@@ -6,7 +6,8 @@
              xmlns:cards="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common" 
              xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
              xmlns:navigationDrawer="clr-namespace:Syncfusion.Maui.NavigationDrawer;assembly=Syncfusion.Maui.NavigationDrawer"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" 
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:DataType="cards:LateQuistisPattern"
              x:Name="this"
              Title="LateQuistisManipulationPage">
@@ -16,18 +17,19 @@
 
     <navigationDrawer:SfNavigationDrawer Grid.RowSpan="2" x:Name="NavigationDrawer">
         <navigationDrawer:SfNavigationDrawer.DrawerSettings>
-            <navigationDrawer:DrawerSettings IsOpen="True">
+            <navigationDrawer:DrawerSettings IsOpen="True" DrawerWidth="100">
                 <navigationDrawer:DrawerSettings.DrawerContentView>
-                    <CollectionView ItemsSource="{Binding Strategies}" SelectionMode="Single" SelectionChanged="CollectionView_SelectionChanged" SelectedItem="{Binding SelectedStrategy, Source={x:Reference this}}">
+                    <CollectionView ItemsSource="{Binding Strategies}" SelectionMode="Single" SelectionChanged="CollectionView_SelectionChanged" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="cards:LateQuistisStrategy">
-                                <VerticalStackLayout HeightRequest="60">
-                                    <Label Text="{Binding Frame, StringFormat='Frame {0}'}" Margin="5,0"/>
+                                <Grid HeightRequest="60">
                                     <HorizontalStackLayout>
-                                        <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}}" HeightRequest="50" Aspect="AspectFit" />
-                                        <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}}" HeightRequest="50" Aspect="AspectFit" />
+                                        <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}}" HeightRequest="60" Aspect="AspectFit" />
+                                        <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}}" HeightRequest="60" Aspect="AspectFit" />
                                     </HorizontalStackLayout>
-                                </VerticalStackLayout>
+                                    <Label Text="{Binding Frame, StringFormat='Frame {0}'}"  VerticalTextAlignment="End" BackgroundColor="#7F000000"
+                                           VerticalOptions="End" HorizontalOptions="Start"/>
+                                </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -37,22 +39,25 @@
         <navigationDrawer:SfNavigationDrawer.ContentView>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="250"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                <Label Text="{Binding SelectedStrategy.Frame, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}"/>
-                <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1"
-                                          HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                <buttons:SfButton Clicked="Button_Clicked" Text="CHANGE FRAME"/>
+                <Label Text="{Binding SelectedStrategy.Frame, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" 
+                       HorizontalTextAlignment="Center" FontSize="Large" Grid.Column="1"/>
+
+                <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                          Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Fill" />
 
 
-
-                <controls:CardTimerControl Grid.Row="2" x:Name="CardControl"/>
+                <controls:CardTimerControl Grid.Row="2" Grid.ColumnSpan="2" x:Name="CardControl"/>
             </Grid>
         </navigationDrawer:SfNavigationDrawer.ContentView>
     </navigationDrawer:SfNavigationDrawer>
-    
-
-    
 </ContentPage>

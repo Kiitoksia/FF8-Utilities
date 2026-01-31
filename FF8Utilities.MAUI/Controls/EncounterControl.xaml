@@ -37,7 +37,7 @@
                 <Entry Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}}" HorizontalOptions="Fill"/>
             </HorizontalStackLayout>
 
-            <Button Text="EDIT" Grid.Column="1" 
+            <buttons:SfButton Text="EDIT" Grid.Column="1" 
             TextColor="White"
             BackgroundColor="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InDesignModeConverter}}" 
             Command="{Binding DesignCommand, Source={x:Reference this}}"/>
