@@ -3,13 +3,17 @@ using FF8Utilities.Common;
 using FF8Utilities.Common.Cards.Encounters;
 using FF8Utilities.Common.Cards.Encounters.Dollet;
 using FF8Utilities.Common.Cards.Encounters.IfritsCavern;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -44,6 +48,7 @@ namespace FF8Utilities.Common.Cards
         private string zellPatternMashDisplay;
         private Color _zellMashTextBackgroundColor;
         private Color _quistisMashTextBackgroundColor;
+        private string _quistisPatternResult;
 
 
         private const string TrackingSettingsFilename = "TrackingSettings.xml";
@@ -341,14 +346,20 @@ namespace FF8Utilities.Common.Cards
             FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true, Limits = 1 });
         }
 
-        private void LaunchQuistis()
+        private async void LaunchQuistis()
         {
-            LaunchQuistisPatterns(LateQuistisManip.GetPattern(Output, true));
+            uint? result = await LaunchQuistisPatterns(LateQuistisManip.GetPattern(Output, true));
+            QuistisCardResult = result;
+            QuistisCardObtained = result != null;
+            QuistisPatternResult = result != null ? result.Value.ToString("x8") : null;
         }
 
-        public abstract void LaunchQuistisPatterns(LateQuistisPattern pattern);
+        /// <summary>
+        /// Return the produced result if valid
+        /// </summary>
+        public abstract Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern);
 
-        public abstract void LaunchZellPatterns();
+        public abstract void LaunchZellPatterns(string patternString, int? count);
 
 
         public abstract bool LegacyMode { get; }
@@ -356,7 +367,20 @@ namespace FF8Utilities.Common.Cards
         private void LaunchZell()
         {
             ZellCardSubmitted = true;
-            LaunchZellPatterns();
+
+            
+
+            string patternString = null;
+            if (QuistisCardObtained)
+            {
+                patternString = QuistisPatternResult;
+            }
+            else
+            {
+                patternString = EarlyQuistisPattern.Result.ToString("x8");                                
+            }
+
+            LaunchZellPatterns(patternString, Output);
         }
 
 
@@ -832,5 +856,19 @@ namespace FF8Utilities.Common.Cards
                 OnPropertyChanged();
             }
         }
+
+        public string QuistisPatternResult
+        {
+            get => _quistisPatternResult;
+            set
+            {
+                if (_quistisPatternResult == value)
+                    return;
+                _quistisPatternResult = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public EarlyQuistisPattern EarlyQuistisPattern { get; set; }
     }
 }

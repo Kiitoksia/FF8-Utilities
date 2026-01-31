@@ -13,7 +13,7 @@ namespace FF8Utilities.MAUI.Converters
             if (parameter is Type type)
             {
                 var enumValues = Enum.GetValues(type);
-                return enumValues.Cast<object>().Select(t => new EnumerationMember { Value = t, Description = ((Enum)t).GetDescription() }).ToList();
+                return enumValues.Cast<object>().Select(t => new SelectableComboBoxItem { Value = t, Description = ((Enum)t).GetDescription() }).ToList();
             }
 
             throw new InvalidCastException();

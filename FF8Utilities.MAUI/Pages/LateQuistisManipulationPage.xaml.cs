@@ -1,5 +1,6 @@
 using FF8Utilities.Common.Cards;
 using FF8Utilities.MAUI.Models;
+using System.Windows.Input;
 
 namespace FF8Utilities.MAUI.Pages;
 
@@ -10,7 +11,9 @@ public partial class LateQuistisManipulationPage : ContentPage
 		InitializeComponent();
 
         CardControl.Model = cardManipModel;
-        Model = model;        
+        Model = model;
+
+        QuistisObtainedCommand = new AsyncCommand(QuistisCardObtained);
     }
 
 	public LateQuistisPattern Model
@@ -21,7 +24,21 @@ public partial class LateQuistisManipulationPage : ContentPage
             BindingContext = value;
 			SelectedStrategy = Model.Strategies.FirstOrDefault();			
         }
-    }	
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+		MainThread.BeginInvokeOnMainThread(async () =>
+		{
+			bool canContinue = await DisplayAlertAsync("Confim", "No quistis pattern selected, are you sure you want to return?", "OK", "Cancel");
+			if (canContinue)
+			{
+				SelectedStrategy = null;
+                await Navigation.PopModalAsync();
+            }
+		});
+		return true;        
+    }
 
 	public static readonly BindableProperty CardManipModelProperty = BindableProperty.Create(nameof(CardManipModel), typeof(CardManipulationModel), typeof(LateQuistisManipulationPage), null);
 
@@ -39,6 +56,14 @@ public partial class LateQuistisManipulationPage : ContentPage
 		set => SetValue(SelectedStrategyProperty, value);
     }
 
+	public static readonly BindableProperty QuistisObtainedCommandProperty = BindableProperty.Create(nameof(QuistisObtainedCommand), typeof(ICommand), typeof(LateQuistisManipulationPage), null);
+
+	public ICommand QuistisObtainedCommand
+	{
+		get => (ICommand)GetValue(QuistisObtainedCommandProperty);
+		set => SetValue(QuistisObtainedCommandProperty, value);
+    }
+
     private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
 		NavigationDrawer.ToggleDrawer(); // Hide after selection
@@ -48,4 +73,12 @@ public partial class LateQuistisManipulationPage : ContentPage
     {
         NavigationDrawer.ToggleDrawer();
     }
+
+	private async Task QuistisCardObtained()
+	{
+		if (SelectedStrategy != null)
+		{
+			await Navigation.PopModalAsync();
+		}
+	}
 }

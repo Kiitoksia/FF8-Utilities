@@ -13,7 +13,6 @@
     xmlns:encs="clr-namespace:FF8Utilities.Common.Cards.Encounters;assembly=FF8Utilities.Common"
     xmlns:extensions="clr-namespace:FF8Utilities.Extensions"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:ff8PingvalGui="clr-namespace:FF8Utilities"
     xmlns:ff8Utilities="clr-namespace:FF8Utilities"
     xmlns:local="clr-namespace:FF8Utilities.Dialogs"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -306,9 +305,8 @@
                                                         Grid.Column="1"
                                                         Background="Transparent"
                                                         DisplayMemberPath="Description"
-                                                        ItemsSource="{Binding Source={extensions:Enum {x:Type ff8Utilities:TwoPersonFanfareCamera}}}"
-                                                        SelectedValue="{Binding Camera}"
-                                                        SelectedValuePath="Value" />
+                                                        ItemsSource="{Binding Source={x:Static common:FanfareCamera.TwoPersonCameras}}"
+                                                        SelectedValue="{Binding Camera}" />
                                                     <mah:NumericUpDown
                                                         Grid.Column="2"
                                                         Width="150"

@@ -10,7 +10,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Diablos
     public class DiablosEncounter : BaseEncounterModel
     {
 
-        public DiablosEncounter() : base("Diablos", 13, typeof(ThreePersonFanfareCamera))
+        public DiablosEncounter() : base("Diablos", 13, FanfareCamera.ThreePerson.All)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new ZellAttack());

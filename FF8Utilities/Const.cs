@@ -47,33 +47,6 @@ namespace FF8Utilities
         TRex
     }
 
-    public enum TwoPersonFanfareCamera
-    {
-        [Description("1 Character")]
-        SingleCharacter = 2,
-        [Description("2 Characters")]
-        TwoCharacters = 3
-    }
-
-    public enum ThreePersonFanfareCamera
-    {
-        [Description("1 Character")]
-        SingleCharacter,
-        [Description("3 Characters")]
-        ThreeCharacters,
-        [Description("One to One")]
-        OneToOne
-    }
-
-    public enum ElvoretFanfareCamera
-    {
-        [Description("One to One")]
-        OneToOne,
-        [Description("1-2 Characters Dead")]
-        CharacterDead,
-        Other
-    }
-
     public enum CardPosition
     {
         [Description("Top Left")]

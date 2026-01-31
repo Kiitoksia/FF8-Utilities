@@ -34,20 +34,4 @@ public partial class EncounterControl : ContentView
         get => (ICommand)GetValue(DesignCommandProperty);
         set => SetValue(DesignCommandProperty, value);
     }
-
-    private void RadioButton_CheckedChanged(object sender, CheckedChangedEventArgs e)
-    {
-        RadioButton button = (RadioButton)sender;
-        if (!button.IsChecked) return;
-        foreach (var item in Model.FanfareTypeList)
-        {
-            if (item.Value == button.Value) continue;
-            item.IsSelected = false;
-        }
-    }
-
-    private void SfRadioButton_StateChanged(object sender, Syncfusion.Maui.Buttons.StateChangedEventArgs e)
-    {
-        
-    }
 }

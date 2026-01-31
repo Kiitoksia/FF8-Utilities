@@ -41,6 +41,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition/>
+                    <RowDefinition Height="35"/>
                     <RowDefinition Height="250"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -55,8 +56,10 @@
                 <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
                                           Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Fill" />
 
+                <buttons:SfButton Text="Quistis Obtained" Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                  Margin="10,5" />
 
-                <controls:CardTimerControl Grid.Row="2" Grid.ColumnSpan="2" x:Name="CardControl"/>
+                <controls:CardTimerControl Grid.Row="3" Grid.ColumnSpan="2" x:Name="CardControl" Margin="10"/>
             </Grid>
         </navigationDrawer:SfNavigationDrawer.ContentView>
     </navigationDrawer:SfNavigationDrawer>

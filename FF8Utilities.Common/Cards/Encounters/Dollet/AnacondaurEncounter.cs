@@ -4,7 +4,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Dollet
 {
     public class AnacondaurEncounter : BaseEncounterModel
     {
-        public AnacondaurEncounter() : base("Anacondaur", 14, typeof(ThreePersonFanfareCamera))
+        public AnacondaurEncounter() : base("Anacondaur", 14, FanfareCamera.ThreePerson.All)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new SeiferAttack());
@@ -22,7 +22,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Dollet
             get
             {
                 if (Fanfare == null) return 0;
-                if ((ThreePersonFanfareCamera)Fanfare == ThreePersonFanfareCamera.ThreeCharacters && !IsToggled)
+                if (Fanfare == FanfareCamera.ThreePerson.ThreeCharacters && !IsToggled)
                 {
                     // Special case, subtract one if three character camera and not everyone is alive
                     return -1;

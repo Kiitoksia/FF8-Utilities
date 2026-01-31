@@ -4,6 +4,7 @@ using FF8Utilities.Common.Cards;
 using FF8Utilities.MAUI.Pages;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FF8Utilities.MAUI.Models
@@ -52,13 +53,25 @@ namespace FF8Utilities.MAUI.Models
             return new CardManipulationModel(manip, state, player, App.DelayFrames, count);
         }
 
-        public override void LaunchQuistisPatterns(LateQuistisPattern pattern)
-        {
+        public override async Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern)
+        {            
             LateQuistisManipulationPage page = new LateQuistisManipulationPage(pattern, (CardManipulationModel)CreateCardManipModel(CardManip, 0, "fc01", pattern.RNGIndex));            
+
+            TaskCompletionSource tcs = new TaskCompletionSource();
+            EventHandler handler = null;
+            handler = (s, e) =>
+            {
+                tcs.SetResult();
+                page.Unloaded -= handler;
+            };
+            page.Unloaded += handler;
             MainThread.BeginInvokeOnMainThread(() => App.Current.Windows[0].Page.Navigation.PushModalAsync(page));
+            await tcs.Task;
+            if (page.SelectedStrategy == null) return null;
+            return uint.Parse(page.SelectedStrategy.ResultHex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
 
-        public override void LaunchZellPatterns()
+        public override void LaunchZellPatterns(string patternString, int? count)
         {
             throw new NotImplementedException();
         }

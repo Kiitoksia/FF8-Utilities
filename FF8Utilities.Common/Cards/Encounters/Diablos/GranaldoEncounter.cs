@@ -9,7 +9,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Diablos
 {
     public class GranaldoEncounter : BaseEncounterModel
     {
-        public GranaldoEncounter() : base("Granalado", 22, typeof(TwoPersonFanfareCamera))
+        public GranaldoEncounter() : base("Granalado", 22, FanfareCamera.TwoPerson.All)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new EncounterAbilityModel("Granaldo Attack", 1));

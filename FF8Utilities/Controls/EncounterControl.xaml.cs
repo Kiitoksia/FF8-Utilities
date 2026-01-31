@@ -1,4 +1,5 @@
-﻿using FF8Utilities.Common.Cards;
+﻿using FF8Utilities.Common;
+using FF8Utilities.Common.Cards;
 using FF8Utilities.Entities;
 using FF8Utilities.Models;
 using System;
@@ -31,12 +32,7 @@ namespace FF8Utilities.Controls
             SelectFanfareCommand = new Command<object>(() => true, (s, e) =>
             {
                 BaseEncounterModel model = (BaseEncounterModel)DataContext;
-                model.Fanfare = (Enum)e;
-                foreach (var item in model.FanfareTypeList)
-                {
-                    if (item.Value == e) continue;
-                    item.IsSelected = false;
-                }
+                model.Fanfare = (FanfareCamera)e;
             });
         }
 

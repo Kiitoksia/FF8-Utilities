@@ -12,6 +12,8 @@
              xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             xmlns:encs="clr-namespace:FF8Utilities.Common.Cards.Encounters;assembly=FF8Utilities.Common"
+             xmlns:fishFins="clr-namespace:FF8Utilities.Common.Cards.Encounters.IfritsCavern;assembly=FF8Utilities.Common"
              x:DataType="models:CardTrackerModel"
              Title="CardTrackerPage">
     <ContentPage.Resources>
@@ -64,7 +66,59 @@
                                 </tabView:SfTabItem>
                                 <tabView:SfTabItem Header="Post Ifrit" x:Name="PostIfritTab"/>
 
+                                <tabView:SfTabItem Header="World Map">
+                                    <tabView:SfTabItem.Content>
+                                        <ScrollView>
+                                            <VerticalStackLayout>
+                                                <Label Text="World Map Encs" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5"/>
+                                                <CollectionView ItemsSource="{Binding WorldMapEncounters}" Margin="5,0">
+                                                    <CollectionView.ItemTemplate>
+                                                        <DataTemplate x:DataType="encs:WorldMapEncounter">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Label Text="{Binding FormationDisplay}" VerticalOptions="Center"/>
+                                                                <Border StrokeThickness="1" Grid.Column="1" Stroke="White">
+                                                                    <editors:SfNumericEntry Value="{Binding Quantity}" Minimum="0" ShowBorder="False" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </CollectionView.ItemTemplate>
+                                                </CollectionView>
+
+                                                <Label Text="Fish Fins" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5"/>
+                                                <CollectionView ItemsSource="{Binding FishFinEncounters}">
+                                                    <CollectionView.ItemTemplate>
+                                                        <DataTemplate x:DataType="fishFins:FishFinsEncounter">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="30"/>
+                                                                    <ColumnDefinition Width="1.2*"/>
+                                                                    <ColumnDefinition/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <buttons:SfButton Text="X" Background="Transparent" TextColor="Red" FontSize="Large" Padding="0"/>
+                                                                <picker:SfPicker Grid.Column="1">
+                                                                    <picker:SfPicker.HeaderView>
+                                                                        <picker:PickerHeaderView Text="Adjust Fight"/>
+                                                                    </picker:SfPicker.HeaderView>
+                                                                    <picker:SfPicker.Columns>
+                                                                    </picker:SfPicker.Columns>
+                                                                </picker:SfPicker>
+                                                                <editors:SfNumericEntry Value="{Binding SquallPhysicals}" Minimum="0" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline" Grid.Column="2"/>
+                                                                <editors:SfNumericEntry Value="{Binding Limits}" Minimum="0" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline" Grid.Column="3"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </CollectionView.ItemTemplate>
+                                                </CollectionView>
+                                            </VerticalStackLayout>
+                                        </ScrollView>
+                                    </tabView:SfTabItem.Content>
+                                </tabView:SfTabItem>
                             </tabView:SfTabView.Items>
+                                                        
                         </tabView:SfTabView>
                         <Grid Grid.Row="1" BackgroundColor="#00589F">
                             <Grid.Resources>

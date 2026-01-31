@@ -9,7 +9,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Dollet
 {
     public class RedSoldierEncounter : BaseEncounterModel
     {
-        public RedSoldierEncounter(bool hasFanfare) : base("Elite (Red) Soldier", 13, hasFanfare ? typeof(ThreePersonFanfareCamera) : null)
+        public RedSoldierEncounter(bool hasFanfare) : base("Elite (Red) Soldier", 13, hasFanfare ? FanfareCamera.ThreePerson.All : null)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new ZellAttack());

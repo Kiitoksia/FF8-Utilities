@@ -4,6 +4,7 @@ using FF8Utilities.Common.Cards;
 using FF8Utilities.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,11 +92,11 @@ namespace FF8Utilities.Models
 
         public ZellCardCalculatorWindow Window { get; set; }
 
-        public override void LaunchQuistisPatterns(LateQuistisPattern pattern)
+        public override async Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern)
         {
             if (LegacyMode)
             {
-                MainModel.Instance.LaunchCardScript(false, LateQuistisOutput, false);
+                MainModel.Instance.LaunchCardScript(false, LateQuistisOutput, false);                
             }
 
             QuistisCardPatternWindow window = new QuistisCardPatternWindow(Window, pattern);
@@ -105,19 +106,23 @@ namespace FF8Utilities.Models
             {
                 MainModel.Instance.UseCustomQuistisPattern = true;
                 MainModel.Instance.CustomQuistisPattern = window.ResultHex;
-                MainModel.Instance.Pattern = Common.QuistisPattern.LateQuistis;
-                QuistisCardObtained = true;
+                MainModel.Instance.Pattern = EarlyQuistisPattern.LateQuistis;
+                QuistisCardObtained = true;   
+                return uint.Parse(window.ResultHex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             }
             else
             {
                 MainModel.Instance.UseCustomQuistisPattern = false;
                 MainModel.Instance.CustomQuistisPattern = null;
-                MainModel.Instance.Pattern = Common.QuistisPattern.Elastoid_JellyEye;
+                MainModel.Instance.Pattern = EarlyQuistisPattern.Frame1;
                 QuistisCardObtained = false;
             }
+
+            return null;
+
         }
 
-        public override void LaunchZellPatterns()
+        public override void LaunchZellPatterns(string patternString, int? count)
         {
             MainModel.Instance.LaunchCardScript(true, Output, true);
         }

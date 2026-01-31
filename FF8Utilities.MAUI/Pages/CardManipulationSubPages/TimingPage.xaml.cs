@@ -19,9 +19,9 @@ public partial class TimingPage : ContentPage
 	{
 		InitializeComponent();
 
-        foreach (QuistisPattern enumValue in Enum.GetValues(typeof(QuistisPattern)))
+        foreach (EarlyQuistisPattern enumValue in Enum.GetValues(typeof(EarlyQuistisPattern)))
         {
-            if (enumValue == QuistisPattern.LateQuistis) continue; // Currently unsupported
+            if (enumValue == EarlyQuistisPattern.LateQuistis) continue; // Currently unsupported
             QuistisCardPatterns.Add(new PickerItem(enumValue.GetDescription(), enumValue));
         }
 
@@ -49,7 +49,7 @@ public partial class TimingPage : ContentPage
             Model = null;
         }
 
-        QuistisPattern pattern = (QuistisPattern)QuistisCardPattern.Value;
+        EarlyQuistisPattern pattern = (EarlyQuistisPattern)QuistisCardPattern.Value;
 
         CardManipulationModel model = new CardManipulationModel(_manip, pattern.GetCardResult(), "zellmama", DelayFrames, RNGModifier);
         model.RenderTimerTick += Model_RenderTimerTick;

@@ -36,7 +36,7 @@ namespace FF8Utilities.Common
         }
     }
 
-    public class EnumerationMember : BaseModel
+    public class SelectableComboBoxItem : BaseModel
     {
         public string Description { get; set; }
         public object Value { get; set; }
@@ -54,4 +54,17 @@ namespace FF8Utilities.Common
             }
         }
     }
+
+    public class ComboBoxItem : BaseModel
+    {
+        public string Description { get; set; }
+        public object Value { get; set; }
+    }
+
+    public class ComboBoxItem<T> : BaseModel
+    {
+        public string Description { get; set; }
+        public T Value { get; set; }
+    }
+
 }

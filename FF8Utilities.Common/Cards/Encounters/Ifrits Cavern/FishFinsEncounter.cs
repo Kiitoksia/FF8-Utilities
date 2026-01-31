@@ -8,7 +8,7 @@ namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
     {
         private int _squallPhysicals;
         private int _limits = 2;
-        private TwoPersonFanfareCamera? _camera;
+        private FanfareCamera _camera;
         private bool _singleFishEmerged;
 
         public FishFinsEncounter()
@@ -40,7 +40,7 @@ namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
             }
         }
 
-        public TwoPersonFanfareCamera? Camera
+        public FanfareCamera Camera
         {
             get => _camera;
             set
@@ -72,19 +72,7 @@ namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
                 int output = SquallPhysicals * 2;
                 output += Limits;
                 output += SingleFishKilled ? 11 : 22; // Fish fins floating up after being hit
-                switch (Camera)
-                {
-                    case null:
-                        break;
-                    case TwoPersonFanfareCamera.SingleCharacter:
-                        output += 2;
-                        break;
-                    case TwoPersonFanfareCamera.TwoCharacters:
-                        output += 3;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(Camera), Camera, "Camera not recongised");
-                }
+                output += Camera?.RngAddition ?? 0;               
 
                 return Base + output;
             }

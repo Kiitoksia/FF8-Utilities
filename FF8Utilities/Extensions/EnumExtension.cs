@@ -40,7 +40,7 @@ namespace FF8Utilities.Extensions
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var enumValues = Enum.GetValues(EnumType);
-            return enumValues.Cast<object>().Select(t => new EnumerationMember { Value = t, Description = ((Enum)t).GetDescription()});
+            return enumValues.Cast<object>().Select(t => new SelectableComboBoxItem { Value = t, Description = ((Enum)t).GetDescription()});
         }              
     }
 }

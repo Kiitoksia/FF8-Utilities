@@ -29,7 +29,6 @@ using Newtonsoft.Json.Linq;
 using UltimeciaManip;
 using UltimeciaManip.Entities;
 using Manipulation = UltimeciaManip.Manipulation;
-using QuistisPattern = FF8Utilities.Common.QuistisPattern;
 using Timer = System.Timers.Timer;
 
 namespace FF8Utilities.Models
@@ -43,7 +42,7 @@ namespace FF8Utilities.Models
         private BindingList<CardNotesModel> _cardNotes;
         private bool _currentlyTalling;
         private bool _includeRinoaParties;
-        private Common.QuistisPattern _pattern = Common.QuistisPattern.Elastoid_JellyEye;
+        private EarlyQuistisPattern _pattern = Common.EarlyQuistisPattern.Frame1;
         private BindingList<PoleModel> _poles;
         private int? _rngPattern;
         private SettingsModel _settings;
@@ -151,12 +150,12 @@ namespace FF8Utilities.Models
             {
                 if (e.PropertyName == nameof(Pattern))
                 {
-                    if (Pattern == Common.QuistisPattern.LateQuistis && string.IsNullOrWhiteSpace(CustomQuistisPattern))
+                    if (Pattern == Common.EarlyQuistisPattern.LateQuistis && string.IsNullOrWhiteSpace(CustomQuistisPattern))
                     {
                         // Don't let them select this
                         Window.BeginInvoke(() =>
                         {
-                            Pattern = Common.QuistisPattern.Elastoid_JellyEye;
+                            Pattern = EarlyQuistisPattern.Frame1;
                             Window.ShowMessageAsync("Error", "Use tracker to set late quistis pattern");
                         });
                     }
@@ -395,56 +394,56 @@ namespace FF8Utilities.Models
         private void PopulateCardNotes()
         {
             CardNotes.Clear();
-            switch (Pattern)
+            if (Pattern == EarlyQuistisPattern.Frame1)
             {
-                case QuistisPattern.Elastoid_JellyEye:
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.TopCentre));
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreRight));
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
-                    break;
-                case QuistisPattern.Malboro_Snek:
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomCentre));
-                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
-                    break;
-                case QuistisPattern.BiggsWedge_JellyEye:
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.TopRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.Centre));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreLeft));
-                    break;
-                case QuistisPattern.Elastoid_Grendel:
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.TopRight));
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
-                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.BottomLeft));
-                    break;
-                case QuistisPattern.Malboro_GrandMantis:
-                case QuistisPattern.GrandMantis_Elastoid:
-                case QuistisPattern.Snek_GIM:
-                    break;
-                case QuistisPattern.GlacialEye_GrandMantis:
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.CentreLeft));
-                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.Centre));
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.BottomRight));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopCentre));
-                    break;
-                case QuistisPattern.JellyEye_BiggsWedge:
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.Centre));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomCentre));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomLeft));
-                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
-                    break;
-                case QuistisPattern.Chimera_Thrustaevis:
-                    CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomCentre));
-                    CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.CentreRight));
-                    CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.TopRight));
-                    CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.CentreLeft));
-                    CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomLeft));
-                    break;
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.TopCentre));
+                CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreRight));
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomRight));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
+            }
+            else if (Pattern == EarlyQuistisPattern.Frame2)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomCentre));
+                CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
+            }
+            else if (Pattern == EarlyQuistisPattern.Frame3)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.TopRight));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.Centre));
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
+                CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreLeft));
+            }
+            else if (Pattern == EarlyQuistisPattern.Frame4)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.TopRight));
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.CentreRight));
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomRight));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopLeft));
+                CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.BottomLeft));
+            }
+            else if (Pattern == EarlyQuistisPattern.Frame7)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.CentreLeft));
+                CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.Centre));
+                CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.BottomRight));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopCentre));
+            }
+            else if (Pattern == EarlyQuistisPattern.Frame9)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.Centre));
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.BottomCentre));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomLeft));
+                CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopCentre));
+            }
+            else if (Pattern == EarlyQuistisPattern.Frame10)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomCentre));
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.CentreRight));
+                CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.TopRight));
+                CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.CentreLeft));
+                CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.BottomLeft));
             }
         }
 
@@ -660,37 +659,7 @@ namespace FF8Utilities.Models
             }
             else
             {
-                switch (Pattern)
-                {
-                    case QuistisPattern.Elastoid_JellyEye:
-                        patternString = "1";
-                        break;
-                    case QuistisPattern.Malboro_Snek:
-                        patternString = "2";
-                        break;
-                    case QuistisPattern.BiggsWedge_JellyEye:
-                        patternString = "3";
-                        break;
-                    case QuistisPattern.Elastoid_Grendel:
-                        patternString = "0x65c6be07";
-                        break;
-                    case QuistisPattern.Malboro_GrandMantis:
-                    case QuistisPattern.GrandMantis_Elastoid:
-                    case QuistisPattern.Snek_GIM:
-                        //Unwinnable
-                        MessageBox.Show("This is unwinnable and thus you can't continue manip.  If you somehow won, please let us know!");
-                        return;
-                    case QuistisPattern.GlacialEye_GrandMantis:
-                        patternString = "0x832b19d2";
-                        break;
-                    case QuistisPattern.JellyEye_BiggsWedge:
-                        patternString = "0xad8f1b2f";
-                        break;
-                    case QuistisPattern.Chimera_Thrustaevis:
-                        patternString = "0xf99a05ef";
-                        break;
-                    default: throw new NotImplementedException();
-                }
+                patternString = Pattern.Result.ToString("X8");
             }
 
             if (!isZell) patternString = "0x00000001";
@@ -821,7 +790,7 @@ namespace FF8Utilities.Models
 
         public bool NoSubscriptsDetected => !CarawayOutput?.Any() ?? true;
 
-        public QuistisPattern Pattern
+        public EarlyQuistisPattern Pattern
         {
             get => _pattern;
             set

@@ -5,7 +5,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Dollet
 {
     public class ElvoretEncounter : BaseEncounterModel
     {
-        public ElvoretEncounter() : base("Elvoret", 16, typeof(ElvoretFanfareCamera))
+        public ElvoretEncounter() : base("Elvoret", 16, FanfareCamera.Elvoret.All)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new ZellAttack());

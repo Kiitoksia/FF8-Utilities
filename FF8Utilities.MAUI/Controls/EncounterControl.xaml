@@ -37,8 +37,7 @@
                 <Entry Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}}" HorizontalOptions="Fill"/>
             </HorizontalStackLayout>
 
-            <buttons:SfButton Text="EDIT" Grid.Column="1" 
-            TextColor="White"
+            <buttons:SfButton Text="EDIT" Grid.Column="1" CornerRadius="2" 
             BackgroundColor="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InDesignModeConverter}}" 
             Command="{Binding DesignCommand, Source={x:Reference this}}"/>
 
@@ -79,7 +78,7 @@
                 <Label Text="Camera" FontAttributes="Bold" IsVisible="{Binding FanfareVisible}" HorizontalTextAlignment="Start" Margin="0,5"/>
                 <CollectionView IsVisible="{Binding FanfareVisible}" ItemsSource="{Binding FanfareTypeList}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="common:EnumerationMember">
+                        <DataTemplate x:DataType="common:SelectableComboBoxItem">
                             <buttons:SfRadioButton Text="{Binding Description}" IsChecked="{Binding IsSelected}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding Value}" StateChanged="SfRadioButton_StateChanged"/>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

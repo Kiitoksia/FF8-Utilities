@@ -11,13 +11,12 @@ namespace FF8Utilities.Common.Cards
 {
     public abstract class BaseEncounterModel : BaseModel
     {
-        private Enum _fanfare;
+        private FanfareCamera _fanfare;
         private bool _isToggled;
-        private bool _usesFanfare;
         private string _notes;
 
 
-        public BaseEncounterModel(string description, int baseAddition, Type fanfareType = null)
+        public BaseEncounterModel(string description, int baseAddition, FanfareCamera[] fanfareList = null)
         {
             Description = description;
             Base = baseAddition;
@@ -27,18 +26,7 @@ namespace FF8Utilities.Common.Cards
                 OnPropertyChanged(nameof(Output));
             };
 
-            _usesFanfare = fanfareType != null;
-            FanfareTypeList = new BindingList<EnumerationMember>();
-
-            if (fanfareType != null)
-            {
-                FanfareTypeList.Add(new EnumerationMember { Value = null, Description = "None", IsSelected = true });
-                foreach (Enum enumValue in Enum.GetValues(fanfareType))
-                {
-                    FanfareTypeList.Add(new EnumerationMember { Value = enumValue, Description = ((Enum)enumValue).GetDescription() });
-                }
-            }
-
+            FanfareList = fanfareList;
             PlusOneToAllCommand = new RelayCommand(()=>
             {
                 foreach (EncounterAbilityModel ability in Abilities)
@@ -108,52 +96,7 @@ namespace FF8Utilities.Common.Cards
 
                 if (Fanfare != null)
                 {
-                    if (Fanfare is ThreePersonFanfareCamera threePersonCamera)
-                    {
-                        switch (threePersonCamera)
-                        {
-                            case ThreePersonFanfareCamera.OneToOne:
-                                output += 3;
-                                break;
-                            case ThreePersonFanfareCamera.SingleCharacter:
-                                output += 2;
-                                break;
-                            case ThreePersonFanfareCamera.ThreeCharacters:
-                                output += 4;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(Fanfare), Fanfare, "Camera not recognised");
-                        }
-                    }
-                    else if (Fanfare is TwoPersonFanfareCamera twoPersonCamera)
-                    {
-                        switch (twoPersonCamera)
-                        {
-                            case TwoPersonFanfareCamera.SingleCharacter:
-                                output += 2;
-                                break;
-                            case TwoPersonFanfareCamera.TwoCharacters:
-                                output += 3;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(Fanfare), Fanfare, "Camera not recognised");
-                        }
-                    }
-                    else if (Fanfare is ElvoretFanfareCamera elvoretCamera)
-                    {
-                        switch (elvoretCamera)
-                        {
-                            case ElvoretFanfareCamera.OneToOne:
-                            case ElvoretFanfareCamera.CharacterDead:
-                                output += 2;
-                                break;
-                            case ElvoretFanfareCamera.Other:
-                                output += 3;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(Fanfare), Fanfare, "Camera not recognised");
-                        }
-                    }
+                    output += Fanfare.RngAddition;
                 }
 
                 output += CustomRNGAddition;                
@@ -167,7 +110,7 @@ namespace FF8Utilities.Common.Cards
 
         public ICommand PlusOneToAllCommand { get; }
 
-        public Enum Fanfare
+        public FanfareCamera Fanfare
         {
             get => _fanfare; set
             {
@@ -181,9 +124,9 @@ namespace FF8Utilities.Common.Cards
 
 
 
-        public BindingList<EnumerationMember> FanfareTypeList { get; }
+        public FanfareCamera[] FanfareList { get; }
 
-        public bool FanfareVisible => _usesFanfare;
+        public bool FanfareVisible => FanfareList != null;
 
         public string ToggleOptionDescription { get; protected set; }
 
