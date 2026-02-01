@@ -42,19 +42,18 @@ public partial class MainPage : ContentPage
         });
         // Initialise once off items
 
-        await Task.WhenAll(
-        Task.Run(async () => _ = BaseZellCardTrackerModel.LateQuistisManip),
-        Task.Run(async () => _ = BaseZellCardTrackerModel.CardManip)
-        );
+        await Task.Run(() =>
+        {
+            _ = BaseZellCardTrackerModel.LateQuistisManip;
+            _ = BaseZellCardTrackerModel.CardManip;
+        });
 
         CardTrackerPage page = new CardTrackerPage();
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             await Navigation.PushModalAsync(page);
             ShowLoadingBar = false;
-        });
-        
-
+        });   
     }
 
     public static readonly BindableProperty ShowLoadingBarProperty = BindableProperty.Create(nameof(ShowLoadingBar), typeof(bool), typeof(MainPage), false);

@@ -8,34 +8,41 @@ namespace FF8Utilities.MAUI.Pages;
 
 public partial class CardTrackerPage : ContentPage
 {
+	/// <summary>
+	/// Ensure you call Initialise() before using the page
+	/// </summary>
 	public CardTrackerPage()
 	{
 		InitializeComponent();
-		Model = new CardTrackerModel();
+        Initialise();
+    }
 
-		Model.PropertyChanged += (s, e) =>
-		{
-			if (e.PropertyName == nameof(CardTrackerModel.IfritsCavernEncounterType))
-			{
+	public void Initialise()
+	{
+        Model = new CardTrackerModel();
+        CreatePostIfritEncounterContent();
+        CreateAnacondaurEncounterContent();
+
+        Model.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(CardTrackerModel.IfritsCavernEncounterType))
+            {
                 CreatePostIfritEncounterContent();
             }
-			if (e.PropertyName == nameof(CardTrackerModel.DidGetSecondBridgeEncounter))
-			{
+            if (e.PropertyName == nameof(CardTrackerModel.DidGetSecondBridgeEncounter))
+            {
                 CreateAnacondaurEncounterContent();
             }
 
-			if (e.PropertyName == nameof(CardTrackerModel.QuistisCardObtained))
-			{
-				if (Model.QuistisCardObtained && Model.QuistisCardResult != null)
-				{
+            if (e.PropertyName == nameof(CardTrackerModel.QuistisCardObtained))
+            {
+                if (Model.QuistisCardObtained && Model.QuistisCardResult != null)
+                {
                     // They just obtained Quistis card, move the tab over to dollet
-					MainThread.BeginInvokeOnMainThread(() => TabView.SelectedIndex = 1);
+                    MainThread.BeginInvokeOnMainThread(() => TabView.SelectedIndex = 1);
                 }
-			}
-		};
-
-        CreatePostIfritEncounterContent();
-        CreateAnacondaurEncounterContent();
+            }
+        };        
     }
 
     protected override bool OnBackButtonPressed()

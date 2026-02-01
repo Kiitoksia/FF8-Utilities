@@ -79,7 +79,7 @@
                 <CollectionView IsVisible="{Binding FanfareVisible, Mode=OneTime}" ItemsSource="{Binding FanfareList, Mode=OneTime}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="common:FanfareCamera">
-                            <buttons:SfRadioButton Text="{Binding Description, Mode=OneTime}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding .}" StateChanged="SfRadioButton_StateChanged"/>
+                            <buttons:SfRadioButton Text="{Binding Description, Mode=OneTime}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding ., Mode=OneTime}" StateChanged="SfRadioButton_StateChanged"/>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

@@ -137,7 +137,7 @@
                                                                 <Grid.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding OpenPickerCommand, Mode=OneTime}"/>
                                                                 </Grid.GestureRecognizers>
-                                                                <picker:SfPicker Closed="" PopupHeight="400" Mode="Dialog" IsOpen="{Binding IsPickerOpen}" TextDisplayMode="Fade">
+                                                                <picker:SfPicker PopupHeight="400" Mode="Dialog" IsOpen="{Binding IsPickerOpen}" TextDisplayMode="Fade">
                                                                     <picker:SfPicker.HeaderView>
                                                                         <picker:PickerHeaderView Text="Adjust Fight"/>
                                                                     </picker:SfPicker.HeaderView>
