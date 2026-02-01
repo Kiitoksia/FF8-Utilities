@@ -3,13 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FF8Utilities.MAUI.Pages.MainPage"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
              x:Name="this"             
              BindingContext="{x:Reference this}"
              Title="MainPage">
-    <Grid>
+    <ContentPage.Resources>
+        <Style TargetType="buttons:SfButton" BasedOn="{StaticResource BaseSfButton}">
+            <Setter Property="FontSize" Value="Large"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="LineBreakMode" Value="WordWrap"/>
+        </Style>
+    </ContentPage.Resources>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition Height="0"/> <!-- Row to hide picker-->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -17,10 +29,38 @@
         </Grid.ColumnDefinitions>
 
         <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}"/>
-        <buttons:SfButton Text="Fish Fins" Grid.Column="1"/>
-        <buttons:SfButton Text="Caraway Code" Grid.Row="1"/>
-        <buttons:SfButton Text="Ultimecia Party" Grid.Row="1" Grid.Column="1"/>
+        <buttons:SfButton Text="[NYI] Fish Fins" Grid.Column="1"/>
+        <buttons:SfButton Text="[NYI] Caraway Code" Grid.Row="1"/>
+        <buttons:SfButton Text="[NYI] Ultimecia Party" Grid.Row="1" Grid.Column="1"/>
 
         <ActivityIndicator IsRunning="{Binding ShowLoadingBar}" IsVisible="{Binding ShowLoadingBar}" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+
+        <popup:SfPopup x:Name="QuistisPopup" HeaderTitle="Select Quistis Strategy">
+            <popup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <Grid HeightRequest="100">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <buttons:SfButton Text="Early" Grid.Row="1" Command="{Binding LaunchCardTrackingCommand}" CommandParameter="{x:Boolean True}"/>
+                        <buttons:SfButton Text="Late" Grid.Row="1" Grid.Column="1"  Command="{Binding LaunchCardTrackingCommand}" CommandParameter="{x:Boolean False}"/>
+                    </Grid>
+                </DataTemplate>
+            </popup:SfPopup.ContentTemplate>
+        </popup:SfPopup>
+
+        <picker:SfPicker PopupHeight="500" DeclineCommand="{Binding EarlyQuistisCardPatternPickedCommand}" PopupWidth="300" Grid.Row="2" Mode="Dialog" x:Name="EarlyQuistisFramePicker" TextDisplayMode="Fade" Grid.ColumnSpan="2">
+            <picker:SfPicker.HeaderView>
+                <picker:PickerHeaderView Height="50" Text="Select Early Quistis Frame"/>
+            </picker:SfPicker.HeaderView>
+            <picker:SfPicker.Columns>
+                <picker:PickerColumn ItemsSource="{x:Static common:EarlyQuistisPattern.OptionsExcludeLate}" DisplayMemberPath="Description" HeaderText="Select Frame" SelectedItem="{Binding EarlyQuistisPattern, Mode=TwoWay}"/>
+            </picker:SfPicker.Columns>
+            <picker:SfPicker.FooterView>
+                <picker:PickerFooterView Height="50"  ShowOkButton="False" CancelButtonText="OK"/>
+            </picker:SfPicker.FooterView>
+        </picker:SfPicker>
+        
     </Grid>
 </ContentPage>

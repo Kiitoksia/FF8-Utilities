@@ -7,7 +7,6 @@ public partial class ZellManipulationPage : ContentPage
 	public ZellManipulationPage(CardManipulationModel model)
 	{
 		InitializeComponent();
-
-		BindingContext = model;
+		CardControl.Model = model;
     }
 }

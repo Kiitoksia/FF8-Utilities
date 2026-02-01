@@ -8,6 +8,13 @@
              xmlns:card="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
              x:DataType="models:CardManipulationModel"
              Title="ZellManipulationPage">
+    <ContentPage.Resources>
+        <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="FontSize" Value="Large"/>
+        </Style>
+    </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -35,13 +42,17 @@
                         <Label Text="Option 1"/>
                         <Label Text="Option 2" Grid.Column="1"/>
 
-                        <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsWeak}" Grid.Row="1"/>
-                        <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsStrong}" Grid.Row="1" Grid.Column="1"/>
+                        <Border Grid.Row="1" VerticalOptions="Center">
+                            <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsWeak}"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                            <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsStrong}"/>
+                        </Border>
                     </Grid>
                 </tabView:SfTabItem>
             </tabView:SfTabView.Items>
         </tabView:SfTabView>
 
-        <c:CardTimerControl BindingContext="{Binding .}" Grid.Row="1"/>
+        <c:CardTimerControl x:Name="CardControl" Grid.Row="1"/>
     </Grid>
 </ContentPage>

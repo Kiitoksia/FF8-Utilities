@@ -30,9 +30,21 @@ namespace FF8Utilities.Common
             Result = result;
         }
         public string Description { get; }
-        public uint Result { get; }
+        public uint Result { get; }        
 
-        public static readonly EarlyQuistisPattern[] Options = new EarlyQuistisPattern[]
+        public static readonly EarlyQuistisPattern Frame1 = new EarlyQuistisPattern("[Frame 1] - Elastoid (Jellyeye)", 1);
+        public static readonly EarlyQuistisPattern Frame2 = new EarlyQuistisPattern("[Frame 2] - Malboro (Anacondaur)", 2);
+        public static readonly EarlyQuistisPattern Frame3 = new EarlyQuistisPattern("[Frame 3] - Biggs & Wedge (Jellyeye)", 3);
+        public static readonly EarlyQuistisPattern Frame4 = new EarlyQuistisPattern("[Frame 4] - Elastoid (Grendel)", 0x65c6be07);
+        public static readonly EarlyQuistisPattern Frame5 = new EarlyQuistisPattern("[Frame 5] - Malboro (Grand Mantis) *Unwinnable*", 5);
+        public static readonly EarlyQuistisPattern Frame6 = new EarlyQuistisPattern("[Frame 6] - Grand Mantis (Elastoid) *Unwinnable*", 6);
+        public static readonly EarlyQuistisPattern Frame7 = new EarlyQuistisPattern("[Frame 7] - Glacial Eye (Grand Mantis)", 0x832b19d2);
+        public static readonly EarlyQuistisPattern Frame8 = new EarlyQuistisPattern("[Frame 8] - Anacondaur (GIM47N) *Unwinnable*", 8);
+        public static readonly EarlyQuistisPattern Frame9 = new EarlyQuistisPattern("[Frame 9] - Jellyeye (Biggs & Wedge)", 0xad8f1b2f);
+        public static readonly EarlyQuistisPattern Frame10 = new EarlyQuistisPattern("[Frame 10] - Chimera (Thrustaevis)", 0xf99a05ef);
+        public static readonly EarlyQuistisPattern LateQuistis = new EarlyQuistisPattern("Late Quistis", 0);
+
+        public static readonly EarlyQuistisPattern[] Options = new[]
         {
             Frame1,
             Frame2,
@@ -47,17 +59,20 @@ namespace FF8Utilities.Common
             LateQuistis
         };
 
-        public static readonly EarlyQuistisPattern Frame1 = new EarlyQuistisPattern("[Frame 1] - Elastoid (Jellyeye)", 1);
-        public static readonly EarlyQuistisPattern Frame2 = new EarlyQuistisPattern("[Frame 2] - Malboro (Anacondaur)", 2);
-        public static readonly EarlyQuistisPattern Frame3 = new EarlyQuistisPattern("[Frame 3] - Biggs & Wedge (Jellyeye)", 3);
-        public static readonly EarlyQuistisPattern Frame4 = new EarlyQuistisPattern("[Frame 4] - Elastoid (Grendel)", 0x65c6be07);
-        public static readonly EarlyQuistisPattern Frame5 = new EarlyQuistisPattern("[Frame 5] - Malboro (Grand Mantis) *Unwinnable*", 5);
-        public static readonly EarlyQuistisPattern Frame6 = new EarlyQuistisPattern("[Frame 6] - Grand Mantis (Elastoid) *Unwinnable*", 6);
-        public static readonly EarlyQuistisPattern Frame7 = new EarlyQuistisPattern("[Frame 7] - Glacial Eye (Grand Mantis)", 0x832b19d2);
-        public static readonly EarlyQuistisPattern Frame8 = new EarlyQuistisPattern("[Frame 8] - Anacondaur (GIM47N) *Unwinnable*", 8);
-        public static readonly EarlyQuistisPattern Frame9 = new EarlyQuistisPattern("[Frame 9] - Jellyeye (Biggs & Wedge)", 0xad8f1b2f);
-        public static readonly EarlyQuistisPattern Frame10 = new EarlyQuistisPattern("[Frame 10] - Chimera (Thrustaevis)", 0xf99a05ef);
-        public static readonly EarlyQuistisPattern LateQuistis = new EarlyQuistisPattern("Late Quistis", 0);
+        public static readonly EarlyQuistisPattern[] OptionsExcludeLate = new[]
+        {
+            Frame1,
+            Frame2,
+            Frame3,
+            Frame4,
+            Frame5,
+            Frame6,
+            Frame7,
+            Frame8,
+            Frame9,
+            Frame10
+        };
+
     }
 
     public class FanfareCamera

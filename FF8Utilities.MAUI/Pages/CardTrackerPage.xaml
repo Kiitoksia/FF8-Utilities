@@ -43,286 +43,294 @@
             <x:Int32>10</x:Int32>
         </x:Array>
     </ContentPage.Resources>
-    <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView">
-        <tabView:SfTabView.Items>
 
-            <tabView:SfTabItem Header="Fish Fins">
-                <tabView:SfTabItem.Content>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
+    <Grid>
+        <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView">
+            <tabView:SfTabView.Items>
+
+                <tabView:SfTabItem Header="Fish Fins">
+                    <tabView:SfTabItem.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="80"/>
+                            </Grid.RowDefinitions>
+                            <tabView:SfTabView TabBarPlacement="Bottom">
+                                <tabView:SfTabView.Items>
+                                    <tabView:SfTabItem Header="2x Bats">
+                                        <tabView:SfTabItem.Content>
+                                            <c:EncounterControl BindingContext="{Binding TwoBatsEncounter, Mode=OneTime}"/>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem Header="Ifrit">
+                                        <tabView:SfTabItem.Content>
+                                            <VerticalStackLayout>
+                                                <c:EncounterControl BindingContext="{Binding IfritEncounter, Mode=OneTime}"/>
+                                                <buttons:SfRadioGroup SelectedValue="{Binding IfritsCavernEncounterType, Mode=OneWayToSource}">
+                                                    <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.RedBat}" Text="2x Red Bats"/>
+                                                    <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.Buel}" Text="Buel"/>
+                                                </buttons:SfRadioGroup>
+                                            </VerticalStackLayout>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem Header="Post Ifrit" x:Name="PostIfritTab"/>
+
+                                    <tabView:SfTabItem Header="World Map">
+                                        <tabView:SfTabItem.Content>
+                                            <ScrollView Margin="10,0">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <Label Text="World Map Encs" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5"/>
+                                                    <CollectionView ItemsSource="{Binding WorldMapEncounters, Mode=OneTime}" Grid.Row="1">
+                                                        <CollectionView.ItemTemplate>
+                                                            <DataTemplate x:DataType="encs:WorldMapEncounter">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition/>
+                                                                        <ColumnDefinition/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Label Text="{Binding FormationDisplay, Mode=OneTime}" VerticalOptions="Center"/>
+                                                                    <Border StrokeThickness="1" Grid.Column="1" Stroke="White">
+                                                                        <editors:SfNumericEntry Value="{Binding Quantity}" Minimum="0" ShowBorder="False" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline"/>
+                                                                    </Border>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </CollectionView.ItemTemplate>
+                                                    </CollectionView>
+
+                                                    <Label Text="Fish Fins" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5" Grid.Row="2"/>
+                                                    <Grid Grid.Row="3">
+                                                        <Grid.Resources>
+                                                            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                                                <Setter Property="FontAttributes" Value="Bold"/>
+                                                            </Style>
+                                                        </Grid.Resources>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition/>
+                                                            <RowDefinition Height="1"/>
+                                                        </Grid.RowDefinitions>
+                                                        <Label Text="Camera"/>
+                                                        <Label Text="Squall Physicals" Grid.Column="1"/>
+                                                        <Label Text="Limits" Grid.Column="2"/>
+                                                        <Border BackgroundColor="White" Grid.ColumnSpan="3" Grid.Row="1"/>
+                                                    </Grid>
+                                                    <CollectionView ItemsSource="{Binding FishFinEncounters, Mode=OneWay}" VerticalOptions="Fill" Grid.Row="4">
+                                                        <CollectionView.ItemTemplate>
+                                                            <DataTemplate x:DataType="fishFins:FishFinsEncounter">
+                                                                <Grid x:Name="FishFinGrid" HeightRequest="60">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="0"/>
+                                                                        <!-- Hidden column for picker to show-->
+                                                                        <ColumnDefinition/>
+                                                                        <ColumnDefinition/>
+                                                                        <ColumnDefinition/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.GestureRecognizers>
+                                                                        <TapGestureRecognizer Command="{Binding OpenPickerCommand, Mode=OneTime}"/>
+                                                                    </Grid.GestureRecognizers>
+                                                                    <picker:SfPicker PopupHeight="400" Mode="Dialog" IsOpen="{Binding IsPickerOpen}" TextDisplayMode="Fade">
+                                                                        <picker:SfPicker.HeaderView>
+                                                                            <picker:PickerHeaderView Text="Adjust Fight"/>
+                                                                        </picker:SfPicker.HeaderView>
+                                                                        <picker:SfPicker.Columns>
+                                                                            <picker:PickerColumn ItemsSource="{x:Static common:FanfareCamera.TwoPersonCameras}" DisplayMemberPath="Description" SelectedItem="{Binding Camera, Mode=TwoWay}" HeaderText="Camera"/>
+                                                                            <picker:PickerColumn SelectedItem="{Binding SquallPhysicals, Mode=TwoWay}" HeaderText="Squall Physicals" ItemsSource="{StaticResource NumberArray}"/>
+                                                                            <picker:PickerColumn SelectedItem="{Binding Limits, Mode=TwoWay}" HeaderText="Limits" ItemsSource="{StaticResource NumberArray}"/>
+                                                                        </picker:SfPicker.Columns>
+                                                                        <picker:SfPicker.ColumnHeaderView>
+                                                                            <picker:PickerColumnHeaderView Height="40"/>
+                                                                        </picker:SfPicker.ColumnHeaderView>
+                                                                        <picker:SfPicker.FooterView>
+                                                                            <picker:PickerFooterView Height="50"/>
+                                                                        </picker:SfPicker.FooterView>
+                                                                        <picker:SfPicker.FooterTemplate>
+                                                                            <DataTemplate>
+                                                                                <buttons:SfButton Background="DarkRed" Text="Remove Encounter" Command="{Binding BindingContext.RemoveFishFinEncounterCommand, Source={x:Reference this}, Mode=OneTime}" CommandParameter="{Binding BindingContext, Source={x:Reference FishFinGrid}}" CornerRadius="0"/>
+                                                                            </DataTemplate>
+                                                                        </picker:SfPicker.FooterTemplate>
+                                                                    </picker:SfPicker>
+                                                                    <Border Grid.Column="1" Grid.ColumnSpan="3" Background="DarkSlateGray" IsVisible="{Binding SingleFishKilled, Mode=OneWay}"/>
+                                                                    <Label Grid.Column="1" Text="{Binding Camera.Description, Mode=OneWay}" VerticalTextAlignment="Center"/>
+                                                                    <Label Grid.Column="2" Text="{Binding SquallPhysicals, Mode=OneWay}"  VerticalTextAlignment="Center"/>
+                                                                    <Label Grid.Column="3" Text="{Binding Limits, Mode=OneWay}"  VerticalTextAlignment="Center"/>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </CollectionView.ItemTemplate>
+                                                    </CollectionView>
+                                                    <Grid VerticalOptions="End" Grid.Row="5">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition Width="0.5*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <buttons:SfButton Command="{Binding AddNewEncounterCommand, Mode=OneWay}" Text="Add Regular Encounter" CornerRadius="0"/>
+                                                        <buttons:SfButton Command="{Binding AddNewHalfEncounterCommand, Mode=OneWay}" Text="Add Single Fish" Grid.Column="1" Background="DarkSlateGray" CornerRadius="0"/>
+                                                    </Grid>
+                                                </Grid>
+                                            </ScrollView>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                </tabView:SfTabView.Items>
+
+                            </tabView:SfTabView>
+                            <Grid Grid.Row="1" BackgroundColor="#00589F">
+                                <Grid.Resources>
+                                    <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                        <Setter Property="FontAttributes" Value="Bold"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding LaunchQuistisPatternsCommand}"/>
+                                </Grid.GestureRecognizers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="0.3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})', Mode=OneWay}"/>
+                                <Border Grid.Column="1" Stroke="White" StrokeThickness="2" BackgroundColor="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorConverter}, Mode=OneWay}" >
+                                    <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                                        <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
+                                        <Label Text="{Binding QuistisPatternMashDisplay, Mode=OneWay}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+
+                            </Grid>
+                        </Grid>
+                    </tabView:SfTabItem.Content>
+                </tabView:SfTabItem>
+
+                <tabView:SfTabItem Header="Dollet">
+                    <tabView:SfTabItem.Content>
                         <tabView:SfTabView TabBarPlacement="Bottom">
                             <tabView:SfTabView.Items>
-                                <tabView:SfTabItem Header="2x Bats">
+                                <tabView:SfTabItem Header="[1st] 2x Soldier">
                                     <tabView:SfTabItem.Content>
-                                        <c:EncounterControl BindingContext="{Binding TwoBatsEncounter, Mode=OneTime}"/>
+                                        <c:EncounterControl BindingContext="{Binding FirstDolletEncounter, Mode=OneTime}"/>
                                     </tabView:SfTabItem.Content>
                                 </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="Ifrit">
+                                <tabView:SfTabItem Header="[2nd] 2x Soldier">
                                     <tabView:SfTabItem.Content>
-                                        <VerticalStackLayout>
-                                            <c:EncounterControl BindingContext="{Binding IfritEncounter, Mode=OneTime}"/>
-                                            <buttons:SfRadioGroup SelectedValue="{Binding IfritsCavernEncounterType, Mode=OneWayToSource}">
-                                                <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.RedBat}" Text="2x Red Bats"/>
-                                                <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.Buel}" Text="Buel"/>
-                                            </buttons:SfRadioGroup>
-                                        </VerticalStackLayout>
+                                        <c:EncounterControl BindingContext="{Binding SecondDolletEncounter, Mode=OneTime}"/>
                                     </tabView:SfTabItem.Content>
                                 </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="Post Ifrit" x:Name="PostIfritTab"/>
-
-                                <tabView:SfTabItem Header="World Map">
+                                <tabView:SfTabItem Header="[3rd] 1x Soldier">
                                     <tabView:SfTabItem.Content>
-                                        <ScrollView Margin="10,0">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                </Grid.RowDefinitions>
-                                                <Label Text="World Map Encs" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5"/>
-                                                <CollectionView ItemsSource="{Binding WorldMapEncounters, Mode=OneTime}" Grid.Row="1">
-                                                    <CollectionView.ItemTemplate>
-                                                        <DataTemplate x:DataType="encs:WorldMapEncounter">
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition/>
-                                                                    <ColumnDefinition/>
-                                                                </Grid.ColumnDefinitions>
-                                                                <Label Text="{Binding FormationDisplay, Mode=OneTime}" VerticalOptions="Center"/>
-                                                                <Border StrokeThickness="1" Grid.Column="1" Stroke="White">
-                                                                    <editors:SfNumericEntry Value="{Binding Quantity}" Minimum="0" ShowBorder="False" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline"/>
-                                                                </Border>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </CollectionView.ItemTemplate>
-                                                </CollectionView>
+                                        <c:EncounterControl BindingContext="{Binding ThirdDolletEncounter, Mode=OneTime}"/>
+                                    </tabView:SfTabItem.Content>
+                                </tabView:SfTabItem>
+                                <tabView:SfTabItem Header="[4th] 1x Soldier">
+                                    <tabView:SfTabItem.Content>
+                                        <c:EncounterControl BindingContext="{Binding FourthDolletEncounter, Mode=OneTime}"/>
+                                    </tabView:SfTabItem.Content>
+                                </tabView:SfTabItem>
+                            </tabView:SfTabView.Items>
+                        </tabView:SfTabView>
+                    </tabView:SfTabItem.Content>
+                </tabView:SfTabItem>
 
-                                                <Label Text="Fish Fins" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5" Grid.Row="2"/>
-                                                <Grid Grid.Row="3">
-                                                    <Grid.Resources>
-                                                        <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
-                                                            <Setter Property="FontAttributes" Value="Bold"/>
-                                                        </Style>
-                                                    </Grid.Resources>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition/>
-                                                        <ColumnDefinition/>
-                                                        <ColumnDefinition/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition/>
-                                                        <RowDefinition Height="1"/>
-                                                    </Grid.RowDefinitions>
-                                                    <Label Text="Camera"/>
-                                                    <Label Text="Squall Physicals" Grid.Column="1"/>
-                                                    <Label Text="Limits" Grid.Column="2"/>
-                                                    <Border BackgroundColor="White" Grid.ColumnSpan="3" Grid.Row="1"/>
-                                                </Grid>
-                                                <CollectionView ItemsSource="{Binding FishFinEncounters, Mode=OneWay}" VerticalOptions="Fill" Grid.Row="4">
-                                                    <CollectionView.ItemTemplate>
-                                                        <DataTemplate x:DataType="fishFins:FishFinsEncounter">
-                                                            <Grid x:Name="FishFinGrid" HeightRequest="60">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="0"/> <!-- Hidden column for picker to show-->
-                                                                    <ColumnDefinition/>
-                                                                    <ColumnDefinition/>
-                                                                    <ColumnDefinition/>
-                                                                </Grid.ColumnDefinitions>
-                                                                <Grid.GestureRecognizers>
-                                                                    <TapGestureRecognizer Command="{Binding OpenPickerCommand, Mode=OneTime}"/>
-                                                                </Grid.GestureRecognizers>
-                                                                <picker:SfPicker PopupHeight="400" Mode="Dialog" IsOpen="{Binding IsPickerOpen}" TextDisplayMode="Fade">
-                                                                    <picker:SfPicker.HeaderView>
-                                                                        <picker:PickerHeaderView Text="Adjust Fight"/>
-                                                                    </picker:SfPicker.HeaderView>
-                                                                    <picker:SfPicker.Columns>
-                                                                        <picker:PickerColumn ItemsSource="{x:Static common:FanfareCamera.TwoPersonCameras}" DisplayMemberPath="Description" SelectedItem="{Binding Camera, Mode=TwoWay}" HeaderText="Camera"/>
-                                                                        <picker:PickerColumn SelectedItem="{Binding SquallPhysicals, Mode=TwoWay}" HeaderText="Squall Physicals" ItemsSource="{StaticResource NumberArray}"/>
-                                                                        <picker:PickerColumn SelectedItem="{Binding Limits, Mode=TwoWay}" HeaderText="Limits" ItemsSource="{StaticResource NumberArray}"/>
-                                                                    </picker:SfPicker.Columns>
-                                                                    <picker:SfPicker.ColumnHeaderView>
-                                                                        <picker:PickerColumnHeaderView Height="40"/>
-                                                                    </picker:SfPicker.ColumnHeaderView>
-                                                                    <picker:SfPicker.FooterView>
-                                                                        <picker:PickerFooterView Height="50"/>
-                                                                    </picker:SfPicker.FooterView>
-                                                                    <picker:SfPicker.FooterTemplate>
-                                                                        <DataTemplate>
-                                                                            <buttons:SfButton Background="DarkRed" Text="Remove Encounter" Command="{Binding BindingContext.RemoveFishFinEncounterCommand, Source={x:Reference this}, Mode=OneTime}" CommandParameter="{Binding BindingContext, Source={x:Reference FishFinGrid}}" CornerRadius="0"/>
-                                                                        </DataTemplate>
-                                                                    </picker:SfPicker.FooterTemplate>
-                                                                </picker:SfPicker>
-                                                                <Border Grid.Column="1" Grid.ColumnSpan="3" Background="DarkSlateGray" IsVisible="{Binding SingleFishKilled, Mode=OneWay}"/>
-                                                                <Label Grid.Column="1" Text="{Binding Camera.Description, Mode=OneWay}" VerticalTextAlignment="Center"/>
-                                                                <Label Grid.Column="2" Text="{Binding SquallPhysicals, Mode=OneWay}"  VerticalTextAlignment="Center"/>
-                                                                <Label Grid.Column="3" Text="{Binding Limits, Mode=OneWay}"  VerticalTextAlignment="Center"/>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </CollectionView.ItemTemplate>
-                                                </CollectionView>
-                                                <Grid VerticalOptions="End" Grid.Row="5">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition/>
-                                                        <ColumnDefinition Width="0.5*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <buttons:SfButton Command="{Binding AddNewEncounterCommand, Mode=OneWay}" Text="Add Regular Encounter" CornerRadius="0"/>
-                                                    <buttons:SfButton Command="{Binding AddNewHalfEncounterCommand, Mode=OneWay}" Text="Add Single Fish" Grid.Column="1" Background="DarkSlateGray" CornerRadius="0"/>
-                                                </Grid>
-                                            </Grid>
+                <tabView:SfTabItem Header="Anacondaur">
+                    <tabView:SfTabItem.Content>
+                        <tabView:SfTabView TabBarPlacement="Bottom">
+                            <tabView:SfTabView.Items>
+                                <tabView:SfTabItem Header="Bridge Soldier">
+                                    <tabView:SfTabItem.Content>
+                                        <ScrollView>
+                                            <VerticalStackLayout>
+                                                <c:EncounterControl BindingContext="{Binding BridgeEncounter, Mode=OneTime}"/>
+                                                <HorizontalStackLayout>
+                                                    <Label Text="2nd Bridge Encounter" VerticalOptions="Center" Margin="5,0"/>
+                                                    <Switch IsToggled="{Binding DidGetSecondBridgeEncounter}" Margin="0,5"/>
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
                                         </ScrollView>
                                     </tabView:SfTabItem.Content>
                                 </tabView:SfTabItem>
-                            </tabView:SfTabView.Items>
-                                                        
-                        </tabView:SfTabView>
-                        <Grid Grid.Row="1" BackgroundColor="#00589F">
-                            <Grid.Resources>
-                                <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
-                                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                                    <Setter Property="VerticalTextAlignment" Value="Center"/>
-                                    <Setter Property="FontAttributes" Value="Bold"/>
-                                    <Setter Property="FontSize" Value="16"/>
-                                </Style>
-                            </Grid.Resources>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding LaunchQuistisPatternsCommand, Mode=OneTime}"/>
-                            </Grid.GestureRecognizers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="0.3*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text="{Binding LateQuistisOutput, StringFormat='Get Quistis Patterns (Index: {0})', Mode=OneWay}"/>
-                            <Border Grid.Column="1" Stroke="White" StrokeThickness="2" BackgroundColor="{Binding QuistisMashTextBackgroundColor, Converter={StaticResource ColorConverter}, Mode=OneWay}" >
-                                <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
-                                    <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
-                                    <Label Text="{Binding QuistisPatternMashDisplay, Mode=OneWay}"/>
-                                </VerticalStackLayout>
-                            </Border>
+                                <tabView:SfTabItem x:Name="Anacondaur2ndEncounter"/>
+                                <tabView:SfTabItem x:Name="Anacondaur3rdEncounter"/>
 
-                        </Grid>
-                    </Grid>
-                </tabView:SfTabItem.Content>
-            </tabView:SfTabItem>
-
-            <tabView:SfTabItem Header="Dollet">
-                <tabView:SfTabItem.Content>
-                    <tabView:SfTabView TabBarPlacement="Bottom">
-                        <tabView:SfTabView.Items>
-                            <tabView:SfTabItem Header="[1st] 2x Soldier">
-                                <tabView:SfTabItem.Content>
-                                    <c:EncounterControl BindingContext="{Binding FirstDolletEncounter, Mode=OneTime}"/>
-                                </tabView:SfTabItem.Content>
-                            </tabView:SfTabItem>
-                            <tabView:SfTabItem Header="[2nd] 2x Soldier">
-                                <tabView:SfTabItem.Content>
-                                    <c:EncounterControl BindingContext="{Binding SecondDolletEncounter, Mode=OneTime}"/>
-                                </tabView:SfTabItem.Content>
-                            </tabView:SfTabItem>
-                            <tabView:SfTabItem Header="[3rd] 1x Soldier">
-                                <tabView:SfTabItem.Content>
-                                    <c:EncounterControl BindingContext="{Binding ThirdDolletEncounter, Mode=OneTime}"/>
-                                </tabView:SfTabItem.Content>
-                            </tabView:SfTabItem>
-                            <tabView:SfTabItem Header="[4th] 1x Soldier">
-                                <tabView:SfTabItem.Content>
-                                    <c:EncounterControl BindingContext="{Binding FourthDolletEncounter, Mode=OneTime}"/>
-                                </tabView:SfTabItem.Content>
-                            </tabView:SfTabItem>
-                        </tabView:SfTabView.Items>
-                    </tabView:SfTabView>
-                </tabView:SfTabItem.Content>
-            </tabView:SfTabItem>
-
-            <tabView:SfTabItem Header="Anacondaur">
-                <tabView:SfTabItem.Content>
-                    <tabView:SfTabView TabBarPlacement="Bottom">
-                        <tabView:SfTabView.Items>
-                            <tabView:SfTabItem Header="Bridge Soldier">
-                                <tabView:SfTabItem.Content>
-                                    <ScrollView>
-                                        <VerticalStackLayout>
-                                            <c:EncounterControl BindingContext="{Binding BridgeEncounter, Mode=OneTime}"/>
-                                            <HorizontalStackLayout>
-                                                <Label Text="2nd Bridge Encounter" VerticalOptions="Center" Margin="5,0"/>
-                                                <Switch IsToggled="{Binding DidGetSecondBridgeEncounter}" Margin="0,5"/>
-                                            </HorizontalStackLayout>
-                                        </VerticalStackLayout>
-                                    </ScrollView>
-                                </tabView:SfTabItem.Content>
-                            </tabView:SfTabItem>
-                            <tabView:SfTabItem x:Name="Anacondaur2ndEncounter"/>
-                            <tabView:SfTabItem x:Name="Anacondaur3rdEncounter"/>
-
-                        </tabView:SfTabView.Items>
-                    </tabView:SfTabView>
-                </tabView:SfTabItem.Content>
-            </tabView:SfTabItem>
-
-            <tabView:SfTabItem Header="Elvoret">
-                <tabView:SfTabItem.Content>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
-                        <tabView:SfTabView TabBarPlacement="Bottom">
-                            <tabView:SfTabView.Items>
-                                <tabView:SfTabItem Header="Elvoret">
-                                    <tabView:SfTabItem.Content>
-                                        <c:EncounterControl BindingContext="{Binding ElvoretEncounter, Mode=OneTime}"/>
-                                    </tabView:SfTabItem.Content>
-                                </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="X-ATM092">
-                                    <tabView:SfTabItem.Content>
-                                        <VerticalStackLayout>
-                                            <c:EncounterControl BindingContext="{Binding SpiderTankEncounter, Mode=OneTime}"/>
-                                            <HorizontalStackLayout Margin="10,0">
-                                                <Label Text="Include Red Soldier Encounter" VerticalOptions="Center"/>
-                                                <Switch IsToggled="{Binding DidGetRedSoldierEncounter}" Margin="5,0"/>
-                                            </HorizontalStackLayout>
-                                        </VerticalStackLayout>
-                                    </tabView:SfTabItem.Content>
-                                </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="Red Soldier">
-                                    <tabView:SfTabItem.Content>
-                                        <c:EncounterControl BindingContext="{Binding RedSoldierEncounter, Mode=OneTime}"/>
-                                    </tabView:SfTabItem.Content>
-                                </tabView:SfTabItem>
                             </tabView:SfTabView.Items>
                         </tabView:SfTabView>
-                        <Grid Grid.Row="1">
-                            <Grid.Resources>
-                                <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
-                                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                                    <Setter Property="VerticalTextAlignment" Value="Center"/>
-                                    <Setter Property="FontAttributes" Value="Bold"/>
-                                    <Setter Property="FontSize" Value="16"/>
-                                </Style>
-                            </Grid.Resources>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding LaunchZellCommand, Mode=OneTime}"/>
-                            </Grid.GestureRecognizers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="0.3*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text="{Binding Output, StringFormat='Launch Zell (Index: {0})', Mode=OneWay}"  BackgroundColor="#00589F"/>
-                            <Border Grid.Column="1" Stroke="White" StrokeThickness="2" BackgroundColor="{Binding ZellMashTextBackgroundColor, Converter={StaticResource ColorConverter}, Mode=OneWay}" >
-                                <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
-                                    <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
-                                    <Label Text="{Binding ZellPatternMashDisplay, Mode=OneWay}"/>
-                                </VerticalStackLayout>
-                            </Border>
+                    </tabView:SfTabItem.Content>
+                </tabView:SfTabItem>
+
+                <tabView:SfTabItem Header="Elvoret">
+                    <tabView:SfTabItem.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="80"/>
+                            </Grid.RowDefinitions>
+                            <tabView:SfTabView TabBarPlacement="Bottom">
+                                <tabView:SfTabView.Items>
+                                    <tabView:SfTabItem Header="Elvoret">
+                                        <tabView:SfTabItem.Content>
+                                            <c:EncounterControl BindingContext="{Binding ElvoretEncounter, Mode=OneTime}"/>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem Header="X-ATM092">
+                                        <tabView:SfTabItem.Content>
+                                            <VerticalStackLayout>
+                                                <c:EncounterControl BindingContext="{Binding SpiderTankEncounter, Mode=OneTime}"/>
+                                                <HorizontalStackLayout Margin="10,0">
+                                                    <Label Text="Include Red Soldier Encounter" VerticalOptions="Center"/>
+                                                    <Switch IsToggled="{Binding DidGetRedSoldierEncounter}" Margin="5,0"/>
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem Header="Red Soldier">
+                                        <tabView:SfTabItem.Content>
+                                            <c:EncounterControl BindingContext="{Binding RedSoldierEncounter, Mode=OneTime}"/>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                </tabView:SfTabView.Items>
+                            </tabView:SfTabView>
+                            <Grid Grid.Row="1">
+                                <Grid.Resources>
+                                    <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                        <Setter Property="FontAttributes" Value="Bold"/>
+                                        <Setter Property="FontSize" Value="16"/>
+                                    </Style>
+                                </Grid.Resources>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding LaunchZellCommand, Mode=OneTime}"/>
+                                </Grid.GestureRecognizers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="0.3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Output, StringFormat='Launch Zell (Index: {0})', Mode=OneWay}"  BackgroundColor="#00589F"/>
+                                <Border Grid.Column="1" Stroke="White" StrokeThickness="2" BackgroundColor="{Binding ZellMashTextBackgroundColor, Converter={StaticResource ColorConverter}, Mode=OneWay}" >
+                                    <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                                        <Label Text="Instant Mash" FontAttributes="None" FontSize="14"/>
+                                        <Label Text="{Binding ZellPatternMashDisplay, Mode=OneWay}"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </tabView:SfTabItem.Content>
-            </tabView:SfTabItem>
-        </tabView:SfTabView.Items>
-    </tabView:SfTabView>
+                    </tabView:SfTabItem.Content>
+                </tabView:SfTabItem>
+            </tabView:SfTabView.Items>
+        </tabView:SfTabView>
+
+        <Border BackgroundColor="#363B57" IsVisible="{Binding LaunchingWindow}">
+            <ActivityIndicator IsRunning="{Binding LaunchingWindow}"/>
+        </Border>
+    </Grid>
 </ContentPage>

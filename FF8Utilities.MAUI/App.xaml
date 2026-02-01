@@ -23,7 +23,7 @@
                 <Setter Property="TextColor" Value="White"/>
             </Style>
 
-            <Style TargetType="buttons:SfButton">
+            <Style TargetType="buttons:SfButton" x:Key="BaseSfButton">
                 <Setter Property="Background" Value="#00589F"/>
             </Style>
         </ResourceDictionary>

@@ -11,6 +11,8 @@ namespace FF8Utilities.MAUI.Models
 {
     public class CardTrackerModel : BaseZellCardTrackerModel
     {
+        private bool _launchingWindow;
+
         public override bool LegacyMode => Preferences.Get(nameof(LegacyMode), false);
 
         public override bool DidGetRedSoldierEncounter
@@ -55,30 +57,42 @@ namespace FF8Utilities.MAUI.Models
 
         public override async Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern)
         {            
-            LateQuistisManipulationPage page = new LateQuistisManipulationPage(pattern, (CardManipulationModel)CreateCardManipModel(CardManip, 0, "fc01", pattern.RNGIndex));            
-
-            TaskCompletionSource tcs = new TaskCompletionSource();
-            EventHandler handler = null;
-            handler = (s, e) =>
+            try
             {
-                tcs.SetResult();
-                page.Unloaded -= handler;
-            };
-            page.Unloaded += handler;
-            MainThread.BeginInvokeOnMainThread(() => App.Current.Windows[0].Page.Navigation.PushModalAsync(page));
-            await tcs.Task;
-            if (page.SelectedStrategy == null) return null;
-            return uint.Parse(page.SelectedStrategy.ResultHex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                LaunchingWindow = true;
+                LateQuistisManipulationPage page = new LateQuistisManipulationPage(pattern, (CardManipulationModel)CreateCardManipModel(CardManip, 0, "fc01", pattern.RNGIndex));
+
+                TaskCompletionSource tcs = new TaskCompletionSource();
+                EventHandler handler = null;
+                handler = (s, e) =>
+                {
+                    tcs.SetResult();
+                    page.Unloaded -= handler;
+                };
+                page.Unloaded += handler;
+                MainThread.BeginInvokeOnMainThread(() => App.Current.Windows[0].Page.Navigation.PushModalAsync(page));
+                await tcs.Task;
+                if (page.SelectedStrategy == null) return null;
+                return uint.Parse(page.SelectedStrategy.ResultHex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            }
+            finally
+            {
+                LaunchingWindow = false;
+            }
+            
         }
 
         public override void LaunchZellPatterns(string patternString, int? count)
         {
+            LaunchingWindow = true;
             uint state = uint.Parse(patternString, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             ZellManipulationPage page = new ZellManipulationPage((CardManipulationModel)CreateCardManipModel(CardManip, state, "zellmama", count));
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await App.Current.Windows[0].Page.Navigation.PushModalAsync(page);
+                LaunchingWindow = false;
             });
+
         }
 
         public override void ShowMessage(string message, string caption)
@@ -87,6 +101,17 @@ namespace FF8Utilities.MAUI.Models
             {
                 await App.Current.Windows[0].Page.DisplayAlertAsync(caption, message, "OK");
             });
+        }
+
+        public bool LaunchingWindow 
+        { 
+            get => _launchingWindow; 
+            set
+            {
+                if (_launchingWindow == value) return;
+                _launchingWindow = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

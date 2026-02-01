@@ -1,5 +1,6 @@
 using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace FF8Utilities.MAUI.Pages;
@@ -10,12 +11,37 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 
-        
-        CardTrackerCommand = new AsyncCommand(LaunchCardTracker);
-	}
+        EarlyQuistisPattern = EarlyQuistisPattern.Frame1;
+        CardTrackerCommand = new AsyncCommand(ShowQuistisPopup);
+        LaunchCardTrackingCommand = new AsyncCommand(earlyQuistis => ShowCardTrackerOptions((bool)earlyQuistis));
+        EarlyQuistisCardPatternPickedCommand = new AsyncCommand(async () => await LaunchTracker(true));
+    }
 
-    private async Task LaunchCardTracker()
+    private async Task ShowQuistisPopup()
     {
+        await QuistisPopup.ShowAsync();
+    }
+
+    public static readonly BindableProperty EarlyQuistisPatternProperty = BindableProperty.Create(nameof(EarlyQuistisPattern), typeof(EarlyQuistisPattern), typeof(MainPage), EarlyQuistisPattern.Frame1);
+
+    public EarlyQuistisPattern EarlyQuistisPattern
+    {
+        get => (EarlyQuistisPattern)GetValue(EarlyQuistisPatternProperty);
+        set => SetValue(EarlyQuistisPatternProperty, value);
+    }
+
+    public static readonly BindableProperty EarlyQuistisPatternsProperty = BindableProperty.Create(nameof(EarlyQuistisPatterns), typeof(ObservableCollection<EarlyQuistisPattern>), typeof(MainPage), new ObservableCollection<EarlyQuistisPattern>(EarlyQuistisPattern.OptionsExcludeLate));
+
+    public ObservableCollection<EarlyQuistisPattern> EarlyQuistisPatterns
+    {
+        get => (ObservableCollection<EarlyQuistisPattern>)GetValue(EarlyQuistisPatternsProperty);
+        set => SetValue(EarlyQuistisPatternsProperty, value);
+    }
+
+    private async Task ShowCardTrackerOptions(bool earlyQuistis)
+    {
+        QuistisPopup.IsOpen = false;
+
         bool downloadQuistisFiles = false;
         foreach (string quistisFile in LateQuistis.RequiredFiles)
         {
@@ -36,6 +62,24 @@ public partial class MainPage : ContentPage
             }
         }
 
+        if (earlyQuistis)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                EarlyQuistisFramePicker.IsOpen = true;
+            });
+            
+            // The picker frame will handle the rest
+        }
+        else
+        {
+            await LaunchTracker(false);
+        }
+
+    }
+
+    private async Task LaunchTracker(bool earlyQuistis)
+    {
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             ShowLoadingBar = true;
@@ -48,12 +92,13 @@ public partial class MainPage : ContentPage
             _ = BaseZellCardTrackerModel.CardManip;
         });
 
-        CardTrackerPage page = new CardTrackerPage();
+        CardTrackerPage page = new CardTrackerPage();      
+        page.Model.EarlyQuistisPattern = earlyQuistis ? EarlyQuistisPattern : Common.EarlyQuistisPattern.LateQuistis;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             await Navigation.PushModalAsync(page);
             ShowLoadingBar = false;
-        });   
+        });
     }
 
     public static readonly BindableProperty ShowLoadingBarProperty = BindableProperty.Create(nameof(ShowLoadingBar), typeof(bool), typeof(MainPage), false);
@@ -99,5 +144,21 @@ public partial class MainPage : ContentPage
     {
         get => (ICommand)GetValue(UltimeciaCommandProperty);
         set => SetValue(UltimeciaCommandProperty, value);
+    }
+
+    public static readonly BindableProperty LaunchCardTrackingCommandProperty = BindableProperty.Create(nameof(LaunchCardTrackingCommand), typeof(ICommand), typeof(MainPage), null);
+
+    public ICommand LaunchCardTrackingCommand
+    {
+        get => (ICommand)GetValue(LaunchCardTrackingCommandProperty);
+        set => SetValue(LaunchCardTrackingCommandProperty, value);
+    }
+
+    public static readonly BindableProperty EarlyQuistisCardPatternPickedCommandProperty = BindableProperty.Create(nameof(EarlyQuistisCardPatternPickedCommand), typeof(ICommand), typeof(MainPage), null);
+
+    public ICommand EarlyQuistisCardPatternPickedCommand
+    {
+        get => (ICommand)GetValue(EarlyQuistisCardPatternPickedCommandProperty);
+        set => SetValue(EarlyQuistisCardPatternPickedCommandProperty, value);
     }
 }
