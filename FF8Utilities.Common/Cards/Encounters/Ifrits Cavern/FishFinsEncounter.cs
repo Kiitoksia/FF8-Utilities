@@ -9,7 +9,7 @@ namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
     {
         private int _squallPhysicals;
         private int _limits = 2;
-        private FanfareCamera _camera;
+        private FanfareCamera _camera = FanfareCamera.TwoPerson.None;
         private bool _singleFishEmerged;
         private bool _isPickerOpen;
 

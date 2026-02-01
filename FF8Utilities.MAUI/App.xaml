@@ -2,6 +2,7 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:local="clr-namespace:FF8Utilities.MAUI"
              x:Class="FF8Utilities.MAUI.App">
     <Application.Resources>
@@ -20,6 +21,10 @@
             <Style TargetType="RadioButton" x:Key="BaseRadioButton">
                 <Setter Property="BackgroundColor" Value="Transparent"/>
                 <Setter Property="TextColor" Value="White"/>
+            </Style>
+
+            <Style TargetType="buttons:SfButton">
+                <Setter Property="Background" Value="#00589F"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

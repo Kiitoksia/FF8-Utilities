@@ -23,6 +23,15 @@ public partial class CardTrackerPage : ContentPage
 			{
                 CreateAnacondaurEncounterContent();
             }
+
+			if (e.PropertyName == nameof(CardTrackerModel.QuistisCardResult))
+			{
+				if (Model.QuistisCardResult != null)
+				{
+                    // They just obtained Quistis card, move the tab over to dollet
+					MainThread.BeginInvokeOnMainThread(() => TabView.SelectedIndex = 1);
+                }
+			}
 		};
 
         CreatePostIfritEncounterContent();

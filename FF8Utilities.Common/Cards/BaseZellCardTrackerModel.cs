@@ -6,6 +6,7 @@ using FF8Utilities.Common.Cards.Encounters.IfritsCavern;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -27,7 +28,7 @@ namespace FF8Utilities.Common.Cards
         private IfritEncounter _ifritEncounter;
         private BuelEncounter _buelEncounter;
         private TwoBatsEncounter _secondBatsEncounter;
-        private BindingList<FishFinsEncounter> _fishFinEncounters;
+        private ObservableCollection<FishFinsEncounter> _fishFinEncounters;
         private DoubleSoldierEncounter _firstDolletEncounter;
         private DoubleSoldierEncounter _secondDolletEncounter;
         private SingleSoldierEncounter _thirdDolletEncounter;
@@ -103,7 +104,7 @@ namespace FF8Utilities.Common.Cards
             SecondBatsEncounter = new TwoBatsEncounter();
             SecondBatsEncounter.PropertyChanged += EncounterPropertyChanged;
             
-            FishFinEncounters = new BindingList<FishFinsEncounter>
+            FishFinEncounters = new ObservableCollection<FishFinsEncounter>
             {
                 // Default to 3 encounters
                 new FishFinsEncounter(),
@@ -112,18 +113,14 @@ namespace FF8Utilities.Common.Cards
             };
             foreach (FishFinsEncounter f in FishFinEncounters)
             {
-                f.PropertyChanged += (s, e) =>
-                {
-                    if (e.PropertyName == nameof(FishFinsEncounter.IsPickerOpen)) return;
-                    OnPropertyChanged(nameof(Output));
-                };
+                f.PropertyChanged += Enc_PropertyChanged;
             }
 
-            FishFinEncounters.ListChanged += (s, e) =>
-            {
-                OnPropertyChanged(nameof(FishFinEncounters));
-                OnPropertyChanged(nameof(Output));
-            };
+            //FishFinEncounters.ListChanged += (s, e) =>
+            //{
+            //    OnPropertyChanged(nameof(FishFinEncounters));
+            //    OnPropertyChanged(nameof(Output));
+            //};
             FirstDolletEncounter = new DoubleSoldierEncounter(false, "[1st] 2X Soldier");
             FirstDolletEncounter.PropertyChanged += EncounterPropertyChanged;
             SecondDolletEncounter = new DoubleSoldierEncounter(false, "[2nd] 2X Soldier");
@@ -285,10 +282,7 @@ namespace FF8Utilities.Common.Cards
                     FishFinsEncounter enc = new FishFinsEncounter();
                     enc.FromXml(fishFin);
 
-                    enc.PropertyChanged += (s, e) =>
-                    {
-                        OnPropertyChanged(nameof(Output));
-                    };
+                    enc.PropertyChanged += Enc_PropertyChanged;
 
                     FishFinEncounters.Add(enc);
                 }
@@ -336,16 +330,28 @@ namespace FF8Utilities.Common.Cards
         {
             enc.IsPickerOpen = false;
             FishFinEncounters.Remove(enc);
+            enc.PropertyChanged -= Enc_PropertyChanged;
+            OnPropertyChanged(nameof(Output));
+        }
+
+        private void Enc_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(FishFinsEncounter.IsPickerOpen)) return;
+            OnPropertyChanged(nameof(Output));
         }
 
         private void AddNewEncounter()
         {
-            FishFinEncounters.Add(new FishFinsEncounter());
+            FishFinsEncounter enc = new FishFinsEncounter();
+            enc.PropertyChanged += Enc_PropertyChanged;
+            FishFinEncounters.Add(enc);
         }
 
         private void AddNewHalfEncounter()
         {
-            FishFinEncounters.Add(new FishFinsEncounter { SingleFishKilled = true, Limits = 1 });
+            FishFinsEncounter enc = new FishFinsEncounter { SingleFishKilled = true, Limits = 1 };
+            enc.PropertyChanged += Enc_PropertyChanged;
+            FishFinEncounters.Add(enc);
         }
 
         private async void LaunchQuistis()
@@ -452,7 +458,7 @@ namespace FF8Utilities.Common.Cards
             }
         }
 
-        public BindingList<FishFinsEncounter> FishFinEncounters
+        public ObservableCollection<FishFinsEncounter> FishFinEncounters
         {
             get => _fishFinEncounters;
             set
