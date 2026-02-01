@@ -92,7 +92,7 @@ public partial class MainPage : ContentPage
             _ = BaseZellCardTrackerModel.CardManip;
         });
 
-        CardTrackerPage page = new CardTrackerPage();      
+        CardTrackerPage page = new CardTrackerPage(earlyQuistis);      
         page.Model.EarlyQuistisPattern = earlyQuistis ? EarlyQuistisPattern : Common.EarlyQuistisPattern.LateQuistis;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {

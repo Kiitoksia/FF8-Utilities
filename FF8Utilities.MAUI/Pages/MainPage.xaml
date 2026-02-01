@@ -58,7 +58,7 @@
                 <picker:PickerColumn ItemsSource="{x:Static common:EarlyQuistisPattern.OptionsExcludeLate}" DisplayMemberPath="Description" HeaderText="Select Frame" SelectedItem="{Binding EarlyQuistisPattern, Mode=TwoWay}"/>
             </picker:SfPicker.Columns>
             <picker:SfPicker.FooterView>
-                <picker:PickerFooterView Height="50"  ShowOkButton="False" CancelButtonText="OK"/>
+                <picker:PickerFooterView Height="50" ShowOkButton="False" CancelButtonText="OK"/>
             </picker:SfPicker.FooterView>
         </picker:SfPicker>
         

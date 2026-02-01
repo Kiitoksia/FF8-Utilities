@@ -25,6 +25,8 @@
             <Setter Property="EnableVirtualization" Value="True"/>
         </Style>
 
+        <converters:BoolConverter x:TypeArguments="GridLength" True="80" False="0" x:Key="ShowQuistisPatternsConverter"/>
+
         <Style TargetType="Switch">
             <Setter Property="VerticalOptions" Value="Center"/>
         </Style>
@@ -53,7 +55,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
-                                <RowDefinition Height="80"/>
+                                <RowDefinition x:Name="QuistisPatternRow" Height="80"/>
                             </Grid.RowDefinitions>
                             <tabView:SfTabView TabBarPlacement="Bottom">
                                 <tabView:SfTabView.Items>
@@ -184,7 +186,7 @@
                                 </tabView:SfTabView.Items>
 
                             </tabView:SfTabView>
-                            <Grid Grid.Row="1" BackgroundColor="#00589F">
+                            <Grid Grid.Row="1" BackgroundColor="#00589F" x:Name="QuistisPatternView">
                                 <Grid.Resources>
                                     <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
                                         <Setter Property="HorizontalTextAlignment" Value="Center"/>

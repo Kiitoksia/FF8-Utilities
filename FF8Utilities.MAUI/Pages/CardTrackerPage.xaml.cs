@@ -11,10 +11,13 @@ public partial class CardTrackerPage : ContentPage
 	/// <summary>
 	/// Ensure you call Initialise() before using the page
 	/// </summary>
-	public CardTrackerPage()
+	public CardTrackerPage(bool earlyQuistisMode)
 	{
 		InitializeComponent();
         Initialise();
+
+        QuistisPatternRow.Height = new GridLength(earlyQuistisMode ? 0 : 80, GridUnitType.Absolute);
+        QuistisPatternView.IsVisible = !earlyQuistisMode;
     }
 
 	public void Initialise()
