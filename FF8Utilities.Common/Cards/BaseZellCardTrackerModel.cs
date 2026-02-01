@@ -114,6 +114,7 @@ namespace FF8Utilities.Common.Cards
             {
                 f.PropertyChanged += (s, e) =>
                 {
+                    if (e.PropertyName == nameof(FishFinsEncounter.IsPickerOpen)) return;
                     OnPropertyChanged(nameof(Output));
                 };
             }

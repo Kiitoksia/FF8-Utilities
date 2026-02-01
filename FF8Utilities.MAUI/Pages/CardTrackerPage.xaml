@@ -14,6 +14,7 @@
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:encs="clr-namespace:FF8Utilities.Common.Cards.Encounters;assembly=FF8Utilities.Common"
              xmlns:fishFins="clr-namespace:FF8Utilities.Common.Cards.Encounters.IfritsCavern;assembly=FF8Utilities.Common"
+             x:Name="this"
              x:DataType="models:CardTrackerModel"
              Title="CardTrackerPage">
     <ContentPage.Resources>
@@ -35,6 +36,20 @@
         <Style TargetType="Switch">
             <Setter Property="VerticalOptions" Value="Center"/>
         </Style>
+
+        <x:Array Type="{x:Type x:Int32}" x:Key="NumberArray">
+            <x:Int32>0</x:Int32>
+            <x:Int32>1</x:Int32>
+            <x:Int32>2</x:Int32>
+            <x:Int32>3</x:Int32>
+            <x:Int32>4</x:Int32>
+            <x:Int32>5</x:Int32>
+            <x:Int32>6</x:Int32>
+            <x:Int32>7</x:Int32>
+            <x:Int32>8</x:Int32>
+            <x:Int32>9</x:Int32>
+            <x:Int32>10</x:Int32>
+        </x:Array>
     </ContentPage.Resources>
     <tabView:SfTabView TabBarPlacement="Top">
         <tabView:SfTabView.Items>
@@ -95,20 +110,32 @@
                                                             <Grid>
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="30"/>
-                                                                    <ColumnDefinition Width="1.2*"/>
+                                                                    <ColumnDefinition Width="0"/> <!-- Hidden column for picker to show-->
+                                                                    <ColumnDefinition/>
                                                                     <ColumnDefinition/>
                                                                     <ColumnDefinition/>
                                                                 </Grid.ColumnDefinitions>
+                                                                <Grid.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding OpenPickerCommand}"/>
+                                                                </Grid.GestureRecognizers>
                                                                 <buttons:SfButton Text="X" Background="Transparent" TextColor="Red" FontSize="Large" Padding="0"/>
-                                                                <picker:SfPicker Grid.Column="1">
+                                                                <picker:SfPicker PopupHeight="400" Grid.Column="1" Mode="Dialog"  IsOpen="{Binding IsPickerOpen}" TextDisplayMode="Fade">
                                                                     <picker:SfPicker.HeaderView>
                                                                         <picker:PickerHeaderView Text="Adjust Fight"/>
                                                                     </picker:SfPicker.HeaderView>
                                                                     <picker:SfPicker.Columns>
+                                                                        <picker:PickerColumn ItemsSource="{x:Static common:FanfareCamera.TwoPersonCameras}" DisplayMemberPath="Description" SelectedItem="{Binding Camera, Mode=TwoWay}" HeaderText="Camera"/>
+                                                                        <picker:PickerColumn SelectedItem="{Binding SquallPhysicals, Mode=TwoWay}" HeaderText="Squall Physicals" ItemsSource="{StaticResource NumberArray}"/>
+                                                                        <picker:PickerColumn SelectedItem="{Binding Limits, Mode=TwoWay}" HeaderText="Limits" ItemsSource="{StaticResource NumberArray}"/>
                                                                     </picker:SfPicker.Columns>
+                                                                    <picker:SfPicker.ColumnHeaderView>
+                                                                        <picker:PickerColumnHeaderView Height="40"/>
+                                                                    </picker:SfPicker.ColumnHeaderView>
                                                                 </picker:SfPicker>
-                                                                <editors:SfNumericEntry Value="{Binding SquallPhysicals}" Minimum="0" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline" Grid.Column="2"/>
-                                                                <editors:SfNumericEntry Value="{Binding Limits}" Minimum="0" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline" Grid.Column="3"/>
+
+                                                                <Label Grid.Column="2" Text="{Binding Camera.Description}"/>
+                                                                <Label Grid.Column="3" Text="{Binding SquallPhysicals}"/>
+                                                                <Label Grid.Column="4" Text="{Binding Limits}"/>
                                                             </Grid>
                                                         </DataTemplate>
                                                     </CollectionView.ItemTemplate>

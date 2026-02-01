@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 using System.Xml.Linq;
 
 namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
@@ -10,10 +11,11 @@ namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
         private int _limits = 2;
         private FanfareCamera _camera;
         private bool _singleFishEmerged;
+        private bool _isPickerOpen;
 
         public FishFinsEncounter()
         {
-
+            OpenPickerCommand = new RelayCommand(() => IsPickerOpen = true);
         }
 
         public int SquallPhysicals
@@ -90,6 +92,22 @@ namespace FF8Utilities.Common.Cards.Encounters.IfritsCavern
             xml.Add(new XAttribute(nameof(Limits), Limits));
             xml.Add(new XAttribute(nameof(SingleFishKilled), SingleFishKilled));
             return xml;
+        }
+
+        /// <summary>
+        /// Only used by MAUI to open the picker, PC has it in-line
+        /// </summary>
+        public ICommand OpenPickerCommand { get; set; }
+
+        public bool IsPickerOpen 
+        { 
+            get => _isPickerOpen; 
+            set 
+            {
+                if (value == _isPickerOpen) return;
+                _isPickerOpen = value;
+                OnPropertyChanged();
+            } 
         }
 
         public void FromXml(XElement xml)
