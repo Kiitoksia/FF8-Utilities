@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <VerticalStackLayout>
-            <Label Text="{Binding Explanation}" HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding Explanation, Mode=OneWay}" HorizontalTextAlignment="Center"/>
             <Entry
             x:Name="RecoveryEntry"
             ClearButtonVisibility="WhileEditing"
@@ -24,10 +24,10 @@
             Placeholder="Enter cards for recovery or 1st try search"
                 PlaceholderColor="Gray"
             Text="{Binding RecoveryPattern}"            
-            ReturnCommand="{Binding SubmitCommand}"
+            ReturnCommand="{Binding SubmitCommand, Mode=OneTime}"
             TextColor="White" />
-            <Label Text="{Binding FoundCards}" />
-            <Label Text="{Binding ErrorText}"/>
+            <Label Text="{Binding FoundCards, Mode=OneWay}" />
+            <Label Text="{Binding ErrorText, Mode=OneWay}"/>
         </VerticalStackLayout>
 
 
@@ -35,16 +35,16 @@
         <VerticalStackLayout Grid.Row="1" VerticalOptions="Fill">
             <skia:SKCanvasView PaintSurface="SKCanvasView_PaintSurface" HeightRequest="30" HorizontalOptions="Fill" x:Name="SnakeView"/>
 
-            <Border BackgroundColor="{Binding InstantMashBackgroundMaui}" IsVisible="{Binding ShowInstantMashText}" Padding="5">
+            <Border BackgroundColor="{Binding InstantMashBackgroundMaui, Mode=OneWay}" IsVisible="{Binding ShowInstantMashText, Mode=OneWay}" Padding="5">
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <Label Text="Instant Mash:"/>
-                    <Label Text="{Binding FirstFrameAvailableFramesDisplay}" Margin="5,0"/>
-                    <Label Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)'}"/>
+                    <Label Text="{Binding FirstFrameAvailableFramesDisplay, Mode=OneWay}" Margin="5,0"/>
+                    <Label Text="{Binding InstantMashFramesAvailable, StringFormat='({0} frames)', Mode=OneWay}"/>
                 </HorizontalStackLayout>
             </Border>
         </VerticalStackLayout>
 
-        <buttons:SfButton Command="{Binding SubmitCommand}" Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large"/>
+        <buttons:SfButton Command="{Binding SubmitCommand, Mode=OneTime}" Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large"/>
 
     </Grid>
     

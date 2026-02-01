@@ -32,17 +32,17 @@
             </Grid.ColumnDefinitions>
 
             <HorizontalStackLayout HorizontalOptions="Fill">
-                <Label Text="{Binding Description}" FontSize="14" FontAttributes="Bold" Margin="0,0,10,0"/>
-                <Label Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InverseBoolConverter}}" HorizontalOptions="Fill"/>
+                <Label Text="{Binding Description, Mode=OneTime}" FontSize="14" FontAttributes="Bold" Margin="0,0,10,0"/>
+                <Label Text="{Binding Notes, Mode=OneWay}" IsVisible="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InverseBoolConverter}}" HorizontalOptions="Fill"/>
                 <Entry Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}}" HorizontalOptions="Fill"/>
             </HorizontalStackLayout>
 
             <buttons:SfButton Text="EDIT" Grid.Column="1" CornerRadius="2" 
             BackgroundColor="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InDesignModeConverter}}" 
-            Command="{Binding DesignCommand, Source={x:Reference this}}"/>
+            Command="{Binding DesignCommand, Source={x:Reference this}, Mode=OneTime}"/>
 
             <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="2">
-                <CollectionView ItemsSource="{Binding Abilities}">
+                <CollectionView ItemsSource="{Binding Abilities, Mode=OneTime}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="m:EncounterAbilityModel">
                             <Grid Margin="20,3,0,3">
@@ -55,7 +55,7 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
-                                <Label Text="{Binding Description}" FontAttributes="Bold"/>
+                                <Label Text="{Binding Description, Mode=OneTime}" FontAttributes="Bold"/>
                                 <Border Grid.Column="1" StrokeThickness="1" Stroke="White" Padding="10,0">
                                     <editors:SfNumericEntry Value="{Binding Count}" ValueChangeMode="OnKeyFocus" SelectAllOnFocus="True" 
                                 CustomFormat="0" UpDownPlacementMode="Inline" ShowClearButton="False" Minimum="0" Maximum="99" 
@@ -69,17 +69,17 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <HorizontalStackLayout IsVisible="{Binding ShowToggleOption}">
-                    <Label Text="{Binding ToggleOptionDescription}"/>
+                <HorizontalStackLayout IsVisible="{Binding ShowToggleOption, Mode=OneTime}">
+                    <Label Text="{Binding ToggleOptionDescription, Mode=OneTime}"/>
                     <Switch IsToggled="{Binding IsToggled}"/>
                 </HorizontalStackLayout>
 
 
-                <Label Text="Camera" FontAttributes="Bold" IsVisible="{Binding FanfareVisible}" HorizontalTextAlignment="Start" Margin="0,5"/>
-                <CollectionView IsVisible="{Binding FanfareVisible}" ItemsSource="{Binding FanfareList}">
+                <Label Text="Camera" FontAttributes="Bold" IsVisible="{Binding FanfareVisible, Mode=OneTime}" HorizontalTextAlignment="Start" Margin="0,5"/>
+                <CollectionView IsVisible="{Binding FanfareVisible, Mode=OneTime}" ItemsSource="{Binding FanfareList, Mode=OneTime}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="common:FanfareCamera">
-                            <buttons:SfRadioButton Text="{Binding Description}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding .}" StateChanged="SfRadioButton_StateChanged"/>
+                            <buttons:SfRadioButton Text="{Binding Description, Mode=OneTime}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding .}" StateChanged="SfRadioButton_StateChanged"/>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

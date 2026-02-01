@@ -7,13 +7,13 @@
              MinimumHeightRequest="300"
              MinimumWidthRequest="200"
              x:Class="FF8Utilities.MAUI.Controls.CardPatternView">
-    <CollectionView ItemsSource="{Binding .}">
+    <CollectionView ItemsSource="{Binding ., Mode=OneWay}">
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="3"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <c:CardPatternPositionView BindingContext="{Binding .}"/>
+                <c:CardPatternPositionView BindingContext="{Binding ., Mode=OneWay}"/>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
