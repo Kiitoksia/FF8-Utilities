@@ -118,6 +118,9 @@
 	  <MauiXaml Update="Pages\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\ZellManipulationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="UltimeciaManipPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

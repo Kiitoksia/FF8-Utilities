@@ -73,7 +73,12 @@ namespace FF8Utilities.MAUI.Models
 
         public override void LaunchZellPatterns(string patternString, int? count)
         {
-            throw new NotImplementedException();
+            uint state = uint.Parse(patternString, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            ZellManipulationPage page = new ZellManipulationPage((CardManipulationModel)CreateCardManipModel(CardManip, state, "zellmama", count));
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await App.Current.Windows[0].Page.Navigation.PushModalAsync(page);
+            });
         }
 
         public override void ShowMessage(string message, string caption)

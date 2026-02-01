@@ -24,9 +24,9 @@ public partial class CardTrackerPage : ContentPage
                 CreateAnacondaurEncounterContent();
             }
 
-			if (e.PropertyName == nameof(CardTrackerModel.QuistisCardResult))
+			if (e.PropertyName == nameof(CardTrackerModel.QuistisCardObtained))
 			{
-				if (Model.QuistisCardResult != null)
+				if (Model.QuistisCardObtained && Model.QuistisCardResult != null)
 				{
                     // They just obtained Quistis card, move the tab over to dollet
 					MainThread.BeginInvokeOnMainThread(() => TabView.SelectedIndex = 1);
@@ -54,10 +54,10 @@ public partial class CardTrackerPage : ContentPage
 		BaseEncounterModel postIfritEncounter = null;
 		switch (Model.IfritsCavernEncounterType)
 		{
-			case Common.IfritEncounterType.RedBat:
+			case IfritEncounterType.RedBat:
 				postIfritEncounter = Model.SecondBatsEncounter;
 				break;
-			case Common.IfritEncounterType.Buel:
+			case IfritEncounterType.Buel:
 				postIfritEncounter = Model.BuelEncounter;
 				break;
 			default: throw new NotImplementedException();

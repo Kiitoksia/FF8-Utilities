@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FF8Utilities.MAUI.Pages.ZellManipulationPage"
+             xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+             xmlns:c="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:models="clr-namespace:FF8Utilities.MAUI.Models"
+             xmlns:card="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             x:DataType="models:CardManipulationModel"
+             Title="ZellManipulationPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="250"/>
+        </Grid.RowDefinitions>
+
+        <tabView:SfTabView>
+            <tabView:SfTabView.Items>
+                <tabView:SfTabItem Header="Player Starts">
+                    <tabView:SfTabItem.Content>
+                        <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellPlayerFirstPositions}"/>
+                    </tabView:SfTabItem.Content>
+                </tabView:SfTabItem>
+                <tabView:SfTabItem Header="Mom Starts">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Text="Option 1"/>
+                        <Label Text="Option 2" Grid.Column="1"/>
+
+                        <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsWeak}" Grid.Row="1"/>
+                        <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsStrong}" Grid.Row="1" Grid.Column="1"/>
+                    </Grid>
+                </tabView:SfTabItem>
+            </tabView:SfTabView.Items>
+        </tabView:SfTabView>
+
+        <c:CardTimerControl BindingContext="{Binding .}" Grid.Row="1"/>
+    </Grid>
+</ContentPage>
