@@ -1,4 +1,6 @@
+using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
+using Syncfusion.Maui.Buttons;
 using System.Windows.Input;
 
 namespace FF8Utilities.MAUI.Controls;
@@ -33,5 +35,14 @@ public partial class EncounterControl : ContentView
     {
         get => (ICommand)GetValue(DesignCommandProperty);
         set => SetValue(DesignCommandProperty, value);
+    }
+
+    private void SfRadioButton_StateChanged(object sender, Syncfusion.Maui.Buttons.StateChangedEventArgs e)
+    {
+        if (e.IsChecked ?? false)
+        {
+            SfRadioButton button = (SfRadioButton)sender;
+            Model.Fanfare = (FanfareCamera)button.Value;
+        }        
     }
 }

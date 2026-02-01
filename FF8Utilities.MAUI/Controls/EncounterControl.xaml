@@ -18,6 +18,8 @@
         </Style>
         <toolkit:InvertedBoolConverter x:Key="InverseBoolConverter"/>
 
+        <converters:EqualsParameterConverer x:Key="FanfareCheckedConverter" />
+
         <buttons:SfRadioGroupKey x:Key="FanfareRadioKey"/>
     </ContentView.Resources>
     <ScrollView>
@@ -76,10 +78,10 @@
 
 
                 <Label Text="Camera" FontAttributes="Bold" IsVisible="{Binding FanfareVisible}" HorizontalTextAlignment="Start" Margin="0,5"/>
-                <CollectionView IsVisible="{Binding FanfareVisible}" ItemsSource="{Binding FanfareTypeList}">
+                <CollectionView IsVisible="{Binding FanfareVisible}" ItemsSource="{Binding FanfareList}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="common:SelectableComboBoxItem">
-                            <buttons:SfRadioButton Text="{Binding Description}" IsChecked="{Binding IsSelected}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding Value}" StateChanged="SfRadioButton_StateChanged"/>
+                        <DataTemplate x:DataType="common:FanfareCamera">
+                            <buttons:SfRadioButton Text="{Binding Description}" GroupKey="{StaticResource FanfareRadioKey}" Value="{Binding .}" StateChanged="SfRadioButton_StateChanged"/>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
