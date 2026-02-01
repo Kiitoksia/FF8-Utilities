@@ -334,6 +334,7 @@ namespace FF8Utilities.Common.Cards
 
         private void RemoveFishFinEncounter(FishFinsEncounter enc)
         {
+            enc.IsPickerOpen = false;
             FishFinEncounters.Remove(enc);
         }
 
