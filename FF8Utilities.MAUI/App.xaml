@@ -11,6 +11,7 @@
                 <syncTheme:SyncfusionThemeResourceDictionary VisualTheme="MaterialDark"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <Color x:Key="StandardBlue">#00589F</Color>
             <Style TargetType="Page" ApplyToDerivedTypes="True">
                 <Setter Property="BackgroundColor" Value="#252525"/>
             </Style>
@@ -24,7 +25,8 @@
             </Style>
 
             <Style TargetType="buttons:SfButton" x:Key="BaseSfButton">
-                <Setter Property="Background" Value="#00589F"/>
+                <Setter Property="Background" Value="{StaticResource StandardBlue}"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource StandardBlue}"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

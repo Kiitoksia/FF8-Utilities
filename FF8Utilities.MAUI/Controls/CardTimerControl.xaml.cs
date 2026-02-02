@@ -9,6 +9,9 @@ public partial class CardTimerControl : ContentView
     private SKPaint _paint = new SKPaint { IsAntialias = true, IsStroke = false };
     private SKFont _font = new SKFont();
 
+    private string _lastRenderedText = string.Empty;
+    private Color _lastRenderedColor = Colors.Transparent;
+
     public CardTimerControl()
 	{
 		InitializeComponent();
@@ -46,7 +49,18 @@ public partial class CardTimerControl : ContentView
 
     private void Value_RenderTimerTick(object sender, EventArgs e)
     {
-        SnakeView.InvalidateSurface();
+        if (Model == null) return;
+        
+        // Only invalidate if display content changed
+        string currentText = $"{Model.RareCardTimer} {Model.Snake}";
+        Color currentColor = Model.TextColourMaui;
+        
+        if (currentText != _lastRenderedText || currentColor != _lastRenderedColor)
+        {
+            _lastRenderedText = currentText;
+            _lastRenderedColor = currentColor;
+            SnakeView.InvalidateSurface();
+        }
     }
 
     private void SKCanvasView_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
@@ -62,12 +76,8 @@ public partial class CardTimerControl : ContentView
         // Compose single-line text and sanitize newlines
         string text = $"{Model.RareCardTimer} {Model.Snake}";
 
-        canvas.Save();
-        canvas.ClipRect(new SKRect(0, 0, info.Width, info.Height));
-
         _paint.Color = Model.TextColourMaui.ToSKColor();
         float y = Math.Abs(_font.Metrics.Ascent);
         canvas.DrawText(text, 0, y, _font, _paint);
-        canvas.Restore();
     }
 }

@@ -2,14 +2,15 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:common="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
              x:DataType="common:CardPosition"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Name="this"
              x:Class="FF8Utilities.MAUI.Controls.CardPatternPositionView">
     <ContentView.Resources>
         <ResourceDictionary>
-            <toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>
             <toolkit:InvertedBoolConverter x:Key="InverseConverter"/>
+            <converters:CachedByteArrayToImageSourceConverter x:Key="ImageConverter"/>
         </ResourceDictionary>
     </ContentView.Resources>
     <Grid>
@@ -21,10 +22,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Image Source="{Binding Card, Converter={StaticResource ImageConverter}, Mode=OneTime}" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Fill"
-               Aspect="AspectFit"/>
-        
-        <Border IsVisible="{Binding IsPlayerTurn, Converter={StaticResource InverseConverter}, Mode=OneTime}" Grid.RowSpan="2" Grid.ColumnSpan="2" BackgroundColor="Black" Opacity="0.5"/>
+        <Image  Source="{Binding Card, Converter={StaticResource ImageConverter}, Mode=OneTime}" Grid.RowSpan="2" Grid.ColumnSpan="2"  HorizontalOptions="Fill" VerticalOptions="Fill" x:Name="CardImage" Aspect="AspectFit"/>
 
         <Label Text="{Binding Turn}" HorizontalTextAlignment="End" VerticalTextAlignment="End" FontAttributes="Bold" IsVisible="{Binding ShowTurnNumber, Mode=OneTime}" Grid.Row="1" Grid.Column="1" FontSize="64" TextColor="White">
             <Label.Style>

@@ -5,9 +5,12 @@
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls" 
              x:DataType="models:CardManipulationModel"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="FF8Utilities.MAUI.Controls.CardTimerControl">
-
-    <Grid>
+    <ContentView.Resources>
+        <toolkit:IsStringNotNullOrWhiteSpaceConverter x:Key="StringIsNullConverter"/>
+    </ContentView.Resources>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -16,6 +19,7 @@
 
         <VerticalStackLayout>
             <Label Text="{Binding Explanation, Mode=OneWay}" HorizontalTextAlignment="Center"/>
+            
             <Entry
             x:Name="RecoveryEntry"
             ClearButtonVisibility="WhileEditing"
@@ -26,8 +30,8 @@
             Text="{Binding RecoveryPattern}"            
             ReturnCommand="{Binding SubmitCommand, Mode=OneTime}"
             TextColor="White" />
-            <Label Text="{Binding FoundCards, Mode=OneWay}" />
-            <Label Text="{Binding ErrorText, Mode=OneWay}"/>
+            <Label Text="{Binding FoundCards, Mode=OneWay}" IsVisible="{Binding FoundCards, Converter={StaticResource StringIsNullConverter}}" />
+            <Label Text="{Binding ErrorText, Mode=OneWay}" IsVisible="{Binding ErrorText, Converter={StaticResource StringIsNullConverter}}"/>
         </VerticalStackLayout>
 
 

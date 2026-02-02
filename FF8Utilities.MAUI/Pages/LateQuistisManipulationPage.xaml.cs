@@ -6,10 +6,13 @@ namespace FF8Utilities.MAUI.Pages;
 
 public partial class LateQuistisManipulationPage : ContentPage
 {
-	public LateQuistisManipulationPage(LateQuistisPattern model, CardManipulationModel cardManipModel)
+	public LateQuistisManipulationPage()
 	{
 		InitializeComponent();
+    }
 
+    public LateQuistisManipulationPage(LateQuistisPattern model, CardManipulationModel cardManipModel) : this()
+	{
         CardControl.Model = cardManipModel;
         Model = model;
 
@@ -62,16 +65,6 @@ public partial class LateQuistisManipulationPage : ContentPage
 	{
 		get => (ICommand)GetValue(QuistisObtainedCommandProperty);
 		set => SetValue(QuistisObtainedCommandProperty, value);
-    }
-
-    private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-		NavigationDrawer.ToggleDrawer(); // Hide after selection
-    }
-
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-        NavigationDrawer.ToggleDrawer();
     }
 
 	private async Task QuistisCardObtained()

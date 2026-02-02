@@ -8,59 +8,65 @@
              xmlns:navigationDrawer="clr-namespace:Syncfusion.Maui.NavigationDrawer;assembly=Syncfusion.Maui.NavigationDrawer"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" 
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
              x:DataType="cards:LateQuistisPattern"
              x:Name="this"
              Title="LateQuistisManipulationPage">
     <ContentPage.Resources>
-        <toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+        <converters:CachedByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+
+        <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="Large"/>
+        </Style>
     </ContentPage.Resources>
 
-    <navigationDrawer:SfNavigationDrawer Grid.RowSpan="2" x:Name="NavigationDrawer">
-        <navigationDrawer:SfNavigationDrawer.DrawerSettings>
-            <navigationDrawer:DrawerSettings IsOpen="True" DrawerWidth="100">
-                <navigationDrawer:DrawerSettings.DrawerContentView>
-                    <CollectionView ItemsSource="{Binding Strategies, Mode=OneTime}" SelectionMode="Single" SelectionChanged="CollectionView_SelectionChanged" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="cards:LateQuistisStrategy">
-                                <Grid HeightRequest="60">
-                                    <HorizontalStackLayout>
-                                        <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="60" Aspect="AspectFit" />
-                                        <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="60" Aspect="AspectFit" />
-                                    </HorizontalStackLayout>
-                                    <Label Text="{Binding Frame, StringFormat='Frame {0}', Mode=OneTime}"  VerticalTextAlignment="End" BackgroundColor="#7F000000"
-                                           VerticalOptions="End" HorizontalOptions="Start"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </navigationDrawer:DrawerSettings.DrawerContentView>
-            </navigationDrawer:DrawerSettings>
-        </navigationDrawer:SfNavigationDrawer.DrawerSettings>
-        <navigationDrawer:SfNavigationDrawer.ContentView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="250"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="250"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Text="Frames"/>
+        <CollectionView ItemsSource="{Binding Strategies, Mode=OneTime}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="cards:LateQuistisStrategy">
+                    <Border StrokeThickness="2">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="White"/>
+                                    </VisualState.Setters>
+                                </VisualState>
 
-                <buttons:SfButton Clicked="Button_Clicked" Text="CHANGE FRAME"/>
-                <Label Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" 
-                       HorizontalTextAlignment="Center" FontSize="Large" Grid.Column="1"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <HorizontalStackLayout>
+                            <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="60" Aspect="AspectFit" />
+                            <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="60" Aspect="AspectFit" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-                <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" 
-                                          Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Fill" />
 
-                <buttons:SfButton Text="Quistis Obtained" Grid.Row="2" Grid.ColumnSpan="2" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
-                                  Margin="10,5" />
-
-                <controls:CardTimerControl Grid.Row="3" Grid.ColumnSpan="2" x:Name="CardControl" Margin="10"/>
-            </Grid>
-        </navigationDrawer:SfNavigationDrawer.ContentView>
-    </navigationDrawer:SfNavigationDrawer>
+        <Label Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large" Grid.Column="1"/>
+        <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" Grid.Row="1" Grid.Column="1"  HorizontalOptions="Fill" VerticalOptions="Fill" />
+        <buttons:SfButton Grid.Row="2" Grid.ColumnSpan="2" Text="Quistis Obtained" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                          Margin="10,5" BackgroundColor="{StaticResource StandardBlue}" />
+        <controls:CardTimerControl Grid.Row="3" x:Name="CardControl" Margin="10" Grid.ColumnSpan="2"/>
+    </Grid>
 </ContentPage>

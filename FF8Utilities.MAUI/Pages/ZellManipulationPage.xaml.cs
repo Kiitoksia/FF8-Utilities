@@ -4,9 +4,13 @@ namespace FF8Utilities.MAUI.Pages;
 
 public partial class ZellManipulationPage : ContentPage
 {
-	public ZellManipulationPage(CardManipulationModel model)
+	public ZellManipulationPage() 
 	{
 		InitializeComponent();
+    }
+
+    public ZellManipulationPage(CardManipulationModel model) : this()
+	{
 		CardControl.Model = model;
     }
 }

@@ -8,14 +8,18 @@ namespace FF8Utilities.MAUI.Pages;
 
 public partial class CardTrackerPage : ContentPage
 {
-	/// <summary>
-	/// Ensure you call Initialise() before using the page
-	/// </summary>
-	public CardTrackerPage(bool earlyQuistisMode)
+    /// <summary>
+    /// Ensure you call Initialise() before using the page if using this constructor
+    /// </summary>
+    public CardTrackerPage()
 	{
-		InitializeComponent();
-        Initialise();
+        InitializeComponent();
+    }
 
+	
+	public CardTrackerPage(bool earlyQuistisMode) : this()
+	{
+        Initialise();
         QuistisPatternRow.Height = new GridLength(earlyQuistisMode ? 0 : 80, GridUnitType.Absolute);
         QuistisPatternView.IsVisible = !earlyQuistisMode;
     }

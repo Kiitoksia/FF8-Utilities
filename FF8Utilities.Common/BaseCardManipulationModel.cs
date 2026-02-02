@@ -91,23 +91,41 @@ namespace FF8Utilities.Common
             var deltaTime = renderingTime - _lastRenderTime;
             _lastRenderTime = renderingTime;
 
-            RareCardAvailable = CurrentResult.RareTable[0];
-            RareCardSoon = !CurrentResult.RareTable[0] && CurrentResult.RareTable.Take(10).Any(t => t);
-            Snake = string.Join("", CurrentResult.RareTable.Select(t => t ? "*" : "-"));
-            TimeElapsedSeconds = (decimal)CurrentResult.DurationSeconds;
+            // Cache current values and only update if changed
+            bool newRareCardAvailable = CurrentResult.RareTable[0];
+            if (_rareCardAvailable != newRareCardAvailable)
+                RareCardAvailable = newRareCardAvailable;
 
-            if (RareCardAvailable) TextColor = Color.Green;
-            else if (RareCardSoon) TextColor = Color.Orange;
-            else TextColor = Color.White;
+            bool newRareCardSoon = !CurrentResult.RareTable[0] && CurrentResult.RareTable.Take(10).Any(t => t);
+            if (_rareCardSoon != newRareCardSoon)
+                RareCardSoon = newRareCardSoon;
 
-            if (RareCardAvailable)
+            string newSnake = string.Join("", CurrentResult.RareTable.Select(t => t ? "*" : "-"));
+            if (_snake != newSnake)
+                Snake = newSnake;
+
+            decimal newTimeElapsed = (decimal)CurrentResult.DurationSeconds;
+            if (_timeElapsedSeconds != newTimeElapsed)
+                TimeElapsedSeconds = newTimeElapsed;
+
+            // Determine color
+            Color newTextColor = newRareCardAvailable ? Color.Green 
+                               : newRareCardSoon ? Color.Orange 
+                               : Color.White;
+            if (_textColor != newTextColor)
+                TextColor = newTextColor;
+
+            // Calculate timer text
+            string newRareCardTimer;
+            if (newRareCardAvailable)
             {
-                RareCardTimer = "NOW";
+                newRareCardTimer = "NOW";
             }
             else
             {
                 int framesTillAvailable = 0;
                 int framesTillAvailableEnd = 0;
+                
                 for (int i = 0; i < CurrentResult.RareTable.Count; i++)
                 {
                     if (CurrentResult.RareTable[i])
@@ -126,15 +144,18 @@ namespace FF8Utilities.Common
                     }
                 }
 
-                _timeTillNextCard = TimeSpan.FromSeconds(framesTillAvailable * 0.01666); // 60 FPS
-                _timeTillNextCardEnd = TimeSpan.FromSeconds(framesTillAvailableEnd * 0.01666); // 60 FPS
-                RareCardTimer = $"{_timeTillNextCard.TotalSeconds:F2}s";
+                _timeTillNextCard = TimeSpan.FromSeconds(framesTillAvailable * 0.01666);
+                _timeTillNextCardEnd = TimeSpan.FromSeconds(framesTillAvailableEnd * 0.01666);
+                newRareCardTimer = $"{_timeTillNextCard.TotalSeconds:F2}s";
 
                 if (_timeTillNextCard.TotalSeconds >= 1.5 && !_launchedFromCountdown)
                 {
                     TryPlayBeeps();
                 }
             }
+            
+            if (_rareCardTimer != newRareCardTimer)
+                RareCardTimer = newRareCardTimer;
         }
 
         public uint State { get; private set; }
