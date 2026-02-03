@@ -6,6 +6,7 @@ namespace FF8Utilities.MAUI.Pages;
 
 public partial class LateQuistisManipulationPage : ContentPage
 {
+	private bool _initialised;
 	public LateQuistisManipulationPage()
 	{
 		InitializeComponent();
@@ -17,6 +18,7 @@ public partial class LateQuistisManipulationPage : ContentPage
         Model = model;
 
         QuistisObtainedCommand = new AsyncCommand(QuistisCardObtained);
+        _initialised = true;
     }
 
 	public LateQuistisPattern Model
@@ -70,8 +72,14 @@ public partial class LateQuistisManipulationPage : ContentPage
 	private async Task QuistisCardObtained()
 	{
 		if (SelectedStrategy != null)
-		{
-			await Navigation.PopModalAsync();
+		{            
+            await Navigation.PopModalAsync();
 		}
 	}
+
+    private async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+		if (!_initialised) return;
+        await StrategyPopup.ShowAsync();
+    }
 }

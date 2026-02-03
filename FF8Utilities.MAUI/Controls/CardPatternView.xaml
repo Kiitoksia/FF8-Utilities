@@ -4,16 +4,19 @@
              xmlns:common="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
              xmlns:c="clr-namespace:FF8Utilities.MAUI.Controls"
              xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Runtime"
-             MinimumHeightRequest="300"
-             MinimumWidthRequest="200"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Name="this"
              x:Class="FF8Utilities.MAUI.Controls.CardPatternView">
+    <ContentView.Resources>
+        <toolkit:MathExpressionConverter x:Key="MathExpressionConverter"/>
+    </ContentView.Resources>
     <CollectionView ItemsSource="{Binding ., Mode=OneWay}">
         <CollectionView.ItemsLayout>
             <GridItemsLayout Orientation="Vertical" Span="3"/>
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <c:CardPatternPositionView BindingContext="{Binding ., Mode=OneWay}"/>
+                <c:CardPatternPositionView BindingContext="{Binding ., Mode=OneWay}" HeightRequest="{Binding Height, Source={x:Reference this}, Converter={StaticResource MathExpressionConverter}, ConverterParameter='x/3'}"/>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

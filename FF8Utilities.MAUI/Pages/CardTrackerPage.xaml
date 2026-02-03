@@ -47,7 +47,7 @@
     </ContentPage.Resources>
 
     <Grid>
-        <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView">
+        <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView" EnableVirtualization="True">
             <tabView:SfTabView.Items>
 
                 <tabView:SfTabItem Header="Fish Fins">
@@ -57,7 +57,7 @@
                                 <RowDefinition/>
                                 <RowDefinition x:Name="QuistisPatternRow" Height="80"/>
                             </Grid.RowDefinitions>
-                            <tabView:SfTabView TabBarPlacement="Bottom">
+                            <tabView:SfTabView TabBarPlacement="Bottom" EnableVirtualization="True">
                                 <tabView:SfTabView.Items>
                                     <tabView:SfTabItem Header="2x Bats">
                                         <tabView:SfTabItem.Content>
@@ -217,7 +217,7 @@
 
                 <tabView:SfTabItem Header="Dollet">
                     <tabView:SfTabItem.Content>
-                        <tabView:SfTabView TabBarPlacement="Bottom">
+                        <tabView:SfTabView TabBarPlacement="Bottom" EnableVirtualization="True">
                             <tabView:SfTabView.Items>
                                 <tabView:SfTabItem Header="[1st] 2x Soldier">
                                     <tabView:SfTabItem.Content>
@@ -276,7 +276,7 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="80"/>
                             </Grid.RowDefinitions>
-                            <tabView:SfTabView TabBarPlacement="Bottom">
+                            <tabView:SfTabView TabBarPlacement="Bottom" EnableVirtualization="True">
                                 <tabView:SfTabView.Items>
                                     <tabView:SfTabItem Header="Elvoret">
                                         <tabView:SfTabItem.Content>
