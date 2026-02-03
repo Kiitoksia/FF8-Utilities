@@ -1,5 +1,6 @@
 using FF8Utilities.Common.Cards;
 using FF8Utilities.MAUI.Models;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace FF8Utilities.MAUI.Pages;
@@ -17,9 +18,20 @@ public partial class LateQuistisManipulationPage : ContentPage
         CardControl.Model = cardManipModel;
         Model = model;
 
+        OrderedStrategies = new ObservableCollection<LateQuistisStrategy>(model.Strategies.OrderBy(t => t.OpponentDeckOrderer));
         QuistisObtainedCommand = new AsyncCommand(QuistisCardObtained);
         _initialised = true;
     }
+
+    public static readonly BindableProperty OrderedStrategiesProperty = BindableProperty.Create(nameof(OrderedStrategies), typeof(ObservableCollection<LateQuistisStrategy>), typeof(LateQuistisManipulationPage), null);
+
+
+    public ObservableCollection<LateQuistisStrategy> OrderedStrategies
+    {
+        get => (ObservableCollection<LateQuistisStrategy>)GetValue(OrderedStrategiesProperty);
+        set => SetValue(OrderedStrategiesProperty, value);
+    }
+
 
 	public LateQuistisPattern Model
 	{
