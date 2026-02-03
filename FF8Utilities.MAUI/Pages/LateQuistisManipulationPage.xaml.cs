@@ -82,4 +82,9 @@ public partial class LateQuistisManipulationPage : ContentPage
 		if (!_initialised) return;
         await StrategyPopup.ShowAsync();
     }
+
+    private void SfButton_Clicked(object sender, EventArgs e)
+    {
+        StrategyPopup.IsOpen = false;
+    }
 }

@@ -32,19 +32,26 @@
             <RowDefinition Height="0"/> <!-- Container for popup-->
         </Grid.RowDefinitions>
 
-        <popup:SfPopup x:Name="StrategyPopup" IsFullScreen="True" HeaderTitle="Pattern">
+        <popup:SfPopup x:Name="StrategyPopup" IsFullScreen="True" ShowHeader="False">
+            <popup:SfPopup.PopupStyle>
+                <popup:PopupStyle CornerRadius="0"/>
+            </popup:SfPopup.PopupStyle>
             <popup:SfPopup.ContentTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                             <RowDefinition/>
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
-                        <Label Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large"/>
-                        <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" Grid.Row="1"/>
-                        <buttons:SfButton Grid.Row="2" Text="Submit" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
-          Margin="10,5" BackgroundColor="{StaticResource StandardBlue}" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <buttons:SfButton Text="Hide" Clicked="SfButton_Clicked"/>
+                        <Label Grid.Column="1" Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                        <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" Grid.Row="1" Grid.ColumnSpan="2"/>
+                        <buttons:SfButton Grid.Row="2" Grid.ColumnSpan="2" Text="Submit" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Margin="10,5" Background="{StaticResource StandardBlue}" />
                     </Grid>
                 </DataTemplate>
             </popup:SfPopup.ContentTemplate>
