@@ -73,11 +73,8 @@ public partial class CardTimerControl : ContentView
         if (Model is null || info.Width <= 0 || info.Height <= 0)
             return;
 
-        // Compose single-line text and sanitize newlines
-        string text = $"{Model.RareCardTimer} {Model.Snake}";
-
         _paint.Color = Model.TextColourMaui.ToSKColor();
         float y = Math.Abs(_font.Metrics.Ascent);
-        canvas.DrawText(text, 0, y, _font, _paint);
+        canvas.DrawText(_lastRenderedText, 0, y, _font, _paint);
     }
 }

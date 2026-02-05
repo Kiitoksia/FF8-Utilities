@@ -5,7 +5,8 @@
              xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
              xmlns:c="clr-namespace:FF8Utilities.MAUI.Controls"
              xmlns:models="clr-namespace:FF8Utilities.MAUI.Models"
-             xmlns:card="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common"
+             xmlns:card="clr-namespace:FF8Utilities.Common.Cards;assembly=FF8Utilities.Common" 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="models:CardManipulationModel"
              Title="ZellManipulationPage">
     <ContentPage.Resources>
@@ -14,6 +15,8 @@
             <Setter Property="FontAttributes" Value="Bold"/>
             <Setter Property="FontSize" Value="Large"/>
         </Style>
+
+        <toolkit:MathExpressionConverter x:Key="MathExpressionConverter"/>
     </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,7 +31,7 @@
                         <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellPlayerFirstPositions}"/>
                     </tabView:SfTabItem.Content>
                 </tabView:SfTabItem>
-                <tabView:SfTabItem Header="Mom Starts">
+                <tabView:SfTabItem Header="Mom Starts" x:Name="MomStartsTab">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -42,10 +45,10 @@
                         <Label Text="Option 1"/>
                         <Label Text="Option 2" Grid.Column="1"/>
 
-                        <Border Grid.Row="1" VerticalOptions="Center">
+                        <Border Grid.Row="1">
                             <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsWeak}"/>
                         </Border>
-                        <Border Grid.Row="1" Grid.Column="1" VerticalOptions="Center">
+                        <Border Grid.Row="1" Grid.Column="1">
                             <c:CardPatternView BindingContext="{x:Static card:CardPosition.ZellMomFirstPositionsStrong}"/>
                         </Border>
                     </Grid>

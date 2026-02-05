@@ -39,7 +39,7 @@ public partial class LateQuistisManipulationPage : ContentPage
 		set
 		{
             BindingContext = value;
-			SelectedStrategy = Model.Strategies.FirstOrDefault();			
+			//SelectedStrategy = Model.Strategies.FirstOrDefault();			
         }
     }
 

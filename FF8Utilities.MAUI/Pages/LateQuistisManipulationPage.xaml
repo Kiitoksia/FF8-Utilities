@@ -60,11 +60,11 @@
         <CollectionView ItemsSource="{Binding OrderedStrategies, Source={x:Reference this}, Mode=OneWay}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1" 
                         SelectionChanged="CollectionView_SelectionChanged" ItemSizingStrategy="MeasureAllItems" x:Name="StrategiesView" HorizontalOptions="Fill" VerticalOptions="Fill">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="5"/>
+                <GridItemsLayout Orientation="Vertical" Span="5" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="cards:LateQuistisStrategy">
-                    <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="2" HeightRequest="{Binding Height, Source={x:Reference StrategiesView}, Converter={StaticResource MathExpressionConverter}, ConverterParameter='x/2'}">
+                    <Border HeightRequest="{Binding Height, Source={x:Reference StrategiesView}, Converter={StaticResource MathExpressionConverter}, ConverterParameter='x/2'}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Normal">
@@ -74,19 +74,22 @@
                                 </VisualState>
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="White"/>
+                                        <Setter Property="BackgroundColor" Value="#66000000"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" VerticalOptions="Fill" HorizontalOptions="Fill" Aspect="AspectFit" />
-                            <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" VerticalOptions="Fill" HorizontalOptions="Fill" Aspect="AspectFit" Grid.Row="1" />
-                        </Grid>
+                        <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" VerticalOptions="Fill" HorizontalOptions="Fill" Aspect="AspectFit" />
+                                <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" VerticalOptions="Fill" HorizontalOptions="Fill" Aspect="AspectFit" Grid.Row="1" />
+                            </Grid>
+                        </Border>
+                        
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
