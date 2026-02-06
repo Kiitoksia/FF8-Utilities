@@ -34,12 +34,12 @@
             <HorizontalStackLayout HorizontalOptions="Fill">
                 <Label Text="{Binding Description, Mode=OneTime}" FontSize="14" FontAttributes="Bold" Margin="0,0,10,0"/>
                 <Label Text="{Binding Notes, Mode=OneWay}" IsVisible="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InverseBoolConverter}}" HorizontalOptions="Fill"/>
-                <Entry Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}}" HorizontalOptions="Fill"/>
+                <!--<Entry Text="{Binding Notes}" IsVisible="{Binding DesignMode, Source={x:Reference this}}" HorizontalOptions="Fill"/>-->
             </HorizontalStackLayout>
 
-            <buttons:SfButton Text="EDIT" Grid.Column="1" CornerRadius="2" 
+            <!--<buttons:SfButton Text="EDIT" Grid.Column="1" CornerRadius="2" 
             BackgroundColor="{Binding DesignMode, Source={x:Reference this}, Converter={StaticResource InDesignModeConverter}}" 
-            Command="{Binding DesignCommand, Source={x:Reference this}, Mode=OneTime}"/>
+            Command="{Binding DesignCommand, Source={x:Reference this}, Mode=OneTime}"/>-->
 
             <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="2">
                 <CollectionView ItemsSource="{Binding Abilities, Mode=OneTime}">

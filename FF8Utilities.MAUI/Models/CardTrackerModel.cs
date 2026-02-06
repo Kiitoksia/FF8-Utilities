@@ -112,6 +112,6 @@ namespace FF8Utilities.MAUI.Models
                 _launchingWindow = value;
                 OnPropertyChanged();
             }
-        }
+        }        
     }
 }

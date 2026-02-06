@@ -68,7 +68,8 @@
                                         <tabView:SfTabItem.Content>
                                             <VerticalStackLayout>
                                                 <c:EncounterControl BindingContext="{Binding IfritEncounter, Mode=OneTime}"/>
-                                                <buttons:SfRadioGroup SelectedValue="{Binding IfritsCavernEncounterType, Mode=OneWayToSource}">
+                                                <Label Text="Post Ifrit Encounter" TextColor="White" Margin="5" FontAttributes="Bold"/>
+                                                <buttons:SfRadioGroup SelectedValue="{Binding IfritsCavernEncounterType}">
                                                     <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.RedBat}" Text="2x Red Bats"/>
                                                     <buttons:SfRadioButton Value="{x:Static common:IfritEncounterType.Buel}" Text="Buel"/>
                                                 </buttons:SfRadioGroup>
@@ -89,7 +90,7 @@
                                                         <RowDefinition/>
                                                         <RowDefinition/>
                                                     </Grid.RowDefinitions>
-                                                    <Label Text="World Map Encs" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5"/>
+                                                    <Label Text="World Map Encs" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5" TextColor="White"/>
                                                     <CollectionView ItemsSource="{Binding WorldMapEncounters, Mode=OneTime}" Grid.Row="1">
                                                         <CollectionView.ItemTemplate>
                                                             <DataTemplate x:DataType="encs:WorldMapEncounter">
@@ -98,7 +99,7 @@
                                                                         <ColumnDefinition/>
                                                                         <ColumnDefinition/>
                                                                     </Grid.ColumnDefinitions>
-                                                                    <Label Text="{Binding FormationDisplay, Mode=OneTime}" VerticalOptions="Center"/>
+                                                                    <Label Text="{Binding FormationDisplay, Mode=OneTime}" VerticalOptions="Center" TextColor="White"/>
                                                                     <Border StrokeThickness="1" Grid.Column="1" Stroke="White">
                                                                         <editors:SfNumericEntry Value="{Binding Quantity}" Minimum="0" ShowBorder="False" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline"/>
                                                                     </Border>
@@ -107,7 +108,7 @@
                                                         </CollectionView.ItemTemplate>
                                                     </CollectionView>
 
-                                                    <Label Text="Fish Fins" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5" Grid.Row="2"/>
+                                                    <Label Text="Fish Fins" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5" Grid.Row="2" TextColor="White"/>
                                                     <Grid Grid.Row="3">
                                                         <Grid.Resources>
                                                             <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
@@ -123,9 +124,9 @@
                                                             <RowDefinition/>
                                                             <RowDefinition Height="1"/>
                                                         </Grid.RowDefinitions>
-                                                        <Label Text="Camera"/>
-                                                        <Label Text="Squall Physicals" Grid.Column="1"/>
-                                                        <Label Text="Limits" Grid.Column="2"/>
+                                                        <Label Text="Camera" TextColor="White"/>
+                                                        <Label Text="Squall Physicals" Grid.Column="1" TextColor="White"/>
+                                                        <Label Text="Limits" Grid.Column="2" TextColor="White"/>
                                                         <Border BackgroundColor="White" Grid.ColumnSpan="3" Grid.Row="1"/>
                                                     </Grid>
                                                     <CollectionView ItemsSource="{Binding FishFinEncounters, Mode=OneWay}" VerticalOptions="Fill" Grid.Row="4">
@@ -159,14 +160,14 @@
                                                                         </picker:SfPicker.FooterView>
                                                                         <picker:SfPicker.FooterTemplate>
                                                                             <DataTemplate>
-                                                                                <buttons:SfButton Background="DarkRed" Text="Remove Encounter" Command="{Binding BindingContext.RemoveFishFinEncounterCommand, Source={x:Reference this}, Mode=OneTime}" CommandParameter="{Binding BindingContext, Source={x:Reference FishFinGrid}}" CornerRadius="0"/>
+                                                                                <buttons:SfButton Background="DarkRed" TextColor="White" Text="Remove Encounter" Command="{Binding BindingContext.RemoveFishFinEncounterCommand, Source={x:Reference this}, Mode=OneTime}" CommandParameter="{Binding BindingContext, Source={x:Reference FishFinGrid}}" CornerRadius="0"/>
                                                                             </DataTemplate>
                                                                         </picker:SfPicker.FooterTemplate>
                                                                     </picker:SfPicker>
                                                                     <Border Grid.Column="1" Grid.ColumnSpan="3" Background="DarkSlateGray" IsVisible="{Binding SingleFishKilled, Mode=OneWay}"/>
-                                                                    <Label Grid.Column="1" Text="{Binding Camera.Description, Mode=OneWay}" VerticalTextAlignment="Center"/>
-                                                                    <Label Grid.Column="2" Text="{Binding SquallPhysicals, Mode=OneWay}"  VerticalTextAlignment="Center"/>
-                                                                    <Label Grid.Column="3" Text="{Binding Limits, Mode=OneWay}"  VerticalTextAlignment="Center"/>
+                                                                    <Label Grid.Column="1" Text="{Binding Camera.Description, Mode=OneWay}" VerticalTextAlignment="Center" TextColor="White"/>
+                                                                    <Label Grid.Column="2" Text="{Binding SquallPhysicals, Mode=OneWay}"  VerticalTextAlignment="Center"  TextColor="White"/>
+                                                                    <Label Grid.Column="3" Text="{Binding Limits, Mode=OneWay}"  VerticalTextAlignment="Center"  TextColor="White"/>
                                                                 </Grid>
                                                             </DataTemplate>
                                                         </CollectionView.ItemTemplate>
@@ -326,6 +327,15 @@
                                 </Border>
                             </Grid>
                         </Grid>
+                    </tabView:SfTabItem.Content>
+                </tabView:SfTabItem>
+
+                <tabView:SfTabItem Header="Options">
+                    <tabView:SfTabItem.Content>
+                        <VerticalStackLayout Spacing="10" VerticalOptions="Center" Margin="10">
+                            <buttons:SfButton Text="Save values as default" Command="{Binding SaveAsDefaultsCommand, Source={x:Reference this}}"/>
+                            <buttons:SfButton Text="Restore defaults" Command="{Binding RestoreDefaultsCommand, Source={x:Reference this}}"/>
+                        </VerticalStackLayout>
                     </tabView:SfTabItem.Content>
                 </tabView:SfTabItem>
             </tabView:SfTabView.Items>

@@ -289,7 +289,7 @@ namespace FF8Utilities.Common.Cards
             }
         }
 
-        private void SaveEncounterDetails()
+        public void SaveEncounterDetails()
         {
             XElement xml = new XElement("CardTrackingSettings");
             xml.Add(TwoBatsEncounter.ToXml(nameof(TwoBatsEncounter)));
@@ -317,6 +317,15 @@ namespace FF8Utilities.Common.Cards
             xml.Add(fishFinXml);
 
             File.WriteAllText(Path.Combine(Const.PackagesFolder, TrackingSettingsFilename), xml.ToString());
+        }
+
+        /// <summary>
+        /// This deletes the Tracking Settings XML file, but the model remains as it were.
+        /// </summary>
+        public void RestoreDefaults()
+        {
+            string filePath = Path.Combine(Const.PackagesFolder, TrackingSettingsFilename);
+            if (File.Exists(filePath)) File.Delete(filePath);
         }
 
 

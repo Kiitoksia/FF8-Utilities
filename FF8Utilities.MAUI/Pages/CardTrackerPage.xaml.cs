@@ -14,9 +14,35 @@ public partial class CardTrackerPage : ContentPage
     public CardTrackerPage()
 	{
         InitializeComponent();
+
+        SaveAsDefaultsCommand = new AsyncCommand(SaveAsDefault);
+        RestoreDefaultsCommand = new AsyncCommand(RestoreDefaults);
     }
 
+
+    private async Task SaveAsDefault()
+    {
+        Model.SaveEncounterDetails();
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await DisplayAlertAsync("Success", "Values have been saved and will be used next time the tracker is opened", "OK");
+        });
+    }
 	
+    private async Task RestoreDefaults()
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            bool proceed = await DisplayAlertAsync("Confirm", "Really delete settings? All tracking settings will be restored to default and the tracker closed.\r\nThis process cannot be reversed", "OK", "Cancel");
+            if (proceed)
+            {
+                Model.RestoreDefaults();
+                await DisplayAlertAsync("Success", "Default settings restored, tracker will now close", "OK");
+                await Navigation.PopModalAsync();
+            }
+        });
+    }
+
 	public CardTrackerPage(bool earlyQuistisMode) : this()
 	{
         Initialise();
@@ -111,4 +137,22 @@ public partial class CardTrackerPage : ContentPage
 		get => (CardTrackerModel)BindingContext;
 		set => BindingContext = value;
 	}
+
+    public static readonly BindableProperty SaveAsDefaultsCommandProperty = BindableProperty.Create(nameof(SaveAsDefaultsCommand), typeof(ICommand), typeof(CardTrackerPage), null);
+
+
+    public ICommand SaveAsDefaultsCommand
+    {
+        get => (ICommand)GetValue(SaveAsDefaultsCommandProperty);
+        set => SetValue(SaveAsDefaultsCommandProperty, value);
+    }
+
+    public static readonly BindableProperty RestoreDefaultsCommandProperty = BindableProperty.Create(nameof(RestoreDefaultsCommand), typeof(ICommand), typeof(CardTrackerPage), null);
+
+
+    public ICommand RestoreDefaultsCommand
+    {
+        get => (ICommand)GetValue(RestoreDefaultsCommandProperty);
+        set => SetValue(RestoreDefaultsCommandProperty, value);
+    }
 }

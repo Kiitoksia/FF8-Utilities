@@ -37,7 +37,7 @@
             <editors:SfComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding GameLanguage}" ItemsSource="{Binding GameLanguages}" IsClearButtonVisible="False"/>
 
             <Label Text="Custom Card Delay Frames" Grid.Row="2"/>
-            <editors:SfNumericEntry Grid.Row="2" Grid.Column="1" Minimum="0" AllowNull="True" MaximumNumberDecimalDigits="0" CustomFormat="0" Value="{Binding CustomCardDelayFrames}" Placeholder="(None)" />
+            <editors:SfNumericEntry Grid.Row="2" Grid.Column="1" Minimum="0" AllowNull="True" MaximumNumberDecimalDigits="0" CustomFormat="0" Value="{Binding CustomCardDelayFrames}" Placeholder="(None)" PlaceholderColor="Gray" />
 
             <buttons:SfButton Text="Close" Grid.Row="3" Grid.ColumnSpan="2" Command="{Binding CloseButtonCommand}"/>
         </Grid>
