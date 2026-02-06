@@ -11,6 +11,19 @@ public partial class LateQuistisManipulationPage : ContentPage
 	public LateQuistisManipulationPage()
 	{
 		InitializeComponent();
+
+		Header.BackCommand = new AsyncCommand(async () =>
+		{
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                bool canContinue = await DisplayAlertAsync("Confim", "No quistis pattern selected, are you sure you want to return?", "OK", "Cancel");
+                if (canContinue)
+                {
+                    SelectedStrategy = null;
+                    await Navigation.PopModalAsync();
+                }
+            });            
+        });
     }
 
     public LateQuistisManipulationPage(LateQuistisPattern model, CardManipulationModel cardManipModel) : this()
@@ -39,7 +52,6 @@ public partial class LateQuistisManipulationPage : ContentPage
 		set
 		{
             BindingContext = value;
-			//SelectedStrategy = Model.Strategies.FirstOrDefault();			
         }
     }
 

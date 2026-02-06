@@ -341,7 +341,7 @@
             </tabView:SfTabView.Items>
         </tabView:SfTabView>
 
-        <Border BackgroundColor="#363B57" IsVisible="{Binding LaunchingWindow}">
+        <Border BackgroundColor="#363B57" IsVisible="{Binding LaunchingWindow}" Grid.RowSpan="2">
             <ActivityIndicator IsRunning="{Binding LaunchingWindow}"/>
         </Border>
 
