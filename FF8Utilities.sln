@@ -5,8 +5,6 @@ VisualStudioVersion = 18.2.11408.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities", "FF8Utilities\FF8Utilities.csproj", "{100B1BE4-EED1-48E4-9DA8-5A411ECB5896}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarawayCode", "CarawayCode\CarawayCode.csproj", "{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimeciaManip", "UltimeciaManip\UltimeciaManip.csproj", "{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Updater", "FF8Utilities.Updater\FF8Utilities.Updater.csproj", "{CC22D4C1-852D-4F8C-8968-135492BA37F4}"
@@ -23,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF8Utilities.Common", "FF8U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardManipulation", "CardManipulation\CardManipulation.csproj", "{D40CD4BC-C65A-41B9-AD65-1F3DA1848A20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarawayCode", "CarawayCode\CarawayCode.csproj", "{3C93A198-D059-2C5C-A7EC-7E0A181A4821}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,12 +36,6 @@ Global
 		{100B1BE4-EED1-48E4-9DA8-5A411ECB5896}.DebugTrimming|Any CPU.Build.0 = Debug|Any CPU
 		{100B1BE4-EED1-48E4-9DA8-5A411ECB5896}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100B1BE4-EED1-48E4-9DA8-5A411ECB5896}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}.DebugTrimming|Any CPU.ActiveCfg = Debug|Any CPU
-		{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}.DebugTrimming|Any CPU.Build.0 = Debug|Any CPU
-		{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E354ACCB-41C5-4ECB-9E1F-0BA274D78C1B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BEA2DDC-ACFD-48A9-9E37-15CC4B19A3FE}.DebugTrimming|Any CPU.ActiveCfg = Debug|Any CPU
@@ -93,6 +87,12 @@ Global
 		{D40CD4BC-C65A-41B9-AD65-1F3DA1848A20}.DebugTrimming|Any CPU.Build.0 = Debug|Any CPU
 		{D40CD4BC-C65A-41B9-AD65-1F3DA1848A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D40CD4BC-C65A-41B9-AD65-1F3DA1848A20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C93A198-D059-2C5C-A7EC-7E0A181A4821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C93A198-D059-2C5C-A7EC-7E0A181A4821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C93A198-D059-2C5C-A7EC-7E0A181A4821}.DebugTrimming|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C93A198-D059-2C5C-A7EC-7E0A181A4821}.DebugTrimming|Any CPU.Build.0 = Debug|Any CPU
+		{3C93A198-D059-2C5C-A7EC-7E0A181A4821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C93A198-D059-2C5C-A7EC-7E0A181A4821}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

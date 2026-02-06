@@ -19,6 +19,7 @@ using System.Windows.Input;
 using CarawayCode.Entities;
 using CardManipulation;
 using FF8Utilities.Common;
+using FF8Utilities.Common.Caraway;
 using FF8Utilities.Common.Cards;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
@@ -490,11 +491,11 @@ namespace FF8Utilities.Models
 
         private void SubmitPoles(object sender, EventArgs eventArgs)
         {
-            CarawayOutput = new BindingList<CarawayCodeOutput>(CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList()), HideUnlikelyCarawayResults));
+            CarawayOutput = new BindingList<CarawayCodeOutput>(CarawayCode.CarawayCode.CalculateCode(PoleModel.ConvertTo(Poles), HideUnlikelyCarawayResults));
             if (HideUnlikelyCarawayResults && CarawayOutput.Count == 0)
             {
                 // Nothing found, toggle back the unlikely results if possible
-                CarawayCodeOutput[] unlikelyResults = CarawayCode.CarawayCode.CalculateCode(HelperMethods.ConvertTo(Poles.ToList()), false);
+                CarawayCodeOutput[] unlikelyResults = CarawayCode.CarawayCode.CalculateCode(PoleModel.ConvertTo(Poles), false);
                 if (unlikelyResults.Length > 0)
                 {
                     // Found an unlikely one, show this instead

@@ -1,4 +1,5 @@
 ﻿using CarawayCode.Entities;
+using FF8Utilities.Common.Caraway;
 using FF8Utilities.Models;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,7 @@ using System.Windows.Media.Imaging;
 namespace FF8Utilities
 {
     public static class HelperMethods
-    {
-        /// <summary>
-        /// Converts PoleModels into PoleCount entities for interacting with CarawayCode project
-        /// </summary>
-        public static PoleCount[] ConvertTo(List<PoleModel> poles)
-        {
-            return poles.Where(p => p.Count != null).Select(p => new PoleCount(p.Count.Value)).ToArray();
-        }               
-
+    {             
         public static Color ToWPFColor(this System.Drawing.Color color)
         {
             return Color.FromArgb(color.A, color.R, color.G, color.B);

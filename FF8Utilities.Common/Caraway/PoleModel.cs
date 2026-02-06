@@ -1,6 +1,10 @@
-﻿using FF8Utilities.Entities;
+﻿using CarawayCode.Entities;
+using FF8Utilities.Common;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 
-namespace FF8Utilities.Models
+namespace FF8Utilities.Common.Caraway
 {
     public class PoleModel : BaseModel
     {
@@ -10,7 +14,7 @@ namespace FF8Utilities.Models
         public PoleModel(string description)
         {
             Description = description;
-            ClearCount = new Command(() => true, (s, e) => Count = null);
+            ClearCount = new RelayCommand(() => Count = null);
         }
 
         public int? Count
@@ -44,6 +48,25 @@ namespace FF8Utilities.Models
             }
         }
 
-        public Command ClearCount { get; }
+        public ICommand ClearCount { get; }
+
+        /// <summary>
+        /// Returns null if Count is empty
+        /// </summary>
+        /// <returns></returns>
+        public PoleCount ToPoleCount()
+        {
+            if (Count == null) return null;
+            return new PoleCount(Count.Value);
+        }
+
+
+        /// <summary>
+        /// Converts PoleModels into PoleCount entities for interacting with CarawayCode project
+        /// </summary>
+        public static PoleCount[] ConvertTo(IEnumerable<PoleModel> poles)
+        {
+            return poles.Where(p => p.Count != null).Select(p => new PoleCount(p.Count.Value)).ToArray();
+        }
     }
 }

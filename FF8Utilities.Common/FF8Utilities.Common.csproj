@@ -75,6 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CarawayCode\CarawayCode.csproj" />
     <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
   </ItemGroup>
 

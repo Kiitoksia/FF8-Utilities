@@ -124,5 +124,7 @@ namespace FF8Utilities.Models
         public override int BeepInterval => SettingsModel.Instance.BeepInterval;
         public override int BeepCount => SettingsModel.Instance.BeepCount;
         public override int BeepOffsetFrames => SettingsModel.Instance.BeepOffsetFrames;
+
+        public override Platform Platform => SettingsModel.Instance.Platform;
     }
 }
