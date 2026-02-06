@@ -1,8 +1,10 @@
 using FF8Utilities.MAUI.Models;
 using SkiaSharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FF8Utilities.MAUI.Controls;
 
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicMethods)]
 public partial class CardTimerControl : ContentView
 {
     private SKTypeface _typeface = SKTypeface.Default;
@@ -10,7 +12,7 @@ public partial class CardTimerControl : ContentView
     private SKFont _font = new SKFont();
 
     private string _lastRenderedText = string.Empty;
-    private Color _lastRenderedColor = Colors.Transparent;
+    private Color _lastRenderedColor = Colors.Transparent;  
 
     public CardTimerControl()
 	{

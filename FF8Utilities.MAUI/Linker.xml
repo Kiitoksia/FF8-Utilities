@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <!-- Preserve all converters -->
+  <assembly fullname="FF8Utilities.MAUI">
+    <type fullname="FF8Utilities.MAUI.Converters.*" preserve="all" />
+    <type fullname="FF8Utilities.MAUI.Models.*" preserve="all" />
+    <type fullname="FF8Utilities.MAUI.Controls.*" preserve="all" />
+    <type fullname="FF8Utilities.MAUI.Pages.*" preserve="all" />
+  </assembly>
+  
+  <!-- Preserve Common types used in XAML bindings -->
+  <assembly fullname="FF8Utilities.Common">
+    <type fullname="FF8Utilities.Common.Cards.CardPosition" preserve="all" />
+    <type fullname="FF8Utilities.Common.Cards.LateQuistisPattern" preserve="all" />
+    <type fullname="FF8Utilities.Common.Cards.LateQuistisStrategy" preserve="all" />
+  </assembly>
+</linker>

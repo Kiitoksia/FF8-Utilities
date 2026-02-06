@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace FF8Utilities.MAUI.Converters
 {
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)]
     public class CachedByteArrayToImageSourceConverter : IValueConverter
     {
         private static readonly SHA1 _sha = SHA1.Create();
