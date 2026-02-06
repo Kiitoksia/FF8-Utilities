@@ -4,7 +4,7 @@
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
              xmlns:pages="clr-namespace:FF8Utilities.MAUI.Pages"
-             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons" xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
              x:Class="FF8Utilities.MAUI.Pages.SettingsPage"
              x:Name="this"
              BindingContext="{x:Reference this}"
@@ -19,27 +19,38 @@
     <ScrollView>
         <Grid Margin="10">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
+            <controls:HeaderControl HeaderText="Settings" ShowSettings="False"/>
 
-            <Label Text="Platform"/>
-            <editors:SfComboBox Grid.Column="1" SelectedItem="{Binding Platform}" ItemsSource="{Binding Platforms}" IsClearButtonVisible="False"/>
+            <Label Text="Platform" Grid.Row="1"/>
+            <editors:SfComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Platform}" ItemsSource="{Binding Platforms}" IsClearButtonVisible="False"/>
 
-            <Label Text="Game language" Grid.Row="1"/>
-            <editors:SfComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding GameLanguage}" ItemsSource="{Binding GameLanguages}" IsClearButtonVisible="False"/>
+            <Label Text="Game language" Grid.Row="2"/>
+            <editors:SfComboBox Grid.Row="2" Grid.Column="1" SelectedItem="{Binding GameLanguage}" ItemsSource="{Binding GameLanguages}" IsClearButtonVisible="False"/>
 
-            <Label Text="Custom Card Delay Frames" Grid.Row="2"/>
-            <editors:SfNumericEntry Grid.Row="2" Grid.Column="1" Minimum="0" AllowNull="True" MaximumNumberDecimalDigits="0" CustomFormat="0" Value="{Binding CustomCardDelayFrames}" Placeholder="(None)" PlaceholderColor="Gray" />
+            <Label Text="Custom Card Delay Frames" Grid.Row="3"/>
+            <editors:SfNumericEntry Grid.Row="3" Grid.Column="1" Minimum="0" AllowNull="True" MaximumNumberDecimalDigits="0" CustomFormat="0" Value="{Binding CustomCardDelayFrames}" Placeholder="(None)" PlaceholderColor="Gray" />
 
-            <buttons:SfButton Text="Close" Grid.Row="3" Grid.ColumnSpan="2" Command="{Binding CloseButtonCommand}"/>
+
+            <VerticalStackLayout Grid.Row="5" Grid.ColumnSpan="2" Margin="0,10,0,0">
+                <VerticalStackLayout.Resources>
+                    <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                        <Setter Property="TextColor" Value="Gray"/>
+                    </Style>
+                </VerticalStackLayout.Resources>
+                <Label Text="About" HorizontalOptions="Center" FontAttributes="Bold" TextColor="White"/>
+                <Label Text="{Binding AppVersion, StringFormat='App Version: {0}'}"/>
+            </VerticalStackLayout>
         </Grid>
     </ScrollView>
 </ContentPage>

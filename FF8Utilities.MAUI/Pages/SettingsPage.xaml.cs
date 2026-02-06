@@ -69,4 +69,13 @@ public partial class SettingsPage : ContentPage
         set => SetValue(CloseButtonCommandProperty, value);
     }
 
+    public static readonly BindableProperty AppVersionProperty = BindableProperty.Create(nameof(AppVersion), typeof(string), typeof(SettingsPage), AppInfo.VersionString);
+
+
+    public string AppVersion
+    {
+        get => (string)GetValue(AppVersionProperty);
+        set => SetValue(AppVersionProperty, value);
+    }
+
 }

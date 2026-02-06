@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:c="clr-namespace:FF8Utilities.MAUI"
+             HeightRequest="50"
+             x:Name="this"
+             BindingContext="{x:Reference this}"
+             x:DataType="controls:HeaderControl"
+             x:Class="FF8Utilities.MAUI.Controls.HeaderControl">
+    <ContentView.Resources>
+        <Style TargetType="buttons:SfButton">
+            <!-- Ensure no styles are applied to these buttons-->
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style TargetType="Label">
+            <!-- Ensure no styles are applied to the label -->
+        </Style>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="BackColumn" Width="50"/>
+            <ColumnDefinition/>
+            <ColumnDefinition x:Name="SettingsColumn" Width="50"/>
+        </Grid.ColumnDefinitions>
+
+        <buttons:SfButton Command="{Binding BackCommand}" BackgroundColor="Transparent" Background="Transparent" CornerRadius="0" ShowIcon="True">
+            <buttons:SfButton.ImageSource>
+                <FontImageSource Glyph="{x:Static c:FontAwesome.NavLeft}" Color="White" FontFamily="FontAwesome" FontAutoScalingEnabled="True" Size="64"/>
+            </buttons:SfButton.ImageSource>
+        </buttons:SfButton>
+
+        <Label Text="{Binding HeaderText}" Grid.Column="0" Grid.ColumnSpan="3" FontSize="Large" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+
+        <buttons:SfButton Command="{Binding SettingsCommand}" Grid.Column="2" BackgroundColor="Transparent" Background="Transparent" CornerRadius="0" ShowIcon="True">
+            <buttons:SfButton.ImageSource>
+                <FontImageSource Glyph="{x:Static c:FontAwesome.CogWheel}" Color="White" FontFamily="FontAwesome" FontAutoScalingEnabled="True" Size="64"/>
+            </buttons:SfButton.ImageSource>
+        </buttons:SfButton>
+    </Grid>
+</ContentView>

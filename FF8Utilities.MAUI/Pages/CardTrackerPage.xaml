@@ -13,7 +13,8 @@
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:encs="clr-namespace:FF8Utilities.Common.Cards.Encounters;assembly=FF8Utilities.Common"
-             xmlns:fishFins="clr-namespace:FF8Utilities.Common.Cards.Encounters.IfritsCavern;assembly=FF8Utilities.Common"
+             xmlns:fishFins="clr-namespace:FF8Utilities.Common.Cards.Encounters.IfritsCavern;assembly=FF8Utilities.Common" 
+             xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              x:Name="this"
              x:DataType="models:CardTrackerModel"
              Title="CardTrackerPage">
@@ -47,7 +48,15 @@
     </ContentPage.Resources>
 
     <Grid>
-        <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView" EnableVirtualization="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="0"/> <!-- Hidden column to hold popup-->
+        </Grid.RowDefinitions>
+
+        <c:HeaderControl HeaderText="Card Tracker" x:Name="Header"/>
+
+        <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView" EnableVirtualization="True" Grid.Row="1">
             <tabView:SfTabView.Items>
 
                 <tabView:SfTabItem Header="Fish Fins">
@@ -329,20 +338,22 @@
                         </Grid>
                     </tabView:SfTabItem.Content>
                 </tabView:SfTabItem>
-
-                <tabView:SfTabItem Header="Options">
-                    <tabView:SfTabItem.Content>
-                        <VerticalStackLayout Spacing="10" VerticalOptions="Center" Margin="10">
-                            <buttons:SfButton Text="Save values as default" Command="{Binding SaveAsDefaultsCommand, Source={x:Reference this}}"/>
-                            <buttons:SfButton Text="Restore defaults" Command="{Binding RestoreDefaultsCommand, Source={x:Reference this}}"/>
-                        </VerticalStackLayout>
-                    </tabView:SfTabItem.Content>
-                </tabView:SfTabItem>
             </tabView:SfTabView.Items>
         </tabView:SfTabView>
 
         <Border BackgroundColor="#363B57" IsVisible="{Binding LaunchingWindow}">
             <ActivityIndicator IsRunning="{Binding LaunchingWindow}"/>
         </Border>
+
+        <popup:SfPopup x:Name="OptionsPopup" HeaderTitle="Options" HeightRequest="200" Grid.Row="2">
+            <popup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Spacing="10" VerticalOptions="Center" Margin="10">
+                        <buttons:SfButton Text="Save values as default" Command="{Binding SaveAsDefaultsCommand, Source={x:Reference this}}"/>
+                        <buttons:SfButton Text="Restore defaults" Command="{Binding RestoreDefaultsCommand, Source={x:Reference this}}"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </popup:SfPopup.ContentTemplate>
+        </popup:SfPopup>
     </Grid>
 </ContentPage>

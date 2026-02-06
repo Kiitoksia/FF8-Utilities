@@ -17,6 +17,20 @@ public partial class CardTrackerPage : ContentPage
 
         SaveAsDefaultsCommand = new AsyncCommand(SaveAsDefault);
         RestoreDefaultsCommand = new AsyncCommand(RestoreDefaults);
+
+        Header.BackCommand = new AsyncCommand(async () =>
+        {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                bool shouldContinue = await DisplayAlertAsync("Confirm", "Are you sure you want to go back? All tracking will be lost", "OK", "Cancel");
+                if (shouldContinue) await Navigation.PopModalAsync();
+            });
+        });
+
+        Header.SettingsCommand = new AsyncCommand(async () =>
+        {
+            await MainThread.InvokeOnMainThreadAsync(OptionsPopup.ShowAsync);
+        });
     }
 
 
@@ -26,6 +40,7 @@ public partial class CardTrackerPage : ContentPage
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             await DisplayAlertAsync("Success", "Values have been saved and will be used next time the tracker is opened", "OK");
+            OptionsPopup.IsOpen = false;
         });
     }
 	
@@ -38,6 +53,7 @@ public partial class CardTrackerPage : ContentPage
             {
                 Model.RestoreDefaults();
                 await DisplayAlertAsync("Success", "Default settings restored, tracker will now close", "OK");
+                OptionsPopup.IsOpen = false;
                 await Navigation.PopModalAsync();
             }
         });

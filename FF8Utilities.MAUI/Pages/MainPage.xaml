@@ -5,7 +5,7 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
-             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
+             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common" xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
              x:Name="this"             
              BindingContext="{x:Reference this}"
              Title="MainPage">
@@ -19,7 +19,7 @@
     </ContentPage.Resources>
         <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition Height="0"/> <!-- Row to hide picker-->
@@ -29,10 +29,12 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}"/>
-        <buttons:SfButton Text="[NYI] Fish Fins" Grid.Column="1"/>
-        <buttons:SfButton Text="[NYI] Caraway Code" Grid.Row="1"/>
-        <buttons:SfButton Text="[NYI] Ultimecia Party" Grid.Row="1" Grid.Column="1"/>
+        <controls:HeaderControl Grid.ColumnSpan="2" HeaderText="FF8 Utilities" ShowBackButton="False"/>
+
+        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}" Grid.Row="1"/>
+        <buttons:SfButton Text="[NYI] Fish Fins" Grid.Row="1" Grid.Column="1"/>
+        <buttons:SfButton Text="[NYI] Caraway Code" Grid.Row="2"/>
+        <buttons:SfButton Text="[NYI] Ultimecia Party" Grid.Row="2" Grid.Column="1"/>
 
         <ActivityIndicator IsRunning="{Binding ShowLoadingBar}" IsVisible="{Binding ShowLoadingBar}" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
 
@@ -51,7 +53,6 @@
             </popup:SfPopup.ContentTemplate>
         </popup:SfPopup>
 
-        <buttons:SfButton Text="Settings" Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding SettingsCommand}"/>
 
         <picker:SfPicker PopupHeight="500" DeclineCommand="{Binding EarlyQuistisCardPatternPickedCommand}" PopupWidth="300" Grid.Row="3" Mode="Dialog" x:Name="EarlyQuistisFramePicker" TextDisplayMode="Fade" Grid.ColumnSpan="2">
             <picker:SfPicker.HeaderView>
