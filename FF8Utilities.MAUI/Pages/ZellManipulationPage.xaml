@@ -20,11 +20,14 @@
     </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="250"/>
         </Grid.RowDefinitions>
 
-        <tabView:SfTabView>
+        <c:HeaderControl x:Name="Header" HeaderText="Zell Card" ShowSettings="False"/>
+
+        <tabView:SfTabView Grid.Row="1">
             <tabView:SfTabView.Items>
                 <tabView:SfTabItem Header="Player Starts">
                     <tabView:SfTabItem.Content>
@@ -56,6 +59,6 @@
             </tabView:SfTabView.Items>
         </tabView:SfTabView>
 
-        <c:CardTimerControl x:Name="CardControl" Grid.Row="1"/>
+        <c:CardTimerControl x:Name="CardControl" Grid.Row="2"/>
     </Grid>
 </ContentPage>
