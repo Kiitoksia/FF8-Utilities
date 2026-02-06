@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -43,7 +44,7 @@ namespace FF8Utilities.Common
         public ICommand CountdownCommand { get; }
 
 
-        public BaseCardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier)
+        public BaseCardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier)
         {
             _manip = manip;
             State = Math.Max(state, 1);
@@ -63,7 +64,23 @@ namespace FF8Utilities.Common
             SubmitCommand = new RelayCommand(Submit);
             CountdownCommand = new RelayCommand(async () => await LaunchCountdownAsync());
 
-            manip.Options.DelayFrame = delayFrames;
+            if (delayFrames == null)
+            {
+                // Use default delay frames
+                switch (Platform)
+                {
+                    case Platform.PS2:
+                        delayFrames = 285;
+                        break;
+                    case Platform.PC:
+                        delayFrames = 69; // nice
+                        break;
+                    default: throw new ArgumentOutOfRangeException("Contact Kiitoksia because this should not have happened");
+                }
+            }
+            
+
+            manip.Options.DelayFrame = delayFrames.Value;
 
             // Initial UI text based on counting vs first-game
             if (Count > 0)
@@ -574,6 +591,8 @@ namespace FF8Utilities.Common
 
         public abstract void TimerStarted();
         public abstract void TimerStopped();
+
+        public abstract Platform Platform { get; }
     }
 
     public sealed class BeepSchedule

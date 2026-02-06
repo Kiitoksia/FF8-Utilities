@@ -15,11 +15,18 @@ public partial class MainPage : ContentPage
         CardTrackerCommand = new AsyncCommand(ShowQuistisPopup);
         LaunchCardTrackingCommand = new AsyncCommand(earlyQuistis => ShowCardTrackerOptions((bool)earlyQuistis));
         EarlyQuistisCardPatternPickedCommand = new AsyncCommand(async () => await LaunchTracker(true));
+        SettingsCommand = new AsyncCommand(LaunchSettings);
     }
 
     private async Task ShowQuistisPopup()
     {
         await QuistisPopup.ShowAsync();
+    }
+
+    private async Task LaunchSettings()
+    {
+        SettingsPage page = new SettingsPage();
+        await Navigation.PushModalAsync(page);
     }
 
     public static readonly BindableProperty EarlyQuistisPatternProperty = BindableProperty.Create(nameof(EarlyQuistisPattern), typeof(EarlyQuistisPattern), typeof(MainPage), EarlyQuistisPattern.Frame1);
@@ -160,5 +167,14 @@ public partial class MainPage : ContentPage
     {
         get => (ICommand)GetValue(EarlyQuistisCardPatternPickedCommandProperty);
         set => SetValue(EarlyQuistisCardPatternPickedCommandProperty, value);
+    }
+
+    public static readonly BindableProperty SettingsCommandProperty = BindableProperty.Create(nameof(SettingsCommand), typeof(ICommand), typeof(MainPage), null);
+
+
+    public ICommand SettingsCommand
+    {
+        get => (ICommand)GetValue(SettingsCommandProperty);
+        set => SetValue(SettingsCommandProperty, value);
     }
 }

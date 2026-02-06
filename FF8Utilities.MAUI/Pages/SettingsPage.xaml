@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
+             xmlns:pages="clr-namespace:FF8Utilities.MAUI.Pages"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             x:Class="FF8Utilities.MAUI.Pages.SettingsPage"
+             x:Name="this"
+             BindingContext="{x:Reference this}"
+             x:DataType="pages:SettingsPage"
+             Title="SettingsPage">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+    </ContentPage.Resources>
+    <ScrollView>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+
+            <Label Text="Platform"/>
+            <editors:SfComboBox Grid.Column="1" SelectedItem="{Binding Platform}" ItemsSource="{Binding Platforms}" IsClearButtonVisible="False"/>
+
+            <Label Text="Game language" Grid.Row="1"/>
+            <editors:SfComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding GameLanguage}" ItemsSource="{Binding GameLanguages}" IsClearButtonVisible="False"/>
+
+            <Label Text="Custom Card Delay Frames" Grid.Row="2"/>
+            <editors:SfNumericEntry Grid.Row="2" Grid.Column="1" Minimum="0" AllowNull="True" MaximumNumberDecimalDigits="0" CustomFormat="0" Value="{Binding CustomCardDelayFrames}" Placeholder="(None)" />
+
+            <buttons:SfButton Text="Close" Grid.Row="3" Grid.ColumnSpan="2" Command="{Binding CloseButtonCommand}"/>
+        </Grid>
+    </ScrollView>
+</ContentPage>

@@ -27,30 +27,21 @@ public partial class UltimeciaManipPage : ContentPage
 	public BindingList<PartyFormation> Formations { get; set; }
 	
 
-	private Common.Platform Platform
-	{
-		get => Enum.Parse<Common.Platform>(Preferences.Get(nameof(Platform), Common.Platform.PS2.ToString()));
-		set => Preferences.Set(nameof(Platform), value.ToString());
-    }
-
-	private UltimeciaManipLanguage Language
-	{
-		get => Enum.Parse<UltimeciaManipLanguage>(Preferences.Get(nameof(Language), UltimeciaManipLanguage.English.ToString()));
-		set => Preferences.Set(nameof(Language), value.ToString());
-    }
+	
 
 	private async Task Calculate()
 	{
-        UltimeciaManipLanguage[] languages = Manipulation.GetSupportedLanguages(Platform);
-		if (!languages.Contains(Language))
-		{
-			await DisplayAlert("Unsupported Language", $"The selected language ({Language}) is not supported for the current platform ({Platform}).", "OK");
-			return;
-        }
+		// TODO
+  //      UltimeciaManipLanguage[] languages = Manipulation.GetSupportedLanguages(App.Platform);
+		//if (!languages.Contains(App.Language))
+		//{
+		//	await DisplayAlert("Unsupported Language", $"The selected language ({Language}) is not supported for the current platform ({Platform}).", "OK");
+		//	return;
+  //      }
 
 
-        PartyFormation[] formations = Manipulation.GetUltimeciaFormations(Directions.ToArray(), Platform, Language);
-        Formations = new BindingList<PartyFormation>(formations);
+  //      PartyFormation[] formations = Manipulation.GetUltimeciaFormations(Directions.ToArray(), Platform, Language);
+  //      Formations = new BindingList<PartyFormation>(formations);
     }
 
 	private void SubmitDirection(Direction direction)

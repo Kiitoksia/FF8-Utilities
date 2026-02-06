@@ -14,7 +14,7 @@ namespace FF8Utilities.MAUI.Models
         private IDispatcherTimer _renderTimer;
         private Stopwatch _renderStopWatch;
 
-        public CardManipulationModel(CardManip manip, uint state, string player, int delayFrames, int? rngModifier) : base(manip, state, player, delayFrames, rngModifier)
+        public CardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier) : base(manip, state, player, delayFrames, rngModifier)
         {
             _renderTimer = Application.Current.Dispatcher.CreateTimer();
             _renderTimer.Interval = TimeSpan.FromMilliseconds(16); // 60FPS
@@ -55,6 +55,8 @@ namespace FF8Utilities.MAUI.Models
         public Color TextColourMaui => Color.FromRgba(TextColor.R, TextColor.G, TextColor.B, TextColor.A);
 
         public Color InstantMashBackgroundMaui => Color.FromRgba(InstantMashBackgroundColor.R, InstantMashBackgroundColor.G, InstantMashBackgroundColor.B, InstantMashBackgroundColor.A);
+
+        public override Common.Platform Platform => App.Platform;
 
         protected override void PauseBeeps()
         {

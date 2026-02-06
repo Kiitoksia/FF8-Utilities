@@ -1,4 +1,5 @@
 ﻿using FF8Utilities.MAUI.Pages;
+using UltimeciaManip;
 
 namespace FF8Utilities.MAUI
 {
@@ -20,14 +21,31 @@ namespace FF8Utilities.MAUI
             return new Window(new MainPage());
         }
 
-        public static int DelayFrames
+        public static int? DelayFrames
         {
-            get => Preferences.Get(nameof(DelayFrames), 9);
+            get
+            {
+                int value = Preferences.Get(nameof(DelayFrames), -1); // Default to an invalid value so its null, as we cannot store nullable ints
+                if (value == -1) return null; // Invalid
+                return value;
+            }
             set
             {
                 if (value == DelayFrames) return;
-                Preferences.Set(nameof(DelayFrames), value);
+                Preferences.Set(nameof(DelayFrames), value ?? -1);
             }
+        }
+
+        public static Common.Platform Platform
+        {
+            get => Enum.Parse<Common.Platform>(Preferences.Get(nameof(Platform), Common.Platform.PS2.ToString()));
+            set => Preferences.Set(nameof(Platform), value.ToString());
+        }
+
+        public static UltimeciaManipLanguage GameLanguage
+        {
+            get => Enum.Parse<UltimeciaManipLanguage>(Preferences.Get(nameof(GameLanguage), UltimeciaManipLanguage.English.ToString()));
+            set => Preferences.Set(nameof(GameLanguage), value.ToString());
         }
     }
 }

@@ -21,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition Height="0"/> <!-- Row to hide picker-->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -50,7 +51,9 @@
             </popup:SfPopup.ContentTemplate>
         </popup:SfPopup>
 
-        <picker:SfPicker PopupHeight="500" DeclineCommand="{Binding EarlyQuistisCardPatternPickedCommand}" PopupWidth="300" Grid.Row="2" Mode="Dialog" x:Name="EarlyQuistisFramePicker" TextDisplayMode="Fade" Grid.ColumnSpan="2">
+        <buttons:SfButton Text="Settings" Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding SettingsCommand}"/>
+
+        <picker:SfPicker PopupHeight="500" DeclineCommand="{Binding EarlyQuistisCardPatternPickedCommand}" PopupWidth="300" Grid.Row="3" Mode="Dialog" x:Name="EarlyQuistisFramePicker" TextDisplayMode="Fade" Grid.ColumnSpan="2">
             <picker:SfPicker.HeaderView>
                 <picker:PickerHeaderView Height="50" Text="Select Early Quistis Frame"/>
             </picker:SfPicker.HeaderView>
