@@ -57,6 +57,17 @@ namespace FF8Utilities.Common
 
     public class ComboBoxItem : BaseModel
     {
+        public ComboBoxItem() 
+        {
+            
+        }
+
+        public ComboBoxItem(string description, object value) : this()
+        {
+            Description = description;
+            Value = value;
+        }
+
         public string Description { get; set; }
         public object Value { get; set; }
     }

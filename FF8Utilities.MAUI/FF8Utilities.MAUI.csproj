@@ -25,7 +25,7 @@
 		<ApplicationId>com.kiitoksia.ff8utilities</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
@@ -42,12 +42,16 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='DebugTrimming'">
@@ -55,6 +59,16 @@
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
 	  <DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
+	  <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>2</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -110,6 +124,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\CarawayCode\CarawayCode.csproj" />
 	  <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
 	  <ProjectReference Include="..\FF8Utilities.Common\FF8Utilities.Common.csproj" />
 	  <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
@@ -122,6 +137,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Controls\CarawayOptionControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\CardPatternPositionView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -167,16 +185,16 @@
 	<!-- Add trimmer configuration -->
 	<ItemGroup>
 	  <!-- Preserve Syncfusion assemblies -->
-	  <TrimmerRootAssembly Include="Syncfusion.Maui.Core" />
+	  <!--<TrimmerRootAssembly Include="Syncfusion.Maui.Core" />
 	  <TrimmerRootAssembly Include="Syncfusion.Maui.Inputs" />
 	  <TrimmerRootAssembly Include="Syncfusion.Maui.TabView" />
 	  <TrimmerRootAssembly Include="Syncfusion.Maui.NavigationDrawer" />
 	  <TrimmerRootAssembly Include="Syncfusion.Maui.Picker" />
-	  <TrimmerRootAssembly Include="Syncfusion.Maui.Buttons" />
+	  <TrimmerRootAssembly Include="Syncfusion.Maui.Buttons" />-->
 	  
 	  <!-- Preserve SkiaSharp -->
-	  <TrimmerRootAssembly Include="SkiaSharp" />
-	  <TrimmerRootAssembly Include="SkiaSharp.Views.Maui.Controls" />
+	  <!--<TrimmerRootAssembly Include="SkiaSharp" />
+	  <TrimmerRootAssembly Include="SkiaSharp.Views.Maui.Controls" />-->
 	</ItemGroup>
 
 	<ItemGroup>

@@ -9,12 +9,19 @@ public partial class MainPage : ContentPage
 {
 	public MainPage()
 	{
+		EarlyQuistisPatterns = new ObservableCollection<EarlyQuistisPattern>(EarlyQuistisPattern.OptionsExcludeLate);
+
 		InitializeComponent();
 
         EarlyQuistisPattern = EarlyQuistisPattern.Frame1;
         CardTrackerCommand = new AsyncCommand(ShowQuistisPopup);
         LaunchCardTrackingCommand = new AsyncCommand(earlyQuistis => ShowCardTrackerOptions((bool)earlyQuistis));
         EarlyQuistisCardPatternPickedCommand = new AsyncCommand(async () => await LaunchTracker(true));
+        CarawayCommand = new AsyncCommand(async () =>
+        {
+            CarawayCodePage page = new CarawayCodePage();
+            await Navigation.PushModalAsync(page);
+        });
         SettingsCommand = new AsyncCommand(LaunchSettings);
     }
 
@@ -37,7 +44,7 @@ public partial class MainPage : ContentPage
         set => SetValue(EarlyQuistisPatternProperty, value);
     }
 
-    public static readonly BindableProperty EarlyQuistisPatternsProperty = BindableProperty.Create(nameof(EarlyQuistisPatterns), typeof(ObservableCollection<EarlyQuistisPattern>), typeof(MainPage), new ObservableCollection<EarlyQuistisPattern>(EarlyQuistisPattern.OptionsExcludeLate));
+    public static readonly BindableProperty EarlyQuistisPatternsProperty = BindableProperty.Create(nameof(EarlyQuistisPatterns), typeof(ObservableCollection<EarlyQuistisPattern>), typeof(MainPage), null);
 
     public ObservableCollection<EarlyQuistisPattern> EarlyQuistisPatterns
     {

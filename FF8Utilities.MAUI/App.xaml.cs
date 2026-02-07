@@ -46,6 +46,6 @@ namespace FF8Utilities.MAUI
         {
             get => Enum.Parse<UltimeciaManipLanguage>(Preferences.Get(nameof(GameLanguage), UltimeciaManipLanguage.English.ToString()));
             set => Preferences.Set(nameof(GameLanguage), value.ToString());
-        }
+        }        
     }
 }

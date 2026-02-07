@@ -14,4 +14,7 @@
     <type fullname="FF8Utilities.Common.Cards.LateQuistisPattern" preserve="all" />
     <type fullname="FF8Utilities.Common.Cards.LateQuistisStrategy" preserve="all" />
   </assembly>
+
+  <assembly fullname="SkiaSharp"/>
+  <assembly fullname="SkiaSharp.Views.Maui.Controls"/>
 </linker>

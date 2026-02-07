@@ -33,7 +33,7 @@
 
         <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}" Grid.Row="1"/>
         <buttons:SfButton Text="[NYI] Fish Fins" Grid.Row="1" Grid.Column="1"/>
-        <buttons:SfButton Text="[NYI] Caraway Code" Grid.Row="2"/>
+        <buttons:SfButton Text="Caraway Code" Grid.Row="2" Command="{Binding CarawayCommand}"/>
         <buttons:SfButton Text="[NYI] Ultimecia Party" Grid.Row="2" Grid.Column="1"/>
 
         <ActivityIndicator IsRunning="{Binding ShowLoadingBar}" IsVisible="{Binding ShowLoadingBar}" Grid.RowSpan="2" Grid.ColumnSpan="2"/>

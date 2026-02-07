@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:caraway="clr-namespace:CarawayCode.Entities;assembly=CarawayCode"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
+             x:Name="this"
+             x:DataType="caraway:CarawayOption"             
+             x:Class="FF8Utilities.MAUI.Controls.CarawayOptionControl">
+    <ContentView.Resources>
+        <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="1" Background="{StaticResource StandardBlue}" Stroke="White" StrokeThickness="1">
+            <Label Text="{Binding Code}" FontAttributes="Bold"/>
+        </Border>
+
+        <Label Grid.Column="2" Text="{Binding Input}" Margin="10,0,0,0" HorizontalTextAlignment="Start"/>
+
+        <Label Grid.Row="1" Text="Backup" HorizontalTextAlignment="Center"/>
+        <Border Grid.Row="1" Grid.Column="1" Stroke="White" StrokeThickness="1">
+            <Label Text="{Binding BackupCode}" FontAttributes="Bold"/>
+        </Border>
+        <Label Grid.Row="1" Grid.Column="2" Text="{Binding BackupInput}" Margin="10,0,0,0" HorizontalTextAlignment="Start"/>
+
+
+        <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{Binding ShowNPCMovement, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Margin="10,0">
+            <VerticalStackLayout.Resources>
+                <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                    
+                </Style>
+            </VerticalStackLayout.Resources>
+            <Label Grid.Row="2" Text="NPC Details" FontAttributes="Bold"/>
+            <Label Text="{Binding Station, StringFormat='Station: {0}'}"/>
+            <Label Text="{Binding Escalator, StringFormat='Escalator: {0}'}"/>
+            <Label Text="{Binding Street, StringFormat='Street: {0}'}"/>
+            <Label Text="{Binding Bus, StringFormat='Bus: {0}'}"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentView>

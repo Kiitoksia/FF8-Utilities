@@ -68,5 +68,15 @@ namespace FF8Utilities.Common.Caraway
         {
             return poles.Where(p => p.Count != null).Select(p => new PoleCount(p.Count.Value)).ToArray();
         }
+
+        public static PoleModel[] Poles = new[]
+        {
+            new PoleModel("Series 1"),
+            new PoleModel("Series 2"),
+            new PoleModel("Series 3"),
+            new PoleModel("Series 4"),
+            new PoleModel("Series 5"),
+            new PoleModel("Series 6"),
+        };
     }
 }

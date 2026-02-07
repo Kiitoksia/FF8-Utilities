@@ -2,36 +2,102 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:models="clr-namespace:FF8Utilities.Common.Caraway;assembly=FF8Utilities.Common" 
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs" 
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker" 
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters" 
+             xmlns:caraway="clr-namespace:CarawayCode.Entities;assembly=CarawayCode"
+             xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              x:Class="FF8Utilities.MAUI.Pages.CarawayCodePage"
+             x:Name="this"
+             BindingContext="{x:Reference this}"
              Title="CarawayCodePage">
     <ContentPage.Resources>
-        <DataTemplate x:Key="PoleEntryTemplate">
-            <VerticalStackLayout>
-                
-            </VerticalStackLayout>
-        </DataTemplate>
+        <converters:ComboBoxToNullIntConverter x:Key="ComboConverter"/>
+
+        <converters:BoolConverter x:TypeArguments="Color" True="SaddleBrown" False="{StaticResource StandardBlue}" x:Key="UnlikelyResultColourConverter"/>
+        <converters:BoolConverter x:TypeArguments="Color" True="{StaticResource StandardBlue}" False="Transparent" x:Key="ToggleButtonConverter"/>
+
     </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition/>
             <RowDefinition Height="50"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <controls:HeaderControl HeaderText="Caraway Code" x:Name="Header"/>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            
-            
-        </Grid>
+        <picker:SfPicker Grid.Row="1" TextDisplayMode="FadeAndShrink" EnableLooping="True">
+            <picker:SfPicker.HeaderView>
+                <picker:PickerHeaderView Height="50" Text="Enter Pole Series"/>
+            </picker:SfPicker.HeaderView>
+            <picker:SfPicker.ColumnHeaderView>
+                <picker:PickerColumnHeaderView Height="30"/>
+            </picker:SfPicker.ColumnHeaderView>
+            <picker:SfPicker.Columns>
+                <picker:PickerColumn HeaderText="1" ItemsSource="{Binding SeriesOptions, Mode=OneTime}" DisplayMemberPath="Description" SelectedItem="{Binding Poles[0].Count, Converter={StaticResource ComboConverter}, Mode=TwoWay}" />
+                <picker:PickerColumn HeaderText="2" ItemsSource="{Binding SeriesOptions, Mode=OneTime}" DisplayMemberPath="Description" SelectedItem="{Binding Poles[1].Count, Converter={StaticResource ComboConverter}, Mode=TwoWay}"/>
+                <picker:PickerColumn HeaderText="3" ItemsSource="{Binding SeriesOptions, Mode=OneTime}" DisplayMemberPath="Description" SelectedItem="{Binding Poles[2].Count, Converter={StaticResource ComboConverter}, Mode=TwoWay}"/>
+                <picker:PickerColumn HeaderText="4" ItemsSource="{Binding SeriesOptions, Mode=OneTime}" DisplayMemberPath="Description" SelectedItem="{Binding Poles[3].Count, Converter={StaticResource ComboConverter}, Mode=TwoWay}"/>
+                <picker:PickerColumn HeaderText="5" ItemsSource="{Binding SeriesOptions, Mode=OneTime}" DisplayMemberPath="Description" SelectedItem="{Binding Poles[4].Count, Converter={StaticResource ComboConverter}, Mode=TwoWay}"/>
+                <picker:PickerColumn HeaderText="6" ItemsSource="{Binding SeriesOptions, Mode=OneTime}" DisplayMemberPath="Description" SelectedItem="{Binding Poles[5].Count, Converter={StaticResource ComboConverter}, Mode=TwoWay}"/>
+            </picker:SfPicker.Columns>
+        </picker:SfPicker>
+
+        <buttons:SfButton Grid.Row="2" Text="Submit" Command="{Binding SubmitCommand}" CornerRadius="0"/>
+
+        <CollectionView Grid.Row="3" ItemsSource="{Binding Output}" Margin="10" ItemSizingStrategy="MeasureFirstItem">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="caraway:CarawayCodeOutput">
+                    <Border Margin="5" Padding="0,0,0,5" Stroke="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Text="{Binding SubscriptDisplay, StringFormat='  {0}'}" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+
+                            <Label Grid.Row="1" Text="Last Series Complete" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Large" FontAttributes="Bold"/>
+                            <controls:CarawayOptionControl Grid.Row="2" BindingContext="{Binding CompleteOption}"/>
+
+                            <Label Grid.Row="3" Text="Last Series Incomplete" HorizontalOptions="Center" VerticalOptions="Center" FontSize="Large" FontAttributes="Bold"/>
+                            <controls:CarawayOptionControl Grid.Row="4" BindingContext="{Binding IncompleteOption}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <popup:SfPopup x:Name="OptionsPopup" HeaderTitle="Options" ShowCloseButton="True">
+            <popup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.Resources>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label Text="Hide Unlikely Results" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Switch IsToggled="{Binding HideUnlikelyResults, Source={x:Reference this}}" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                        <Label Text="Show NPC Movement" HorizontalTextAlignment="Center" Grid.Row="1" VerticalTextAlignment="Center"/>
+                        <Switch IsToggled="{Binding ShowNPCMovement, Source={x:Reference this}}" Grid.Row="1" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </popup:SfPopup.ContentTemplate>
+        </popup:SfPopup>
     </Grid>
 </ContentPage>
