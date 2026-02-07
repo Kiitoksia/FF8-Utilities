@@ -1,39 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Security.Cryptography;
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FF8Utilities.MAUI.Converters
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)]
     public class CachedByteArrayToImageSourceConverter : IValueConverter
     {
-        private static readonly SHA1 _sha = SHA1.Create();
-        private static readonly Dictionary<string, ImageSource> _cache = new();
+        private static readonly ConditionalWeakTable<byte[], ImageSource> _cache = new();
+        private static readonly object _cacheLock = new();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is not byte[] byteArray || byteArray.Length == 0) return null;
 
-            string hash = GetHash(byteArray);
+            if (_cache.TryGetValue(byteArray, out var cached))
+                return cached;
 
+            var imageSource = ImageSource.FromStream(() => new MemoryStream(byteArray, writable: false));
+            lock (_cacheLock)
+            {
+                if (!_cache.TryGetValue(byteArray, out cached))
+                {
+                    _cache.Add(byteArray, imageSource);
+                    return imageSource;
+                }
+            }
 
-            if (_cache.TryGetValue(hash, out var cached)) return cached;
-
-            var imageSource = ImageSource.FromStream(() => new MemoryStream(byteArray));
-            _cache[hash] = imageSource;
-
-            return imageSource;
+            return cached;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => throw new NotImplementedException();
-
-        private static string GetHash(byte[] data)
         {
-            return string.Concat(_sha.ComputeHash(data).Select(t => t.ToString("X2")));            
-        }
+            throw new NotImplementedException();
+        }            
     }
 }

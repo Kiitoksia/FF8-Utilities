@@ -15,8 +15,7 @@
              Title="LateQuistisManipulationPage">
     <ContentPage.Resources>
         <converters:CachedByteArrayToImageSourceConverter x:Key="ImageConverter"/>
-
-        <toolkit:MathExpressionConverter x:Key="MathExpressionConverter" />
+        <!--<toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>-->
 
         <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
             <Setter Property="HorizontalTextAlignment" Value="Center"/>
@@ -24,80 +23,78 @@
         </Style>
     </ContentPage.Resources>
 
-    <ScrollView>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-                <RowDefinition Height="250"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="250"/>
+        </Grid.RowDefinitions>
 
-            <popup:SfPopup x:Name="StrategyPopup" IsFullScreen="True" ShowHeader="False">
-                <popup:SfPopup.PopupStyle>
-                    <popup:PopupStyle CornerRadius="0"/>
-                </popup:SfPopup.PopupStyle>
-                <popup:SfPopup.ContentTemplate>
-                    <DataTemplate>
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition/>
-                                <RowDefinition Height="50"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <buttons:SfButton Text="Hide" Clicked="SfButton_Clicked"/>
-                            <Label Grid.Column="1" Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large"/>
-                            <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" Grid.Row="1" Grid.ColumnSpan="2"/>
-                            <buttons:SfButton Grid.Row="2" Grid.ColumnSpan="2" Text="Submit" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Margin="10,5" Background="{StaticResource StandardBlue}" TextColor="White" />
-                        </Grid>
-                    </DataTemplate>
-                </popup:SfPopup.ContentTemplate>
-            </popup:SfPopup>
+        <popup:SfPopup x:Name="StrategyPopup" IsFullScreen="True" ShowHeader="False">
+            <popup:SfPopup.PopupStyle>
+                <popup:PopupStyle CornerRadius="0"/>
+            </popup:SfPopup.PopupStyle>
+            <popup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <buttons:SfButton Text="Hide" Clicked="SfButton_Clicked"/>
+                        <Label Grid.Column="1" Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                        <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" Grid.Row="1" Grid.ColumnSpan="2"/>
+                        <buttons:SfButton Grid.Row="2" Grid.ColumnSpan="2" Text="Submit" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Margin="10,5" Background="{StaticResource StandardBlue}" TextColor="White" />
+                    </Grid>
+                </DataTemplate>
+            </popup:SfPopup.ContentTemplate>
+        </popup:SfPopup>
 
-            <controls:HeaderControl x:Name="Header" ShowSettings="False" HeaderText="Frames"/>
+        <controls:HeaderControl x:Name="Header" ShowSettings="False" HeaderText="Frames"/>
 
-            <CollectionView ItemsSource="{Binding OrderedStrategies, Source={x:Reference this}, Mode=OneWay}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1" 
-                    SelectionChanged="CollectionView_SelectionChanged" ItemSizingStrategy="MeasureAllItems" x:Name="StrategiesView" HorizontalOptions="Fill" VerticalOptions="Fill">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="5" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="cards:LateQuistisStrategy">
-                        <Border HeightRequest="{Binding Height, Source={x:Reference StrategiesView}, Converter={StaticResource MathExpressionConverter}, ConverterParameter='x/2 - 10'}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup Name="CommonStates">
-                                    <VisualState Name="Normal">
-                                        <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="Transparent"/>
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState Name="Selected">
-                                        <VisualState.Setters>
-                                            <Setter Property="BackgroundColor" Value="#66000000"/>
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="2" HorizontalOptions="Center" VerticalOptions="Center">
-                                <Grid HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" VerticalOptions="Fill" HorizontalOptions="Fill" Aspect="AspectFit" />
-                                    <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" VerticalOptions="Fill" HorizontalOptions="Fill" Aspect="AspectFit" Grid.Row="1" />
-                                </Grid>
-                            </Border>
-
+        <CollectionView ItemsSource="{Binding OrderedStrategies, Source={x:Reference this}, Mode=OneWay}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1" 
+                SelectionChanged="CollectionView_SelectionChanged" ItemSizingStrategy="MeasureFirstItem" x:Name="StrategiesView" HorizontalOptions="Fill" VerticalOptions="Fill">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="5" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="cards:LateQuistisStrategy">
+                    <Border HeightRequest="205">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#66000000"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="100"/>
+                                    <RowDefinition Height="100"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="100" WidthRequest="80" HorizontalOptions="Fill" />
+                                <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="100" WidthRequest="80" HorizontalOptions="Fill" Grid.Row="1" />
+                            </Grid>
                         </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
 
-            <controls:CardTimerControl Grid.Row="2" x:Name="CardControl" Margin="10"/>
-        </Grid>
-    </ScrollView>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <controls:CardTimerControl Grid.Row="2" x:Name="CardControl" Margin="10"/>
+    </Grid>
 </ContentPage>

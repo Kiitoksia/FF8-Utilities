@@ -13,19 +13,11 @@ namespace FF8Utilities.MAUI.Models
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicMethods)]
     public class CardManipulationModel : BaseCardManipulationModel
     {
-        private IDispatcherTimer _renderTimer;
-        private Stopwatch _renderStopWatch;
+        //private IDispatcherTimer _renderTimer;
+        //private Stopwatch _renderStopWatch;
 
         public CardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier) : base(manip, state, player, delayFrames, rngModifier)
         {
-            _renderTimer = Application.Current.Dispatcher.CreateTimer();
-            _renderTimer.Interval = TimeSpan.FromMilliseconds(16); // 60FPS
-            _renderStopWatch = new Stopwatch();
-            _renderTimer.Tick += RenderTick;
-
-            _renderTimer.Start();
-            _renderStopWatch.Start();
-
             PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(TextColor)) OnPropertyChanged(nameof(TextColourMaui));
@@ -35,16 +27,12 @@ namespace FF8Utilities.MAUI.Models
 
         public event EventHandler RenderTimerTick;
 
-        public void Refresh()
-        {
-            RenderTick(this, EventArgs.Empty);
-        }
-
-        private void RenderTick(object sender, EventArgs args)
-        {
-            RenderTimerTick?.Invoke(this, EventArgs.Empty);
-            OnRenderTick(_renderStopWatch.Elapsed);
-        }
+        //private void RenderTick(object sender, EventArgs args)
+        //{
+        //    if (!_renderStopWatch.IsRunning) return;
+        //    RenderTimerTick?.Invoke(this, EventArgs.Empty);
+        //    OnRenderTick(_renderStopWatch.Elapsed);
+        //}
 
         public override int CountdownTimer => Preferences.Get(nameof(CountdownTimer), 3);
 
@@ -73,19 +61,19 @@ namespace FF8Utilities.MAUI.Models
         public override void Dispose()
         {            
             base.Dispose();
-            _renderTimer?.Stop();
-            if (_renderTimer != null) _renderTimer.Tick -= RenderTick;
-            _renderTimer = null;
+            //_renderTimer?.Stop();
+            //if (_renderTimer != null) _renderTimer.Tick -= RenderTick;
+            //_renderTimer = null;
         }
 
         public override void TimerStarted()
         {
-            _renderStopWatch.Restart();
+            //_renderStopWatch.Restart();
         }
 
         public override void TimerStopped()
         {
-            _renderStopWatch.Stop();
+            //_renderStopWatch.Stop();
         }
     }
 }

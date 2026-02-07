@@ -1,16 +1,33 @@
 using FF8Utilities.Common.Cards;
+using FF8Utilities.MAUI.Converters;
 using FF8Utilities.MAUI.Models;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows.Input;
 
 namespace FF8Utilities.MAUI.Pages;
 
 public partial class LateQuistisManipulationPage : ContentPage
 {
+	public static readonly BindableProperty StrategyItemHeightProperty =
+		BindableProperty.Create(nameof(StrategyItemHeight), typeof(double), typeof(LateQuistisManipulationPage), 0d);
+
+	public double StrategyItemHeight
+	{
+		get => (double)GetValue(StrategyItemHeightProperty);
+		set => SetValue(StrategyItemHeightProperty, value);
+	}
+
 	private bool _initialised;
 	public LateQuistisManipulationPage()
 	{
 		InitializeComponent();
+
+		//StrategiesView.SizeChanged += (_, __) =>
+		//{
+		//	if (StrategiesView.Height > 0)
+		//		StrategyItemHeight = Math.Max(0, StrategiesView.Height / 2 - 10);
+		//};
 
 		Header.BackCommand = new AsyncCommand(async () =>
 		{
@@ -23,7 +40,7 @@ public partial class LateQuistisManipulationPage : ContentPage
                     await Navigation.PopModalAsync();
                 }
             });            
-        });
+        });       
     }
 
     public LateQuistisManipulationPage(LateQuistisPattern model, CardManipulationModel cardManipModel) : this()
@@ -33,6 +50,17 @@ public partial class LateQuistisManipulationPage : ContentPage
 
         OrderedStrategies = new ObservableCollection<LateQuistisStrategy>(model.Strategies.OrderBy(t => t.OpponentDeckOrderer));
         QuistisObtainedCommand = new AsyncCommand(QuistisCardObtained);
+
+        // This will pre-load the images
+        Task.Run(() =>
+        {
+            var converter = new CachedByteArrayToImageSourceConverter();
+            foreach (var strategy in OrderedStrategies)
+            {
+                _ = converter.Convert(strategy.OpponentCards.ElementAtOrDefault(0), typeof(ImageSource), null, CultureInfo.InvariantCulture);
+                _ = converter.Convert(strategy.OpponentCards.ElementAtOrDefault(1), typeof(ImageSource), null, CultureInfo.InvariantCulture);
+            }
+        });
         _initialised = true;
     }
 

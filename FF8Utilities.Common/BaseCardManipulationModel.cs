@@ -2,6 +2,7 @@
 using CardManipulation.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime;
@@ -100,10 +101,16 @@ namespace FF8Utilities.Common
             GetInstantMashText();
         }
 
+        public void Refresh()
+        {
+            OnRenderTick(_stopwatch.Elapsed);
+        }
+
         // Platform should call this on each render tick with the current rendering time.
         public void OnRenderTick(TimeSpan renderingTime)
         {
             if (CurrentResult == null) return;
+            if (renderingTime.TotalMilliseconds < 16) return; // Don't update faster than ~60FPS, since some computations are expensive and it doesn't need to be more granular than that.
 
             var deltaTime = renderingTime - _lastRenderTime;
             _lastRenderTime = renderingTime;
@@ -422,6 +429,8 @@ namespace FF8Utilities.Common
             WillBeepsPlay = firstAvailableFrame > 85;
         }
 
+        private Stopwatch _stopwatch = new Stopwatch();
+
         private void StartTimer()
         {
             if (Count == 0 && string.IsNullOrWhiteSpace(RecoveryPattern) && _lastState == null)
@@ -430,6 +439,7 @@ namespace FF8Utilities.Common
                 return;
             }
 
+            _stopwatch.Restart();
             TimerStarted();
 
             ErrorText = null;
@@ -529,6 +539,7 @@ namespace FF8Utilities.Common
             {
                 _cts.Cancel();
                 PauseBeeps();
+                _stopwatch.Stop();                
                 TimerStopped();
             }
         }
