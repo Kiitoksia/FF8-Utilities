@@ -342,9 +342,7 @@
             </tabView:SfTabView.Items>
         </tabView:SfTabView>
 
-        <Border BackgroundColor="#363B57" IsVisible="{Binding LaunchingWindow}" Grid.RowSpan="2">
-            <ActivityIndicator IsRunning="{Binding LaunchingWindow}"/>
-        </Border>
+        <c:LoadOverlayControl Grid.RowSpan="2" IsVisible="{Binding LaunchingWindow}"/>
 
         <popup:SfPopup x:Name="OptionsPopup" HeaderTitle="Options" HeightRequest="200" Grid.Row="2">
             <popup:SfPopup.ContentTemplate>

@@ -14,6 +14,7 @@
 
         <toolkit:InvertedBoolConverter x:Key="InvertedConverter"/>
 
+        <toolkit:VariableMultiValueConverter x:Key="AllTrueConverter" ConditionType="All"/>
         <converters:BoolConverter x:Key="IsFastestColourConverter" x:TypeArguments="Color" True="{StaticResource StandardGreen}" False="{StaticResource StandardBlue}"/>
 
         <Style TargetType="ImageButton">
@@ -172,16 +173,29 @@
             </CollectionView>
         </Grid>
 
-        <ActivityIndicator IsRunning="{Binding IsCalculating}" IsVisible="{Binding IsCalculating}" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Margin="30"/>
+        <controls:LoadOverlayControl Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" IsVisible="{Binding IsCalculating}"/>
 
-        <ImageButton Grid.Row="4" Command="{Binding ToggleResults}" IsVisible="{Binding ShowResults}" HeightRequest="50" VerticalOptions="End">
+        <ImageButton Grid.Row="4" Command="{Binding ToggleResults}" HeightRequest="50" VerticalOptions="End">
             <ImageButton.Source>
                 <FontImageSource Glyph="{x:Static utilities:FontAwesome.PersonWalkingRight}" FontFamily="FontAwesome" Color="White"/>
             </ImageButton.Source>
+            <ImageButton.IsVisible>
+                <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                    <Binding Path="ShowResults"/>
+                    <Binding Path="IsCalculating" Converter="{StaticResource InvertedConverter}"/>
+                </MultiBinding>
+            </ImageButton.IsVisible>
         </ImageButton>
 
         <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ResultsCount, StringFormat='{0} results found'}" HorizontalTextAlignment="Center" 
-               VerticalTextAlignment="Start" FontSize="Large" FontAttributes="Bold" IsVisible="{Binding ShowResults}" HeightRequest="50" VerticalOptions="End"/>
+               VerticalTextAlignment="Start" FontSize="Large" FontAttributes="Bold" HeightRequest="50" VerticalOptions="End">
+            <Label.IsVisible>
+                <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                    <Binding Path="ShowResults"/>
+                    <Binding Path="IsCalculating" Converter="{StaticResource InvertedConverter}"/>
+                </MultiBinding>
+            </Label.IsVisible>
+        </Label>
 
     </Grid>
 </ContentPage>

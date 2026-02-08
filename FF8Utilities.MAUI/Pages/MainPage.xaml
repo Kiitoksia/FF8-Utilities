@@ -5,16 +5,32 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
-             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common" xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common" 
+             xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:utilities="clr-namespace:FF8Utilities.MAUI"
              x:Name="this"             
              BindingContext="{x:Reference this}"
              Title="MainPage">
     <ContentPage.Resources>
-        <Style TargetType="buttons:SfButton" BasedOn="{StaticResource BaseSfButton}">
+        <Style TargetType="buttons:SfButton" BasedOn="{StaticResource BaseSfButton}" x:Key="ButtonStyle">
             <Setter Property="FontSize" Value="Large"/>
             <Setter Property="Margin" Value="20"/>
-            <Setter Property="VerticalOptions" Value="Center"/>
             <Setter Property="LineBreakMode" Value="WordWrap"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="StrokeThickness" Value="1"/>
+            <Setter Property="Stroke" Value="Black"/>
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="ShowIcon" Value="True"/>
+            <Setter Property="ImageAlignment" Value="Top"/>
+            <Setter Property="ImageSize" Value="128"/>
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+        <Style TargetType="FontImageSource">
+            <Setter Property="FontFamily" Value="FontAwesome"/>
+            <Setter Property="FontAutoScalingEnabled" Value="True"/>
+            <Setter Property="Size" Value="128"/>
+            <Setter Property="Color" Value="White"/>
         </Style>
     </ContentPage.Resources>
         <Grid>
@@ -31,12 +47,29 @@
 
         <controls:HeaderControl Grid.ColumnSpan="2" HeaderText="FF8 Utilities" ShowBackButton="False"/>
 
-        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}" Grid.Row="1"/>
-        <buttons:SfButton Text="[NYI] Fish Fins" Grid.Row="1" Grid.Column="1"/>
-        <buttons:SfButton Text="Caraway Code" Grid.Row="2" Command="{Binding CarawayCommand}"/>
-        <buttons:SfButton Text="Ultimecia Party" Grid.Row="2" Grid.Column="1" Command="{Binding UltimeciaCommand}"/>
+        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}" Grid.Row="1" Style="{StaticResource ButtonStyle}">
+            <buttons:SfButton.ImageSource>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ClipboardList}"/>
+            </buttons:SfButton.ImageSource>
+        </buttons:SfButton>
+        <buttons:SfButton Text="[NYI] Fish Fins" Grid.Row="1" Grid.Column="1" Style="{StaticResource ButtonStyle}">
+            <buttons:SfButton.ImageSource>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.FishFins}"/>
+            </buttons:SfButton.ImageSource>
+        </buttons:SfButton>
+        <buttons:SfButton Text="Caraway Code" Grid.Row="2" Command="{Binding CarawayCommand}" Style="{StaticResource ButtonStyle}">
+            <buttons:SfButton.ImageSource>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.Train}"/>
+            </buttons:SfButton.ImageSource>
+        </buttons:SfButton>
 
-        <ActivityIndicator IsRunning="{Binding ShowLoadingBar}" IsVisible="{Binding ShowLoadingBar}" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <buttons:SfButton Text="Ultimecia Party" Grid.Row="2" Grid.Column="1" Command="{Binding UltimeciaCommand}" Style="{StaticResource ButtonStyle}">
+            <buttons:SfButton.ImageSource>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.PeopleLine}"/>
+            </buttons:SfButton.ImageSource>
+        </buttons:SfButton>
+
+        <controls:LoadOverlayControl IsVisible="{Binding ShowLoadingBar}" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="2"/>
 
         <popup:SfPopup x:Name="QuistisPopup" HeaderTitle="Select Quistis Strategy">
             <popup:SfPopup.ContentTemplate>
@@ -46,8 +79,8 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <buttons:SfButton Text="Early" Grid.Row="1" Command="{Binding LaunchCardTrackingCommand}" CommandParameter="{x:Boolean True}"/>
-                        <buttons:SfButton Text="Late" Grid.Row="1" Grid.Column="1"  Command="{Binding LaunchCardTrackingCommand}" CommandParameter="{x:Boolean False}"/>
+                        <buttons:SfButton Text="Early" Grid.Row="1" Command="{Binding LaunchCardTrackingCommand}" CommandParameter="{x:Boolean True}" Style="{StaticResource ButtonStyle}"/>
+                        <buttons:SfButton Text="Late" Grid.Row="1" Grid.Column="1"  Command="{Binding LaunchCardTrackingCommand}" CommandParameter="{x:Boolean False}" Style="{StaticResource ButtonStyle}"/>
                     </Grid>
                 </DataTemplate>
             </popup:SfPopup.ContentTemplate>

@@ -47,7 +47,7 @@
             </picker:SfPicker.Columns>
         </picker:SfPicker>
 
-        <buttons:SfButton Grid.Row="2" Text="Submit" Command="{Binding SubmitCommand}" CornerRadius="0"/>
+        <buttons:SfButton Grid.Row="2" Text="Submit" Command="{Binding SubmitCommand}" CornerRadius="0" Style="{StaticResource BaseSfButton}" Margin="5"/>
 
         <CollectionView Grid.Row="3" ItemsSource="{Binding Output}" Margin="10" ItemSizingStrategy="MeasureFirstItem">
             <CollectionView.ItemTemplate>

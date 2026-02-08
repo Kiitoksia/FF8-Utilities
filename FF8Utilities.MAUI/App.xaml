@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              xmlns:local="clr-namespace:FF8Utilities.MAUI"
+             xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker" 
              x:Class="FF8Utilities.MAUI.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -11,6 +14,7 @@
                 <syncTheme:SyncfusionThemeResourceDictionary VisualTheme="MaterialDark"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <x:String x:Key="Font">OpenSansRegular</x:String>
             <Color x:Key="StandardBlue">#00589F</Color>
             <Color x:Key="StandardGreen">#CC06761F</Color>
             <Style TargetType="Page" ApplyToDerivedTypes="True">
@@ -18,17 +22,53 @@
             </Style>
             <Style TargetType="Label" x:Key="BaseLabel">
                 <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
             </Style>
 
             <Style TargetType="RadioButton" x:Key="BaseRadioButton">
                 <Setter Property="BackgroundColor" Value="Transparent"/>
                 <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
             </Style>
 
             <Style TargetType="buttons:SfButton" x:Key="BaseSfButton">
                 <Setter Property="Background" Value="{StaticResource StandardBlue}"/>
                 <Setter Property="BackgroundColor" Value="{StaticResource StandardBlue}"/>
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+                <Setter Property="Stroke" Value="White"/>
+                <Setter Property="StrokeThickness" Value="1"/>
+                <Setter Property="TextColor" Value="White"/>
             </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+            </Style>
+
+            <Style TargetType="editors:SfComboBox">
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+            </Style>
+
+            <Style TargetType="buttons:SfRadioButton">
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+
+            <Style TargetType="tabView:SfTabItem">
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+
+            <Style TargetType="editors:SfNumericEntry">
+                <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="UpDownButtonColor" Value="White"/>
+                <Setter Property="ClearButtonColor" Value="White"/>
+            </Style>
+
+            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

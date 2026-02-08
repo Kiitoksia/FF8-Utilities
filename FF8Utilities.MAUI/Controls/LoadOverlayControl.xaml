@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="this"
+             BackgroundColor="#B3000000"
+             x:Class="FF8Utilities.MAUI.Controls.LoadOverlayControl">
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <ActivityIndicator HeightRequest="150" WidthRequest="150" IsRunning="True"/>
+        <Label Text="{Binding Text, Source={x:Reference this}}" HorizontalTextAlignment="Center" Margin="10" FontSize="Large"/>
+    </VerticalStackLayout>
+</ContentView>
