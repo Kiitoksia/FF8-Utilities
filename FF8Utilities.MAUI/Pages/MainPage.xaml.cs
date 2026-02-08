@@ -17,6 +17,11 @@ public partial class MainPage : ContentPage
         CardTrackerCommand = new AsyncCommand(ShowQuistisPopup);
         LaunchCardTrackingCommand = new AsyncCommand(earlyQuistis => ShowCardTrackerOptions((bool)earlyQuistis));
         EarlyQuistisCardPatternPickedCommand = new AsyncCommand(async () => await LaunchTracker(true));
+        UltimeciaCommand = new AsyncCommand(async () =>
+        {
+            UltimeciaPage page = new UltimeciaPage();
+            await Navigation.PushModalAsync(page);
+        });
         CarawayCommand = new AsyncCommand(async () =>
         {
             CarawayCodePage page = new CarawayCodePage();

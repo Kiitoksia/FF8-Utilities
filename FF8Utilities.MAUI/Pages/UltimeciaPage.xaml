@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:models="clr-namespace:FF8Utilities.MAUI.Models" 
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
+             xmlns:utilities="clr-namespace:FF8Utilities.MAUI"
+             x:Class="FF8Utilities.MAUI.Pages.UltimeciaPage"
+             x:DataType="models:UltimeciaManipulationModel"
+             Title="UltimeciaPage">
+    <ContentPage.Resources>
+
+        <toolkit:InvertedBoolConverter x:Key="InvertedConverter"/>
+
+        <converters:BoolConverter x:Key="IsFastestColourConverter" x:TypeArguments="Color" True="{StaticResource StandardGreen}" False="{StaticResource StandardBlue}"/>
+
+        <Style TargetType="ImageButton">
+            <Setter Property="BorderColor" Value="Black"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Header -->
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <controls:HeaderControl x:Name="Header" Grid.ColumnSpan="3" HeaderText="Ultimecia"/>
+
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <CollectionView ItemsSource="{Binding Directions}" HorizontalOptions="Center" VerticalOptions="Fill">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:UltimeciaManipulationDirectionModel">
+                        <Label Text="{Binding Glyph}" FontFamily="FontAwesome" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Grid.Column="1" Text="{Binding DirectionCount, StringFormat='{0} / 12'}" HorizontalOptions="End" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Large" TextColor="White"/>
+        </Grid>
+
+
+        <ImageButton Grid.Row="2" Grid.Column="1" Command="{Binding UpCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowUp}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <ImageButton Grid.Row="3" Command="{Binding LeftCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowLeft}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <ImageButton Grid.Row="3" Grid.Column="1" Command="{Binding UnknownCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.QuestionMark}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <ImageButton Grid.Row="3" Grid.Column="2" Command="{Binding RightCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowRight}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <ImageButton Grid.Row="4" Command="{Binding ToggleResults}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.List}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <ImageButton Grid.Row="4" Grid.Column="1" Command="{Binding DownCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowDown}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <ImageButton Grid.Row="4" Grid.Column="2" Command="{Binding RemoveCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.CircleXMark}" FontFamily="FontAwesome" Color="DarkRed" FontAutoScalingEnabled="True" Size="64"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <Grid Grid.Row="2" IsVisible="{Binding ShowResults}" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label Text="Output" HorizontalTextAlignment="Center" VerticalOptions="Center" FontSize="Large"/>
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Results}" VerticalOptions="Fill" HorizontalOptions="Fill" ItemSizingStrategy="MeasureFirstItem" Margin="10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:UltimeciaResultModel">
+                        <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <CollectionView ItemsSource="{Binding MovementGlyphs}" BackgroundColor="{StaticResource StandardBlue}">
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <Label Text="{Binding .}" FontFamily="FontAwesome" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                                <CollectionView Grid.Row="1" ItemsSource="{Binding Formations}" ItemSizingStrategy="MeasureFirstItem" Margin="5">
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:UltimeciaPartyFormationModel">
+                                            <Grid BackgroundColor="{Binding IsFastestFormation, Converter={StaticResource IsFastestColourConverter}}" RowSpacing="5">
+                                                <Grid.Resources>
+                                                    <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                                        <Setter Property="FontSize" Value="Small"/>
+                                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                                    </Style>
+                                                </Grid.Resources>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Text="{Binding CharacterOne}"/>
+                                                <Label Text="{Binding CharacterTwo}" Grid.Row="1"/>
+                                                <Label Text="{Binding CharacterThree}" Grid.Row="2"/>
+
+                                                <Label Text="{Binding Offset}" FontSize="Large" FontAttributes="Bold" Grid.RowSpan="3" Grid.Column="1"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <ActivityIndicator IsRunning="{Binding IsCalculating}" IsVisible="{Binding IsCalculating}" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Margin="30"/>
+
+    </Grid>
+</ContentPage>

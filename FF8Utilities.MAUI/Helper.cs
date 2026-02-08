@@ -38,6 +38,6 @@ namespace FF8Utilities.MAUI
             (byte)(colour.Green * 255),
             (byte)(colour.Blue * 255),
             (byte)(colour.Alpha * 255));
-        }
+        }       
     }
 }

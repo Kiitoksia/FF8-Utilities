@@ -12,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="StandardBlue">#00589F</Color>
+            <Color x:Key="StandardGreen">#CC06761F</Color>
             <Style TargetType="Page" ApplyToDerivedTypes="True">
                 <Setter Property="BackgroundColor" Value="#252525"/>
             </Style>
