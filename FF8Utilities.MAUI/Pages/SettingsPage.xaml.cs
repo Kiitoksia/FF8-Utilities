@@ -22,6 +22,7 @@ public partial class SettingsPage : ContentPage
         Platform = App.Platform;
         GameLanguage = App.GameLanguage;
         CustomCardDelayFrames = App.DelayFrames;
+        ShowRinoaParties = App.ShowRinoaParties;
         CloseButtonCommand = new AsyncCommand(Navigation.PopModalAsync);
     }
 
@@ -76,6 +77,19 @@ public partial class SettingsPage : ContentPage
     {
         get => (string)GetValue(AppVersionProperty);
         set => SetValue(AppVersionProperty, value);
+    }
+
+    public static readonly BindableProperty ShowRinoaPartiesProperty = BindableProperty.Create(nameof(ShowRinoaParties), typeof(bool), typeof(SettingsPage), false, propertyChanged: OnShowRinoaPartiesChanged);
+
+    public bool ShowRinoaParties
+    {
+        get => (bool)GetValue(ShowRinoaPartiesProperty);
+        set => SetValue(ShowRinoaPartiesProperty, value);
+    }
+
+    private static void OnShowRinoaPartiesChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (newValue is bool showRinoaParties) App.ShowRinoaParties = showRinoaParties;
     }
 
 }

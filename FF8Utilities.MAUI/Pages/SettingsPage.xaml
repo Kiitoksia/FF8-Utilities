@@ -23,6 +23,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -41,6 +42,8 @@
             <Label Text="Custom Card Delay Frames" Grid.Row="3"/>
             <editors:SfNumericEntry Grid.Row="3" Grid.Column="1" Minimum="0" AllowNull="True" MaximumNumberDecimalDigits="0" CustomFormat="0" Value="{Binding CustomCardDelayFrames}" Placeholder="(None)" PlaceholderColor="Gray" />
 
+            <Label Text="(Ultimecia) Include Rinoa Parties" Grid.Row="4"/>
+            <Switch Grid.Row="4" Grid.Column="1" IsToggled="{Binding ShowRinoaParties}" HorizontalOptions="Start"/>
 
             <VerticalStackLayout Grid.Row="5" Grid.ColumnSpan="2" Margin="0,10,0,0">
                 <VerticalStackLayout.Resources>

@@ -36,7 +36,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <controls:HeaderControl x:Name="Header" Grid.ColumnSpan="3" HeaderText="Ultimecia"/>
+        <controls:HeaderControl x:Name="Header" Grid.ColumnSpan="3" HeaderText="Ultimecia" ShowSettings="False"/>
 
 
         <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
@@ -101,7 +101,7 @@
             </ImageButton.Source>
         </ImageButton>
 
-        <Grid Grid.Row="2" IsVisible="{Binding ShowResults}" Grid.ColumnSpan="3">
+        <Grid Grid.Row="2" Grid.RowSpan="2" IsVisible="{Binding ShowResults}" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
@@ -118,16 +118,19 @@
                                     <RowDefinition Height="30"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <CollectionView ItemsSource="{Binding MovementGlyphs}" BackgroundColor="{StaticResource StandardBlue}">
-                                    <CollectionView.ItemsLayout>
-                                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5"/>
-                                    </CollectionView.ItemsLayout>
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <Label Text="{Binding .}" FontFamily="FontAwesome" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
+                                <Border StrokeThickness="0" BackgroundColor="{StaticResource StandardBlue}">
+                                    <CollectionView ItemsSource="{Binding MovementGlyphs}" HorizontalOptions="Center">
+                                        <CollectionView.ItemsLayout>
+                                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Label Text="{Binding .}" FontFamily="FontAwesome" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </Border>
+                                
 
                                 <CollectionView Grid.Row="1" ItemsSource="{Binding Formations}" ItemSizingStrategy="MeasureFirstItem" Margin="5">
                                     <CollectionView.ItemsLayout>
@@ -170,6 +173,15 @@
         </Grid>
 
         <ActivityIndicator IsRunning="{Binding IsCalculating}" IsVisible="{Binding IsCalculating}" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Margin="30"/>
+
+        <ImageButton Grid.Row="4" Command="{Binding ToggleResults}" IsVisible="{Binding ShowResults}" HeightRequest="50" VerticalOptions="End">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{x:Static utilities:FontAwesome.PersonWalkingRight}" FontFamily="FontAwesome" Color="White"/>
+            </ImageButton.Source>
+        </ImageButton>
+
+        <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ResultsCount, StringFormat='{0} results found'}" HorizontalTextAlignment="Center" 
+               VerticalTextAlignment="Start" FontSize="Large" FontAttributes="Bold" IsVisible="{Binding ShowResults}" HeightRequest="50" VerticalOptions="End"/>
 
     </Grid>
 </ContentPage>

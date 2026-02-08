@@ -29,6 +29,8 @@ namespace FF8Utilities.MAUI
 
         public const string NavLeft = "\uf104";
 
+        public const string PersonWalkingRight = "\ue553";
+
         public static string GetGlyph(this Direction direction)
         {
             switch (direction)

@@ -37,9 +37,11 @@ namespace FF8Utilities.MAUI.Models
 
             ToggleResults = new Command(() => ShowResults = !ShowResults);
 
-            _inlcudeRinoaParties = Preferences.Get(nameof(IncludeRinoaParties), false);
+            _inlcudeRinoaParties = App.ShowRinoaParties;
             Results = new ObservableCollection<UltimeciaResultModel>();
         }
+
+        public int ResultsCount => Results.Count;
 
         public ObservableCollection<UltimeciaManipulationDirectionModel> Directions { get; }
 
@@ -100,6 +102,8 @@ namespace FF8Utilities.MAUI.Models
                 Results.Add(new UltimeciaResultModel(formation, this));
             }
             IsCalculating = false;
+
+            OnPropertyChanged(nameof(ResultsCount));
         }
 
         public bool IncludeRinoaParties 
@@ -110,7 +114,6 @@ namespace FF8Utilities.MAUI.Models
                 if (_inlcudeRinoaParties == value) return;
                 _inlcudeRinoaParties = value;
                 OnPropertyChanged();
-                Preferences.Set(nameof(IncludeRinoaParties), value);
             }
         }
 
