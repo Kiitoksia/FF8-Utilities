@@ -46,6 +46,9 @@
 
             <Style TargetType="editors:SfComboBox">
                 <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="TextColor" Value="White"/>
             </Style>
 
             <Style TargetType="buttons:SfRadioButton">

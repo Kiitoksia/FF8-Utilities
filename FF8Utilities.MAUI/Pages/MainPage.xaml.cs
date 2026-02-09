@@ -59,52 +59,53 @@ public partial class MainPage : ContentPage
 
     private async Task ShowCardTrackerOptions(bool earlyQuistis)
     {
-        QuistisPopup.IsOpen = false;
-
-        bool downloadQuistisFiles = false;
-        foreach (string quistisFile in LateQuistis.RequiredFiles)
+        try
         {
-            if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
+            ShowLoadingBar = true;
+            bool downloadQuistisFiles = false;
+            foreach (string quistisFile in LateQuistis.RequiredFiles)
             {
-                downloadQuistisFiles = true;
-                break;
+                if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
+                {
+                    downloadQuistisFiles = true;
+                    break;
+                }
+            }
+
+            if (downloadQuistisFiles)
+            {
+                DownloadResult result = await App.DriveManager.DownloadLateQuistisCSRFiles();
+                if (result == DownloadResult.Error)
+                {
+                    await DisplayAlertAsync("Error", "Could not download quistis files, cannot launch tracker", "OK");
+                    return;
+                }
+            }
+
+            if (earlyQuistis)
+            {
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    EarlyQuistisFramePicker.IsOpen = true;
+                });
+
+                // The picker frame will handle the rest
+            }
+            else
+            {
+                await LaunchTracker(false);
             }
         }
-
-        if (downloadQuistisFiles)
+        finally
         {
-            DownloadResult result = await App.DriveManager.DownloadLateQuistisCSRFiles();
-            if (result == DownloadResult.Error)
-            {
-                await DisplayAlertAsync("Error", "Could not download quistis files, cannot launch tracker", "OK");
-                return;
-            }
+            ShowLoadingBar = false;
         }
-
-        if (earlyQuistis)
-        {
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                EarlyQuistisFramePicker.IsOpen = true;
-            });
-            
-            // The picker frame will handle the rest
-        }
-        else
-        {
-            await LaunchTracker(false);
-        }
-
+        QuistisPopup.IsOpen = false;        
     }
 
     private async Task LaunchTracker(bool earlyQuistis)
     {
-        await MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            ShowLoadingBar = true;
-        });
         // Initialise once off items
-
         await Task.Run(() =>
         {
             _ = BaseZellCardTrackerModel.LateQuistisManip;

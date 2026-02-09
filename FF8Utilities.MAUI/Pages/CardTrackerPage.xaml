@@ -230,22 +230,22 @@
                     <tabView:SfTabItem.Content>
                         <tabView:SfTabView TabBarPlacement="Bottom" EnableVirtualization="True">
                             <tabView:SfTabView.Items>
-                                <tabView:SfTabItem Header="[1st] 2x Soldier">
+                                <tabView:SfTabItem Header="2x Soldier">
                                     <tabView:SfTabItem.Content>
                                         <c:EncounterControl BindingContext="{Binding FirstDolletEncounter, Mode=OneTime}"/>
                                     </tabView:SfTabItem.Content>
                                 </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="[2nd] 2x Soldier">
+                                <tabView:SfTabItem Header="2x Soldier">
                                     <tabView:SfTabItem.Content>
                                         <c:EncounterControl BindingContext="{Binding SecondDolletEncounter, Mode=OneTime}"/>
                                     </tabView:SfTabItem.Content>
                                 </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="[3rd] 1x Soldier">
+                                <tabView:SfTabItem Header="1x Soldier">
                                     <tabView:SfTabItem.Content>
                                         <c:EncounterControl BindingContext="{Binding ThirdDolletEncounter, Mode=OneTime}"/>
                                     </tabView:SfTabItem.Content>
                                 </tabView:SfTabItem>
-                                <tabView:SfTabItem Header="[4th] 1x Soldier">
+                                <tabView:SfTabItem Header="1x Soldier">
                                     <tabView:SfTabItem.Content>
                                         <c:EncounterControl BindingContext="{Binding FourthDolletEncounter, Mode=OneTime}"/>
                                     </tabView:SfTabItem.Content>

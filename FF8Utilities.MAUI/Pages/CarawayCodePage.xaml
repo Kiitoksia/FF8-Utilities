@@ -78,7 +78,7 @@
         <popup:SfPopup x:Name="OptionsPopup" HeaderTitle="Options" ShowCloseButton="True">
             <popup:SfPopup.ContentTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Margin="10" HorizontalOptions="Center" ColumnSpacing="10">
                         <Grid.Resources>
                         </Grid.Resources>
                         <Grid.ColumnDefinitions>
