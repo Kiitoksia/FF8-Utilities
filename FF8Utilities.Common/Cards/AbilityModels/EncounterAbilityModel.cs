@@ -17,6 +17,13 @@ namespace FF8Utilities.Common.Cards
             Description = description;
             Addition = addition;
             Count = count;
+
+            PlusCommand = new RelayCommand(() => Count++);
+            MinusCommand = new RelayCommand(() =>
+            {
+                if (Count == 0) return;
+                Count--;
+            });
         }
 
         public string Description { get; }
@@ -46,5 +53,9 @@ namespace FF8Utilities.Common.Cards
                 OnPropertyChanged();
             }
         }
+
+        public RelayCommand PlusCommand { get; }
+
+        public RelayCommand MinusCommand { get; }
     }
 }

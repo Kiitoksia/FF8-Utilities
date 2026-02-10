@@ -8,6 +8,7 @@
              xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"             
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:utilites="clr-namespace:FF8Utilities.MAUI"
              x:Name="this"
              x:Class="FF8Utilities.MAUI.Controls.EncounterControl">
     <ContentView.Resources>
@@ -57,9 +58,29 @@
 
                                 <Label Text="{Binding Description, Mode=OneTime}" FontAttributes="Bold"/>
                                 <Border Grid.Column="1" StrokeThickness="1" Stroke="White" Padding="10,0" Margin="0,10">
-                                    <editors:SfNumericEntry Value="{Binding Count}" ValueChangeMode="OnKeyFocus" SelectAllOnFocus="True" 
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Count}" FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                        <ImageButton Grid.Column="1" Command="{Binding PlusCommand}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="{x:Static utilites:FontAwesome.Plus}" FontFamily="FontAwesome" Size="64" Color="White"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
+                                        <ImageButton Grid.Column="2" Command="{Binding MinusCommand}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="{x:Static utilites:FontAwesome.Minus}" FontFamily="FontAwesome" Size="64" Color="White"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
+                                    </Grid>
+                                    
+                                    
+                                    <!--<editors:SfNumericEntry Value="{Binding Count}" ValueChangeMode="OnKeyFocus" SelectAllOnFocus="True" 
                                         CustomFormat="0" UpDownPlacementMode="Inline" ShowClearButton="False" Minimum="0" Maximum="99" 
-                                        MaximumNumberDecimalDigits="0" FontSize="16" FontAttributes="Bold" ShowBorder="False"/>
+                                        MaximumNumberDecimalDigits="0" FontSize="16" FontAttributes="Bold" ShowBorder="False"/>-->
                                 </Border>
 
 
