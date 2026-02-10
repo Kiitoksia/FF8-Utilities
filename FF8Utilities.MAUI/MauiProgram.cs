@@ -17,6 +17,10 @@ namespace FF8Utilities.MAUI
                 .UseMauiCommunityToolkit()
                 .UseSkiaSharp()
                 .ConfigureSyncfusionCore()
+                .ConfigureEssentials(essentials =>
+                {
+                    essentials.UseVersionTracking();
+                })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

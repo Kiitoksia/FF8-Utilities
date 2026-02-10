@@ -7,6 +7,7 @@ namespace FF8Utilities.MAUI.Pages;
 
 public partial class MainPage : ContentPage
 {
+    private bool _loaded;
 	public MainPage()
 	{
 		EarlyQuistisPatterns = new ObservableCollection<EarlyQuistisPattern>(EarlyQuistisPattern.OptionsExcludeLate);
@@ -28,6 +29,62 @@ public partial class MainPage : ContentPage
             await Navigation.PushModalAsync(page);
         });
         SettingsCommand = new AsyncCommand(LaunchSettings);
+
+        ShowLoadingBar = true;
+
+        Loaded += MainPage_Loaded;
+    }
+
+    private async Task<bool> DownloadRequiredFilesIfNeccessary()
+    {
+        bool neccessaryFilesDownloaded = true;
+        foreach (string quistisFile in LateQuistis.RequiredFiles)
+        {
+            if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
+            {
+                neccessaryFilesDownloaded = false;
+                break;
+            }
+        }        
+
+        if (!neccessaryFilesDownloaded)
+        {
+            ShowLoadingBar = true;
+            DownloadResult result = await App.DriveManager.DownloadLateQuistisCSRFiles();
+            if (result == DownloadResult.Error)
+            {
+                await DisplayAlertAsync("Error", "Could not download required tracker files, cannot launch tracker", "OK");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private async void MainPage_Loaded(object sender, EventArgs e)
+    {
+        if (_loaded) return; // Ensure Loaded event isn't called multiple times
+        _loaded = true;
+        bool downloadedFiles = await DownloadRequiredFilesIfNeccessary();
+
+        if (VersionTracking.IsFirstLaunchEver)
+        {
+            SettingsPage page = new SettingsPage();
+            EventHandler handler = null;
+            handler = (s, e) =>
+            {
+                page.Loaded -= handler;
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await page.DisplayAlertAsync("Welcome", "First launch detected, please verify your settings before using utilities", "OK");
+                });            
+            };
+
+            page.Loaded += handler;
+            await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PushModalAsync(page));
+        }
+
+        ShowLoadingBar = false;
     }
 
     private async Task ShowQuistisPopup()
@@ -62,25 +119,8 @@ public partial class MainPage : ContentPage
         try
         {
             ShowLoadingBar = true;
-            bool downloadQuistisFiles = false;
-            foreach (string quistisFile in LateQuistis.RequiredFiles)
-            {
-                if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
-                {
-                    downloadQuistisFiles = true;
-                    break;
-                }
-            }
-
-            if (downloadQuistisFiles)
-            {
-                DownloadResult result = await App.DriveManager.DownloadLateQuistisCSRFiles();
-                if (result == DownloadResult.Error)
-                {
-                    await DisplayAlertAsync("Error", "Could not download quistis files, cannot launch tracker", "OK");
-                    return;
-                }
-            }
+            bool hasRequiredFiles = await DownloadRequiredFilesIfNeccessary();
+            if (!hasRequiredFiles) return;            
 
             if (earlyQuistis)
             {
@@ -98,9 +138,9 @@ public partial class MainPage : ContentPage
         }
         finally
         {
+            QuistisPopup.IsOpen = false;
             ShowLoadingBar = false;
         }
-        QuistisPopup.IsOpen = false;        
     }
 
     private async Task LaunchTracker(bool earlyQuistis)
@@ -113,7 +153,7 @@ public partial class MainPage : ContentPage
         });
 
         CardTrackerPage page = new CardTrackerPage(earlyQuistis);      
-        page.Model.EarlyQuistisPattern = earlyQuistis ? EarlyQuistisPattern : Common.EarlyQuistisPattern.LateQuistis;
+        page.Model.EarlyQuistisPattern = earlyQuistis ? EarlyQuistisPattern : EarlyQuistisPattern.LateQuistis;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             await Navigation.PushModalAsync(page);
