@@ -23,13 +23,13 @@ public partial class LateQuistisManipulationPage : ContentPage
 	{
 		InitializeComponent();
 
-		//StrategiesView.SizeChanged += (_, __) =>
-		//{
-		//	if (StrategiesView.Height > 0)
-		//		StrategyItemHeight = Math.Max(0, StrategiesView.Height / 2 - 10);
-		//};
+        StrategiesView.SizeChanged += (_, __) =>
+        {
+            if (StrategiesView.Height > 0)
+                StrategyItemHeight = Math.Max(0, StrategiesView.Height / 2 - 10);
+        };
 
-		Header.BackCommand = new AsyncCommand(async () =>
+        Header.BackCommand = new AsyncCommand(async () =>
 		{
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
@@ -87,6 +87,13 @@ public partial class LateQuistisManipulationPage : ContentPage
     {
 		MainThread.BeginInvokeOnMainThread(async () =>
 		{
+            if (StrategyPopup.IsOpen)
+            {
+                // Popup open, assume this is what they want to close
+                StrategyPopup.IsOpen = false;
+                return;
+            }
+
 			bool canContinue = await DisplayAlertAsync("Confim", "No quistis pattern selected, are you sure you want to return?", "OK", "Cancel");
 			if (canContinue)
 			{

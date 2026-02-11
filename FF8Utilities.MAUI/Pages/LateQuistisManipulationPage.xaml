@@ -17,6 +17,8 @@
         <converters:CachedByteArrayToImageSourceConverter x:Key="ImageConverter"/>
         <!--<toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>-->
 
+        <toolkit:MathExpressionConverter x:Key="ImageHeightConverter"/>
+
         <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
             <Setter Property="HorizontalTextAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="Large"/>
@@ -58,13 +60,13 @@
         <controls:HeaderControl x:Name="Header" ShowSettings="False" HeaderText="Frames"/>
 
         <CollectionView ItemsSource="{Binding OrderedStrategies, Source={x:Reference this}, Mode=OneWay}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1" 
-                SelectionChanged="CollectionView_SelectionChanged" ItemSizingStrategy="MeasureFirstItem" x:Name="StrategiesView" HorizontalOptions="Fill" VerticalOptions="Fill">
+                SelectionChanged="CollectionView_SelectionChanged" ItemSizingStrategy="MeasureAllItems" x:Name="StrategiesView" HorizontalOptions="Fill" VerticalOptions="Fill">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="5" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="cards:LateQuistisStrategy">
-                    <Border HeightRequest="205">
+                    <Border HeightRequest="{Binding StrategyItemHeight, Source={x:Reference this}, Mode=OneWay}" Stroke="{StaticResource StandardBlue}" StrokeThickness="2">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Normal">
@@ -79,16 +81,14 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="2" HorizontalOptions="Center" VerticalOptions="Center">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="100"/>
-                                    <RowDefinition Height="100"/>
-                                </Grid.RowDefinitions>
-                                <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="100" WidthRequest="80" HorizontalOptions="Fill" />
-                                <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" HeightRequest="100" WidthRequest="80" HorizontalOptions="Fill" Grid.Row="1" />
-                            </Grid>
-                        </Border>
+                        <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding OpponentCards[0], Converter={StaticResource ImageConverter}, Mode=OneTime}" Aspect="AspectFit" VerticalOptions="Fill" HorizontalOptions="Fill" />
+                            <Image Source="{Binding OpponentCards[1], Converter={StaticResource ImageConverter}, Mode=OneTime}" Aspect="AspectFit" VerticalOptions="Fill" HorizontalOptions="Fill" Grid.Row="1" />
+                        </Grid>
 
                     </Border>
                 </DataTemplate>
