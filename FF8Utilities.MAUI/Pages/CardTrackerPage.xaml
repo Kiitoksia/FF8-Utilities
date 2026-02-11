@@ -60,7 +60,7 @@
         <tabView:SfTabView TabBarPlacement="Top" x:Name="TabView" EnableVirtualization="True" Grid.Row="1">
             <tabView:SfTabView.Items>
 
-                <tabView:SfTabItem Header="Fish Fins">
+                <tabView:SfTabItem Header="Balamb">
                     <tabView:SfTabItem.Content>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -187,8 +187,8 @@
                                                             <ColumnDefinition/>
                                                             <ColumnDefinition Width="0.5*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <buttons:SfButton Command="{Binding AddNewEncounterCommand, Mode=OneWay}" Text="Add Regular Encounter" CornerRadius="0"/>
-                                                        <buttons:SfButton Command="{Binding AddNewHalfEncounterCommand, Mode=OneWay}" Text="Add Single Fish" Grid.Column="1" Background="DarkSlateGray" CornerRadius="0"/>
+                                                        <buttons:SfButton Command="{Binding AddNewEncounterCommand, Mode=OneWay}" Text="Add Regular Encounter" CornerRadius="0" Style="{StaticResource BaseSfButton}"/>
+                                                        <buttons:SfButton Command="{Binding AddNewHalfEncounterCommand, Mode=OneWay}" Text="Add Single Fish" Grid.Column="1" Background="DarkSlateGray" CornerRadius="0"  Style="{StaticResource BaseSfButton}"/>
                                                     </Grid>
                                                 </Grid>
                                             </ScrollView>

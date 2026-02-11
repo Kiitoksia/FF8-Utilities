@@ -43,6 +43,8 @@ namespace FF8Utilities.MAUI
 
         public const string Train = "\uf239";
 
+        public const string XMark = "\uf00d";
+
         public static string GetGlyph(this Direction direction)
         {
             switch (direction)

@@ -133,6 +133,7 @@ public partial class MainPage : ContentPage
             }
             else
             {
+                QuistisPopup.IsOpen = false;
                 await LaunchTracker(false);
             }
         }

@@ -10,12 +10,12 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
+             xmlns:utilities="clr-namespace:FF8Utilities.MAUI"
              x:DataType="cards:LateQuistisPattern"
              x:Name="this"
              Title="LateQuistisManipulationPage">
     <ContentPage.Resources>
         <converters:CachedByteArrayToImageSourceConverter x:Key="ImageConverter"/>
-        <!--<toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>-->
 
         <toolkit:MathExpressionConverter x:Key="ImageHeightConverter"/>
 
@@ -45,13 +45,18 @@
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <buttons:SfButton Text="Hide" Clicked="SfButton_Clicked"/>
-                        <Label Grid.Column="1" Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                        <Label Text="{Binding SelectedStrategy.Frame, Mode=OneWay, Source={RelativeSource AncestorType={x:Type ContentPage}}, StringFormat='Frame {0}'}" HorizontalTextAlignment="Center" FontSize="Large" Grid.ColumnSpan="2"/>
                         <controls:CardPatternView BindingContext="{Binding SelectedStrategy.Positions, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=OneWay}" Grid.Row="1" Grid.ColumnSpan="2"/>
                         <buttons:SfButton Grid.Row="2" Grid.ColumnSpan="2" Text="Submit" CornerRadius="0" Command="{Binding QuistisObtainedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Margin="10,5" Background="{StaticResource StandardBlue}" TextColor="White" />
+
+                        <ImageButton Grid.Column="1" Clicked="SfButton_Clicked">
+                            <ImageButton.Source>
+                                <FontImageSource Glyph="{x:Static utilities:FontAwesome.XMark}" FontFamily="FontAwesome" Color="White" Size="64" FontAutoScalingEnabled="True"/>
+                            </ImageButton.Source>
+                        </ImageButton>
                     </Grid>
                 </DataTemplate>
             </popup:SfPopup.ContentTemplate>
