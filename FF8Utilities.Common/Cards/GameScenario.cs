@@ -113,7 +113,7 @@ namespace FF8Utilities.Common.Cards
                 case "mesmerize": return GetCardImage("unicorn");
                 case "thrustaevis": return GetCardImage("bird");
                 case "xx": return null;
-                default: throw new NotImplementedException();
+                default: return GetCardImage(card);
             }
         }
 

@@ -365,7 +365,7 @@ namespace FF8Utilities.Common.Cards
 
         private async void LaunchQuistis()
         {
-            uint? result = await LaunchQuistisPatterns(LateQuistisManip.GetPattern(Output, true));
+            uint? result = await LaunchQuistisPatterns(LateQuistisManip.GetPattern(LateQuistisOutput, true));
             QuistisCardResult = result;
             QuistisCardObtained = result != null;
             QuistisPatternResult = result != null ? result.Value.ToString("x8") : null;
