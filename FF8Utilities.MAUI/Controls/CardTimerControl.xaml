@@ -48,7 +48,7 @@
             </Border>
         </VerticalStackLayout>
 
-        <buttons:SfButton Command="{Binding SubmitCommand, Mode=OneTime}" Text="Submit" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large"/>
+        <buttons:SfButton Command="{Binding SubmitCommand, Mode=OneTime}" Text="GO" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large" Style="{StaticResource BaseSfButton}" BackgroundColor="{StaticResource StandardBlue}"/>
 
     </Grid>
     
