@@ -23,14 +23,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="250"/>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <controls:HeaderControl HeaderText="Caraway Code" x:Name="Header"/>
 
-        <picker:SfPicker Grid.Row="1" TextDisplayMode="FadeAndShrink" EnableLooping="True">
+        <picker:SfPicker Grid.Row="1" TextDisplayMode="FadeAndShrink" EnableLooping="True" >
             <picker:SfPicker.HeaderView>
                 <picker:PickerHeaderView Height="50" Text="Enter Pole Series"/>
             </picker:SfPicker.HeaderView>
@@ -62,17 +62,23 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Text="{Binding SubscriptDisplay, StringFormat='  {0}'}" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                            <Label Text="{Binding SubscriptDisplay, StringFormat='  {0}'}" HorizontalOptions="Fill" VerticalOptions="Fill" 
+                                   BackgroundColor="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" TextColor="White"/>
 
-                            <Label Grid.Row="1" Text="Last Series Complete" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Large" FontAttributes="Bold"/>
+                            <Label Grid.Row="1" Text="Last Series Complete" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" TextColor="White"/>
                             <controls:CarawayOptionControl Grid.Row="2" BindingContext="{Binding CompleteOption}"/>
 
-                            <Label Grid.Row="3" Text="Last Series Incomplete" HorizontalOptions="Center" VerticalOptions="Center" FontSize="Large" FontAttributes="Bold"/>
+                            <Label Grid.Row="3" Text="Last Series Incomplete" HorizontalOptions="Center" VerticalOptions="Center" FontSize="Large" FontAttributes="Bold" TextColor="White"/>
                             <controls:CarawayOptionControl Grid.Row="4" BindingContext="{Binding IncompleteOption}"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+            <CollectionView.EmptyViewTemplate>
+                <DataTemplate>
+                    <Label Text="No results found" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" TextColor="White"/>
+                </DataTemplate>
+            </CollectionView.EmptyViewTemplate>
         </CollectionView>
 
         <popup:SfPopup x:Name="OptionsPopup" HeaderTitle="Options" ShowCloseButton="True">
