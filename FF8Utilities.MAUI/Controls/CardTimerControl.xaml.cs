@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Views;
 using FF8Utilities.MAUI.Models;
 using SkiaSharp;
 using System.Diagnostics;
@@ -34,13 +35,17 @@ public partial class CardTimerControl : ContentView
         Loaded += (s, e) =>
         {
             timer.Start();
+            Model.MediaPlayer = MediaPlayer;
         };
         Unloaded += (s, e) =>
         {
             timer.Stop();
             timer.Tick -= Timer_Tick;
             timer = null;
+            Model.MediaPlayer = null;
         };
+
+        MediaPlayer.Source = MediaSource.FromResource("raw/clack.wav");
     }
 
     private void Timer_Tick(object sender, EventArgs e)

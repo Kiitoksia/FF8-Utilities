@@ -5,6 +5,7 @@
              xmlns:common="clr-namespace:FF8Utilities.Common;assembly=FF8Utilities.Common"
              xmlns:pages="clr-namespace:FF8Utilities.MAUI.Pages"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons" 
+             xmlns:models="clr-namespace:FF8Utilities.MAUI.Models"
              xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
              x:Class="FF8Utilities.MAUI.Pages.SettingsPage"
              x:Name="this"
@@ -25,6 +26,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -46,7 +48,15 @@
             <Label Text="(Ultimecia) Include Rinoa Parties" Grid.Row="4"/>
             <Switch Grid.Row="4" Grid.Column="1" IsToggled="{Binding ShowRinoaParties}" HorizontalOptions="Start"/>
 
-            <VerticalStackLayout Grid.Row="5" Grid.ColumnSpan="2" Margin="0,10,0,0">
+            <Label Text="Card Found Notification" Grid.Row="5" VerticalOptions="Start"/>
+            <buttons:SfRadioGroup Grid.Row="5" Grid.Column="1" SelectedValue="{Binding CardTimingOptions}">
+                <buttons:SfRadioButton Value="{x:Static models:CardTrackingTimingOptions.None}" Text="None"/>
+                <buttons:SfRadioButton Value="{x:Static models:CardTrackingTimingOptions.Beeps}" Text="Beep"/>
+                <buttons:SfRadioButton Value="{x:Static models:CardTrackingTimingOptions.Vibration}" Text="Vibrate"/>
+                <buttons:SfRadioButton Value="{x:Static models:CardTrackingTimingOptions.BeepsAndVibration}" Text="Both"/>
+            </buttons:SfRadioGroup>
+
+            <VerticalStackLayout Grid.Row="6" Grid.ColumnSpan="2" Margin="0,10,0,0">
                 <VerticalStackLayout.Resources>
                     <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
                         <Setter Property="TextColor" Value="Gray"/>

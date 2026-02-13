@@ -1,3 +1,4 @@
+using FF8Utilities.MAUI.Models;
 using System.Windows.Input;
 using UltimeciaManip;
 
@@ -23,6 +24,7 @@ public partial class SettingsPage : ContentPage
         GameLanguage = App.GameLanguage;
         CustomCardDelayFrames = App.DelayFrames;
         ShowRinoaParties = App.ShowRinoaParties;
+        CardTimingOptions = CardManipulationModel.TimingOptions;
         CloseButtonCommand = new AsyncCommand(Navigation.PopModalAsync);
     }
 
@@ -90,6 +92,20 @@ public partial class SettingsPage : ContentPage
     private static void OnShowRinoaPartiesChanged(BindableObject bindable, object oldValue, object newValue)
     {
         if (newValue is bool showRinoaParties) App.ShowRinoaParties = showRinoaParties;
+    }
+
+    public static readonly BindableProperty CardTimingOptionsProperty = BindableProperty.Create(nameof(CardTimingOptions), typeof(CardTrackingTimingOptions), typeof(SettingsPage), default(CardTrackingTimingOptions), propertyChanged: OnCardTimingOptionsChanged);
+
+
+    public CardTrackingTimingOptions CardTimingOptions
+    {
+        get => (CardTrackingTimingOptions)GetValue(CardTimingOptionsProperty);
+        set => SetValue(CardTimingOptionsProperty, value);
+    }
+
+    private static void OnCardTimingOptionsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (newValue is CardTrackingTimingOptions options) CardManipulationModel.TimingOptions = options;
     }
 
 }

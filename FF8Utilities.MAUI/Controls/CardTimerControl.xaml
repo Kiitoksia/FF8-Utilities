@@ -11,11 +11,11 @@
         <toolkit:IsStringNotNullOrWhiteSpaceConverter x:Key="StringIsNullConverter"/>
     </ContentView.Resources>
         <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
         <VerticalStackLayout>
             <Label Text="{Binding Explanation, Mode=OneWay}" HorizontalTextAlignment="Center"/>
@@ -50,6 +50,8 @@
 
         <buttons:SfButton Command="{Binding SubmitCommand, Mode=OneTime}" Text="GO" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large" Style="{StaticResource BaseSfButton}" BackgroundColor="{StaticResource StandardBlue}"/>
 
+
+        <toolkit:MediaElement x:Name="MediaPlayer" IsVisible="False"/>
     </Grid>
     
 </ContentView>

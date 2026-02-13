@@ -7,14 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using CardManipulation;
 using System.Diagnostics;
+using CommunityToolkit.Maui.Views;
 
 namespace FF8Utilities.MAUI.Models
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicMethods)]
     public class CardManipulationModel : BaseCardManipulationModel
     {
-        //private IDispatcherTimer _renderTimer;
-        //private Stopwatch _renderStopWatch;
+        private Timer _currentlyPlayingTimer;
+
 
         public CardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier) : base(manip, state, player, delayFrames, rngModifier)
         {
@@ -50,30 +51,74 @@ namespace FF8Utilities.MAUI.Models
 
         protected override void PauseBeeps()
         {
-            // TODO
+            _currentlyPlayingTimer?.Dispose();
+            _currentlyPlayingTimer = null;
         }
+
 
         protected override void PlayBeeps(BeepSchedule schedule)
         {
+            int currentBeeps = 1;
+            _currentlyPlayingTimer = new Timer(_ =>
+            {
+                if (TimingOptions.HasFlag(CardTrackingTimingOptions.Vibration))
+                {
+                    bool finalBeep = currentBeeps >= schedule.Count;
+#if IOS
+                    // iOS can only vibrate at 500ms fixed, so only vibrate on the final beep
+                    if (finalBeep) Vibration.Vibrate();
+#else
+                    // Android supports variable vibration lengths, use short vibrations for incoming, and a long for the hit
+                    Vibration.Vibrate(finalBeep ? 500 : 20);
+#endif
+                }
+
+                if (TimingOptions.HasFlag(CardTrackingTimingOptions.Beeps))
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        MediaPlayer?.Play();
+                    });
+                }
+
+                currentBeeps++;
+
+            }, null, schedule.InitialDelayMs, schedule.IntervalMs);
             // TODO
         }
 
         public override void Dispose()
         {            
-            base.Dispose();
-            //_renderTimer?.Stop();
-            //if (_renderTimer != null) _renderTimer.Tick -= RenderTick;
-            //_renderTimer = null;
+            base.Dispose();            
         }
 
         public override void TimerStarted()
         {
-            //_renderStopWatch.Restart();
+            
         }
 
         public override void TimerStopped()
         {
-            //_renderStopWatch.Stop();
+            
         }
+
+        public static CardTrackingTimingOptions TimingOptions
+        {
+            get => Enum.Parse<CardTrackingTimingOptions>(Preferences.Get(nameof(TimingOptions), CardTrackingTimingOptions.BeepsAndVibration.ToString()));
+            set => Preferences.Set(nameof(TimingOptions), value.ToString());
+        }
+
+        public MediaElement MediaPlayer { get; set; }
+
     }
+
+    [Flags]
+    public enum CardTrackingTimingOptions
+    {
+        None = 1,
+        Beeps = 2,
+        Vibration = 4,
+        BeepsAndVibration = 2 + 4
+    }
+    
 }

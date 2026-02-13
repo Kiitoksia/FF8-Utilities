@@ -15,6 +15,7 @@ namespace FF8Utilities.MAUI
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement(true)
                 .UseSkiaSharp()
                 .ConfigureSyncfusionCore()
                 .ConfigureEssentials(essentials =>

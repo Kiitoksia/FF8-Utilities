@@ -33,7 +33,7 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
     <!--<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>-->
 	</PropertyGroup>
 
@@ -115,6 +115,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.30" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
@@ -190,8 +191,7 @@
 	</ItemGroup>
 
 	<!-- Add trimmer configuration -->
-	<ItemGroup>
-	  <!-- Preserve Syncfusion assemblies -->
+	<ItemGroup><!-- Preserve Syncfusion assemblies -->
 	  <!--<TrimmerRootAssembly Include="Syncfusion.Maui.Core" />
 	  <TrimmerRootAssembly Include="Syncfusion.Maui.Inputs" />
 	  <TrimmerRootAssembly Include="Syncfusion.Maui.TabView" />
@@ -202,6 +202,11 @@
 	  <!-- Preserve SkiaSharp -->
 	  <!--<TrimmerRootAssembly Include="SkiaSharp" />
 	  <TrimmerRootAssembly Include="SkiaSharp.Views.Maui.Controls" />-->
+	
+	  <MauiAsset Remove="Resources\Raw\clack.wav" />
+	  <MauiAsset Remove="Resources\Raw\click1.wav" />
+	  <MauiAsset Remove="Resources\Raw\ping1.wav" />
+	  <MauiAsset Remove="Resources\Raw\ping2.wav" />
 	</ItemGroup>
 
 	<ItemGroup>
