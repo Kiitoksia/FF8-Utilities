@@ -150,6 +150,7 @@ namespace FF8Utilities.MAUI.Models
         public UltimeciaResultModel(PartyFormation formation, UltimeciaManipulationModel model)
         {
             RngState = formation.RngState;
+            Index = formation.Index;
             MovementGlyphs = formation.Movements.Select(t => t.GetGlyph()).ToArray();
 
             Formations = new ObservableCollection<UltimeciaPartyFormationModel>();
@@ -165,6 +166,8 @@ namespace FF8Utilities.MAUI.Models
 
 
         public string RngState { get; }
+
+        public int Index { get; }
 
         public string[] MovementGlyphs { get; }
 

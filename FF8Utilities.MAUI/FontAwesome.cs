@@ -9,6 +9,8 @@ namespace FF8Utilities.MAUI
     {
         // Add more from https://fontawesome.com/search?ip=classic&s=solid&ic=free-collection
 
+        public const string ArrowsAll = "\uf0b2";
+
         public const string ArrowDown = "\uf063";
 
         public const string ArrowLeft = "\uf060";
@@ -16,6 +18,7 @@ namespace FF8Utilities.MAUI
         public const string ArrowRight = "\uf061";
 
         public const string ArrowUp = "\uf062";
+
 
         public const string Asterik = "\u002a";
 

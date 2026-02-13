@@ -22,25 +22,22 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Padding" Value="10"/>
         </Style>
+
+        <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+            
+        </Style>
     </ContentPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Header -->
             <RowDefinition Height="80"/>
             <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        </Grid.RowDefinitions>       
 
-        <controls:HeaderControl x:Name="Header" Grid.ColumnSpan="3" HeaderText="Ultimecia" ShowSettings="False"/>
+        <controls:HeaderControl x:Name="Header" HeaderText="Ultimecia" ShowSettings="False"/>
 
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="10">
+        <Grid Grid.Row="1" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
@@ -51,7 +48,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:UltimeciaManipulationDirectionModel">
-                        <Label Text="{Binding Glyph}" FontFamily="FontAwesome" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Label Text="{Binding Glyph}" FontFamily="FontAwesome" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
@@ -60,57 +57,78 @@
         </Grid>
 
 
-        <ImageButton Grid.Row="2" Grid.Column="1" Command="{Binding UpCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowUp}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+        <Grid Grid.Row="2" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <ImageButton Grid.Row="3" Command="{Binding LeftCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowLeft}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+            <ImageButton Grid.Column="1" Command="{Binding UpCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowUp}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
 
-        <ImageButton Grid.Row="3" Grid.Column="1" Command="{Binding UnknownCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.QuestionMark}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+            <ImageButton Grid.Row="1" Command="{Binding LeftCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowLeft}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
 
-        <ImageButton Grid.Row="3" Grid.Column="2" Command="{Binding RightCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowRight}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+            <ImageButton Grid.Row="1" Grid.Column="1" Command="{Binding UnknownCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.QuestionMark}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
 
-        <ImageButton Grid.Row="4" Command="{Binding ToggleResults}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.List}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+            <ImageButton Grid.Row="1" Grid.Column="2" Command="{Binding RightCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowRight}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
 
-        <ImageButton Grid.Row="4" Grid.Column="1" Command="{Binding DownCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowDown}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+            <ImageButton Grid.Row="2" Command="{Binding ToggleResults}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.List}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
 
-        <ImageButton Grid.Row="4" Grid.Column="2" Command="{Binding RemoveCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.CircleXMark}" FontFamily="FontAwesome" Color="DarkRed" FontAutoScalingEnabled="True" Size="64"/>
-            </ImageButton.Source>
-        </ImageButton>
+            <ImageButton Grid.Row="2" Grid.Column="1" Command="{Binding DownCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowDown}" FontFamily="FontAwesome" Color="White" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
 
-        <Grid Grid.Row="2" Grid.RowSpan="2" IsVisible="{Binding ShowResults}" Grid.ColumnSpan="3">
+            <ImageButton Grid.Row="2" Grid.Column="2" Command="{Binding RemoveCommand}" IsVisible="{Binding ShowResults, Converter={StaticResource InvertedConverter}}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.CircleXMark}" FontFamily="FontAwesome" Color="DarkRed" FontAutoScalingEnabled="True" Size="64"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </Grid>
+
+        
+
+        <Grid Grid.Row="2" IsVisible="{Binding ShowResults}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-            <Label Text="Output" HorizontalTextAlignment="Center" VerticalOptions="Center" FontSize="Large"/>
+            <Label Text="Output" HorizontalTextAlignment="Center" VerticalOptions="Center" FontSize="Large" Grid.ColumnSpan="3"/>
 
-            <CollectionView Grid.Row="1" ItemsSource="{Binding Results}" VerticalOptions="Fill" HorizontalOptions="Fill" ItemSizingStrategy="MeasureFirstItem" Margin="10">
+            <CollectionView Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Results}" VerticalOptions="Fill" HorizontalOptions="Fill" ItemSizingStrategy="MeasureFirstItem" Margin="10">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:UltimeciaResultModel">
                         <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="1">
@@ -120,16 +138,20 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <Border StrokeThickness="0" BackgroundColor="{StaticResource StandardBlue}">
-                                    <CollectionView ItemsSource="{Binding MovementGlyphs}" HorizontalOptions="Center">
-                                        <CollectionView.ItemsLayout>
-                                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
-                                        </CollectionView.ItemsLayout>
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Label Text="{Binding .}" FontFamily="FontAwesome" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>
+                                    <HorizontalStackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
+                                        <Label Text="{Binding Index, StringFormat='Index: {0}'}" FontSize="Small" VerticalTextAlignment="Center"/>
+                                        <CollectionView ItemsSource="{Binding MovementGlyphs}" HorizontalOptions="Center">
+                                            <CollectionView.ItemsLayout>
+                                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                                            </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Label Text="{Binding .}" FontFamily="FontAwesome" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </HorizontalStackLayout>
+                                   
                                 </Border>
                                 
 
@@ -171,31 +193,30 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+            <ImageButton Grid.Row="2" Command="{Binding ToggleResults}" Margin="10" Padding="2">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilities:FontAwesome.ArrowsAll}" FontFamily="FontAwesome" Color="White"/>
+                </ImageButton.Source>
+                <ImageButton.IsVisible>
+                    <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                        <Binding Path="ShowResults"/>
+                        <Binding Path="IsCalculating" Converter="{StaticResource InvertedConverter}"/>
+                    </MultiBinding>
+                </ImageButton.IsVisible>
+            </ImageButton>
+
+            <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ResultsCount, StringFormat='{0} results found'}" HorizontalTextAlignment="Center" 
+       VerticalTextAlignment="Center" FontSize="Large" FontAttributes="Bold">
+                <Label.IsVisible>
+                    <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                        <Binding Path="ShowResults"/>
+                        <Binding Path="IsCalculating" Converter="{StaticResource InvertedConverter}"/>
+                    </MultiBinding>
+                </Label.IsVisible>
+            </Label>
         </Grid>
 
-        <controls:LoadOverlayControl Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" IsVisible="{Binding IsCalculating}"/>
-
-        <ImageButton Grid.Row="4" Command="{Binding ToggleResults}" HeightRequest="50" VerticalOptions="End">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{x:Static utilities:FontAwesome.PersonWalkingRight}" FontFamily="FontAwesome" Color="White"/>
-            </ImageButton.Source>
-            <ImageButton.IsVisible>
-                <MultiBinding Converter="{StaticResource AllTrueConverter}">
-                    <Binding Path="ShowResults"/>
-                    <Binding Path="IsCalculating" Converter="{StaticResource InvertedConverter}"/>
-                </MultiBinding>
-            </ImageButton.IsVisible>
-        </ImageButton>
-
-        <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ResultsCount, StringFormat='{0} results found'}" HorizontalTextAlignment="Center" 
-               VerticalTextAlignment="Start" FontSize="Large" FontAttributes="Bold" HeightRequest="50" VerticalOptions="End">
-            <Label.IsVisible>
-                <MultiBinding Converter="{StaticResource AllTrueConverter}">
-                    <Binding Path="ShowResults"/>
-                    <Binding Path="IsCalculating" Converter="{StaticResource InvertedConverter}"/>
-                </MultiBinding>
-            </Label.IsVisible>
-        </Label>
-
+        <controls:LoadOverlayControl Grid.Row="1" Grid.RowSpan="2" IsVisible="{Binding IsCalculating}"/>
     </Grid>
 </ContentPage>
