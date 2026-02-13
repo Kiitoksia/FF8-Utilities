@@ -17,7 +17,7 @@
         <converters:ComboBoxToNullIntConverter x:Key="ComboConverter"/>
 
         <converters:BoolConverter x:TypeArguments="Color" True="SaddleBrown" False="{StaticResource StandardBlue}" x:Key="UnlikelyResultColourConverter"/>
-        <converters:BoolConverter x:TypeArguments="Color" True="{StaticResource StandardBlue}" False="Transparent" x:Key="ToggleButtonConverter"/>
+        <converters:BoolConverter x:TypeArguments="Color" True="{StaticResource StandardBlue}" False="Transparent" x:Key="EnabledButtonColourConverter"/>
 
     </ContentPage.Resources>
     <Grid>
@@ -47,7 +47,8 @@
             </picker:SfPicker.Columns>
         </picker:SfPicker>
 
-        <buttons:SfButton Grid.Row="2" Text="Submit" Command="{Binding SubmitCommand}" CornerRadius="0" Style="{StaticResource BaseSfButton}" Margin="5"/>
+        <buttons:SfButton Grid.Row="2" Text="{Binding SubmittedPolesDisplay}" Command="{Binding SubmitCommand}" CornerRadius="0" Style="{StaticResource BaseSfButton}" Margin="5" IsEnabled="{Binding SubmitButtonEnabled}"
+                          Background="{Binding SubmitButtonEnabled, Converter={StaticResource EnabledButtonColourConverter}}" />
 
         <CollectionView Grid.Row="3" ItemsSource="{Binding Output}" Margin="10" ItemSizingStrategy="MeasureFirstItem">
             <CollectionView.ItemTemplate>

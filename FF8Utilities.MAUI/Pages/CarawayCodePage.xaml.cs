@@ -24,6 +24,11 @@ public partial class CarawayCodePage : ContentPage
 		Poles = poles;
 		Output = new ObservableCollection<CarawayCodeOutput>();
 
+		foreach (PoleModel pole in poles)
+		{
+            pole.PropertyChanged += Pole_PropertyChanged;
+		}
+
         InitializeComponent();
 
         SubmitCommand = new AsyncCommand(Submit);
@@ -33,9 +38,57 @@ public partial class CarawayCodePage : ContentPage
         HideUnlikelyResults = Preferences.Get(nameof(HideUnlikelyResults), true);
         ShowNPCMovement = Preferences.Get(nameof(ShowNPCMovement), false);
         _initialised = true;
+
+		Unloaded += (s, e) =>
+		{
+			foreach (PoleModel pole in Poles)
+			{
+                pole.PropertyChanged -= Pole_PropertyChanged;
+			}
+		};
+
+        SetPoleDisplay();
     }
 
-	private async Task Submit()
+    private void Pole_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+		if (e.PropertyName == nameof(PoleModel.Count))
+		{
+			SetPoleDisplay();
+		}        
+    }
+
+	private void SetPoleDisplay()
+	{
+		string output = string.Empty;
+		bool validOutput = false;
+		foreach (PoleModel pole in Poles)
+		{
+			if (pole.Count == null) break;
+			output += $",{pole.Count}";
+			validOutput = true;
+		}
+
+		if (output == string.Empty) output = "Select poles before submitting";
+		else output = $"({output.Trim(',')}) - SUBMIT";
+		if (output != SubmittedPolesDisplay)
+		{
+            SubmittedPolesDisplay = output;
+        }
+
+        SubmitButtonEnabled = validOutput;
+    }
+
+    public static readonly BindableProperty SubmitButtonEnabledProperty = BindableProperty.Create(nameof(SubmitButtonEnabled), typeof(bool), typeof(CarawayCodePage), false);
+
+
+    public bool SubmitButtonEnabled
+    {
+        get => (bool)GetValue(SubmitButtonEnabledProperty);
+        set => SetValue(SubmitButtonEnabledProperty, value);
+    }
+
+    private async Task Submit()
 	{
 		if (Poles.All(t => t.Count == null))
 		{
@@ -122,4 +175,13 @@ public partial class CarawayCodePage : ContentPage
 		get => (bool)GetValue(ShowNPCMovementProperty);
 		set => SetValue(ShowNPCMovementProperty, value);
 	}
+
+    public static readonly BindableProperty SubmittedPolesDisplayProperty = BindableProperty.Create(nameof(SubmittedPolesDisplay), typeof(string), typeof(CarawayCodePage), null);
+
+
+    public string SubmittedPolesDisplay
+    {
+        get => (string)GetValue(SubmittedPolesDisplayProperty);
+        private set => SetValue(SubmittedPolesDisplayProperty, value);
+    }
 }
