@@ -131,9 +131,10 @@ public partial class LateQuistisManipulationPage : ContentPage
 	private async Task QuistisCardObtained()
 	{
 		if (SelectedStrategy != null)
-		{            
-            await Navigation.PopModalAsync();
-		}
+		{
+            await DisplayAlertAsync("Outcome saved", "Continue as normal for zell tracking", "OK");
+            await Navigation.PopModalAsync();            
+        }
 	}
 
     private async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)

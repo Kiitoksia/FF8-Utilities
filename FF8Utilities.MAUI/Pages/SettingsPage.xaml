@@ -28,6 +28,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -65,6 +66,8 @@
                 <Label Text="About" HorizontalOptions="Center" FontAttributes="Bold" TextColor="White"/>
                 <Label Text="{Binding AppVersion, StringFormat='App Version: {0}'}"/>
             </VerticalStackLayout>
+
+            <buttons:SfButton Grid.Row="7" Command="{Binding CloseButtonCommand}" Grid.ColumnSpan="2" Text="Close" Style="{StaticResource BaseSfButton}"/>
         </Grid>
     </ScrollView>
 </ContentPage>

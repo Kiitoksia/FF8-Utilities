@@ -38,6 +38,7 @@
                 <Setter Property="Stroke" Value="White"/>
                 <Setter Property="StrokeThickness" Value="1"/>
                 <Setter Property="TextColor" Value="White"/>
+                <Setter Property="CornerRadius" Value="3"/>
             </Style>
 
             <Style TargetType="Button">
