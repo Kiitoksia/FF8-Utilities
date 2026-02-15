@@ -40,7 +40,7 @@ namespace FF8Utilities.MAUI
 
         public const string PersonWalkingRight = "\ue553";
 
-        public const string Plus= "\u002b";
+        public const string Plus = "\u002b";
 
         public const string QuestionMark = "\u003F";
 

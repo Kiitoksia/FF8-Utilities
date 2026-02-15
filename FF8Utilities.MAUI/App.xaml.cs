@@ -1,4 +1,5 @@
-﻿using FF8Utilities.MAUI.Pages;
+﻿using FF8Utilities.Common.Cards;
+using FF8Utilities.MAUI.Pages;
 using UltimeciaManip;
 
 namespace FF8Utilities.MAUI
@@ -12,8 +13,7 @@ namespace FF8Utilities.MAUI
             InitializeComponent();
 
             // MAUI cant use LocalAppData, point it to the right path
-            Common.Const.PackagesFolder = FileSystem.AppDataDirectory;
-
+            Common.Const.PackagesFolder = FileSystem.AppDataDirectory;            
         }
 
         protected override Window CreateWindow(IActivationState activationState)
