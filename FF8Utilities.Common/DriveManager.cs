@@ -91,10 +91,10 @@ namespace FF8Utilities.Common
             {
                 await Initialise;
                 // Not exactly a secret
-                GoogleCredential credential = await GoogleCredential.FromFileAsync(Path.Combine(AppContext.BaseDirectory, "client_secret.json"), CancellationToken.None).ConfigureAwait(false);
-                    credential = credential.CreateScoped(DriveService.Scope.DriveReadonly);
+                GoogleCredential credential = await CredentialFactory.FromFileAsync(Path.Combine(AppContext.BaseDirectory, "client_secret.json"), JsonCredentialParameters.ServiceAccountCredentialType, CancellationToken.None).ConfigureAwait(false);
+                credential = credential.CreateScoped(DriveService.Scope.DriveReadonly);
 
-                    DriveService = new DriveService(new BaseClientService.Initializer() { HttpClientInitializer = credential, ApplicationName = "FF8 Utilities" });
+                DriveService = new DriveService(new BaseClientService.Initializer() { HttpClientInitializer = credential, ApplicationName = "FF8 Utilities" });
             }  
                
             return DriveService;
@@ -269,21 +269,30 @@ namespace FF8Utilities.Common
         public async Task<DownloadResult> DownloadLateQuistisCSRFiles()
         {
 
-            DriveService service = await GetDriveService().ConfigureAwait(false);
-            FilesResource.ListRequest request = service.Files.List();
-
-            request.Q = $"'{LateQuistisCSVFolder}' in parents and trashed = false";
-            request.Fields = "files(id, name, size, fileExtension)";
-
-            FileList result = await request.ExecuteAsync().ConfigureAwait(false);
-
-            List<DownloadResult> results = new List<DownloadResult>();
-            foreach (File file in result.Files)
+            try
             {
-                results.Add(await DownloadFile(file, null, Path.GetFileNameWithoutExtension(file.Name), false));
-            }
+                DriveService service = await GetDriveService().ConfigureAwait(false);
+                FilesResource.ListRequest request = service.Files.List();
 
-            return results.Contains(DownloadResult.Error) ? DownloadResult.Error : DownloadResult.Downloaded;
+                request.Q = $"'{LateQuistisCSVFolder}' in parents and trashed = false";
+                request.Fields = "files(id, name, size, fileExtension)";
+
+                FileList result = await request.ExecuteAsync().ConfigureAwait(false);
+
+                List<DownloadResult> results = new List<DownloadResult>();
+                foreach (File file in result.Files)
+                {
+                    results.Add(await DownloadFile(file, null, Path.GetFileNameWithoutExtension(file.Name), false));
+                }
+
+                return results.Contains(DownloadResult.Error) ? DownloadResult.Error : DownloadResult.Downloaded;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+            
         }
     }
 }

@@ -49,9 +49,6 @@
         </VerticalStackLayout>
 
         <buttons:SfButton Command="{Binding SubmitCommand, Mode=OneTime}" Text="GO" Margin="5" VerticalOptions="Fill" Grid.Row="2" FontSize="Large" Style="{StaticResource BaseSfButton}" BackgroundColor="{StaticResource StandardBlue}"/>
-
-
-        <toolkit:MediaElement x:Name="MediaPlayer" IsVisible="False"/>
     </Grid>
     
 </ContentView>

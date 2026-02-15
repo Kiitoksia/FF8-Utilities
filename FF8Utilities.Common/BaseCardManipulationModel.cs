@@ -40,6 +40,8 @@ namespace FF8Utilities.Common
         private TimeSpan _timeTillNextCard;
         private TimeSpan _timeTillNextCardEnd;
         private string _countdownText;
+        private bool _isFirstLoop = true;
+
 
         public ICommand SubmitCommand { get; }
         public ICommand CountdownCommand { get; }
@@ -105,6 +107,7 @@ namespace FF8Utilities.Common
         {
             OnRenderTick(_stopwatch.Elapsed);
         }
+
 
         // Platform should call this on each render tick with the current rendering time.
         public void OnRenderTick(TimeSpan renderingTime)
@@ -440,6 +443,7 @@ namespace FF8Utilities.Common
             }
 
             _stopwatch.Restart();
+            _isFirstLoop = true;
             TimerStarted();
 
             ErrorText = null;
@@ -578,9 +582,16 @@ namespace FF8Utilities.Common
 
             frameOffsetMs += BeepOffsetFrames * 16; // frames->ms
 
-            int totalBeepDurationMs = intervalMs * (desiredBeeps - 1);
+            int totalBeepDurationMs = intervalMs * (desiredBeeps - 1);            
             int delayMs = Math.Max((int)_timeTillNextCard.TotalMilliseconds - totalBeepDurationMs + frameOffsetMs, 0);
 
+            if (_isFirstLoop)
+            {
+                // In the first loop we need to add the initial delay frame on
+                delayMs += (int)_manip.Options.DelayFrame * 16;
+                _isFirstLoop = false;
+            }
+            
             // Delegate to platform-specific implementation. Provide parameters.
             PlayBeeps(new BeepSchedule
             {

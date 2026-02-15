@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Syncfusion.Maui.Core.Hosting;
 
@@ -15,7 +16,7 @@ namespace FF8Utilities.MAUI
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMediaElement(true)
+                .AddAudio()
                 .UseSkiaSharp()
                 .ConfigureSyncfusionCore()
                 .ConfigureEssentials(essentials =>

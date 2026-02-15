@@ -142,10 +142,10 @@
                     <Grid Grid.Row="1" Grid.Column="1" Margin="20,20,0,20">
                         <ComboBox 
                                     ItemsSource="{Binding Source={x:Static data:EarlyQuistisPattern.Options}}"  
-                                    SelectedValue="{Binding Pattern}"
+                                    SelectedItem="{Binding Pattern}"
                                     DisplayMemberPath="Description"
                                     HorizontalAlignment="Stretch"
-                                    SelectedValuePath="Value"/>
+                                    />
                     </Grid>
 
                     <ToggleButton Grid.Row="1" Margin="0,20,20,20" Grid.Column="2" IsChecked="{Binding ShowNotes}" Controls:VisibilityHelper.IsHidden="{Binding UseCustomQuistisPattern}">

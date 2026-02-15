@@ -32,9 +32,9 @@ namespace FF8Utilities.Common
         public string Description { get; }
         public uint Result { get; }        
 
-        public static readonly EarlyQuistisPattern Frame1 = new EarlyQuistisPattern("[Frame 1] - Elastoid (Jellyeye)", 1);
-        public static readonly EarlyQuistisPattern Frame2 = new EarlyQuistisPattern("[Frame 2] - Malboro (Anacondaur)", 2);
-        public static readonly EarlyQuistisPattern Frame3 = new EarlyQuistisPattern("[Frame 3] - Biggs & Wedge (Jellyeye)", 3);
+        public static readonly EarlyQuistisPattern Frame1 = new EarlyQuistisPattern("[Frame 1] - Elastoid (Jellyeye)", 0x1de5_b942);
+        public static readonly EarlyQuistisPattern Frame2 = new EarlyQuistisPattern("[Frame 2] - Malboro (Anacondaur)", 0x963c_b5e4);
+        public static readonly EarlyQuistisPattern Frame3 = new EarlyQuistisPattern("[Frame 3] - Biggs & Wedge (Jellyeye)", 0x1f13_2481);
         public static readonly EarlyQuistisPattern Frame4 = new EarlyQuistisPattern("[Frame 4] - Elastoid (Grendel)", 0x65c6be07);
         public static readonly EarlyQuistisPattern Frame5 = new EarlyQuistisPattern("[Frame 5] - Malboro (Grand Mantis) *Unwinnable*", 5);
         public static readonly EarlyQuistisPattern Frame6 = new EarlyQuistisPattern("[Frame 6] - Grand Mantis (Elastoid) *Unwinnable*", 6);
