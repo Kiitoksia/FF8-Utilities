@@ -10,7 +10,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InverseConverter"/>
-            <converters:CachedByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+            <toolkit:ByteArrayToImageSourceConverter x:Key="ImageConverter"/>
+            <converters:BoolConverter x:Key="OpacityConverter" x:TypeArguments="x:Double" True="1" False="0.5"/>
         </ResourceDictionary>
     </ContentView.Resources>
     <Grid>
@@ -22,13 +23,13 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Image  Source="{Binding Card, Converter={StaticResource ImageConverter}, Mode=OneTime}" Grid.RowSpan="2" Grid.ColumnSpan="2"  HorizontalOptions="Fill" VerticalOptions="Fill" x:Name="CardImage" Aspect="AspectFit"/>
+        <Image Source="{Binding Card, Converter={StaticResource ImageConverter}}" Opacity="{Binding IsPlayerTurn, Converter={StaticResource OpacityConverter}}" Grid.RowSpan="2" Grid.ColumnSpan="2"  HorizontalOptions="Fill" VerticalOptions="Fill" x:Name="CardImage" Aspect="AspectFit"/>
 
-        <Label Text="{Binding Turn}" HorizontalTextAlignment="End" VerticalTextAlignment="End" FontAttributes="Bold" IsVisible="{Binding ShowTurnNumber, Mode=OneTime}" Grid.Row="1" Grid.Column="1" FontSize="64" TextColor="White">
+        <Label Text="{Binding Turn}" HorizontalTextAlignment="End" VerticalTextAlignment="End" FontAttributes="Bold" IsVisible="{Binding ShowTurnNumber}" Grid.Row="1" Grid.Column="1" FontSize="64" TextColor="White">
             <Label.Style>
                 <Style TargetType="Label">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsPlayerTurn, Mode=OneTime}" Value="False" TargetType="Label">
+                        <DataTrigger Binding="{Binding IsPlayerTurn}" Value="False" TargetType="Label">
                             <Setter Property="TextColor" Value="Red"/>
                         </DataTrigger>
                     </Style.Triggers>
@@ -55,10 +56,10 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Text="{Binding CustomTopInfo, Mode=OneTime}" Grid.Column="1"/>
-            <Label Text="{Binding CustomRightInfo, Mode=OneTime}" Grid.Row="1" Grid.Column="2" FontAttributes="Bold"/>
-            <Label Text="{Binding CustomBotInfo, Mode=OneTime}" Grid.Row="2" Grid.Column="1"/>
-            <Label Text="{Binding CustomLeftInfo, Mode=OneTime}" Grid.Row="1"/>
+            <Label Text="{Binding CustomTopInfo}" Grid.Column="1"/>
+            <Label Text="{Binding CustomRightInfo}" Grid.Row="1" Grid.Column="2" FontAttributes="Bold"/>
+            <Label Text="{Binding CustomBotInfo}" Grid.Row="2" Grid.Column="1"/>
+            <Label Text="{Binding CustomLeftInfo}" Grid.Row="1"/>
         </Grid>
     </Grid>
 </ContentView>

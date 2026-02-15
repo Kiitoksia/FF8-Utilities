@@ -8,16 +8,5 @@ public partial class CardPatternPositionView : ContentView
 	public CardPatternPositionView()
 	{
 		InitializeComponent();
-
-		BindingContextChanged += (s, e) =>
-		{
-			if (BindingContext is CardPosition model)
-			{
-				if (!model.IsPlayerTurn)
-				{
-					CardImage.Opacity = 0.5;
-				}
-			}
-		};
 	}
 }

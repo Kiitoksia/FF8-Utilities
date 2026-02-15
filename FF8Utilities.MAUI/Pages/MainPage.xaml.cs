@@ -18,6 +18,8 @@ public partial class MainPage : ContentPage
         CardTrackerCommand = new AsyncCommand(ShowQuistisPopup);
         LaunchCardTrackingCommand = new AsyncCommand(earlyQuistis => ShowCardTrackerOptions((bool)earlyQuistis));
         EarlyQuistisCardPatternPickedCommand = new AsyncCommand(async () => await LaunchTracker(true));
+
+        CloseEarlyQuistisStrategyCommand = new AsyncCommand(() => EarlyQuistisStrategyPopup.IsOpen = false);
         UltimeciaCommand = new AsyncCommand(async () =>
         {
             UltimeciaPage page = new UltimeciaPage();
@@ -31,6 +33,8 @@ public partial class MainPage : ContentPage
         SettingsCommand = new AsyncCommand(LaunchSettings);
 
         ShowLoadingBar = true;
+
+        EarlyQuistisStrategy = new ObservableCollection<CardPosition>(CardPosition.EarlyQuistisFrame1);        
 
         Loaded += MainPage_Loaded;
     }
@@ -98,7 +102,7 @@ public partial class MainPage : ContentPage
         await Navigation.PushModalAsync(page);
     }
 
-    public static readonly BindableProperty EarlyQuistisPatternProperty = BindableProperty.Create(nameof(EarlyQuistisPattern), typeof(EarlyQuistisPattern), typeof(MainPage), EarlyQuistisPattern.Frame1);
+    public static readonly BindableProperty EarlyQuistisPatternProperty = BindableProperty.Create(nameof(EarlyQuistisPattern), typeof(EarlyQuistisPattern), typeof(MainPage), EarlyQuistisPattern.Frame1, propertyChanged: EarlyQuistisPatternChanged);
 
     public EarlyQuistisPattern EarlyQuistisPattern
     {
@@ -114,6 +118,48 @@ public partial class MainPage : ContentPage
         set => SetValue(EarlyQuistisPatternsProperty, value);
     }
 
+    private static void EarlyQuistisPatternChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        MainPage page = (MainPage)bindable;
+
+        page.EarlyQuistisStrategy.Clear();
+        CardPosition[] strategy = null;
+        if (newValue is EarlyQuistisPattern pattern)
+        {
+            if (pattern == EarlyQuistisPattern.Frame1) strategy = CardPosition.EarlyQuistisFrame1;
+            else if (pattern == EarlyQuistisPattern.Frame2) strategy = CardPosition.EarlyQuistisFrame2;
+            else if (pattern == EarlyQuistisPattern.Frame3) strategy = CardPosition.EarlyQuistisFrame3;
+            else if (pattern == EarlyQuistisPattern.Frame4) strategy = CardPosition.EarlyQuistisFrame4;
+            else if (pattern == EarlyQuistisPattern.Frame7) strategy = CardPosition.EarlyQuistisFrame7;
+            else if (pattern == EarlyQuistisPattern.Frame9) strategy = CardPosition.EarlyQuistisFrame9;
+            else if (pattern == EarlyQuistisPattern.Frame10) strategy = CardPosition.EarlyQuistisFrame10;
+        }
+
+        if (strategy != null)
+        {
+            foreach (CardPosition pos in strategy)
+            {
+                page.EarlyQuistisStrategy.Add(pos);
+            }
+        }
+    }
+
+    public static readonly BindableProperty EarlyQuistisStrategyProperty = BindableProperty.Create(nameof(EarlyQuistisStrategy), typeof(ObservableCollection<CardPosition>), typeof(MainPage), null);
+
+    public ObservableCollection<CardPosition> EarlyQuistisStrategy
+    {
+        get => (ObservableCollection<CardPosition>)GetValue(EarlyQuistisStrategyProperty);
+        set => SetValue(EarlyQuistisStrategyProperty, value);
+    }
+
+    public static readonly BindableProperty CloseEarlyQuistisStrategyCommandProperty = BindableProperty.Create(nameof(CloseEarlyQuistisStrategyCommand), typeof(ICommand), typeof(MainPage), null);
+
+    public ICommand CloseEarlyQuistisStrategyCommand
+    {
+        get => (ICommand)GetValue(CloseEarlyQuistisStrategyCommandProperty);
+        set => SetValue(CloseEarlyQuistisStrategyCommandProperty, value);
+    }
+
     private async Task ShowCardTrackerOptions(bool earlyQuistis)
     {
         try
@@ -126,7 +172,7 @@ public partial class MainPage : ContentPage
             {
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    EarlyQuistisFramePicker.IsOpen = true;
+                    EarlyQuistisStrategyPopup.IsOpen = true;
                 });
 
                 // The picker frame will handle the rest
