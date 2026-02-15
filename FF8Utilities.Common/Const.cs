@@ -169,4 +169,38 @@ namespace FF8Utilities.Common
         Downloaded,
         Error
     }
+
+    public enum Card
+    {
+        Anacondaur,
+        Behemoth,
+        Belhelmel,
+        BiggsWedge,
+        Buel,
+        Caterchipallar,
+        Chimera,
+        Creeps,
+        Elastoid,
+        Elnoyle,
+        Fasticalcon,
+        Fungar,
+        Gayla,
+        Geezard,
+        Gim47N,
+        GlacialEye,
+        GrandMantis,
+        Grat,
+        Grendel,
+        Ifrit,
+        IronGiant,
+        Jelleye,
+        Malboro,
+        Mesmerize,
+        None,
+        RubyDragon,
+        Thrustaevis,
+        TonberryKing,
+        Quistis,
+        Zell
+    }
 }

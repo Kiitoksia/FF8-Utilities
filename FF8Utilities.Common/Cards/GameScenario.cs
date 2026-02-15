@@ -83,6 +83,44 @@ namespace FF8Utilities.Common.Cards
             return CardImage.GetCardImage(card);
         }
 
+        public static byte[] GetCardImage(Card card)
+        {
+            switch (card)
+            {
+                case Card.Behemoth: return GetCardImage("beast");
+                case Card.Anacondaur: return GetCardImage("snake");
+                case Card.Belhelmel: return GetCardImage("mask");
+                case Card.BiggsWedge: return GetCardImage("biggs");
+                case Card.Buel: return GetCardImage("buel");
+                case Card.Caterchipallar: return GetCardImage("c");
+                case Card.Chimera: return GetCardImage("chimera");                    
+                case Card.Creeps: return GetCardImage("creeps");
+                case Card.Elastoid: return GetCardImage("elastoid");
+                case Card.Elnoyle: return GetCardImage("elnoyle");
+                case Card.Fasticalcon: return GetCardImage("t");
+                case Card.Fungar: return GetCardImage("f");
+                case Card.Gayla: return GetCardImage("m");
+                case Card.Geezard: return GetCardImage("g");
+                case Card.Gim47N: return GetCardImage("robot");
+                case Card.GlacialEye: return GetCardImage("glacial");
+                case Card.GrandMantis: return GetCardImage("mantis");
+                case Card.Grat: return GetCardImage("grat");
+                case Card.Grendel: return GetCardImage("grendel");
+                case Card.Ifrit: return GetCardImage("i");
+                case Card.IronGiant: return GetCardImage("giant");
+                case Card.Jelleye: return GetCardImage("jelleye");
+                case Card.Malboro: return GetCardImage("malboro");
+                case Card.Mesmerize: return GetCardImage("unicorn");
+                case Card.None: return null;
+                case Card.RubyDragon: return GetCardImage("ruby");
+                case Card.Thrustaevis: return GetCardImage("bird");
+                case Card.TonberryKing: return GetCardImage("king");
+                case Card.Quistis: return GetCardImage("q");
+                case Card.Zell: return GetCardImage("z");
+                default: throw new NotImplementedException();
+            }
+        }
+
         internal static byte[] GetDeckCardImage(string card)
         {
             switch (card.ToLower())
