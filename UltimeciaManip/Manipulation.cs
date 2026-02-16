@@ -84,7 +84,7 @@ namespace UltimeciaManip
             }
         }
 
-        public static char ToDirectionCharacter(this Direction direction)
+        public static char ToDirectionCharacter(this Direction direction, char wildcardChar = '.')
         {
             switch (direction)
             {
@@ -97,7 +97,7 @@ namespace UltimeciaManip
                 case Direction.Right:
                     return '6';
                 default:
-                    return '.';
+                    return wildcardChar;
             }
         }
     }

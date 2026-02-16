@@ -86,8 +86,6 @@
             <popup:SfPopup.ContentTemplate>
                 <DataTemplate>
                     <Grid Margin="10" HorizontalOptions="Center" ColumnSpacing="10">
-                        <Grid.Resources>
-                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>

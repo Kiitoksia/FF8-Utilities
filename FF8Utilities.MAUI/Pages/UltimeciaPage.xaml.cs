@@ -7,6 +7,15 @@ public partial class UltimeciaPage : ContentPage
 	public UltimeciaPage()
 	{
 		BindingContext = new UltimeciaManipulationModel();
-		InitializeComponent();				
-	}
+		InitializeComponent();
+
+        Header.SettingsCommand = new AsyncCommand(async() =>
+		{
+			await MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				SettingsPopup.IsOpen = true;
+			});
+		});
+
+    }
 }

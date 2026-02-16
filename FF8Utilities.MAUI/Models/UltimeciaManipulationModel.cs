@@ -1,4 +1,5 @@
-﻿using FF8Utilities.Common;
+﻿using CommunityToolkit.Maui.Alerts;
+using FF8Utilities.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,10 +36,33 @@ namespace FF8Utilities.MAUI.Models
                 }
             });
 
+            CopyToClipboardCommand = new AsyncCommand(async () =>
+            {
+                string output = string.Join(string.Empty, Directions.Select(t => t.Direction.ToDirectionCharacter('5')));
+                await Clipboard.SetTextAsync(output);
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Toast.Make("Directions copied to clipboard").Show();
+                });
+            });
+
             ToggleResults = new Command(() => ShowResults = !ShowResults);
 
             _inlcudeRinoaParties = App.ShowRinoaParties;
             Results = new ObservableCollection<UltimeciaResultModel>();
+
+            PropertyChanged += async (s, e) =>
+            {
+                if (e.PropertyName == nameof(IncludeRinoaParties))
+                {
+                    App.ShowRinoaParties = IncludeRinoaParties;
+                    if (this.Results != null && Results.Count > 0)
+                    {
+                        // Re-calculate results
+                        await CalculateOutput();
+                    }
+                }
+            };
         }
 
         public int ResultsCount => Results.Count;
@@ -76,6 +100,8 @@ namespace FF8Utilities.MAUI.Models
         public ICommand RemoveCommand { get; }
 
         public ICommand ToggleResults { get; }
+
+        public ICommand CopyToClipboardCommand { get; }
 
         public bool ShowResults 
         { 
@@ -152,7 +178,7 @@ namespace FF8Utilities.MAUI.Models
             RngState = formation.RngState;
             Index = formation.Index;
             MovementGlyphs = formation.Movements.Select(t => t.GetGlyph()).ToArray();
-
+            Directions = formation.Movements.ToArray();
             Formations = new ObservableCollection<UltimeciaPartyFormationModel>();
 
             bool isFirst = true;
@@ -170,6 +196,8 @@ namespace FF8Utilities.MAUI.Models
         public int Index { get; }
 
         public string[] MovementGlyphs { get; }
+
+        public Direction[] Directions { get; }
 
         public ObservableCollection<UltimeciaPartyFormationModel> Formations { get; }
     }

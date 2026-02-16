@@ -59,6 +59,6 @@ namespace FF8Utilities.MAUI
                 case Direction.Unknown: return QuestionMark;
                 default: throw new NotImplementedException();
             }
-        }
+        }        
     }
 }

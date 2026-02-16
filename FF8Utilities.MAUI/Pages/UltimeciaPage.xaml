@@ -6,7 +6,8 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
-             xmlns:utilities="clr-namespace:FF8Utilities.MAUI"
+             xmlns:utilities="clr-namespace:FF8Utilities.MAUI" 
+             xmlns:sf="http://schemas.syncfusion.com/maui"
              x:Class="FF8Utilities.MAUI.Pages.UltimeciaPage"
              x:DataType="models:UltimeciaManipulationModel"
              Title="UltimeciaPage">
@@ -34,15 +35,18 @@
             <RowDefinition/>
         </Grid.RowDefinitions>       
 
-        <controls:HeaderControl x:Name="Header" HeaderText="Ultimecia" ShowSettings="False"/>
+        <controls:HeaderControl x:Name="Header" HeaderText="Ultimecia"/>
 
 
         <Grid Grid.Row="1" Margin="10">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CopyToClipboardCommand}"/>
+            </Grid.GestureRecognizers>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <CollectionView ItemsSource="{Binding Directions}" HorizontalOptions="Center" VerticalOptions="Fill">
+            <CollectionView ItemsSource="{Binding Directions}" HorizontalOptions="Center" VerticalOptions="Fill" InputTransparent="True">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
                 </CollectionView.ItemsLayout>
@@ -128,7 +132,7 @@
 
             <Label Text="Output" HorizontalTextAlignment="Center" VerticalOptions="Center" FontSize="Large" Grid.ColumnSpan="3"/>
 
-            <CollectionView Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Results}" VerticalOptions="Fill" HorizontalOptions="Fill" ItemSizingStrategy="MeasureFirstItem" Margin="10">
+            <CollectionView Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Results}" VerticalOptions="Fill" HorizontalOptions="Fill" ItemSizingStrategy="MeasureAllItems" Margin="10">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:UltimeciaResultModel">
                         <Border Stroke="{StaticResource StandardBlue}" StrokeThickness="1">
@@ -217,6 +221,23 @@
             </Label>
         </Grid>
 
+        <sf:SfPopup x:Name="SettingsPopup" HeaderTitle="Options" ShowCloseButton="True">
+            <sf:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <Grid Margin="10" HorizontalOptions="Center" ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Text="Show Rinoa Parties" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Switch Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center" IsToggled="{Binding IncludeRinoaParties}"/>
+                    </Grid>
+                </DataTemplate>
+            </sf:SfPopup.ContentTemplate>
+        </sf:SfPopup>
         <controls:LoadOverlayControl Grid.Row="1" Grid.RowSpan="2" IsVisible="{Binding IsCalculating}"/>
     </Grid>
 </ContentPage>
