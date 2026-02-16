@@ -56,7 +56,7 @@ namespace FF8Utilities.MAUI.Models
                 if (e.PropertyName == nameof(IncludeRinoaParties))
                 {
                     App.ShowRinoaParties = IncludeRinoaParties;
-                    if (this.Results != null && Results.Count > 0)
+                    if (Results != null && Results.Count > 0)
                     {
                         // Re-calculate results
                         await CalculateOutput();
