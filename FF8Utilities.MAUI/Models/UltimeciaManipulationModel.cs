@@ -79,12 +79,14 @@ namespace FF8Utilities.MAUI.Models
                 Directions.RemoveAt(0);
             }
             Directions.Add(new UltimeciaManipulationDirectionModel(direction));
+            
+            MainThread.BeginInvokeOnMainThread(() => Vibration.Vibrate(Directions.Count >= 12 ? 500 : 100)); // Do a longer vibration on the last one to let the user know its finished (unfortunately android only)
 
             if (Directions.Count >= 12)
             {
                 ShowResults = true;
                 await CalculateOutput();
-            }
+            }            
         }
 
         public ICommand UpCommand { get; }

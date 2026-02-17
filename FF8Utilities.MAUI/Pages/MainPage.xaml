@@ -47,16 +47,16 @@
 
         <controls:HeaderControl Grid.ColumnSpan="2" HeaderText="FF8 Utilities" ShowBackButton="False"/>
 
-        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}" Grid.Row="1" Style="{StaticResource ButtonStyle}">
+        <buttons:SfButton Text="Card Tracker" Command="{Binding CardTrackerCommand}" Grid.Row="1" Style="{StaticResource ButtonStyle}" Grid.ColumnSpan="2">
             <buttons:SfButton.ImageSource>
                 <FontImageSource Glyph="{x:Static utilities:FontAwesome.ClipboardList}"/>
             </buttons:SfButton.ImageSource>
         </buttons:SfButton>
-        <buttons:SfButton Text="[NYI] Fish Fins" Grid.Row="1" Grid.Column="1" Style="{StaticResource ButtonStyle}">
+        <!--<buttons:SfButton Text="[NYI] Fish Fins" Grid.Row="1" Grid.Column="1" Style="{StaticResource ButtonStyle}">
             <buttons:SfButton.ImageSource>
                 <FontImageSource Glyph="{x:Static utilities:FontAwesome.FishFins}"/>
             </buttons:SfButton.ImageSource>
-        </buttons:SfButton>
+        </buttons:SfButton>-->
         <buttons:SfButton Text="Caraway Code" Grid.Row="2" Command="{Binding CarawayCommand}" Style="{StaticResource ButtonStyle}">
             <buttons:SfButton.ImageSource>
                 <FontImageSource Glyph="{x:Static utilities:FontAwesome.Train}"/>
