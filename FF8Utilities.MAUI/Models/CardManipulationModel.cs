@@ -100,8 +100,8 @@ namespace FF8Utilities.MAUI.Models
         public override void Dispose()
         {            
             base.Dispose();
-            _audioManager.Stop();
-            _audioManager.Dispose();
+            _audioManager?.Stop();
+            _audioManager?.Dispose();
             _audioManager = null;
         }
 

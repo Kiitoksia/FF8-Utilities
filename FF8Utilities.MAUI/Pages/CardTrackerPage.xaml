@@ -287,7 +287,7 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="80"/>
                             </Grid.RowDefinitions>
-                            <tabView:SfTabView TabBarPlacement="Bottom" EnableVirtualization="True">
+                            <tabView:SfTabView TabBarPlacement="Bottom" EnableVirtualization="True" x:Name="ElvoretTabView">
                                 <tabView:SfTabView.Items>
                                     <tabView:SfTabItem Header="Elvoret">
                                         <tabView:SfTabItem.Content>
@@ -305,7 +305,7 @@
                                             </VerticalStackLayout>
                                         </tabView:SfTabItem.Content>
                                     </tabView:SfTabItem>
-                                    <tabView:SfTabItem Header="Red Soldier">
+                                    <tabView:SfTabItem Header="Red Soldier" x:Name="RedSoldierTab">
                                         <tabView:SfTabItem.Content>
                                             <c:EncounterControl BindingContext="{Binding RedSoldierEncounter, Mode=OneTime}"/>
                                         </tabView:SfTabItem.Content>

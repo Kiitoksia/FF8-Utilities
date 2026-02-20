@@ -71,6 +71,7 @@ public partial class CardTrackerPage : ContentPage
         Model = new CardTrackerModel();
         CreatePostIfritEncounterContent();
         CreateAnacondaurEncounterContent();
+        ShowOrHideEliteSoldier();
 
         Model.PropertyChanged += (s, e) =>
         {
@@ -83,6 +84,11 @@ public partial class CardTrackerPage : ContentPage
                 CreateAnacondaurEncounterContent();
             }
 
+            if (e.PropertyName == nameof(CardTrackerModel.DidGetRedSoldierEncounter))
+            {
+                ShowOrHideEliteSoldier();
+            }
+
             if (e.PropertyName == nameof(CardTrackerModel.QuistisCardObtained))
             {
                 if (Model.QuistisCardObtained && Model.QuistisCardResult != null)
@@ -90,8 +96,30 @@ public partial class CardTrackerPage : ContentPage
                     // They just obtained Quistis card, move the tab over to dollet
                     MainThread.BeginInvokeOnMainThread(() => TabView.SelectedIndex = 1);
                 }
-            }
+            }           
         };        
+    }
+
+    private void ShowOrHideEliteSoldier()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            if (Model.DidGetRedSoldierEncounter)
+            {
+                if (!ElvoretTabView.Items.Contains(RedSoldierTab))
+                {
+                    ElvoretTabView.Items.Add(RedSoldierTab);
+                }
+            }
+            else
+            {
+                if (ElvoretTabView.Items.Contains(RedSoldierTab))
+                {
+                    ElvoretTabView.Items.Remove(RedSoldierTab);
+                }
+            }
+        });
+        
     }
 
     protected override bool OnBackButtonPressed()
