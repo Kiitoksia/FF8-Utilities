@@ -1,5 +1,6 @@
 using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
+using FF8Utilities.MAUI.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -18,6 +19,12 @@ public partial class MainPage : ContentPage
         CardTrackerCommand = new AsyncCommand(ShowQuistisPopup);
         LaunchCardTrackingCommand = new AsyncCommand(earlyQuistis => ShowCardTrackerOptions((bool)earlyQuistis));
         EarlyQuistisCardPatternPickedCommand = new AsyncCommand(async () => await LaunchTracker(true));
+        SecondTryZellCommand = new AsyncCommand(() =>
+        {
+            EarlyQuistisStrategyPopup.IsOpen = false;
+            CardTrackerModel model = new CardTrackerModel();
+            model.LaunchZellPatterns(EarlyQuistisPattern.Result.ToString("x8"), null);            
+        });
 
         CloseEarlyQuistisStrategyCommand = new AsyncCommand(() => EarlyQuistisStrategyPopup.IsOpen = false);
         UltimeciaCommand = new AsyncCommand(async () =>
@@ -276,5 +283,13 @@ public partial class MainPage : ContentPage
     {
         get => (ICommand)GetValue(SettingsCommandProperty);
         set => SetValue(SettingsCommandProperty, value);
+    }
+
+    public static readonly BindableProperty SecondTryZellCommandProperty = BindableProperty.Create(nameof(SecondTryZellCommand), typeof(ICommand), typeof(MainPage), null);
+
+    public ICommand SecondTryZellCommand
+    {
+        get => (ICommand)GetValue(SecondTryZellCommandProperty);
+        set => SetValue(SecondTryZellCommandProperty, value);
     }
 }

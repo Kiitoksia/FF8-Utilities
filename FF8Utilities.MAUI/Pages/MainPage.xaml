@@ -90,26 +90,31 @@
         <popup:SfPopup x:Name="EarlyQuistisStrategyPopup" HeaderTitle="Select Frame" IsFullScreen="True" HeaderHeight="0">
             <popup:SfPopup.ContentTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Margin="5,0,5,20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
-                            <RowDefinition Height="200"/>
+                            <RowDefinition Height="150"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition/>
-                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="80"/>
                         </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                        <controls:HeaderControl HeaderText="Select frame" ShowSettings="False" BackCommand="{Binding CloseEarlyQuistisStrategyCommand, Source={x:Reference this}}"/>
-                        <picker:SfPicker Grid.Row="1" x:Name="EarlyQuistisFramePicker" TextDisplayMode="FadeAndShrink">
+                        <controls:HeaderControl HeaderText="Select frame" ShowSettings="False" BackCommand="{Binding CloseEarlyQuistisStrategyCommand, Source={x:Reference this}}" Grid.ColumnSpan="2"/>
+                        <picker:SfPicker Grid.Row="1" Grid.ColumnSpan="2" x:Name="EarlyQuistisFramePicker" TextDisplayMode="FadeAndShrink">
                             <picker:SfPicker.Columns>
                                 <picker:PickerColumn ItemsSource="{x:Static common:EarlyQuistisPattern.OptionsExcludeLate}" DisplayMemberPath="Description" HeaderText="Select Frame" SelectedItem="{Binding EarlyQuistisPattern, Mode=TwoWay}"/>
                             </picker:SfPicker.Columns>
                         </picker:SfPicker>
 
-                        <Label Grid.Row="2" Text="Strategy" TextColor="White" VerticalTextAlignment="Center" FontSize="Large" HorizontalTextAlignment="Center" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                        <controls:CardPatternView BindingContext="{Binding EarlyQuistisStrategy}" Grid.Row="3"/>
+                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="Strategy" TextColor="White" VerticalTextAlignment="Center" FontSize="Large" HorizontalTextAlignment="Center" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                        <controls:CardPatternView BindingContext="{Binding EarlyQuistisStrategy}" Grid.Row="3" Grid.ColumnSpan="2"/>
 
-                        <buttons:SfButton Command="{Binding EarlyQuistisCardPatternPickedCommand}" Grid.Row="4" Text="Submit" Style="{StaticResource BaseSfButton}"/>
+                        <buttons:SfButton Command="{Binding EarlyQuistisCardPatternPickedCommand}" Grid.Row="4" Text="Submit &amp; Launch Tracker" Style="{StaticResource BaseSfButton}"/>
+                        <buttons:SfButton Grid.Row="4" Grid.Column="1" Command="{Binding SecondTryZellCommand}" Text="Submit &amp; 2nd try Zell" Style="{StaticResource BaseSfButton}" BackgroundColor="{StaticResource StandardGreen}" Background="{StaticResource StandardGreen}"/>
                     </Grid>
                 </DataTemplate>
             </popup:SfPopup.ContentTemplate>
