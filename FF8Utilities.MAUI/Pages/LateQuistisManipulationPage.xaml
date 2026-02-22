@@ -64,7 +64,7 @@
 
         <controls:HeaderControl x:Name="Header" ShowSettings="False" HeaderText="Frames"/>
 
-        <CollectionView ItemsSource="{Binding OrderedStrategies, Source={x:Reference this}, Mode=OneWay}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}}" Grid.Row="1" 
+        <CollectionView ItemsSource="{Binding OrderedStrategies, Source={x:Reference this}, Mode=OneWay}" SelectionMode="Single" SelectedItem="{Binding SelectedStrategy, Source={RelativeSource AncestorType={x:Type ContentPage}}, Mode=TwoWay}" Grid.Row="1" 
                 SelectionChanged="CollectionView_SelectionChanged" ItemSizingStrategy="MeasureAllItems" x:Name="StrategiesView" HorizontalOptions="Fill" VerticalOptions="Fill">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="5" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>

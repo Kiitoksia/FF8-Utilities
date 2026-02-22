@@ -51,16 +51,16 @@ public partial class LateQuistisManipulationPage : ContentPage
         OrderedStrategies = new ObservableCollection<LateQuistisStrategy>(model.Strategies.OrderBy(t => t.OpponentDeckOrderer));
         QuistisObtainedCommand = new AsyncCommand(QuistisCardObtained);
 
-        // This will pre-load the images
-        Task.Run(() =>
-        {
-            var converter = new CachedByteArrayToImageSourceConverter();
-            foreach (var strategy in OrderedStrategies)
-            {
-                _ = converter.Convert(strategy.OpponentCards.ElementAtOrDefault(0), typeof(ImageSource), null, CultureInfo.InvariantCulture);
-                _ = converter.Convert(strategy.OpponentCards.ElementAtOrDefault(1), typeof(ImageSource), null, CultureInfo.InvariantCulture);
-            }
-        });
+        //// This will pre-load the images
+        //Task.Run(() =>
+        //{
+        //    var converter = new CachedByteArrayToImageSourceConverter();
+        //    foreach (var strategy in OrderedStrategies)
+        //    {
+        //        _ = converter.Convert(strategy.OpponentCards.ElementAtOrDefault(0), typeof(ImageSource), null, CultureInfo.InvariantCulture);
+        //        _ = converter.Convert(strategy.OpponentCards.ElementAtOrDefault(1), typeof(ImageSource), null, CultureInfo.InvariantCulture);
+        //    }
+        //});
         _initialised = true;
     }
 
@@ -112,7 +112,7 @@ public partial class LateQuistisManipulationPage : ContentPage
 		set => SetValue(CardManipModelProperty, value);
     }
 
-	public static readonly BindableProperty SelectedStrategyProperty = BindableProperty.Create(nameof(SelectedStrategy), typeof(LateQuistisStrategy), typeof(LateQuistisManipulationPage), null, BindingMode.TwoWay);
+	public static readonly BindableProperty SelectedStrategyProperty = BindableProperty.Create(nameof(SelectedStrategy), typeof(LateQuistisStrategy), typeof(LateQuistisManipulationPage), null, BindingMode.TwoWay, propertyChanged: SelectedStrategyChanged);
 
     public LateQuistisStrategy SelectedStrategy
 	{
@@ -120,7 +120,18 @@ public partial class LateQuistisManipulationPage : ContentPage
 		set => SetValue(SelectedStrategyProperty, value);
     }
 
-	public static readonly BindableProperty QuistisObtainedCommandProperty = BindableProperty.Create(nameof(QuistisObtainedCommand), typeof(ICommand), typeof(LateQuistisManipulationPage), null);
+    private static void SelectedStrategyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is LateQuistisManipulationPage page && page._initialised)
+        {
+            if (newValue is LateQuistisStrategy strategy)
+            {
+                page.StrategyPopup.IsOpen = true;
+            }
+        }
+    }
+
+    public static readonly BindableProperty QuistisObtainedCommandProperty = BindableProperty.Create(nameof(QuistisObtainedCommand), typeof(ICommand), typeof(LateQuistisManipulationPage), null);
 
 	public ICommand QuistisObtainedCommand
 	{
@@ -139,12 +150,13 @@ public partial class LateQuistisManipulationPage : ContentPage
 
     private async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-		if (!_initialised) return;
-        await StrategyPopup.ShowAsync();
+		
+
     }
 
     private void SfButton_Clicked(object sender, EventArgs e)
-    {
+    {        
         StrategyPopup.IsOpen = false;
+        SelectedStrategy = null;
     }
 }
