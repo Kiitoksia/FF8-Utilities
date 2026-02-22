@@ -11,7 +11,7 @@
     <ContentView.Resources>
         <toolkit:IsStringNotNullOrWhiteSpaceConverter x:Key="StringIsNullConverter"/>
         <converters:BoolConverter x:TypeArguments="x:String" True="STOP" False="GO" x:Key="SubmitButtonLabelConverter"/>
-        <converters:BoolConverter x:TypeArguments="Color" True="{StaticResource StandardGreeen}" False="{StaticResource StandardBlue}" x:Key="SubmitButtonBackgroundConverter"/>
+        <converters:BoolConverter x:TypeArguments="Color" True="{StaticResource StandardGreen}" False="{StaticResource StandardBlue}" x:Key="SubmitButtonBackgroundConverter"/>
     </ContentView.Resources>
         <Grid>
             <Grid.RowDefinitions>
@@ -59,7 +59,6 @@
                           FontSize="Large" 
                           Style="{StaticResource BaseSfButton}" 
                           BackgroundColor="{Binding IsTimerRunning, Converter={StaticResource SubmitButtonBackgroundConverter}}"
-                          Background="{Binding IsTimerRunning, Converter={StaticResource SubmitButtonBackgroundConverter}}"
                           />
     </Grid>
     

@@ -66,6 +66,8 @@
                             <Label Text="{Binding SubscriptDisplay, StringFormat='  {0}'}" HorizontalOptions="Fill" VerticalOptions="Fill" 
                                    BackgroundColor="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" TextColor="White"/>
 
+                            <Label Text="(CSR/Reset Likely)" HorizontalOptions="End" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" IsVisible="{Binding LikelyCSR}" TextColor="White" FontAttributes="Italic" FontSize="Small"/>
+
                             <Label Grid.Row="1" Text="Last Series Complete" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" TextColor="White"/>
                             <controls:CarawayOptionControl Grid.Row="2" BindingContext="{Binding CompleteOption}"/>
 
