@@ -104,6 +104,8 @@ namespace FF8Utilities.Common
             public static readonly FanfareCamera OneToOne = new FanfareCamera("One to One", 3);
 
             public static readonly FanfareCamera[] All = new[] { None, OneCharacter, ThreeCharacters, OneToOne };
+
+            public static readonly FanfareCamera[] AllExcludeNone = new[] { OneCharacter, ThreeCharacters, OneToOne };
         }
 
         public static FanfareCamera[] ThreePersonCameras => FanfareCamera.ThreePerson.All;

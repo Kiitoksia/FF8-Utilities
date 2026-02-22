@@ -4,7 +4,7 @@ namespace FF8Utilities.Common.Cards.Encounters.Dollet
 {
     public class AnacondaurEncounter : BaseEncounterModel
     {
-        public AnacondaurEncounter() : base("Anacondaur", 14, FanfareCamera.ThreePerson.All)
+        public AnacondaurEncounter() : base("Anacondaur", 14, FanfareCamera.ThreePerson.AllExcludeNone)
         {
             Abilities.Add(new SquallAttack());
             Abilities.Add(new SeiferAttack());

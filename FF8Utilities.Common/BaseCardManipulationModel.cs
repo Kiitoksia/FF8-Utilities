@@ -489,63 +489,71 @@ namespace FF8Utilities.Common
 
         private void Submit()
         {
-            if (_cts?.Token.IsCancellationRequested ?? true)
+            try
             {
-                if (string.IsNullOrWhiteSpace(RecoveryPattern))
+                if (_cts?.Token.IsCancellationRequested ?? true)
                 {
-                    StartTimer();
-                }
-                else
-                {
-                    var pattern = _manip.ParsePattern(RecoveryPattern, _player);
-                    if (pattern.Error == null)
+                    if (string.IsNullOrWhiteSpace(RecoveryPattern))
                     {
-                        var searchType = (Count == 0 ? SearchType.First : SearchType.Counting);
-                        if (_lastState != null)
-                        {
-                            searchType = SearchType.Recovery;
-                        }
-
-                        var results = _manip.SearchOpenings(
-                            _lastState ?? State,
-                            _player,
-                            pattern,
-                            false,
-                            count: Count,
-                            searchType: searchType,
-                            elapsedSeconds: CurrentResult?.DurationSeconds ?? 0);
-
-                        if (results.Any())
-                        {
-                            var result = results[0];
-                            _lastState = result.LastState;
-                            RecoveryPattern = null;
-                            FoundCards = $"Index {result.Index}: {string.Join(", ", result.Cards)}";
-                            Explanation = "Pattern found.  Confirm to start timer";
-                            ErrorText = null;
-                            GetInstantMashText();
-                            ShowInstantMashText = true;
-                        }
-                        else
-                        {
-                            ErrorText = "No cards found with this pattern";
-                            ShowInstantMashText = false;
-                        }
+                        StartTimer();
                     }
                     else
                     {
-                        ErrorText = pattern.Error;
-                        ShowInstantMashText = false;
+                        var pattern = _manip.ParsePattern(RecoveryPattern, _player);
+                        if (pattern.Error == null)
+                        {
+                            var searchType = (Count == 0 ? SearchType.First : SearchType.Counting);
+                            if (_lastState != null)
+                            {
+                                searchType = SearchType.Recovery;
+                            }
+
+                            var results = _manip.SearchOpenings(
+                                _lastState ?? State,
+                                _player,
+                                pattern,
+                                false,
+                                count: Count,
+                                searchType: searchType,
+                                elapsedSeconds: CurrentResult?.DurationSeconds ?? 0);
+
+                            if (results.Any())
+                            {
+                                var result = results[0];
+                                _lastState = result.LastState;
+                                RecoveryPattern = null;
+                                FoundCards = $"Index {result.Index}: {string.Join(", ", result.Cards)}";
+                                Explanation = "Pattern found.  Confirm to start timer";
+                                ErrorText = null;
+                                GetInstantMashText();
+                                ShowInstantMashText = true;
+                            }
+                            else
+                            {
+                                ErrorText = "No cards found with this pattern";
+                                ShowInstantMashText = false;
+                            }
+                        }
+                        else
+                        {
+                            ErrorText = pattern.Error;
+                            ShowInstantMashText = false;
+                        }
                     }
                 }
+                else
+                {
+                    _cts.Cancel();
+                    PauseBeeps();
+                    _stopwatch.Stop();
+                    TimerStopped();
+                }
             }
-            else
+            finally
             {
-                _cts.Cancel();
-                PauseBeeps();
-                _stopwatch.Stop();                
-                TimerStopped();
+                OnPropertyChanged(nameof(IsTimerRunning));
             }
+            
         }
 
         public abstract int BeepInterval { get; }
@@ -615,6 +623,8 @@ namespace FF8Utilities.Common
         public abstract void TimerStopped();
 
         public abstract Platform Platform { get; }
+
+        public bool IsTimerRunning => _cts != null && !_cts.Token.IsCancellationRequested;
     }
 
     public sealed class BeepSchedule
