@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using UltimeciaManip;
+using Platform = FF8Utilities.Common.Platform;
 
 namespace FF8Utilities.MAUI.Models
 {
@@ -14,6 +15,8 @@ namespace FF8Utilities.MAUI.Models
         private bool _showResults;
         private bool _inlcudeRinoaParties;
         private bool _isCalculating;
+        private Platform _gamePlatform;
+        private UltimeciaManipLanguage _language;
 
         public UltimeciaManipulationModel()
         {
@@ -49,13 +52,14 @@ namespace FF8Utilities.MAUI.Models
             ToggleResults = new Command(() => ShowResults = !ShowResults);
 
             _inlcudeRinoaParties = App.ShowRinoaParties;
+            _gamePlatform = App.Platform;
+            _language = App.GameLanguage;
             Results = new ObservableCollection<UltimeciaResultModel>();
 
             PropertyChanged += async (s, e) =>
             {
-                if (e.PropertyName == nameof(IncludeRinoaParties))
+                if (e.PropertyName == nameof(IncludeRinoaParties) || e.PropertyName == nameof(GamePlatform) || e.PropertyName == nameof(Language))
                 {
-                    App.ShowRinoaParties = IncludeRinoaParties;
                     if (Results != null && Results.Count > 0)
                     {
                         // Re-calculate results
@@ -120,18 +124,29 @@ namespace FF8Utilities.MAUI.Models
         {
             if (Directions.Count < 12) return;
 
-            IsCalculating = true;
-            PartyFormation[] formations = await Task.Run(() => Manipulation.GetUltimeciaFormations(Directions.Select(t => t.Direction).ToArray(), App.Platform, App.GameLanguage));
-            
-
             Results.Clear();
-            foreach (PartyFormation formation in formations)
-            {
-                Results.Add(new UltimeciaResultModel(formation, this));
-            }
-            IsCalculating = false;
 
-            OnPropertyChanged(nameof(ResultsCount));
+            try
+            {
+                IsCalculating = true;
+                if (!Manipulation.GetSupportedLanguages(App.Platform).Contains(App.GameLanguage))
+                {
+                    await App.Current.Windows[0].Page.DisplayAlertAsync("Error", "Language not supported for this platform", "OK");
+                    return;
+                }
+
+                PartyFormation[] formations = await Task.Run(() => Manipulation.GetUltimeciaFormations(Directions.Select(t => t.Direction).ToArray(), App.Platform, App.GameLanguage));
+
+                foreach (PartyFormation formation in formations)
+                {
+                    Results.Add(new UltimeciaResultModel(formation, this));
+                }
+            }
+            finally
+            {
+                IsCalculating = false;
+                OnPropertyChanged(nameof(ResultsCount));
+            }            
         }
 
         public bool IncludeRinoaParties 
@@ -141,6 +156,7 @@ namespace FF8Utilities.MAUI.Models
             {
                 if (_inlcudeRinoaParties == value) return;
                 _inlcudeRinoaParties = value;
+                if (value != App.ShowRinoaParties) App.ShowRinoaParties = value;
                 OnPropertyChanged();
             }
         }
@@ -157,6 +173,33 @@ namespace FF8Utilities.MAUI.Models
                 OnPropertyChanged();
             }
         }
+
+        public Platform GamePlatform 
+        { 
+            get => _gamePlatform; 
+            set
+            {
+                if (_gamePlatform == value) return;
+                _gamePlatform = value;
+                if (value != App.Platform) App.Platform = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public UltimeciaManipLanguage Language 
+        { 
+            get => _language; 
+            set
+            {
+                if (_language == value) return;
+                _language = value;
+                if (value != App.GameLanguage) App.GameLanguage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<Platform> Platforms => Enum.GetValues<Platform>();
+        public IEnumerable<UltimeciaManipLanguage> GameLanguages => Enum.GetValues<UltimeciaManipLanguage>();
 
     }
 

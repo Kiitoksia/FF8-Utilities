@@ -42,8 +42,8 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
@@ -53,8 +53,8 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='DebugTrimming'">
@@ -65,16 +65,16 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -50,7 +50,7 @@
         <buttons:SfButton Grid.Row="2" Text="{Binding SubmittedPolesDisplay}" Command="{Binding SubmitCommand}" CornerRadius="0" Style="{StaticResource BaseSfButton}" Margin="5" IsEnabled="{Binding SubmitButtonEnabled}"
                           Background="{Binding SubmitButtonEnabled, Converter={StaticResource EnabledButtonColourConverter}}" />
 
-        <CollectionView Grid.Row="3" ItemsSource="{Binding Output}" Margin="10" ItemSizingStrategy="MeasureFirstItem">
+        <CollectionView Grid.Row="3" ItemsSource="{Binding Output}" Margin="10" ItemSizingStrategy="MeasureAllItems">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="caraway:CarawayCodeOutput">
                     <Border Margin="5" Padding="0,0,0,5" Stroke="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}">
@@ -66,7 +66,7 @@
                             <Label Text="{Binding SubscriptDisplay, StringFormat='  {0}'}" HorizontalOptions="Fill" VerticalOptions="Fill" 
                                    BackgroundColor="{Binding LikelyCSR, Converter={StaticResource UnlikelyResultColourConverter}}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" TextColor="White"/>
 
-                            <Label Text="(CSR/Reset Likely)" HorizontalOptions="End" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" IsVisible="{Binding LikelyCSR}" TextColor="White" FontAttributes="Italic" FontSize="Small"/>
+                            <Label Text="(CSR/Reset Likely)" HorizontalOptions="End" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" IsVisible="{Binding LikelyCSR}" TextColor="White"  FontSize="Micro" Margin="0,0,10,0"/>
 
                             <Label Grid.Row="1" Text="Last Series Complete" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Large" FontAttributes="Bold" TextColor="White"/>
                             <controls:CarawayOptionControl Grid.Row="2" BindingContext="{Binding CompleteOption}"/>
@@ -97,10 +97,10 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Label Text="Hide Unlikely Results" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="Hide Unlikely Results" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White"/>
                         <Switch IsToggled="{Binding HideUnlikelyResults, Source={x:Reference this}}" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center"/>
 
-                        <Label Text="Show NPC Movement" HorizontalTextAlignment="Center" Grid.Row="1" VerticalTextAlignment="Center"/>
+                        <Label Text="Show NPC Movement" HorizontalTextAlignment="Center" Grid.Row="1" VerticalTextAlignment="Center" TextColor="White"/>
                         <Switch IsToggled="{Binding ShowNPCMovement, Source={x:Reference this}}" Grid.Row="1" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center"/>
                     </Grid>
                 </DataTemplate>

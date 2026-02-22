@@ -58,7 +58,7 @@
                           Grid.Row="2" 
                           FontSize="Large" 
                           Style="{StaticResource BaseSfButton}" 
-                          BackgroundColor="{Binding IsTimerRunning, Converter={StaticResource SubmitButtonBackgroundConverter}}"
+                          Background="{Binding IsTimerRunning, Converter={StaticResource SubmitButtonBackgroundConverter}}"
                           />
     </Grid>
     

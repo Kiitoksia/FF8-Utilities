@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:FF8Utilities.MAUI.Converters"
              xmlns:utilities="clr-namespace:FF8Utilities.MAUI" 
              xmlns:sf="http://schemas.syncfusion.com/maui"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"             
              x:Class="FF8Utilities.MAUI.Pages.UltimeciaPage"
              x:DataType="models:UltimeciaManipulationModel"
              Title="UltimeciaPage">
@@ -33,6 +34,7 @@
             <RowDefinition Height="Auto"/> <!-- Header -->
             <RowDefinition Height="80"/>
             <RowDefinition/>
+            <RowDefinition Height="0"/> <!-- Hidden row for popup-->
         </Grid.RowDefinitions>       
 
         <controls:HeaderControl x:Name="Header" HeaderText="Ultimecia"/>
@@ -46,6 +48,10 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
             <CollectionView ItemsSource="{Binding Directions}" HorizontalOptions="Center" VerticalOptions="Fill" InputTransparent="True">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
@@ -56,8 +62,8 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
             <Label Grid.Column="1" Text="{Binding DirectionCount, StringFormat='{0} / 12'}" HorizontalOptions="End" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Large" TextColor="White"/>
+            <Label Text="(Tap to copy)" Grid.Row="1" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" FontSize="Micro" TextColor="LightGray" IsVisible="{Binding ShowResults}"/>
         </Grid>
 
 
@@ -143,8 +149,8 @@
                                 </Grid.RowDefinitions>
                                 <Border StrokeThickness="0" BackgroundColor="{StaticResource StandardBlue}">
                                     <HorizontalStackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
-                                        <Label Text="{Binding Index, StringFormat='Index: {0}'}" FontSize="Small" VerticalTextAlignment="Center"/>
-                                        <CollectionView ItemsSource="{Binding MovementGlyphs}" HorizontalOptions="Center">
+                                        <Label Text="{Binding Index, StringFormat='Index: {0}'}" FontSize="Small" VerticalTextAlignment="Center" Margin="5,0,5,0"/>
+                                        <CollectionView ItemsSource="{Binding MovementGlyphs}" HorizontalOptions="Fill">
                                             <CollectionView.ItemsLayout>
                                                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
                                             </CollectionView.ItemsLayout>
@@ -221,19 +227,33 @@
             </Label>
         </Grid>
 
-        <sf:SfPopup x:Name="SettingsPopup" HeaderTitle="Options" ShowCloseButton="True">
+        <sf:SfPopup x:Name="SettingsPopup" HeaderTitle="Options" ShowCloseButton="True" HeightRequest="300" Grid.Row="3">
             <sf:SfPopup.ContentTemplate>
                 <DataTemplate>
-                    <Grid Margin="10" HorizontalOptions="Center" ColumnSpacing="10">
+                    <Grid Margin="10" HorizontalOptions="Center" ColumnSpacing="10" RowSpacing="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
-                        <Label Text="Show Rinoa Parties" HorizontalOptions="Center" VerticalOptions="Center"/>
-                        <Switch Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center" IsToggled="{Binding IncludeRinoaParties}"/>
+                        <Grid.Resources>
+                            <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Label Text="Platform"/>
+                        <editors:SfComboBox Grid.Column="1" SelectedItem="{Binding GamePlatform}" ItemsSource="{Binding Platforms}" IsClearButtonVisible="False"/>
+
+                        <Label Text="Game language" Grid.Row="1"/>
+                        <editors:SfComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Language}" ItemsSource="{Binding GameLanguages}" IsClearButtonVisible="False"/>
+
+                        <Label Text="Show Rinoa Parties" Grid.Row="2"/>
+                        <Switch Grid.Row="2" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center" IsToggled="{Binding IncludeRinoaParties}"/>
                     </Grid>
                 </DataTemplate>
             </sf:SfPopup.ContentTemplate>
