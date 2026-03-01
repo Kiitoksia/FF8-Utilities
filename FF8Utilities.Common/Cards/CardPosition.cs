@@ -83,7 +83,7 @@ namespace FF8Utilities.Common.Cards
         public static readonly CardPosition[] EarlyQuistisFrame1 = new[]
         {
             new CardPosition(1, true, 4, Common.Card.Fasticalcon),
-            new CardPosition(2, false, 1, Common.Card.Gayla),
+            new CardPosition(2, true, 1, Common.Card.Gayla),
             new CardPosition(3, false, 1, Common.Card.Anacondaur),
             new CardPosition(4, false, 3, Common.Card.Elastoid),
             new CardPosition(5, false, 2, Common.Card.Quistis),
