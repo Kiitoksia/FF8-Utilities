@@ -15,6 +15,7 @@
              xmlns:encs="clr-namespace:FF8Utilities.Common.Cards.Encounters;assembly=FF8Utilities.Common"
              xmlns:fishFins="clr-namespace:FF8Utilities.Common.Cards.Encounters.IfritsCavern;assembly=FF8Utilities.Common" 
              xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:utilites="clr-namespace:FF8Utilities.MAUI"
              x:Name="this"
              x:DataType="models:CardTrackerModel"
              Title="CardTrackerPage">
@@ -110,8 +111,26 @@
                                                                         <ColumnDefinition/>
                                                                     </Grid.ColumnDefinitions>
                                                                     <Label Text="{Binding FormationDisplay, Mode=OneTime}" VerticalOptions="Center" TextColor="White"/>
-                                                                    <Border StrokeThickness="1" Grid.Column="1" Stroke="White">
-                                                                        <editors:SfNumericEntry Value="{Binding Quantity}" Minimum="0" ShowBorder="False" CustomFormat="0" MaximumNumberDecimalDigits="0" UpDownPlacementMode="Inline"/>
+                                                                    
+                                                                    <Border StrokeThickness="1" Grid.Column="1" Stroke="White" Padding="10,5">
+                                                                        <Grid ColumnSpacing="10">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="50"/>
+                                                                                <ColumnDefinition/>
+                                                                                <ColumnDefinition/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Label Text="{Binding Quantity}" FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White"/>
+                                                                            <ImageButton Grid.Column="1" Command="{Binding PlusCommand}">
+                                                                                <ImageButton.Source>
+                                                                                    <FontImageSource Glyph="{x:Static utilites:FontAwesome.Plus}" FontFamily="FontAwesome" Size="64" Color="White"/>
+                                                                                </ImageButton.Source>
+                                                                            </ImageButton>
+                                                                            <ImageButton Grid.Column="2" Command="{Binding MinusCommand}">
+                                                                                <ImageButton.Source>
+                                                                                    <FontImageSource Glyph="{x:Static utilites:FontAwesome.Minus}" FontFamily="FontAwesome" Size="64" Color="White"/>
+                                                                                </ImageButton.Source>
+                                                                            </ImageButton>
+                                                                        </Grid>
                                                                     </Border>
                                                                 </Grid>
                                                             </DataTemplate>

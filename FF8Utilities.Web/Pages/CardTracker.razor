@@ -1,13 +1,17 @@
-﻿@page "/card-tracker"
-@using FF8Utilities.Web.Controls
-@inject ISettingsService Settings
+﻿@page "/"
 <PageTitle>Card Tracker</PageTitle>
 
 @code {
     private CardTrackerModel _model;
 
+    [Inject] 
+    private HttpClient Http { get; set; }
+    [Inject] 
+    private ISettingsService Settings { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, "res");
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
     }
@@ -19,19 +23,101 @@
 }
 else
 {
-    <Tabs>
-        <Tab Title="Balamb" Active="true">
-            <Content>
-                <div class="row">
-                    <div class="col-md-6">
-                        <EncounterControl Model="@_model.TwoBatsEncounter" />
-                    </div>
-                    <div class=col-md-6>
-                        <EncounterControl Model="@_model.IfritEncounter"/>
-                    </div>
-                </div>
+    <div class="page-wrapper">
+        <div class="tab-content-wrapper">
+            <Tabs>
+                <Tab Title="Balamb" Active="true">
+                    <Content>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.TwoBatsEncounter" />
+                            </div>
+                            <div class=col-md-6>
+                                <EncounterControl Model="@_model.IfritEncounter" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p>Post Ifrit Encounter</p>
+                            </div>
+                            <div class="col-md-auto">
+                                <select class="form-select" value="@_model.IfritsCavernEncounterType"
+                                        @onchange="e => { _model.IfritsCavernEncounterType = Enum.Parse<IfritEncounterType>(e.Value.ToString()); StateHasChanged(); }">
+                                    @foreach (IfritEncounterType type in Enum.GetValues<IfritEncounterType>())
+                                    {
+                                        <option value="@type">@type.GetDescription()</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-14">
+                                @if (_model.IfritsCavernEncounterType == IfritEncounterType.RedBat)
+                                {
+                                    <EncounterControl Model="@_model.SecondBatsEncounter" />
+                                }
+                                @if (_model.IfritsCavernEncounterType == IfritEncounterType.Buel)
+                                {
+                                    <EncounterControl Model="@_model.BuelEncounter" />
+                                }
+                            </div>
+                        </div>
                 
-            </Content>
-        </Tab>
-    </Tabs>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <Grid TItem="WorldMapEncounter" Data="@_model.WorldMapEncounters" Class="table table-hover table-bordered table-striped">
+                                    <GridColumns>
+                                        <GridColumn TItem="WorldMapEncounter" HeaderText="FORMATION" PropertyName="FormationDisplay">
+                                            @context.FormationDisplay
+                                        </GridColumn>
+                                        <GridColumn TItem="WorldMapEncounter" HeaderText="QUANTITY" PropertyName="Quantity">
+                                            <div class="input-group" style="width: auto;">
+                                                <span class="input-group-text">@context.Quantity</span>
+                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Quantity++">▲</Button>
+                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Quantity--">▼</Button>
+                                            </div>
+                                        </GridColumn>
+                                    </GridColumns>
+                                </Grid>
+                            </div>
+                            <div class="col-md-6">
+                                <Grid TItem="FishFinsEncounter" Data="@_model.FishFinEncounters"
+                                      Class="table table-hover table-bordered table-striped">
+                                    <GridColumns>
+                                        <GridColumn TItem="FishFinsEncounter" HeaderText="CAMERA" PropertyName="Camera">
+                                            <select class="form-select" value="@context.Camera"
+                                                    @onchange="e => { context.Camera = FanfareCamera.TwoPersonCameras.FirstOrDefault(t => t.Description == e.Value?.ToString()); StateHasChanged(); }">
+                                                @foreach (FanfareCamera camera in FanfareCamera.TwoPersonCameras)
+                                                {
+                                                    <option value="@camera.Description">@camera.Description</option>
+                                                }
+                                            </select>
+                                        </GridColumn>
+                                        <GridColumn TItem="FishFinsEncounter" HeaderText="SQUALL PHYSICALS" PropertyName="SquallPhysicals">
+                                            <div class="input-group" style="width: auto;">
+                                                <span class="input-group-text">@context.SquallPhysicals</span>
+                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.SquallPhysicals++">▲</Button>
+                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.SquallPhysicals--">▼</Button>
+                                            </div>
+                                        </GridColumn>
+                                        <GridColumn TItem="FishFinsEncounter" HeaderText="LIMITS" PropertyName="Limits">
+                                            <div class="input-group" style="width: auto;">
+                                                <span class="input-group-text">@context.Limits</span>
+                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Limits++">▲</Button>
+                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Limits--">▼</Button>
+                                            </div>
+                                        </GridColumn>
+                                    </GridColumns>
+                                </Grid>
+                            </div>
+                        </div>                
+                    </Content>
+                </Tab>
+            </Tabs>
+        </div>
+        <div class="fixed-footer d-flex justify-content-center align-items-center">
+            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</Button>
+            <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Outline="true" Disabled="true">Instant Mash: @_model.QuistisPatternMashDisplay</Button>
+        </div>
+    </div>    
 }

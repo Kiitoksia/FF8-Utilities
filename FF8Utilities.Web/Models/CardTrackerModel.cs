@@ -36,7 +36,7 @@ namespace FF8Utilities.Web.Models
 
         public override BaseCardManipulationModel CreateCardManipModel(CardManip manip, uint state, string player, int? count)
         {
-            return new CardManipulationModel(manip, state, player, _settings.DelayFrames, count, _settings);
+            return new CardManipulationModel(manip, state, player, _settings?.DelayFrames, count, _settings);
         }
 
         public override Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern)

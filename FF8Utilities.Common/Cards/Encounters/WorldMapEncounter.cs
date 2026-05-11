@@ -1,5 +1,6 @@
-﻿using System;
-using FF8Utilities;
+﻿using FF8Utilities;
+using System;
+using System.Drawing;
 
 namespace FF8Utilities.Common.Cards.Encounters
 {
@@ -10,7 +11,12 @@ namespace FF8Utilities.Common.Cards.Encounters
 
         public WorldMapEncounter()
         {
-
+            PlusCommand = new RelayCommand(() => Quantity++);
+            MinusCommand = new RelayCommand(() =>
+            {
+                if (Quantity == 0) return;
+                Quantity--;
+            });
         }
 
         public WorldMapFormation? Formation
@@ -26,6 +32,10 @@ namespace FF8Utilities.Common.Cards.Encounters
         }
 
         public string FormationDisplay => Formation?.GetDescription();
+
+        public RelayCommand PlusCommand { get; }
+
+        public RelayCommand MinusCommand { get; }
 
         #region Implementation of IEncounter
 

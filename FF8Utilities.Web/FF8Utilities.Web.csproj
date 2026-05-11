@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\res\Q card Late - Full Game Scenario.csv" />
+    <Content Remove="wwwroot\res\Q card Late - How to Play.csv" />
+    <Content Remove="wwwroot\res\Q card Late - Opponent Deck.csv" />
+    <Content Remove="wwwroot\res\Q card Late - RNG result.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="3.5.0" />
     <PackageReference Include="Blazor.Storage" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.7" />
@@ -19,6 +26,13 @@
     <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
     <ProjectReference Include="..\FF8Utilities.Common\FF8Utilities.Common.csproj" />
     <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\res\Q card Late - Full Game Scenario.csv" />
+    <None Include="wwwroot\res\Q card Late - How to Play.csv" />
+    <None Include="wwwroot\res\Q card Late - Opponent Deck.csv" />
+    <None Include="wwwroot\res\Q card Late - RNG result.csv" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -58,7 +59,6 @@ namespace FF8Utilities.Common.Cards
         private static LateQuistis _lateQuistisManip;
 
 
-        private bool _initialised;
 
         public static CardManip CardManip
         {
@@ -77,6 +77,12 @@ namespace FF8Utilities.Common.Cards
                 return _lateQuistisManip;
             }
         }
+
+        public static async Task InitializeLateQuistisAsync(HttpClient http, string baseUrl)
+        {
+            _lateQuistisManip = await LateQuistis.CreateAsync(http, baseUrl);
+        }
+
 
         public BaseZellCardTrackerModel()
         {
@@ -167,7 +173,6 @@ namespace FF8Utilities.Common.Cards
             };
 
             ZellCardManipModel = CreateCardManipModel(CardManip, 1, "zellmama", Output);
-            _initialised = true;
 
             try
             {

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,12 +21,11 @@ namespace FF8Utilities.Common.Cards
         public static readonly string[] RequiredFiles = new[] { QuistisCardRNGResultFilename, QuistisCardFullGameFilename, QuistisCardHowToPlayFilename, QuistisCardOpponentDeckFilename };
 
         private string _baseFolder;
+        private Dictionary<string, string> _csvContents;
 
         /// <summary>
-        /// 
+        /// File-system based constructor for desktop/MAUI.
         /// </summary>
-        /// <param name="baseFolder">Should be the folder containing the 4 quistis CSV files</param>
-        /// <exception cref="ArgumentException">Thrown if base folder does not contain the 4 expected files</exception>
         public LateQuistis(string baseFolder)
         {
             _baseFolder = baseFolder;
@@ -42,7 +42,6 @@ namespace FF8Utilities.Common.Cards
             Stopwatch sw = new Stopwatch();
             sw.Start();
 #endif
-
             LoadRNGResult();
             LoadOpponentDecks();
             LoadPlayPatterns();
@@ -53,24 +52,64 @@ namespace FF8Utilities.Common.Cards
 #endif
         }
 
-        private List<OpponentDeck> OpponentDecks { get; set; }
+        /// <summary>
+        /// In-memory constructor for Blazor WASM (use <see cref="CreateAsync"/>).
+        /// </summary>
+        private LateQuistis(Dictionary<string, string> csvContents)
+        {
+            _csvContents = csvContents;
 
-        private List<RNGResult> RNGResults { get; set; }
-
-        private List<PlayPattern> PlayPatterns { get; set; }
-
-        private List<GameScenario> GameScenarios { get; set; }
+#if DEBUG
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+#endif
+            LoadRNGResult();
+            LoadOpponentDecks();
+            LoadPlayPatterns();
+            LoadGameScenarios();
+#if DEBUG
+            sw.Stop();
+            Console.WriteLine($"LateQuistis Init Time: {sw.Elapsed.TotalSeconds:N2}s");
+#endif
+        }
 
         /// <summary>
-        /// 
+        /// Async factory for Blazor WebAssembly. Fetches CSV files via HttpClient.
         /// </summary>
-        /// <param name="relativeFile"></param>
-        /// <param name="rowHandler">int = RowIndex, string[] rowFields</param>
+        /// <param name="http">The HttpClient to use.</param>
+        /// <param name="baseUrl">Base URL pointing to the folder containing the CSV files (e.g. "res/").</param>
+        public static async Task<LateQuistis> CreateAsync(HttpClient http, string baseUrl)
+        {
+            var contents = new Dictionary<string, string>();
+            foreach (string filename in RequiredFiles)
+            {
+                string url = $"{baseUrl.TrimEnd('/')}/{Uri.EscapeDataString(filename)}";
+                contents[filename] = await http.GetStringAsync(url);
+            }
+            return new LateQuistis(contents);
+        }
+
+        private List<OpponentDeck> OpponentDecks { get; set; }
+        private List<RNGResult> RNGResults { get; set; }
+        private List<PlayPattern> PlayPatterns { get; set; }
+        private List<GameScenario> GameScenarios { get; set; }
+
         private void LoadFile<T>(string relativeFile, Action<int, T> rowHandler) where T : class
         {
-            using (StreamReader reader = new StreamReader(Path.Combine(_baseFolder, relativeFile)))
+            TextReader textReader;
+
+            if (_csvContents != null) // Web approach
             {
-                using (CsvReader csv = new CsvReader(reader, CultureInfo.CurrentCulture))
+                textReader = new StringReader(_csvContents[relativeFile]);
+            }
+            else
+            {
+                textReader = new StreamReader(Path.Combine(_baseFolder, relativeFile));
+            }
+
+            using (textReader)
+            {
+                using (CsvReader csv = new CsvReader(textReader, new CultureInfo("en-US")))
                 {
                     csv.Read();
                     csv.ReadHeader();
@@ -81,24 +120,22 @@ namespace FF8Utilities.Common.Cards
                             var record = csv.GetRecord<T>();
                             rowHandler(csv.CurrentIndex, record);
                         }
-                        catch (CsvHelper.TypeConversion.TypeConverterException ex)
+                        catch (CsvHelper.TypeConversion.TypeConverterException)
                         {
                             // Invalid record
                         }
-                        
                     }
                 }
-            }           
+            }            
         }
-
 
         private void LoadRNGResult()
         {
             RNGResults = new List<RNGResult>();
             LoadFile<RNGResult>(QuistisCardRNGResultFilename, (rowNo, result) =>
-            { 
+            {
                 if (result.IsValid) RNGResults.Add(result);
-            });        
+            });
         }
 
         private void LoadOpponentDecks()
@@ -137,6 +174,5 @@ namespace FF8Utilities.Common.Cards
 
             return new LateQuistisPattern(scenario?.RNGHex, rngModifier, scenario, deck, pattern, result, loadImages);
         }
-
     }
 }

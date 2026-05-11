@@ -15,15 +15,15 @@ namespace FF8Utilities.Web.Models
             _settings = settings;
         }
 
-        public override int CountdownTimer => _settings.CountdownTimer;
+        public override int CountdownTimer => _settings?.CountdownTimer ?? 3;
 
-        public override int BeepInterval => _settings.BeepInterval;
+        public override int BeepInterval => _settings?.BeepInterval ?? 400;
 
-        public override int BeepCount => _settings.BeepCount;
+        public override int BeepCount => _settings?.BeepCount ?? 4;
 
-        public override int BeepOffsetFrames => _settings.BeepOffsetFrames;
+        public override int BeepOffsetFrames => _settings?.BeepOffsetFrames ?? 0;
 
-        public override Platform Platform => _settings.Platform;
+        public override Platform Platform => _settings?.Platform ?? Platform.PC;
 
         public override void TimerStarted()
         {

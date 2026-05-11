@@ -5,28 +5,54 @@
 
 }
 
-<div class="container">
-    <div class="row">
+
+<div class="container border border-secondary rounded">
+    <div class="row bg-primary d-flex align-items-center">
         <div class="col-md-8">
-            <p>@Model.Description</p>
+            <p class="fw-bold mb-0">@Model.Description</p>
         </div>
-        <div class="col-md-6">
-            <p>@Model.Notes</p>
+        <div class="col-md-4">     
+            <TextInput @bind-Value="@Model.Notes" Placeholder="Add notes..." Class="align-middle" />
         </div>
     </div>
     @foreach (EncounterAbilityModel ability in Model.Abilities)
     {
         <div class="row">
-            <div class="col-md-6">
-                <p>@ability.Description</p>
+            <div class="col-md-8">
+                <p class="fw-bold">@ability.Description</p>
             </div>
-            <div class="col-md-6">
-                <div class="input-group" style="width: auto;">
-                    <button class="btn btn-outline-secondary" @onclick="() => ability.Count--">▼</button>
-                    <span class="input-group-text">@ability.Count</span>
-                    <button class="btn btn-outline-secondary" @onclick="() => ability.Count++">▲</button>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text mb-0">@ability.Count</span>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="() => { ability.Count++; StateHasChanged(); }">▲</button>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="() => { ability.Count--; StateHasChanged(); }">▼</button>
                 </div>
             </div>
+        </div>
+    }
+
+    @if(Model.FanfareVisible)
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <p class="fw-bold">Camera</p>
+            </div>
+            @foreach (FanfareCamera camera in Model.FanfareList)
+            {
+                string id = $"{Model.Description}_fanfare_{camera.Description}".Replace(" ", "_");
+                string groupName = $"{Model.Description}_fanfare";
+                <div class="col-md-auto align-content-end">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input"
+                               type="radio"
+                               id="@id"
+                               name="@groupName"
+                               checked="@(Model.Fanfare == camera)"
+                               @onchange="() => Model.Fanfare = camera" />
+                        <label class="form-check-label" for="@id">@camera.Description</label>
+                    </div>
+                </div>
+            }    
         </div>
     }
 </div>
