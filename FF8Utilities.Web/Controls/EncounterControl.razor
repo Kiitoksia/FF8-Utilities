@@ -1,0 +1,32 @@
+﻿
+@code {
+    [Parameter, EditorRequired]
+    public BaseEncounterModel Model { get; set; }
+
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <p>@Model.Description</p>
+        </div>
+        <div class="col-md-6">
+            <p>@Model.Notes</p>
+        </div>
+    </div>
+    @foreach (EncounterAbilityModel ability in Model.Abilities)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <p>@ability.Description</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group" style="width: auto;">
+                    <button class="btn btn-outline-secondary" @onclick="() => ability.Count--">▼</button>
+                    <span class="input-group-text">@ability.Count</span>
+                    <button class="btn btn-outline-secondary" @onclick="() => ability.Count++">▲</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.7" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CarawayCode\CarawayCode.csproj" />
+    <ProjectReference Include="..\CardManipulation\CardManipulation.csproj" />
+    <ProjectReference Include="..\FF8Utilities.Common\FF8Utilities.Common.csproj" />
+    <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
+  </ItemGroup>
+
+</Project>
