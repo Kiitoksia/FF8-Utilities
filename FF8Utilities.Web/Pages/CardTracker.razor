@@ -1,6 +1,37 @@
-﻿<h3>CardTracker</h3>
+﻿@page "/card-tracker"
+@using FF8Utilities.Web.Controls
+@inject ISettingsService Settings
+<PageTitle>Card Tracker</PageTitle>
 
 @code {
-    [Parameter, EditorRequired]
-    public CardManipulationModel Model { get; set; }
+    private CardTrackerModel _model;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Settings.Initialise();
+        _model = new CardTrackerModel(Settings);
+    }
+}
+
+@if (_model is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <Tabs>
+        <Tab Title="Balamb" Active="true">
+            <Content>
+                <div class="row">
+                    <div class="col-md-6">
+                        <EncounterControl Model="@_model.TwoBatsEncounter" />
+                    </div>
+                    <div class=col-md-6>
+                        <EncounterControl Model="@_model.IfritEncounter"/>
+                    </div>
+                </div>
+                
+            </Content>
+        </Tab>
+    </Tabs>
 }
