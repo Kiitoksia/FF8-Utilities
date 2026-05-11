@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+    <TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-maccatalyst</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
@@ -56,6 +57,16 @@
 	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
 	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
+    <PublishTrimmed>True</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+    <ApplicationVersion>7</ApplicationVersion>
+    <!-- For Mac App Store, both architectures are required -->
+    <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='DebugTrimming'">
 	  <PublishTrimmed>True</PublishTrimmed>
@@ -137,11 +148,11 @@
 	  <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<!--<ItemGroup>
 	  <Reference Include="System.Xaml">
 	    <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xaml.dll</HintPath>
 	  </Reference>
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
 	  <MauiXaml Update="Controls\CarawayOptionControl.xaml">

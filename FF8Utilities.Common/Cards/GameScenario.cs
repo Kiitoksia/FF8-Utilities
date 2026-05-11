@@ -33,7 +33,7 @@ namespace FF8Utilities.Common.Cards
             Frame8 = frame8;
             Frame9 = frame9;
             Frame10 = frame10;
-            ExtraFrame = extraFrame;
+            ExtraFrame = extraFrame;            
         }
 
         [Name("RNG Hexa")]
