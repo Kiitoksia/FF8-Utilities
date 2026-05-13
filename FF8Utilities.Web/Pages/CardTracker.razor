@@ -75,10 +75,10 @@ else
                                             @context.FormationDisplay
                                         </GridColumn>
                                         <GridColumn TItem="WorldMapEncounter" HeaderText="QUANTITY" PropertyName="Quantity">
-                                            <div class="input-group" style="width: auto;">
-                                                <span class="input-group-text">@context.Quantity</span>
-                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Quantity++">▲</Button>
-                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Quantity--">▼</Button>
+                                            <div class="input-group mb-0" style="width: auto;">
+                                                <span class="input-group-text flex-fill">@context.Quantity</span>
+                                                <button class="input-group-text" type="button" @onclick="() => context.Quantity++">▲</button>
+                                                <button class="input-group-text" type="button" @onclick="() => context.Quantity--">▼</button>
                                             </div>
                                         </GridColumn>
                                     </GridColumns>
@@ -99,16 +99,16 @@ else
                                         </GridColumn>
                                         <GridColumn TItem="FishFinsEncounter" HeaderText="SQUALL PHYSICALS" PropertyName="SquallPhysicals">
                                             <div class="input-group" style="width: auto;">
-                                                <span class="input-group-text">@context.SquallPhysicals</span>
-                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.SquallPhysicals++">▲</Button>
-                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.SquallPhysicals--">▼</Button>
+                                                <span class="input-group-text flex-fill">@context.SquallPhysicals</span>
+                                                <button class="input-group-text" type="button" @onclick="() => context.SquallPhysicals++">▲</button>
+                                                <button class="input-group-text" type="button" @onclick="() => context.SquallPhysicals--">▼</button>
                                             </div>
                                         </GridColumn>
                                         <GridColumn TItem="FishFinsEncounter" HeaderText="LIMITS" PropertyName="Limits">
                                             <div class="input-group" style="width: auto;">
-                                                <span class="input-group-text">@context.Limits</span>
-                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Limits++">▲</Button>
-                                                <Button Color="ButtonColor.Secondary" @onclick="() => context.Limits--">▼</Button>
+                                                <span class="input-group-text flex-fill">@context.Limits</span>
+                                                <button class="input-group-text" type="button" @onclick="() => context.Limits++">▲</button>
+                                                <button class="input-group-text" type="button" @onclick="() => context.Limits--">▼</button>
                                             </div>
                                         </GridColumn>
                                     </GridColumns>

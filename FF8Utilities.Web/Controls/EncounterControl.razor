@@ -42,7 +42,9 @@
             @* <TextInput @bind-Value="@Model.Notes" Placeholder="Add notes..." Class="align-middle" /> *@
             @if (Model.ShowPlusOneToAllButton)
             {
-                <button class="btn btn-secondary btn-sm btn-block" @onclick="IncrementAll">+1 to all</button>
+                <div class="d-grid">
+                    <button class="btn btn-secondary btn-sm" @onclick="IncrementAll">+1 to all</button>
+                </div>
             }
         </div>
     </div>
@@ -52,11 +54,11 @@
             <div class="col-md-8 col-sm-6">
                 <p class="fw-bold">@ability.Description</p>
             </div>
-            <div class="col-md-4 co-sm-6">
-                <div class="input-group">
-                    <span class="input-group-text mb-0">@ability.Count</span>
-                    <button class="btn btn-secondary btn-sm btn-block" type="button" @onclick="async () => await Increment(ability, true)">▲</button>
-                    <button class="btn btn-secondary btn-sm" btn-block" type="button" @onclick="async () => await Increment(ability, false)">▼</button>
+            <div class="col-md-4 col-sm-6">
+                <div class="input-group mb-0">
+                    <span class="input-group-text flex-fill">@ability.Count</span>
+                    <button class="input-group-text" type="button" @onclick="async () => await Increment(ability, true)">▲</button>
+                    <button class="input-group-text" type="button" @onclick="async () => await Increment(ability, false)">▼</button>
                 </div>
             </div>
         </div>
@@ -65,7 +67,7 @@
     @if (Model.ShowToggleOption)
     {
         <div class="row">
-            <div class="col-md-12 d-flex">
+            <div class="col-md-12 mx-auto">
                 <Switch ValueExpression="() => Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
             </div>
         </div>
