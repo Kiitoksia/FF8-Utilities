@@ -3,6 +3,24 @@
     [Parameter, EditorRequired]
     public BaseEncounterModel Model { get; set; }
 
+    [Parameter, EditorRequired]
+    public EventCallback Changed { get; set; }
+
+    private async Task Increment(EncounterAbilityModel ability, bool adding)
+    {
+        if (adding) ability.Count++;
+        else if (ability.Count <= 0) return;
+        else ability.Count--;
+
+        await Changed.InvokeAsync();
+    }
+
+    private async void SwitchChanged(bool value)
+    {
+        Model.IsToggled = value;
+        await Changed.InvokeAsync();
+    }
+
 }
 
 
@@ -24,9 +42,18 @@
             <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-text mb-0">@ability.Count</span>
-                    <button class="btn btn-secondary btn-sm" type="button" @onclick="() => { ability.Count++; StateHasChanged(); }">▲</button>
-                    <button class="btn btn-secondary btn-sm" type="button" @onclick="() => { ability.Count--; StateHasChanged(); }">▼</button>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="async () => await Increment(ability, true)">▲</button>
+                    <button class="btn btn-secondary btn-sm" type="button" @onclick="async () => await Increment(ability, false)">▼</button>
                 </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.ShowToggleOption)
+    {
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <Switch ValueExpression="() => Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
             </div>
         </div>
     }

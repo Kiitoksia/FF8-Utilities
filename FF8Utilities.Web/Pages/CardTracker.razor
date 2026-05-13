@@ -3,6 +3,7 @@
 
 @code {
     private CardTrackerModel _model;
+    private string _focusedTab;
 
     [Inject] 
     private HttpClient Http { get; set; }
@@ -15,6 +16,9 @@
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
     }
+
+
+    private void OnTabShown(TabsEventArgs args) => _focusedTab = args.ActiveTabTitle; 
 }
 
 @if (_model is null)
@@ -25,15 +29,15 @@ else
 {
     <div class="page-wrapper">
         <div class="tab-content-wrapper">
-            <Tabs>
+            <Tabs EnableFadeEffect="true" OnShowing="@(args => OnTabShown(args))">
                 <Tab Title="Balamb" Active="true">
                     <Content>
                         <div class="row">
                             <div class="col-md-6">
-                                <EncounterControl Model="@_model.TwoBatsEncounter" />
+                                <EncounterControl Model="@_model.TwoBatsEncounter" Changed="StateHasChanged" />
                             </div>
                             <div class=col-md-6>
-                                <EncounterControl Model="@_model.IfritEncounter" />
+                                <EncounterControl Model="@_model.IfritEncounter" Changed="StateHasChanged" />
                             </div>
                         </div>
                         <div class="row">
@@ -54,11 +58,11 @@ else
                             <div class="col-md-14">
                                 @if (_model.IfritsCavernEncounterType == IfritEncounterType.RedBat)
                                 {
-                                    <EncounterControl Model="@_model.SecondBatsEncounter" />
+                                    <EncounterControl Model="@_model.SecondBatsEncounter" Changed="StateHasChanged" />
                                 }
                                 @if (_model.IfritsCavernEncounterType == IfritEncounterType.Buel)
                                 {
-                                    <EncounterControl Model="@_model.BuelEncounter" />
+                                    <EncounterControl Model="@_model.BuelEncounter" Changed="StateHasChanged" />
                                 }
                             </div>
                         </div>
@@ -113,11 +117,95 @@ else
                         </div>                
                     </Content>
                 </Tab>
+                <Tab Title="Dollet">
+                    <Content>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.FirstDolletEncounter" Changed="StateHasChanged" />
+                            </div>
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.SecondDolletEncounter" Changed="StateHasChanged" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.ThirdDolletEncounter" Changed="StateHasChanged" />
+                            </div>
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.FourthDolletEncounter" Changed="StateHasChanged" />
+                            </div>
+                        </div>
+                    </Content>
+                </Tab>
+                <Tab Title="Anacondaur">
+                    <Content>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.BridgeEncounter" Changed="StateHasChanged" />
+                            </div>
+                            <div class="col-md-6">
+                                @if (_model.DidGetSecondBridgeEncounter)
+                                {
+                                    <EncounterControl Model="@_model.SecondBridgeEncounter" Changed="StateHasChanged" />                                    
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 d-flex">
+                                <Switch @bind-Value="_model.DidGetSecondBridgeEncounter" Label="2nd bridge encounter" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.AnacondaurEncounter" Changed="StateHasChanged" />
+                            </div>
+                            <div class="col-md-6">
+                                @if (!_model.DidGetSecondBridgeEncounter)
+                                {
+                                    <EncounterControl Model="@_model.PostAnacondaurEncounter" Changed="StateHasChanged" />
+                                }
+                            </div>
+                        </div>
+                    </Content>
+                </Tab>
+                <Tab Title="Elvoret + X-ATM">
+                    <Content>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.ElvoretEncounter" Changed="StateHasChanged" />
+                            </div>
+                            <div class="col-md-6">
+                                <EncounterControl Model="@_model.SpiderTankEncounter" Changed="StateHasChanged" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 d-flex">
+                                <Switch @bind-Value="_model.DidGetRedSoldierEncounter" Label="Include Red Soldier Encounter" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @if (_model.DidGetRedSoldierEncounter)
+                                {
+                                    <EncounterControl Model="@_model.RedSoldierEncounter" Changed="StateHasChanged" />
+                                }
+                            </div>
+                        </div>
+                    </Content>
+                </Tab>
             </Tabs>
         </div>
         <div class="fixed-footer d-flex justify-content-center align-items-center">
-            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</Button>
-            <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Outline="true" Disabled="true">Instant Mash: @_model.QuistisPatternMashDisplay</Button>
+            @if (_focusedTab == "Balamb" || _focusedTab == null)
+            {
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</Button>
+                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Outline="true" Disabled="true">Instant Mash: @_model.QuistisPatternMashDisplay</Button>
+            }
+            else if (_focusedTab == "Elvoret + X-ATM")
+            {
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Launch Zell (Index: @_model.Output)</Button>
+                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Outline="true" Disabled="true">Instant Mash: @_model.ZellPatternMashDisplay</Button>
+            }
         </div>
     </div>    
 }

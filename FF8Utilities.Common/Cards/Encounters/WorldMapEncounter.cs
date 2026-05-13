@@ -77,6 +77,7 @@ namespace FF8Utilities.Common.Cards.Encounters
             set
             {
                 if (value == _quantity) return;
+                if (value < 0) return; // Invalid value
                 _quantity = value;
                 OnPropertyChanged();
             }
