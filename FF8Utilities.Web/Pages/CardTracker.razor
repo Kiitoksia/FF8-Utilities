@@ -33,10 +33,10 @@ else
                 <Tab Title="Balamb" Active="true">
                     <Content>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.TwoBatsEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class=col-md-6>
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.IfritEncounter" Changed="StateHasChanged" />
                             </div>
                         </div>
@@ -55,7 +55,7 @@ else
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-14">
+                            <div class="col-md-12">
                                 @if (_model.IfritsCavernEncounterType == IfritEncounterType.RedBat)
                                 {
                                     <EncounterControl Model="@_model.SecondBatsEncounter" Changed="StateHasChanged" />
@@ -68,7 +68,7 @@ else
                         </div>
                 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <Grid TItem="WorldMapEncounter" Data="@_model.WorldMapEncounters" Class="table table-hover table-bordered table-striped">
                                     <GridColumns>
                                         <GridColumn TItem="WorldMapEncounter" HeaderText="FORMATION" PropertyName="FormationDisplay">
@@ -84,7 +84,7 @@ else
                                     </GridColumns>
                                 </Grid>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <Grid TItem="FishFinsEncounter" Data="@_model.FishFinEncounters"
                                       Class="table table-hover table-bordered table-striped">
                                     <GridColumns>
@@ -120,18 +120,18 @@ else
                 <Tab Title="Dollet">
                     <Content>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.FirstDolletEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.SecondDolletEncounter" Changed="StateHasChanged" />
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.ThirdDolletEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.FourthDolletEncounter" Changed="StateHasChanged" />
                             </div>
                         </div>
@@ -140,10 +140,10 @@ else
                 <Tab Title="Anacondaur">
                     <Content>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.BridgeEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 @if (_model.DidGetSecondBridgeEncounter)
                                 {
                                     <EncounterControl Model="@_model.SecondBridgeEncounter" Changed="StateHasChanged" />                                    
@@ -156,10 +156,10 @@ else
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.AnacondaurEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 @if (!_model.DidGetSecondBridgeEncounter)
                                 {
                                     <EncounterControl Model="@_model.PostAnacondaurEncounter" Changed="StateHasChanged" />
@@ -171,10 +171,10 @@ else
                 <Tab Title="Elvoret + X-ATM">
                     <Content>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.ElvoretEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <EncounterControl Model="@_model.SpiderTankEncounter" Changed="StateHasChanged" />
                             </div>
                         </div>
@@ -184,7 +184,7 @@ else
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 @if (_model.DidGetRedSoldierEncounter)
                                 {
                                     <EncounterControl Model="@_model.RedSoldierEncounter" Changed="StateHasChanged" />
@@ -198,13 +198,12 @@ else
         <div class="fixed-footer d-flex justify-content-center align-items-center">
             @if (_focusedTab == "Balamb" || _focusedTab == null)
             {
-                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</Button>
-                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Outline="true" Disabled="true">Instant Mash: @_model.QuistisPatternMashDisplay</Button>
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Get Quistis Patterns (Index: @_model.LateQuistisOutput)<br /> Instant Mash: @_model.QuistisPatternMashDisplay</Button>
             }
             else if (_focusedTab == "Elvoret + X-ATM")
             {
                 <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Launch Zell (Index: @_model.Output)</Button>
-                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Outline="true" Disabled="true">Instant Mash: @_model.ZellPatternMashDisplay</Button>
+                <span class="border border-secondary">Instant Mash: @_model.ZellPatternMashDisplay</span>
             }
         </div>
     </div>    
