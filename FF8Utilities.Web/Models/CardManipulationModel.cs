@@ -1,4 +1,6 @@
-﻿using Blazored.LocalStorage;
+﻿using System;
+using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using CardManipulation;
 using FF8Utilities.Common;
 using FF8Utilities.Web.Services;

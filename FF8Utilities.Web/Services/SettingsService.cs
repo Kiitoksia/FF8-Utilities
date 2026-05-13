@@ -1,4 +1,5 @@
-﻿using Blazored.LocalStorage;
+﻿using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using FF8Utilities.Common;
 
 namespace FF8Utilities.Web.Services

@@ -34,9 +34,9 @@
 
 
 <div class="container border border-secondary rounded">
-    <div class="row bg-primary d-flex align-items-center">
+    <div class="row bg-primary d-flex align-items-center py-2">
         <div class="col-md-8 col-sm-6">
-            <p class="fw-bold mb-0">@Model.Description</p>
+            <h4 class="fw-bold mb-0">@Model.Description</h4>
         </div>
         <div class="col-md-4 co-sm-6">
             @* <TextInput @bind-Value="@Model.Notes" Placeholder="Add notes..." Class="align-middle" /> *@
@@ -50,7 +50,7 @@
     </div>
     @foreach (EncounterAbilityModel ability in Model.Abilities)
     {
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-md-8 col-sm-6">
                 <p class="fw-bold">@ability.Description</p>
             </div>
@@ -66,7 +66,7 @@
 
     @if (Model.ShowToggleOption)
     {
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-md-12 mx-auto">
                 <Switch ValueExpression="() => Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
             </div>
@@ -75,7 +75,7 @@
 
     @if(Model.FanfareVisible)
     {
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-md-3">
                 <p class="fw-bold">Camera</p>
             </div>

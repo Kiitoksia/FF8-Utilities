@@ -1,8 +1,10 @@
-﻿using Blazored.LocalStorage;
+﻿using System;
+using System.Threading.Tasks;
 using CardManipulation;
 using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
 using FF8Utilities.Web.Services;
+
 
 namespace FF8Utilities.Web.Models
 {
