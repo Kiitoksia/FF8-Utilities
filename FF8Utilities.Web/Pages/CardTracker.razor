@@ -4,6 +4,7 @@
 @code {
     private CardTrackerModel _model;
     private string _focusedTab;
+    private LateQuistisManipulationControl _quistisControl;
 
     [Inject] 
     private HttpClient Http { get; set; }
@@ -15,6 +16,14 @@
         await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, "res");
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
+        _model.StartLateQuistisPattern += async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                StateHasChanged();
+                await _quistisControl.ShowAsync(_model.CurrentLateQuistisPattern);
+            });
+        };
     }
 
 

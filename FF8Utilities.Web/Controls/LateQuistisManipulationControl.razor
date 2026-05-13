@@ -1,0 +1,43 @@
+﻿
+
+@code {
+    [Parameter, EditorRequired]
+    public CardManipulationModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback<uint?> OnCompleted { get; set; }
+
+    private Modal _modal;
+    private LateQuistisPattern _pattern;
+    private LateQuistisStrategy _selectedStrategy;
+
+    public async Task ShowAsync(LateQuistisPattern pattern)
+    {
+        _pattern = pattern;
+        _selectedStrategy = null;
+        StateHasChanged();
+        await _modal.ShowAsync();
+    }
+
+    private async Task ConfirmStrategy()
+    {
+        if (_selectedStrategy is null) return;
+        var result = uint.Parse(_selectedStrategy.ResultHex, System.Globalization.NumberStyles.HexNumber);
+        await _modal.HideAsync();
+        await OnCompleted.InvokeAsync(result);
+    }
+
+    private async Task Cancel()
+    {
+        await _modal.HideAsync();
+        await OnCompleted.InvokeAsync(null);
+    }
+}
+
+<Modal @ref="_modal" Title="Late Quistis">
+    <BodyTemplate>
+        <Tabs NavStyle="NavStyle.Vertical">
+            
+        </Tabs>
+    </BodyTemplate>
+</Modal>

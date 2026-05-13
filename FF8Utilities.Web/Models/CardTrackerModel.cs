@@ -11,6 +11,7 @@ namespace FF8Utilities.Web.Models
     public class CardTrackerModel : BaseZellCardTrackerModel
     {
         private ISettingsService _settings;
+        private TaskCompletionSource<uint?> _quistisTaskCompletionSource;
 
         public CardTrackerModel(ISettingsService settings) : base()
         {
@@ -35,15 +36,27 @@ namespace FF8Utilities.Web.Models
             set => _settings.IfritsCavernEncounterType = value;
         }
 
+        public LateQuistisPattern CurrentLateQuistisPattern { get; set; }
+
+        public event Action StartLateQuistisPattern;
 
         public override BaseCardManipulationModel CreateCardManipModel(CardManip manip, uint state, string player, int? count)
         {
             return new CardManipulationModel(manip, state, player, _settings?.DelayFrames, count, _settings);
         }
 
-        public override Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern)
+        public override async Task<uint?> LaunchQuistisPatterns(LateQuistisPattern pattern)
         {
-            throw new NotImplementedException();
+            _quistisTaskCompletionSource = new TaskCompletionSource<uint?>();
+            CurrentLateQuistisPattern = pattern;
+            StartLateQuistisPattern?.Invoke();
+            return await _quistisTaskCompletionSource.Task;
+        }
+
+        public void SubmitQuistisResult(uint? result)
+        {
+            CurrentLateQuistisPattern = null;
+            _quistisTaskCompletionSource?.TrySetResult(result);
         }
 
         public override void LaunchZellPatterns(string patternString, int? count)
