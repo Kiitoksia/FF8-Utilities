@@ -20,10 +20,17 @@
         foreach (var strategy in pattern.Strategies)
         {
             foreach (var card in strategy.OpponentCards)
-                _imageCache.TryAdd(card, BuildDataUrl(card));
+            {
+                if (card == null) return;
+                _imageCache.TryAdd(card, BuildDataUrl(card));                
+            }
 
             foreach (var pos in strategy.Positions)
+            {
+                if (pos.Card == null) return;
                 _imageCache.TryAdd(pos.Card, BuildDataUrl(pos.Card));
+            }
+                
         }
 
         StateHasChanged();
@@ -48,9 +55,10 @@
 
     private string GetCardImageSource(byte[] card) => _imageCache.TryGetValue(card, out var url) ? url : BuildDataUrl(card);
 
-    private void SubmitFrame(LateQuistisStrategy frame)
+    private async void SubmitFrame(LateQuistisStrategy frame)
     {
-        
+        _selectedStrategy = frame;
+        await ConfirmStrategy();
     }
 }
 
@@ -60,7 +68,7 @@
             <div style="flex: 2; min-height: 0; overflow: auto;">
                 <div class="row h-100">
                     <Tabs NavStyle="NavStyle.Vertical">
-                        @foreach (var frame in _pattern.Strategies)
+                        @foreach (var frame in _pattern.Strategies.OrderBy(t => t.OpponentDeckOrderer))
                         {
                             <Tab>
                                 <TitleTemplate>

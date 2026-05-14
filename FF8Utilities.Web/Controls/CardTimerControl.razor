@@ -25,35 +25,35 @@
     <div class="row bg-primary d-flex align-items-center py-2">
         <h4 class="fw-bold mb-0">CARD TIMER</h4>
     </div>
-    <div class="row">
-        <p>@Model.Explanation</p>
-    </div>
-    <div class="row">
-        <InputText @bind-Value="@Model.RecoveryPattern" Placeholder="Enter cards for recovery or 1st try search" />
-    </div>
-    @if (!string.IsNullOrWhiteSpace(Model.FoundCards))
-    {
-        <div class="row">
-            <p>@Model.FoundCards</p>
-        </div>
-    }
-    @if (!string.IsNullOrWhiteSpace(Model.ErrorText))
-    {
-        <div class="row">
-            <p>@Model.ErrorText</p>
-        </div>
-    }
-
     <div class="row align-items-center">
-        <div class="col-md-8 col-sm-12" style="min-width: 0">
-            <p class="text-truncate fs-5 fw-bold font-monospace mb-0" style="color: @ToCss(Model.TextColor)">@Model.Snake</p>
+        <div class="col-md-8 col-12">
+            <div class="row">
+                <p>@Model.Explanation</p>
+            </div>
+            <div class="row">
+                <InputText @bind-Value="@Model.RecoveryPattern" Placeholder="Enter cards for recovery or 1st try search" />
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.FoundCards))
+            {
+                <div class="row">
+                    <p>@Model.FoundCards</p>
+                </div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorText))
+            {
+                <div class="row">
+                    <p>@Model.ErrorText</p>
+                </div>
+            }
+            <div style="min-width: 0">
+                <p class="text-truncate fs-5 fw-bold font-monospace mb-0" style="color: @ToCss(Model.TextColor)">@Model.Snake</p>
+            </div>
         </div>
-        <div class="col-md-4 col-sm-12 fs-5">
+        <div class="col-md-4 col-12">
             <button @onclick="() => Model.SubmitCommand.Execute(null)" class="btn w-100 border border-secondary border-3" style="background-color: @ToCss(Model.InstantMashBackgroundColor)">
                 Instant Mash<br />
                 @($"{Model.FirstFrameAvailableFramesDisplay} ({Model.InstantMashFramesAvailable} frames)")
             </button>
         </div>
     </div>
-    
 </div>
