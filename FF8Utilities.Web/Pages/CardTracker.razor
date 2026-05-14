@@ -10,10 +10,13 @@
     private HttpClient Http { get; set; }
     [Inject] 
     private ISettingsService Settings { get; set; }
+    [Inject]
+    private NavigationManager Navigation { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, "res");
+        string baseUrl = Navigation.BaseUri + "res";
+        await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, baseUrl);
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
         _model.StartLateQuistisPattern += async (model) =>
