@@ -1,5 +1,4 @@
-﻿
-@code {
+﻿@code {
     [Parameter, EditorRequired]
     public BaseEncounterModel Model { get; set; }
 
@@ -29,62 +28,45 @@
         }
         await Changed.InvokeAsync();
     }
-
 }
 
-
-<div class="container border border-secondary rounded">
-    <div class="row bg-primary d-flex align-items-center py-2">
-        <div class="col-md-8 col-sm-6">
-            <h4 class="fw-bold mb-0">@Model.Description</h4>
-        </div>
-        <div class="col-md-4 co-sm-6">
-            @* <TextInput @bind-Value="@Model.Notes" Placeholder="Add notes..." Class="align-middle" /> *@
-            @if (Model.ShowPlusOneToAllButton)
-            {
-                <div class="d-grid">
-                    <button class="btn btn-secondary btn-sm" @onclick="IncrementAll">+1 to all</button>
-                </div>
-            }
-        </div>
+<div class="border border-secondary rounded overflow-hidden">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-primary">
+        <h4 class="fw-bold mb-0">@Model.Description</h4>
+        @if (Model.ShowPlusOneToAllButton)
+        {
+            <button class="btn btn-secondary btn-sm" @onclick="IncrementAll">+1 to all</button>
+        }
     </div>
     @foreach (EncounterAbilityModel ability in Model.Abilities)
     {
-        <div class="row mb-3">
-            <div class="col-md-8 col-sm-6">
-                <p class="fw-bold">@ability.Description</p>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="input-group mb-0">
-                    <span class="input-group-text flex-fill">@ability.Count</span>
-                    <button class="input-group-text" type="button" @onclick="async () => await Increment(ability, true)">▲</button>
-                    <button class="input-group-text" type="button" @onclick="async () => await Increment(ability, false)">▼</button>
-                </div>
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 border-top border-secondary">
+            <span class="fw-bold text-center ">@ability.Description</span>
+            <div class="input-group mb-0" style="width: auto;">
+                <span class="input-group-text">@ability.Count</span>
+                <button class="input-group-text" type="button" @onclick="async () => await Increment(ability, true)">▲</button>
+                <button class="input-group-text" type="button" @onclick="async () => await Increment(ability, false)">▼</button>
             </div>
         </div>
     }
 
     @if (Model.ShowToggleOption)
     {
-        <div class="row mb-3">
-            <div class="col-md-12 mx-auto">
-                <Switch ValueExpression="() => Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
-            </div>
+        <div class="px-3 py-2 border-top border-secondary">
+            <Switch ValueExpression="() => Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
         </div>
     }
 
-    @if(Model.FanfareVisible)
+    @if (Model.FanfareVisible)
     {
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <p class="fw-bold">Camera</p>
-            </div>
-            @foreach (FanfareCamera camera in Model.FanfareList)
-            {
-                string id = $"{Model.Description}_fanfare_{camera.Description}".Replace(" ", "_");
-                string groupName = $"{Model.Description}_fanfare";
-                <div class="col-md-auto align-content-end">
-                    <div class="form-check form-check-inline">
+        <div class="d-flex align-items-start px-3 py-2 border-top border-secondary gap-3">
+            <span class="fw-bold">Camera</span>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (FanfareCamera camera in Model.FanfareList)
+                {
+                    string id = Guid.NewGuid().ToString();
+                    string groupName = $"{Model.Description}_fanfare";
+                    <div class="form-check form-check-inline mb-0">
                         <input class="form-check-input"
                                type="radio"
                                id="@id"
@@ -93,8 +75,8 @@
                                @onchange="() => Model.Fanfare = camera" />
                         <label class="form-check-label" for="@id">@camera.Description</label>
                     </div>
-                </div>
-            }    
+                }
+            </div>
         </div>
     }
 </div>

@@ -34,6 +34,8 @@
     private void OnTabShown(TabsEventArgs args) => _focusedTab = args.ActiveTabTitle;
 
     private void LaunchQuistis() => _model.LaunchQuistisPatternsCommand.Execute(null);
+
+    private string GetFishFinRowClass(FishFinsEncounter enc) => enc.SingleFishKilled ? "table-success" : string.Empty;
 }
 
 @if (_model is null)
@@ -47,16 +49,16 @@ else
             <LateQuistisManipulationControl @ref="_quistisControl" OnCompleted="t => _model.SubmitQuistisResult(t)"/>
             <Tabs EnableFadeEffect="true" OnShowing="@(args => OnTabShown(args))">
                 <Tab Title="Balamb" Active="true">
-                    <Content>
-                        <div class="row mb-3">
-                            <div class="col-md-6 col-sm-12">
+                    <Content>  
+                        <div class="row mb-3 justify-content-center">
+                            <div class="col-md-6 col-sm-12 col-lg-4">
                                 <EncounterControl Model="@_model.TwoBatsEncounter" Changed="StateHasChanged" />
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12 col-lg-4">
                                 <EncounterControl Model="@_model.IfritEncounter" Changed="StateHasChanged" />
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3 justify-content-center">
                             <div class="col-md-3">
                                 <p>Post Ifrit Encounter</p>
                             </div>
@@ -70,8 +72,8 @@ else
                                 </select>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-12">
+                        <div class="row mb-3 justify-content-center">
+                            <div class="col-md-12 col-lg-4">
                                 @if (_model.IfritsCavernEncounterType == IfritEncounterType.RedBat)
                                 {
                                     <EncounterControl Model="@_model.SecondBatsEncounter" Changed="StateHasChanged" />
@@ -83,8 +85,11 @@ else
                             </div>
                         </div>
                 
-                        <div class="row mb-3">
-                            <div class="col-md-6 col-sm-12">
+                        <div class="row mb-3 justify-content-center">
+                            <div class="col-md-6 col-sm-12 col-lg-4">
+                                <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-primary">
+                                    <h4 class="fw-bold mb-0">World Map Encounters</h4>
+                                </div>
                                 <Grid TItem="WorldMapEncounter" Data="@_model.WorldMapEncounters" Class="table table-hover table-bordered table-striped">
                                     <GridColumns>
                                         <GridColumn TItem="WorldMapEncounter" HeaderText="FORMATION" PropertyName="FormationDisplay">
@@ -100,10 +105,16 @@ else
                                     </GridColumns>
                                 </Grid>
                             </div>
-                            <div class="col-md-6 col-sm-12">
-                                <Grid TItem="FishFinsEncounter" Data="@_model.FishFinEncounters"
-                                      Class="table table-hover table-bordered table-striped">
+                            <div class="col-md-6 col-sm-12 col-lg-4">
+                                <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-primary">
+                                    <h4 class="fw-bold mb-0">Fish Fin Encounters</h4>
+                                </div>
+                                <Grid TItem="FishFinsEncounter" Data="@_model.FishFinEncounters.ToList()" 
+                                    Class="table table-hover table-bordered table-striped mb-0" RowClass="GetFishFinRowClass">
                                     <GridColumns>
+                                        <GridColumn TItem="FishFinsEncounter" PropertyName="Camera" TextAlignment="Alignment.Center">
+                                            <Button Size="ButtonSize.Small" Color="ButtonColor.Danger" @onclick="() => { _model.RemoveFishFinEncounterCommand.Execute(context); StateHasChanged(); }">X</Button>
+                                        </GridColumn>
                                         <GridColumn TItem="FishFinsEncounter" HeaderText="CAMERA" PropertyName="Camera">
                                             <select class="form-select" value="@context.Camera"
                                                     @onchange="e => { context.Camera = FanfareCamera.TwoPersonCameras.FirstOrDefault(t => t.Description == e.Value?.ToString()); StateHasChanged(); }">
@@ -129,8 +140,18 @@ else
                                         </GridColumn>
                                     </GridColumns>
                                 </Grid>
+                                <div class="row g-0">
+                                    <div class="col-md-8 d-grid">
+                                        <Button Block="true" Color="ButtonColor.Primary" @onclick="() => _model.AddNewEncounterCommand.Execute(null)"
+                                            Class="rounded-0 border-white border-start-2 border-top-2 border-bottom-2 border-end-1">Add Regular Encounter</Button>
+                                    </div>
+                                    <div class="col-md-4 d-grid">
+                                        <Button Block="true" Color="ButtonColor.Success" @onclick="() => _model.AddNewHalfEncounterCommand.Execute(null)"
+                                                Class="rounded-0 border-white border-start-1 border-top-2 border-bottom-2 border-end-2">Add Single Fish</Button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>                
+                        </div>
                     </Content>
                 </Tab>
                 <Tab Title="Dollet">
@@ -215,10 +236,10 @@ else
             @if (_focusedTab == "Balamb" || _focusedTab == null)
             {
                 <div class="d-flex align-items-stretch">
-                    <button class="btn btn-primary btn-lg border-2 border-white rounded-0 border-right-0 fw-bold" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</button>
-                    <div class="border border-2 border-white btn-lg px-3 border-left-0 align-items-center">
+                    <button class="btn btn-primary btn-lg border-start-2 border-top-2 border-end-2 border-right-0 border-white rounded-0 border-right-0 fw-bold" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</button>
+                    <div class="border border-start-0 border-top-2 border-right-2 border-end-2 border-white btn-lg px-3 border-left-0 d-flex flex-column align-items-center justify-content-center" style="background-color: @_model.QuistisMashTextBackgroundColor.ToCss()">
                         <span>Instant Mash<br/></span>
-                        <span class="fs-5 fw-bold align-items-center">@_model.QuistisPatternMashDisplay</span>
+                        <span class="fs-5 fw-bold">@_model.QuistisPatternMashDisplay</span>
                     </div>
                 </div>
                 

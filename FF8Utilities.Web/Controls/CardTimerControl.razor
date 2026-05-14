@@ -17,7 +17,6 @@
         Model.Redraw -= OnRedraw;
     }
 
-    private string ToCss(System.Drawing.Color c) => $"rgba({c.R},{c.G},{c.B},{c.A / 255f:F3})";
 }
 
 
@@ -46,11 +45,11 @@
                 </div>
             }
             <div style="min-width: 0">
-                <p class="text-truncate fs-5 fw-bold font-monospace mb-0" style="color: @ToCss(Model.TextColor)">@Model.Snake</p>
+                <p class="text-truncate fs-5 fw-bold font-monospace mb-0" style="color: @Model.TextColor.ToCss()">@Model.Snake</p>
             </div>
         </div>
         <div class="col-md-4 col-12">
-            <button @onclick="() => Model.SubmitCommand.Execute(null)" class="btn w-100 border border-secondary border-3" style="background-color: @ToCss(Model.InstantMashBackgroundColor)">
+            <button @onclick="() => Model.SubmitCommand.Execute(null)" class="btn w-100 border border-secondary border-3" style="background-color: @Model.InstantMashBackgroundColor.ToCss())">
                 Instant Mash<br />
                 @($"{Model.FirstFrameAvailableFramesDisplay} ({Model.InstantMashFramesAvailable} frames)")
             </button>
