@@ -55,6 +55,8 @@
 
     private string GetCardImageSource(byte[] card) => _imageCache.TryGetValue(card, out var url) ? url : BuildDataUrl(card);
 
+    private string ModalTitle => _pattern is null ? "Quistis Card Pattern" : $"Quistis Card Pattern (RNG Index: {_pattern.RNGIndex})";
+
     private async void SubmitFrame(LateQuistisStrategy frame)
     {
         _selectedStrategy = frame;
@@ -62,7 +64,7 @@
     }
 }
 
-<Modal @ref="_modal" Title="Late Quistis" UseStaticBackdrop="true" Fullscreen="ModalFullscreen.Always">
+<Modal @ref="_modal" Title="@ModalTitle" UseStaticBackdrop="true" Fullscreen="ModalFullscreen.Always">
     <BodyTemplate>
         <div class="d-flex flex-column h-100 gap-3 p-2">
             <div style="flex: 2; min-height: 0; overflow: auto;">
