@@ -214,7 +214,14 @@ else
         <div class="fixed-footer d-flex justify-content-center align-items-center">
             @if (_focusedTab == "Balamb" || _focusedTab == null)
             {
-                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)<br /> Instant Mash: @_model.QuistisPatternMashDisplay</Button>
+                <div class="d-flex align-items-stretch">
+                    <button class="btn btn-primary btn-lg border-2 border-white rounded-0 border-right-0 fw-bold" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</button>
+                    <div class="border border-2 border-white btn-lg px-3 border-left-0 align-items-center">
+                        <span>Instant Mash<br/></span>
+                        <span class="fs-5 fw-bold align-items-center">@_model.QuistisPatternMashDisplay</span>
+                    </div>
+                </div>
+                
             }
             else if (_focusedTab == "Elvoret + X-ATM")
             {
