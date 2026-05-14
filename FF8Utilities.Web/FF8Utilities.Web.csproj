@@ -25,11 +25,4 @@
     <ProjectReference Include="..\UltimeciaManip\UltimeciaManip.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\res\Q card Late - Full Game Scenario.csv" />
-    <None Include="wwwroot\res\Q card Late - How to Play.csv" />
-    <None Include="wwwroot\res\Q card Late - Opponent Deck.csv" />
-    <None Include="wwwroot\res\Q card Late - RNG result.csv" />
-  </ItemGroup>
-
 </Project>
