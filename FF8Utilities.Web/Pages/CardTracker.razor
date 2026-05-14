@@ -16,18 +16,21 @@
         await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, "res");
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
-        _model.StartLateQuistisPattern += async () =>
+        _model.StartLateQuistisPattern += async (model) =>
         {
             await InvokeAsync(async () =>
             {
                 StateHasChanged();
+                _quistisControl.Model = model;
                 await _quistisControl.ShowAsync(_model.CurrentLateQuistisPattern);
             });
         };
     }
 
 
-    private void OnTabShown(TabsEventArgs args) => _focusedTab = args.ActiveTabTitle; 
+    private void OnTabShown(TabsEventArgs args) => _focusedTab = args.ActiveTabTitle;
+
+    private void LaunchQuistis() => _model.LaunchQuistisPatternsCommand.Execute(null);
 }
 
 @if (_model is null)
@@ -38,6 +41,7 @@ else
 {
     <div class="page-wrapper">
         <div class="tab-content-wrapper">
+            <LateQuistisManipulationControl @ref="_quistisControl" OnCompleted="t => _model.SubmitQuistisResult(t)"/>
             <Tabs EnableFadeEffect="true" OnShowing="@(args => OnTabShown(args))">
                 <Tab Title="Balamb" Active="true">
                     <Content>
@@ -207,7 +211,7 @@ else
         <div class="fixed-footer d-flex justify-content-center align-items-center">
             @if (_focusedTab == "Balamb" || _focusedTab == null)
             {
-                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">Get Quistis Patterns (Index: @_model.LateQuistisOutput)<br /> Instant Mash: @_model.QuistisPatternMashDisplay</Button>
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)<br /> Instant Mash: @_model.QuistisPatternMashDisplay</Button>
             }
             else if (_focusedTab == "Elvoret + X-ATM")
             {

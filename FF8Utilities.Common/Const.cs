@@ -174,35 +174,110 @@ namespace FF8Utilities.Common
 
     public enum Card
     {
+        [ImageResource("snake")]
         Anacondaur,
+        [ImageResource("beast", "behemot")] // Looks incorrect but a CSV index has a bad spelling
         Behemoth,
+        [ImageResource("mask")]
         Belhelmel,
+        [ImageResource("biggs", "wedge+biggs")]
         BiggsWedge,
+        [ImageResource("buel")]
         Buel,
+        [ImageResource("c")]
         Caterchipallar,
+        [ImageResource("chimera", "himera")] // Looks incorrect but a CSV index has a bad spelling
         Chimera,
+        [ImageResource("creeps")]
         Creeps,
+        [ImageResource("elastoid")]
         Elastoid,
+        [ImageResource("elnoyle")]
         Elnoyle,
+        [ImageResource("t")]
         Fasticalcon,
+        [ImageResource("f")]
         Fungar,
+        [ImageResource("m")] // ???
         Gayla,
+        [ImageResource("g")]
         Geezard,
+        [ImageResource("robot")]
         Gim47N,
+        [ImageResource("glacial")]
         GlacialEye,
+        [ImageResource("mantis")]
         GrandMantis,
+        [ImageResource("grat")]
         Grat,
+        [ImageResource("grendel")]
         Grendel,
+        [ImageResource("i")]
         Ifrit,
+        [ImageResource("giant", "irongiant")]
         IronGiant,
+        [ImageResource("jelleye")]
         Jelleye,
+        [ImageResource("malboro")]
         Malboro,
+        [ImageResource("unicorn")]
         Mesmerize,
+        [ImageResource("none")]
         None,
+        [ImageResource("b")]
+        RedBat,
+        [ImageResource("ruby")]
         RubyDragon,
+        [ImageResource("bird")]
         Thrustaevis,
+        [ImageResource("king")]
         TonberryKing,
+        [ImageResource("q")]
         Quistis,
+        [ImageResource("z")]
         Zell
+    }
+
+    public class ImageResourceAttribute : Attribute
+    {
+        public ImageResourceAttribute(string filename, params string[] aliases)
+        {
+            Filename = filename;
+            Aliases = aliases;
+        }
+
+        public string Filename { get; }
+        public string[] Aliases { get; }
+    }
+
+    public static class CardExtensionMethods
+    {
+        /// <summary>
+        /// Returns Card.None if not found
+        /// Parses the string and its known aliases
+        /// </summary>
+        public static Card Parse(string cardString)
+        {
+            cardString = cardString?.Trim();
+            if (string.IsNullOrWhiteSpace(cardString)) return Card.None;
+            foreach (Card card in Enum.GetValues(typeof(Card)))
+            {
+                ImageResourceAttribute attribute = (ImageResourceAttribute)EnumMethods.GetAttribute(card, typeof(ImageResourceAttribute));
+                if (cardString.Equals(attribute.Filename, StringComparison.CurrentCultureIgnoreCase)) return card;
+                if (attribute.Aliases != null)
+                {
+                    foreach (string alias in attribute.Aliases)
+                    {
+                        if (cardString.Equals(alias, StringComparison.CurrentCultureIgnoreCase)) return card;
+                    }
+                }
+            }
+            return Card.None;
+        }
+
+        public static string GetImageResourceName(this Card card)
+        {
+            return ((ImageResourceAttribute)EnumMethods.GetAttribute(card, typeof(ImageResourceAttribute))).Filename;
+        }
     }
 }

@@ -1,0 +1,40 @@
+﻿
+@code {
+    [Parameter, EditorRequired]
+    public CardManipulationModel Model { get; set; }
+}
+
+
+<div class="container border border-secondary rounded">
+    <div class="row bg-primary d-flex align-items-center py-2">
+        <h4 class="fw-bold mb-0">CARD TIMER</h4>
+    </div>
+    <div class="row">
+        <p>@Model.Explanation</p>
+    </div>
+    <div class="row">
+        <InputText @bind-bind-Value="@Model.RecoveryPattern" Placeholder="Enter cards for recovery or 1st try search" />
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.FoundCards))
+    {
+        <div class="row">
+            <p>@Model.FoundCards</p>
+        </div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorText))
+    {
+        <div class="row">
+            <p>@Model.ErrorText</p>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8 col-sm-12">
+            <p>@Model.Snake</p>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <Button @onclick="() => Model.SubmitCommand.Execute(null)">@($"Instant Mash: {Model.FirstFrameAvailableFramesDisplay} ({Model.InstantMashFramesAvailable} frames)")</Button>
+        </div>
+    </div>
+    
+</div>

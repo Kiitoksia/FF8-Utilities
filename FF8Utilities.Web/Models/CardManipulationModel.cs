@@ -29,22 +29,22 @@ namespace FF8Utilities.Web.Models
 
         public override void TimerStarted()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void TimerStopped()
         {
-            throw new NotImplementedException();
+            
         }
 
         protected override void PauseBeeps()
         {
-            throw new NotImplementedException();
+           
         }
 
         protected override void PlayBeeps(BeepSchedule schedule)
         {
-            throw new NotImplementedException();
+            
         }
 
 

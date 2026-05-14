@@ -1,7 +1,6 @@
-﻿
+﻿    
 
 @code {
-    [Parameter, EditorRequired]
     public CardManipulationModel Model { get; set; }
 
     [Parameter]
@@ -11,10 +10,24 @@
     private LateQuistisPattern _pattern;
     private LateQuistisStrategy _selectedStrategy;
 
+    private readonly Dictionary<byte[], string> _imageCache = new(ReferenceEqualityComparer.Instance);
+
     public async Task ShowAsync(LateQuistisPattern pattern)
     {
         _pattern = pattern;
         _selectedStrategy = null;
+        _imageCache.Clear();
+
+        // Pre-compute all data URLs once
+        foreach (var strategy in pattern.Strategies)
+        {
+            foreach (var card in strategy.OpponentCards)
+                _imageCache.TryAdd(card, BuildDataUrl(card));
+
+            foreach (var pos in strategy.Positions)
+                _imageCache.TryAdd(pos.Card, BuildDataUrl(pos.Card));
+        }
+
         StateHasChanged();
         await _modal.ShowAsync();
     }
@@ -32,12 +45,77 @@
         await _modal.HideAsync();
         await OnCompleted.InvokeAsync(null);
     }
+
+    private static string BuildDataUrl(byte[] card) => $"data:image/png;base64,{Convert.ToBase64String(card)}";
+
+    private string GetCardImageSource(byte[] card) => _imageCache.TryGetValue(card, out var url) ? url : BuildDataUrl(card);
+
+    private void SubmitFrame(LateQuistisStrategy frame)
+    {
+        
+    }
 }
 
-<Modal @ref="_modal" Title="Late Quistis">
+<Modal @ref="_modal" Title="Late Quistis" UseStaticBackdrop="true" Fullscreen="ModalFullscreen.Always">
     <BodyTemplate>
-        <Tabs NavStyle="NavStyle.Vertical">
-            
-        </Tabs>
+        <div class="row">
+            <Tabs NavStyle="NavStyle.Vertical">
+                @foreach (var frame in _pattern.Strategies)
+                {
+                    <Tab>
+                        <TitleTemplate>
+                            <div class="row">
+                                @foreach (var image in frame.OpponentCards)
+                                {
+                                    <div class="col-md-6">
+                                        <Image Src="@GetCardImageSource(image)" IsResponsive="true" />
+                                    </div>
+                                }
+                            </div>
+                        </TitleTemplate>
+                        <Content>
+                            <div class="d-flex flex-column h-100">
+                                <div class="container mb-2">
+                                    <div class="border border-secondary rounded">
+                                        <div class="row bg-primary d-flex align-items-center py-2">
+                                            <h4 class="fw-bold mb-0">(Frame @frame.Frame) Cards to use</h4>
+                                        </div>
+                                        <div class="row">
+                                            <span>Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-grid-center">
+                                    <div class="card-grid">
+                                        @foreach (var position in frame.Positions)
+                                        {
+                                            <div class="card-position">
+                                                <Image Src="@GetCardImageSource(position.Card)" IsResponsive="true" />
+                                                @if (!position.IsPlayerTurn)
+                                                {
+                                                    <div class="card-position-disabled-overlay"></div>
+                                                }
+                                                @if (position.ShowTurnNumber)
+                                                {
+                                                    <div class="card-position-turn-number @(position.IsPlayerTurn ? "player" : "enemy")">
+                                                        @position.Turn
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-center align-items-center mt-2">
+                                    <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" Block="true" @onclick="() => SubmitFrame(frame)">SUBMIT</Button>
+                                </div>
+                            </div>
+                        </Content>
+                    </Tab>
+                }
+            </Tabs>
+        </div>
+        <div class="row">
+            <CardTimerControl Model="@Model"/>
+        </div>        
     </BodyTemplate>
 </Modal>

@@ -38,7 +38,7 @@ namespace FF8Utilities.Web.Models
 
         public LateQuistisPattern CurrentLateQuistisPattern { get; set; }
 
-        public event Action StartLateQuistisPattern;
+        public event Action<CardManipulationModel> StartLateQuistisPattern;
 
         public override BaseCardManipulationModel CreateCardManipModel(CardManip manip, uint state, string player, int? count)
         {
@@ -49,7 +49,8 @@ namespace FF8Utilities.Web.Models
         {
             _quistisTaskCompletionSource = new TaskCompletionSource<uint?>();
             CurrentLateQuistisPattern = pattern;
-            StartLateQuistisPattern?.Invoke();
+            CardManipulationModel model = (CardManipulationModel)CreateCardManipModel(CardManip, 0, "fc01", pattern.RNGIndex);
+            StartLateQuistisPattern?.Invoke(model);
             return await _quistisTaskCompletionSource.Task;
         }
 
