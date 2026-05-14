@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\res\Q card Late - Full Game Scenario.csv" />
-    <Content Remove="wwwroot\res\Q card Late - How to Play.csv" />
-    <Content Remove="wwwroot\res\Q card Late - Opponent Deck.csv" />
-    <Content Remove="wwwroot\res\Q card Late - RNG result.csv" />
+    <Content Include="wwwroot\res\Q card Late - Full Game Scenario.csv" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="wwwroot\res\Q card Late - How to Play.csv" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="wwwroot\res\Q card Late - Opponent Deck.csv" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="wwwroot\res\Q card Late - RNG result.csv" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
