@@ -73,7 +73,7 @@
 </Modal>
 
 
-<div class="container">    
+<div class="container text-center">    
     <div class="row">
         <Callout>
             This website is still in beta and many tools are unavailable or untested.
@@ -81,18 +81,42 @@
     </div>
     <div class="row">
         <div class="col-6">
-            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await _cardStrategyModal.ShowAsync()">Card Manipulation</Button>
+            <Card>
+                <CardBody>
+                    <CardTitle>Cards</CardTitle>
+                    <CardBody>Supports EQ/LQ, First & 2nd try Zell card</CardBody>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await _cardStrategyModal.ShowAsync()">Launch</Button>
+                </CardBody>
+            </Card>
         </div>
         <div class="col-6">
-            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Fish Fins</Button>
+            <Card>
+                <CardBody>
+                    <CardTitle>Fish Fins</CardTitle>
+                    <CardBody>Currently supports Quezacotl fish fin manipulation</CardBody>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Launch</Button>
+                </CardBody>
+            </Card>
         </div>
     </div>
     <div class="row">
         <div class="col-6">
-            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Caraway Code</Button>
+            <Card>
+                <CardBody>
+                    <CardTitle>Caraway Code</CardTitle>
+                    <CardBody>Enter Caraway Mansion early with pole counting</CardBody>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Launch</Button>
+                </CardBody>
+            </Card>
         </div>
         <div class="col-6">
-            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Ultimecia Final Party</Button>
+            <Card>
+                <CardBody>
+                    <CardTitle>Ultimecia Party</CardTitle>
+                    <CardBody>Ensure Irvine is in your starting party for the Ultimecia battle</CardBody>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Launch</Button>
+                </CardBody>
+            </Card>
         </div>
-    </div>
+    </div>    
 </div>
