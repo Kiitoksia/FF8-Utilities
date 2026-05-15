@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FF8Utilities.Common.Cards;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -73,6 +74,32 @@ namespace FF8Utilities.Common
             Frame10
         };
 
+        public static readonly EarlyQuistisPattern[] WinnableFrames = new[]
+        {
+            Frame1,
+            Frame2,
+            Frame3,
+            Frame4,
+            Frame7,
+            Frame9,
+            Frame10,
+        };
+        
+    }
+
+    public static class EarlyQuistisExtensions
+    {
+        public static CardPosition[] GetCardPositionForQuistisPattern(this EarlyQuistisPattern pattern)
+        {
+            if (pattern == EarlyQuistisPattern.Frame1) return CardPosition.EarlyQuistisFrame1;
+            if (pattern == EarlyQuistisPattern.Frame2) return CardPosition.EarlyQuistisFrame2;
+            if (pattern == EarlyQuistisPattern.Frame3) return CardPosition.EarlyQuistisFrame3;
+            if (pattern == EarlyQuistisPattern.Frame4) return CardPosition.EarlyQuistisFrame4;
+            if (pattern == EarlyQuistisPattern.Frame7) return CardPosition.EarlyQuistisFrame7;
+            if (pattern == EarlyQuistisPattern.Frame9) return CardPosition.EarlyQuistisFrame9;
+            if (pattern == EarlyQuistisPattern.Frame10) return CardPosition.EarlyQuistisFrame10;
+            return null; // Not winnable
+        }
     }
 
     public class FanfareCamera

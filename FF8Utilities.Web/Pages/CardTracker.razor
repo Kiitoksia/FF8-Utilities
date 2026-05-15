@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/card-tracker/{EarlyQuistisState?}"
 <PageTitle>Card Tracker</PageTitle>
 
 @code {
@@ -6,6 +6,9 @@
     private string _focusedTab;
     private LateQuistisManipulationControl _quistisControl;
     private ZellCardManipulationControl _zellControl;
+
+    [Parameter]
+    public string EarlyQuistisState { get; set; } = string.Empty;
 
     [Inject] 
     private HttpClient Http { get; set; }
@@ -15,8 +18,8 @@
     private NavigationManager Navigation { get; set; }
 
     private List<ToastMessage> _toastMessages = new List<ToastMessage>();
-
     private Tabs _tabs;
+    private EarlyQuistisPattern _selectedEarlyQuistisPattern;
 
 
     protected override async Task OnInitializedAsync()
@@ -25,6 +28,15 @@
         await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, baseUrl);
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
+
+        if (!string.IsNullOrWhiteSpace(EarlyQuistisState))
+        {
+            uint state = Convert.ToUInt32(EarlyQuistisState, 16);
+            _selectedEarlyQuistisPattern = EarlyQuistisPattern.Options.SingleOrDefault(t => t.Result == state);
+            Console.WriteLine("Selected early Quistis pattern: " + _selectedEarlyQuistisPattern?.Description);
+        }
+
+        _model.EarlyQuistisPattern = _selectedEarlyQuistisPattern;
         _model.StartLateQuistisPattern += async (model) =>
         {
             await InvokeAsync(async () =>
@@ -265,7 +277,7 @@ else
             </Tabs>
         </div>
         <div class="fixed-footer d-flex justify-content-center align-items-center">
-            @if (_focusedTab == "Balamb" || _focusedTab == null)
+            @if ((_focusedTab == "Balamb" || _focusedTab == null) && _model.EarlyQuistisPattern == null)
             {
                 <div class="d-flex align-items-stretch">
                     <button class="btn btn-primary btn-lg border-start-2 border-top-2 border-end-2 border-right-0 border-white rounded-0 border-right-0 fw-bold" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</button>

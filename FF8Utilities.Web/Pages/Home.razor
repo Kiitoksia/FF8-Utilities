@@ -1,0 +1,98 @@
+﻿@page "/"
+
+@code {
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    private ISettingsService SettingsService { get; set; }
+
+    private Modal _cardModal;
+    private Modal _cardStrategyModal;
+    private ConfirmDialog _cardConfirmDialog;
+
+    private async Task CardManipulationClicked(bool isLate)
+    {
+        await _cardStrategyModal.HideAsync();
+        if (isLate)
+        {
+            NavigationManager.NavigateTo("/card-tracker");            
+        }
+        else
+        {
+            await _cardModal.ShowAsync();
+        }
+    }
+
+    private async Task LaunchCardTracker(EarlyQuistisPattern pattern)
+    {
+        // TODO Add Non tracking option for 2nd try Zell
+        NavigationManager.NavigateTo($"/card-tracker/{pattern.Result:X}");
+    }
+}
+
+<Modal @ref="_cardModal">
+    <BodyTemplate>
+        <Accordion>
+            @foreach (var pattern in EarlyQuistisPattern.OptionsExcludeLate)
+            {
+                <AccordionItem Title="@pattern.Description">
+                    <Content>
+                        @if (EarlyQuistisPattern.WinnableFrames.Contains(pattern))
+                        {
+                            <div class="row">
+                                <CardBoardControl Modal="@pattern.GetCardPositionForQuistisPattern().ToList()" />                                
+                            </div>
+                            <div class="row">
+                                <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="async () => await LaunchCardTracker(pattern)">SUBMIT</Button>
+                            </div>
+                        }
+                        else
+                        {
+                            <span>Frame is not winnable, sorry.  Let us know if you do win!</span>
+                        }
+                    </Content>
+                </AccordionItem>
+            }
+        </Accordion>
+    </BodyTemplate>
+</Modal>
+
+<Modal @ref="_cardStrategyModal" Title="Select Quistis Strategy">
+    <BodyTemplate>
+        <div class="row">
+            <div class="col-6">
+                <Button Block="true" @onclick="async () => await CardManipulationClicked(false)">Early</Button>
+            </div>
+            <div class="col-6">
+                <Button Block="true" @onclick="async () => await CardManipulationClicked(true)">Late</Button>
+            </div>
+        </div>
+    </BodyTemplate>
+</Modal>
+
+
+<div class="container">    
+    <div class="row">
+        <Callout>
+            This website is still in beta and many tools are unavailable or untested.
+        </Callout>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await _cardStrategyModal.ShowAsync()">Card Manipulation</Button>
+        </div>
+        <div class="col-6">
+            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Fish Fins</Button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Caraway Code</Button>
+        </div>
+        <div class="col-6">
+            <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Ultimecia Final Party</Button>
+        </div>
+    </div>
+</div>
