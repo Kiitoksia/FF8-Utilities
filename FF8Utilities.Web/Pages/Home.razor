@@ -8,6 +8,9 @@
     [Inject]
     private ISettingsService SettingsService { get; set; }
 
+    [Inject] 
+    private CardTrackerStateService CardTrackerState { get; set; }
+
     private Modal _cardModal;
     private Modal _cardStrategyModal;
     private ConfirmDialog _cardConfirmDialog;
@@ -17,6 +20,7 @@
         await _cardStrategyModal.HideAsync();
         if (isLate)
         {
+            CardTrackerState.SelectedEarlyQuistisPattern = null;
             NavigationManager.NavigateTo("/card-tracker");            
         }
         else
@@ -28,7 +32,8 @@
     private async Task LaunchCardTracker(EarlyQuistisPattern pattern)
     {
         // TODO Add Non tracking option for 2nd try Zell
-        NavigationManager.NavigateTo($"/card-tracker/{pattern.Result:X}");
+        CardTrackerState.SelectedEarlyQuistisPattern = pattern;
+        NavigationManager.NavigateTo($"/card-tracker");
     }
 }
 

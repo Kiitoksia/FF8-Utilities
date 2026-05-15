@@ -1,4 +1,4 @@
-﻿@page "/card-tracker/{EarlyQuistisState?}"
+﻿@page "/card-tracker"
 <PageTitle>Card Tracker</PageTitle>
 
 @code {
@@ -7,8 +7,6 @@
     private LateQuistisManipulationControl _quistisControl;
     private ZellCardManipulationControl _zellControl;
 
-    [Parameter]
-    public string EarlyQuistisState { get; set; } = string.Empty;
 
     [Inject] 
     private HttpClient Http { get; set; }
@@ -16,10 +14,11 @@
     private ISettingsService Settings { get; set; }
     [Inject]
     private NavigationManager Navigation { get; set; }
+    [Inject] 
+    private CardTrackerStateService CardTrackerState { get; set; }
 
     private List<ToastMessage> _toastMessages = new List<ToastMessage>();
     private Tabs _tabs;
-    private EarlyQuistisPattern _selectedEarlyQuistisPattern;
 
 
     protected override async Task OnInitializedAsync()
@@ -29,14 +28,7 @@
         await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
 
-        if (!string.IsNullOrWhiteSpace(EarlyQuistisState))
-        {
-            uint state = Convert.ToUInt32(EarlyQuistisState, 16);
-            _selectedEarlyQuistisPattern = EarlyQuistisPattern.Options.SingleOrDefault(t => t.Result == state);
-            Console.WriteLine("Selected early Quistis pattern: " + _selectedEarlyQuistisPattern?.Description);
-        }
-
-        _model.EarlyQuistisPattern = _selectedEarlyQuistisPattern;
+        _model.EarlyQuistisPattern = CardTrackerState.SelectedEarlyQuistisPattern;
         _model.StartLateQuistisPattern += async (model) =>
         {
             await InvokeAsync(async () =>
@@ -199,15 +191,18 @@ else
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <div class="d-flex align-items-stretch">
-                            <button class="btn btn-primary btn-lg border-start-2 border-top-2 border-end-2 border-right-0 border-white rounded-0 border-right-0 fw-bold" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</button>
-                            <div class="border border-start-0 border-top-2 border-right-2 border-end-2 border-white btn-lg px-3 border-left-0 d-flex flex-column align-items-center justify-content-center" style="background-color: @_model.QuistisMashTextBackgroundColor.ToCss()">
-                                <span>Instant Mash<br /></span>
-                                <span class="fs-5 fw-bold">@_model.QuistisPatternMashDisplay</span>
+                    @if (_model.EarlyQuistisPattern == null)
+                    {
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="d-flex align-items-stretch">
+                                <button class="btn btn-primary btn-lg border-start-2 border-top-2 border-end-2 border-right-0 border-white rounded-0 border-right-0 fw-bold" @onclick="LaunchQuistis">Get Quistis Patterns (Index: @_model.LateQuistisOutput)</button>
+                                <div class="border border-start-0 border-top-2 border-right-2 border-end-2 border-white btn-lg px-3 border-left-0 d-flex flex-column align-items-center justify-content-center" style="background-color: @_model.QuistisMashTextBackgroundColor.ToCss()">
+                                    <span>Instant Mash<br /></span>
+                                    <span class="fs-5 fw-bold">@_model.QuistisPatternMashDisplay</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }                    
                 </Content>
             </Tab>
             <Tab Title="Dollet">
