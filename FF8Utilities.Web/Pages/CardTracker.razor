@@ -5,6 +5,7 @@
     private CardTrackerModel _model;
     private string _focusedTab;
     private LateQuistisManipulationControl _quistisControl;
+    private ZellCardManipulationControl _zellControl;
 
     [Inject] 
     private HttpClient Http { get; set; }
@@ -31,6 +32,15 @@
                 StateHasChanged();
                 _quistisControl.Model = model;
                 await _quistisControl.ShowAsync(_model.CurrentLateQuistisPattern);
+            });
+        };
+        _model.StartZellPatterns += async (model) =>
+        {
+            await InvokeAsync(async () =>
+            {
+                StateHasChanged();
+                _zellControl.Model = model;
+                await _zellControl.ShowAsync();
             });
         };
     }
@@ -71,6 +81,7 @@ else
     <div class="page-wrapper">
         <div class="tab-content-wrapper">
             <LateQuistisManipulationControl @ref="_quistisControl" OnCompleted="QuistisSubmitted" />
+            <ZellCardManipulationControl @ref="_zellControl" />
             <Toasts Messages="_toastMessages" Placement="ToastsPlacement.TopRight" AutoHide="true"/>
             <Tabs EnableFadeEffect="true" @ref="_tabs" OnShowing="@(args => OnTabShown(args))">
                 <Tab Title="Balamb" Active="true">

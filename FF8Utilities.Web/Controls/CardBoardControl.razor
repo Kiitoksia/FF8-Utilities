@@ -1,0 +1,36 @@
+﻿@code {
+    [Parameter, EditorRequired]
+    public List<CardPosition> Modal { get; set; }
+}
+
+<div class="card-grid">
+    @foreach (var position in Modal)
+    {
+        <div class="card-position">
+            <Image Src="@WebHelper.GetDataImageSource(position.Card)" IsResponsive="true" />
+            @if (!position.IsPlayerTurn)
+            {
+                <div class="card-position-disabled-overlay"></div>
+            }
+            @if (position.ShowTurnNumber)
+            {
+                <div class="card-position-turn-number @(position.IsPlayerTurn ? "player" : "enemy")">
+                    @position.Turn
+                </div>
+            }
+            <div class="position-absolute top-0 start-50 translate-middle-x mt-2">
+                <span class="fs-4 fw-bold">@position.CustomTopInfo</span>
+            </div>
+            <div class="position-absolute top-50 start-0 translate-middle-y ms-2">
+                <span class="fs-4 fw-bold">@position.CustomLeftInfo</span>
+            </div>
+            <div class="position-absolute top-50 end-0 translate-middle-y me-2">
+                <span class="fs-4 fw-bold">@position.CustomRightInfo</span>
+            </div>
+            <span class="position-absolute bottom-0 start-50 translate-middle-x mb-2">
+                <span class="fs-4 fw-bold">@position.CustomBotInfo</span>
+            </span>
+            
+        </div>
+    }
+</div>

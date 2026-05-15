@@ -1,9 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using CardManipulation;
+﻿using CardManipulation;
 using FF8Utilities.Common;
 using FF8Utilities.Common.Cards;
 using FF8Utilities.Web.Services;
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
 
 
 namespace FF8Utilities.Web.Models
@@ -40,6 +41,8 @@ namespace FF8Utilities.Web.Models
 
         public event Action<CardManipulationModel> StartLateQuistisPattern;
 
+        public event Action<CardManipulationModel> StartZellPatterns;
+
         public override BaseCardManipulationModel CreateCardManipModel(CardManip manip, uint state, string player, int? count)
         {
             return new CardManipulationModel(manip, state, player, _settings?.DelayFrames, count, _settings);
@@ -62,7 +65,9 @@ namespace FF8Utilities.Web.Models
 
         public override void LaunchZellPatterns(string patternString, int? count)
         {
-            throw new NotImplementedException();
+            uint state = uint.Parse(patternString, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            CardManipulationModel model = (CardManipulationModel)CreateCardManipModel(CardManip, state, "zellmama", count);
+            StartZellPatterns?.Invoke(model);
         }
 
         public override void ShowMessage(string message, string caption)
