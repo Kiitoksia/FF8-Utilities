@@ -67,7 +67,7 @@ namespace FF8Utilities.Web.Models
 
         public override void ShowMessage(string message, string caption)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
