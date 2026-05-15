@@ -40,11 +40,20 @@ jobs:
       - name: Publish app
         run: dotnet publish FF8Utilities.Web -c Release  # ✅ your project folder name
 
+      - name: Copy index.html to 404.html
+        run: cp ${{ env.PUBLISH_DIR }}/index.html ${{ env.PUBLISH_DIR }}/404.html
+
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@5b54862a8831e012d4f1a8b2660894415fdde8ec # v1.1.0
         with:
           html_path: ${{ env.PUBLISH_DIR }}/index.html
           base_href: /FF8-Utilities/   # ✅ your repo name
+
+      - name: Rewrite base href in 404.html
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@5b54862a8831e012d4f1a8b2660894415fdde8ec # v1.1.0
+        with:
+          html_path: ${{ env.PUBLISH_DIR }}/404.html
+          base_href: /FF8-Utilities/
 
       - name: Setup Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
