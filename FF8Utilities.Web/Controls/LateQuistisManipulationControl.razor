@@ -72,7 +72,7 @@
     }
 }
 
-<Modal @ref="_modal" Title="@ModalTitle" UseStaticBackdrop="true" Fullscreen="ModalFullscreen.Always">
+<Modal @ref="_modal" Title="@ModalTitle" UseStaticBackdrop="true" Size="ModalSize.ExtraLarge">
     <BodyTemplate>
         <div class="d-flex flex-column h-100 gap-3 p-2">
             <div class="row h-100">
@@ -91,18 +91,17 @@
                                 </div>
                             </TitleTemplate>
                             <Content>
-                                <div class="d-flex flex-column h-100">
-                                    <div class="mb-2">
-                                        <div class="border border-secondary rounded">
-                                            <div class="row bg-primary d-flex align-items-center py-2">
-                                                <h4 class="fw-bold mb-0">(Frame @frame.Frame) Cards to use</h4>
-                                            </div>
-                                            <div class="row">
-                                                <span>Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit</span>
-                                            </div>
+                                <div class="d-flex flex-column h-100 align-items-center">
+                                    <div class="border border-secondary rounded mb-2 text-center">
+                                        <div class="bg-primary d-flex align-items-center py-2 px-2 text-center">
+                                            <h4 class="fw-bold mb-0 text-break text-center">(Frame @frame.Frame) Cards to use</h4>
+                                        </div>
+                                        <div class="px-2 text-center">
+                                            <span>Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit</span>
                                         </div>
                                     </div>
-                                    <div class="card-grid-center">
+                                    <div class="d-flex flex-column card-grid-responsive-header">
+                                        
                                         <div class="card-grid">
                                             @foreach (var position in frame.Positions)
                                             {
@@ -121,9 +120,7 @@
                                                 </div>
                                             }
                                         </div>
-                                    </div>
-                                    <div class="row d-flex justify-content-center align-items-center mt-2 border border-secondary border-3">
-                                        <button class="btn btn-primary btn-lg btn-block" @onclick="() => SubmitFrame(frame)">SUBMIT</button>
+                                        <button class="btn btn-primary btn-lg mt-2 border border-secondary border-3" @onclick="() => SubmitFrame(frame)">SUBMIT</button>
                                     </div>
                                 </div>
                             </Content>

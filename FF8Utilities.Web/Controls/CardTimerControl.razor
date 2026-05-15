@@ -26,8 +26,12 @@
     </div>
     <div class="row align-items-center">
         <div class="col-md-8 col-12">
-            <div class="row">
-                <p>@Model.Explanation</p>
+            <div class="row align-items-center" style="min-height: 2.5rem;">
+                <Spinner Visible="Model.IsTimerRunning" Type="SpinnerType.Dots" Color="SpinnerColor.Primary" Size="SpinnerSize.Large" />
+                @if (!Model.IsTimerRunning)
+                {
+                    <span>@Model.Explanation</span>
+                }
             </div>
             <div class="row">
                 <InputText @bind-Value="@Model.RecoveryPattern" Placeholder="Enter cards for recovery or 1st try search" />
@@ -45,7 +49,7 @@
                 </div>
             }
             <div>
-                <p class="card-timer-snake fs-5 fw-bold font-monospace mb-0" style="color: @Model.TextColor.ToCss()">@(string.IsNullOrEmpty(Model.Snake) ? "\u00A0" : Model.Snake)</p>
+                <p class="card-timer-snake fs-5 fw-bold font-monospace mb-0" style="color: @(Model.TextColor.ToCss())">@(string.IsNullOrEmpty(Model.Snake) ? "\u00A0" : Model.Snake)</p>
             </div>
         </div>
         <div class="col-md-4 col-12">
