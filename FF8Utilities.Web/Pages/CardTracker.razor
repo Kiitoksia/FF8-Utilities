@@ -20,28 +20,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        string baseUrl = Navigation.BaseUri + "res";
+        await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, baseUrl);
+        await Settings.Initialise();
+        _model = new CardTrackerModel(Settings);
+        _model.StartLateQuistisPattern += async (model) =>
         {
-            string baseUrl = Navigation.BaseUri + "res";
-            await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, baseUrl);
-            await Settings.Initialise();
-            _model = new CardTrackerModel(Settings);
-            _model.StartLateQuistisPattern += async (model) =>
+            await InvokeAsync(async () =>
             {
-                await InvokeAsync(async () =>
-                {
-                    StateHasChanged();
-                    _quistisControl.Model = model;
-                    await _quistisControl.ShowAsync(_model.CurrentLateQuistisPattern);
-                });
-            };
-        }
-        catch (Exception ex)
-        {
-            // Check browser console for the actual error
-            Console.Error.WriteLine($"CardTracker init failed: {ex}");
-            throw; // re-throw so Blazor still shows the error UI
-        }
+                StateHasChanged();
+                _quistisControl.Model = model;
+                await _quistisControl.ShowAsync(_model.CurrentLateQuistisPattern);
+            });
+        };
     }
 
 
@@ -93,10 +84,8 @@ else
                             </div>
                         </div>
                         <div class="row mb-3 justify-content-center">
-                            <div class="col-md-3">
-                                <p>Post Ifrit Encounter</p>
-                            </div>
-                            <div class="col-md-auto">
+                            <div class="col-md-6 col-sm-12 col-lg-4">
+                                Post Ifrit Encounter
                                 <select class="form-select" value="@_model.IfritsCavernEncounterType"
                                         @onchange="e => { _model.IfritsCavernEncounterType = Enum.Parse<IfritEncounterType>(e.Value.ToString()); StateHasChanged(); }">
                                     @foreach (IfritEncounterType type in Enum.GetValues<IfritEncounterType>())
@@ -105,9 +94,7 @@ else
                                     }
                                 </select>
                             </div>
-                        </div>
-                        <div class="row mb-3 justify-content-center">
-                            <div class="col-md-12 col-lg-4">
+                            <div class="col-md-6 col-sm-12 col-lg-4">
                                 @if (_model.IfritsCavernEncounterType == IfritEncounterType.RedBat)
                                 {
                                     <EncounterControl Model="@_model.SecondBatsEncounter" Changed="StateHasChanged" />
