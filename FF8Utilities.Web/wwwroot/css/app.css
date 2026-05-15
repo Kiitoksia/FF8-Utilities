@@ -50,11 +50,13 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 0;
+    gap: 4px;
     height: 100%;
     max-height: 55vh;
-    aspect-ratio: 1;
+    aspect-ratio: calc(3 * 93 + 2 * 4) / calc(3 * 120 + 2 * 4); /* 3 cards + 2 gaps each axis */
 }
+
+
 
 .card-grid-center {
     display: flex;
@@ -181,4 +183,10 @@ code {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.card-timer-snake {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: clip;
 }

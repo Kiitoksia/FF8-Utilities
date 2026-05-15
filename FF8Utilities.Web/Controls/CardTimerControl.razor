@@ -20,9 +20,9 @@
 }
 
 
-<div class="container border border-secondary rounded py-4">
+<div class="container-fluid border border-secondary rounded">
     <div class="row bg-primary d-flex align-items-center py-2">
-        <h4 class="fw-bold mb-0">CARD TIMER</h4>
+        <h4 class="fw-bold mb-0">Card Timer</h4>
     </div>
     <div class="row align-items-center">
         <div class="col-md-8 col-12">
@@ -44,8 +44,8 @@
                     <p>@Model.ErrorText</p>
                 </div>
             }
-            <div style="min-width: 0">
-                <p class="text-truncate fs-5 fw-bold font-monospace mb-0" style="color: @Model.TextColor.ToCss()">@Model.Snake</p>
+            <div>
+                <p class="card-timer-snake fs-5 fw-bold font-monospace mb-0" style="color: @Model.TextColor.ToCss()">@(string.IsNullOrEmpty(Model.Snake) ? "\u00A0" : Model.Snake)</p>
             </div>
         </div>
         <div class="col-md-4 col-12">
