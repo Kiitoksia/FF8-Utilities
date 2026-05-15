@@ -14,6 +14,22 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="FF8Utilities.Web.styles.css" rel="stylesheet" />
     <script type="importmap"></script>
+    <script>
+        // Restore path from the redirect query string set by 404.html
+        (function (l) {
+            if (l.search[1] === '/') {
+                var decoded = l.search.slice(1).split('&').map(function (s) {
+                    return s.replace(/~and~/g, '&');
+                });
+                window.history.replaceState(
+                    null, null,
+                    l.pathname.slice(0, -1) + decoded[0] +
+                    (decoded[1] ? '?' + decoded[1] : '') +
+                    l.hash
+                );
+            }
+        }(window.location));
+    </script>
 </head>
 
 <body>
