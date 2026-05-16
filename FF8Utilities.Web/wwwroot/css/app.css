@@ -56,6 +56,25 @@
         }*/
 
 /* Card grid scales with viewport height to avoid pushing Card Timer off screen */
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(3, calc((60vh - 80px) / 3 * 93 / 120));
