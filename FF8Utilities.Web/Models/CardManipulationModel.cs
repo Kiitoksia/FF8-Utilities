@@ -10,7 +10,7 @@ namespace FF8Utilities.Web.Models
     public class CardManipulationModel : BaseCardManipulationModel
     {
         private ISettingsService _settings;
-        private CancellationTokenSource? _timerCts;
+        private CancellationTokenSource _timerCts;
 
         public CardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier, ISettingsService settings)
             : base(manip, state, player, delayFrames, rngModifier)
@@ -27,6 +27,8 @@ namespace FF8Utilities.Web.Models
         public event Action Redraw;
 
         public event Action<BeepSchedule, BeepSound> PlayAudio;
+
+        public event Action PauseAudio;
 
         public override void TimerStarted()
         {
@@ -62,8 +64,9 @@ namespace FF8Utilities.Web.Models
 
         protected override void PauseBeeps()
         {
-
+            PauseAudio?.Invoke();
         }
+
         protected override void PlayBeeps(BeepSchedule schedule)
         {
             

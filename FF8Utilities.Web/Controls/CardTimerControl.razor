@@ -22,7 +22,12 @@
                 BeepSound.Clack => "clack.wav",
                 _ => throw new ArgumentOutOfRangeException()
             };
-            await JS.InvokeVoidAsync("audioHelper.playBeep", $"{NavigationManager.BaseUri}/res/{fileName}", schedule.Count, schedule.IntervalMs, schedule.InitialDelayMs);
+            await JS.InvokeVoidAsync("audioHelper.playBeep", $"{NavigationManager.BaseUri}res/{fileName}", schedule.Count, schedule.IntervalMs, schedule.InitialDelayMs);
+            schedule.OnCompleted?.Invoke();
+        };
+        Model.PauseAudio += async () =>
+        {
+            await JS.InvokeVoidAsync("audioHelper.pauseBeeps");
         };
 
         Model.Redraw += OnRedraw;
@@ -42,18 +47,30 @@
 <HeadContent>
     <script>
         window.audioHelper = {
+            _cancelled: false,
             playBeep: function (url, count, intervalMs, delayMs) {
-                setTimeout(() => {
-                    let played = 0;
-                    const play = () => {
-                        new Audio(url).play();
-                        played++;
-                    if (played < count) setTimeout(play, intervalMs);
-                    };
-                play();
-        }, delayMs);
-    }
-};
+                this._cancelled = false;
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        let played = 0;
+                        const play = () => {
+                            if (this._cancelled) { resolve(); return; }
+                            new Audio(url).play();
+                            played++;
+                            if (played < count) {
+                                setTimeout(play, intervalMs);
+                            } else {
+                                resolve();
+                            }
+                        };
+                        play();
+                    }, delayMs);
+                });
+            },
+            pauseBeeps: function () {
+                this._cancelled = true;
+            }
+        };
     </script>
 </HeadContent>
 
