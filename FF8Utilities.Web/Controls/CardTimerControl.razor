@@ -2,8 +2,26 @@
     [Parameter, EditorRequired]
     public CardManipulationModel Model { get; set; }
 
-    protected override void OnParametersSet()
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
     {
+        Model.PlayAudio += async (schedule, sound) =>
+        {
+            string fileName = sound switch
+            {
+                BeepSound.Ping1 => "ping1.wav",
+                BeepSound.Ping2 => "ping2.wav",
+                BeepSound.Click => "click1.wav",
+                BeepSound.Clack => "clack.wav",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            await JS.InvokeVoidAsync("audioHelper.playBeep", $"/res/{fileName}", schedule.Count, schedule.IntervalMs, schedule.InitialDelayMs);
+        };
+
         Model.Redraw += OnRedraw;
     }
 
@@ -15,9 +33,26 @@
     public void Dispose()
     {
         Model.Redraw -= OnRedraw;
-    }
-
+    }        
 }
+
+<HeadContent>
+    <script>
+        window.audioHelper = {
+            playBeep: function (url, count, intervalMs, delayMs) {
+                setTimeout(() => {
+                    let played = 0;
+                    const play = () => {
+                        new Audio(url).play();
+                        played++;
+                    if (played < count) setTimeout(play, intervalMs);
+                    };
+                play();
+        }, delayMs);
+    }
+};
+    </script>
+</HeadContent>
 
 
 <div class="container-fluid border border-secondary rounded">

@@ -16,6 +16,8 @@ namespace FF8Utilities.Web.Services
         bool DidGetSecondBridgeEncounter { get; set; }
         IfritEncounterType IfritsCavernEncounterType { get; set; }
 
+        BeepSound BeepSound { get; set; }
+
         Task Initialise();
         Task Save();
     }
@@ -37,7 +39,7 @@ namespace FF8Utilities.Web.Services
         public bool DidGetRedSoldierEncounter { get; set; }
         public bool DidGetSecondBridgeEncounter { get; set; }
         public IfritEncounterType IfritsCavernEncounterType { get; set; }
-
+        public BeepSound BeepSound { get; set; }
 
         private async Task<T> GetSetting<T>(string key, T defaultVal = default)
         {
@@ -52,6 +54,8 @@ namespace FF8Utilities.Web.Services
             BeepInterval = await GetSetting(nameof(BeepInterval), 400);
             BeepCount = await GetSetting(nameof(BeepCount), 4);
             BeepOffsetFrames = await GetSetting(nameof(BeepOffsetFrames), 0);
+            BeepSound = await GetSetting<BeepSound>(nameof(BeepOffsetFrames), BeepSound.Click);
+
             Platform = await GetSetting(nameof(Platform), Platform.PC);
             DelayFrames = await GetSetting<int?>(nameof(DelayFrames), null);
             DidGetRedSoldierEncounter = await GetSetting<bool>(nameof(DidGetRedSoldierEncounter), false);
@@ -65,6 +69,7 @@ namespace FF8Utilities.Web.Services
             await _storage.SetItemAsync(nameof(BeepInterval), BeepInterval);
             await _storage.SetItemAsync(nameof(BeepCount), BeepCount);
             await _storage.SetItemAsync(nameof(BeepOffsetFrames), BeepOffsetFrames);
+            await _storage.SetItemAsync(nameof(BeepSound), BeepSound);
             await _storage.SetItemAsync(nameof(Platform), Platform);
             await _storage.SetItemAsync(nameof(DelayFrames), DelayFrames);
             await _storage.SetItemAsync(nameof(DidGetRedSoldierEncounter), DidGetRedSoldierEncounter);

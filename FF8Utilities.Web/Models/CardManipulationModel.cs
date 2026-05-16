@@ -26,6 +26,8 @@ namespace FF8Utilities.Web.Models
 
         public event Action Redraw;
 
+        public event Action<BeepSchedule, BeepSound> PlayAudio;
+
         public override void TimerStarted()
         {
             _timerCts = new CancellationTokenSource();
@@ -64,7 +66,8 @@ namespace FF8Utilities.Web.Models
         }
         protected override void PlayBeeps(BeepSchedule schedule)
         {
-
+            
+            PlayAudio?.Invoke(schedule, _settings.BeepSound);
         }
 
         public async Task Initialise()

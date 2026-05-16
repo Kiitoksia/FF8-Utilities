@@ -265,6 +265,19 @@ namespace FF8Utilities.Common
         Zell
     }
 
+    public enum BeepSound
+    {
+        [Description("Ping 1")]
+        Ping1,
+        [Description("Ping 2")]
+        Ping2,
+        [Description("Click")]
+        Click,
+        [Description("Clack")]
+        Clack
+    }
+
+
     public class ImageResourceAttribute : Attribute
     {
         public ImageResourceAttribute(string filename, params string[] aliases)
