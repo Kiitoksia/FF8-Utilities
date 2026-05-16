@@ -4,25 +4,8 @@ using FF8Utilities.Common;
 
 namespace FF8Utilities.Web.Services
 {
-    public interface ISettingsService
-    {
-        int CountdownTimer { get; set; }
-        int BeepInterval { get; set; }
-        int BeepCount { get; set; }
-        int BeepOffsetFrames { get; set; }
-        Platform Platform { get; set; }
-        int? DelayFrames { get; set; }
-        bool DidGetRedSoldierEncounter { get; set; }
-        bool DidGetSecondBridgeEncounter { get; set; }
-        IfritEncounterType IfritsCavernEncounterType { get; set; }
 
-        BeepSound BeepSound { get; set; }
-
-        Task Initialise();
-        Task Save();
-    }
-
-    public class SettingsService : ISettingsService
+    public class SettingsService
     {
         private ILocalStorageService _storage;
         public SettingsService(ILocalStorageService storage)

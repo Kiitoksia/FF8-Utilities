@@ -11,10 +11,10 @@ namespace FF8Utilities.Web.Models
 {
     public class CardTrackerModel : BaseZellCardTrackerModel
     {
-        private ISettingsService _settings;
+        private SettingsService _settings;
         private TaskCompletionSource<uint?> _quistisTaskCompletionSource;
 
-        public CardTrackerModel(ISettingsService settings) : base()
+        public CardTrackerModel(SettingsService settings) : base()
         {
             _settings = settings;
         }

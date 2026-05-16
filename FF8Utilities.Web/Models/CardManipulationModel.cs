@@ -9,10 +9,10 @@ namespace FF8Utilities.Web.Models
 {
     public class CardManipulationModel : BaseCardManipulationModel
     {
-        private ISettingsService _settings;
+        private SettingsService _settings;
         private CancellationTokenSource _timerCts;
 
-        public CardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier, ISettingsService settings)
+        public CardManipulationModel(CardManip manip, uint state, string player, int? delayFrames, int? rngModifier, SettingsService settings)
             : base(manip, state, player, delayFrames, rngModifier)
         {
             _settings = settings;

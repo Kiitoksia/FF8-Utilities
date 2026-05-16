@@ -1,4 +1,31 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
+@code{
+    [Inject]
+    private WebService WebService { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        WebService.OnTitleChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        WebService.OnTitleChanged -= StateHasChanged;
+    }
+
+    private void GoHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+<div class="top-row px-3 py-2 bg-primary">    
+    <Button Color="ButtonColor.Secondary" @onclick="GoHome" Size="ButtonSize.Large">&lt; Back</Button>
+    <span class="fs-5 position-absolute start-50 translate-middle-x">@WebService.Title</span>
+</div>
 <div class="page">
     <main>
         @Body

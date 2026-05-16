@@ -1,4 +1,5 @@
 ﻿@page "/card-tracker"
+@inherits BasePage
 <PageTitle>Card Tracker</PageTitle>
 
 @code {
@@ -11,7 +12,7 @@
     [Inject] 
     private HttpClient Http { get; set; }
     [Inject] 
-    private ISettingsService Settings { get; set; }
+    private SettingsService Settings { get; set; }
     [Inject]
     private NavigationManager Navigation { get; set; }
     [Inject] 
@@ -19,6 +20,8 @@
 
     private List<ToastMessage> _toastMessages = new List<ToastMessage>();
     private Tabs _tabs;
+
+    public override string PageTitle => "Card Tracker";
 
 
     protected override async Task OnInitializedAsync()

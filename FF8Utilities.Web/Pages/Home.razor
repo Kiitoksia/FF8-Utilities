@@ -1,12 +1,13 @@
 ﻿@page "/"
-
+@inherits BasePage
+@implements IAsyncDisposable
 @code {
 
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
     [Inject]
-    private ISettingsService SettingsService { get; set; }
+    private SettingsService SettingsService { get; set; }
 
     [Inject] 
     private CardTrackerStateService CardTrackerState { get; set; }
@@ -15,9 +16,12 @@
     private Modal _cardStrategyModal;
     private ConfirmDialog _cardConfirmDialog;
 
+    public override string PageTitle => "FF8 Utilities";
+
     private async Task CardManipulationClicked(bool isLate)
     {
-        await _cardStrategyModal.HideAsync();
+        await HideModals();
+
         if (isLate)
         {
             CardTrackerState.SelectedEarlyQuistisPattern = null;
@@ -29,11 +33,38 @@
         }
     }
 
+    private async Task HideModals()
+    {
+        try
+        {
+            await _cardModal.HideAsync();
+        }
+        catch
+        {
+            // Already hidden, or something else, ignore
+        }
+
+        try
+        {
+            await _cardStrategyModal.HideAsync();
+        }
+        catch
+        {
+            // Already hidden, or something else, ignore
+        }
+    }
+
     private async Task LaunchCardTracker(EarlyQuistisPattern pattern)
     {
+        await HideModals();
         // TODO Add Non tracking option for 2nd try Zell
         CardTrackerState.SelectedEarlyQuistisPattern = pattern;
         NavigationManager.NavigateTo($"card-tracker");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await HideModals();
     }
 }
 
