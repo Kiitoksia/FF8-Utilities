@@ -59,7 +59,7 @@
 
     private async Task LaunchZell()
     {
-        if (_model.EarlyQuistisPattern == null)
+        if (_model.EarlyQuistisPattern == null && !_model.QuistisCardObtained)
         {
             _toastMessages.Add(new ToastMessage
             {
