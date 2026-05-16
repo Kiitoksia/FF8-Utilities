@@ -5,6 +5,9 @@
     [Inject]
     private IJSRuntime JS { get; set; }
 
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
 
 
     protected override async Task OnInitializedAsync()
@@ -19,7 +22,7 @@
                 BeepSound.Clack => "clack.wav",
                 _ => throw new ArgumentOutOfRangeException()
             };
-            await JS.InvokeVoidAsync("audioHelper.playBeep", $"/res/{fileName}", schedule.Count, schedule.IntervalMs, schedule.InitialDelayMs);
+            await JS.InvokeVoidAsync("audioHelper.playBeep", $"{NavigationManager.BaseUri}/res/{fileName}", schedule.Count, schedule.IntervalMs, schedule.InitialDelayMs);
         };
 
         Model.Redraw += OnRedraw;
