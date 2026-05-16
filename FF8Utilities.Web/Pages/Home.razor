@@ -21,7 +21,7 @@
         if (isLate)
         {
             CardTrackerState.SelectedEarlyQuistisPattern = null;
-            NavigationManager.NavigateTo("/card-tracker");            
+            NavigationManager.NavigateTo("card-tracker");            
         }
         else
         {
@@ -33,7 +33,7 @@
     {
         // TODO Add Non tracking option for 2nd try Zell
         CardTrackerState.SelectedEarlyQuistisPattern = pattern;
-        NavigationManager.NavigateTo($"/card-tracker");
+        NavigationManager.NavigateTo($"card-tracker");
     }
 }
 
