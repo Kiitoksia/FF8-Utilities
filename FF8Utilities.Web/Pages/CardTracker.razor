@@ -57,7 +57,22 @@
 
     private void LaunchQuistis() => _model.LaunchQuistisPatternsCommand.Execute(null);
 
-    private void LaunchZell() => _model.LaunchZellCommand.Execute(null);
+    private async Task LaunchZell()
+    {
+        if (_model.EarlyQuistisPattern == null)
+        {
+            _toastMessages.Add(new ToastMessage
+            {
+                Type = ToastType.Danger,
+                Title = "Error",
+                Message = "No Quistis pattern selected, cannot launch zell tracking"
+            });
+        }
+        else
+        {
+            _model.LaunchZellCommand.Execute(null);            
+        }
+    }
 
     private string GetFishFinRowClass(FishFinsEncounter enc) => enc.SingleFishKilled ? "table-success" : string.Empty;
 
