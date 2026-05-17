@@ -7,11 +7,17 @@
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
+    [Inject]
+    private SettingsService SettingsService { get; set; }
 
-    protected override void OnInitialized()
+    private Offcanvas _offcanvas;
+
+
+    protected override async Task OnInitializedAsync()
     {
         WebService.OnTitleChanged += StateHasChanged;
     }
+
 
     public void Dispose()
     {
@@ -22,10 +28,113 @@
     {
         NavigationManager.NavigateTo("");
     }
+
+    private async Task ShowSettings()
+    {
+        await _offcanvas.ShowAsync();
+    }
+
+    private async Task PlatformChanged(int value)
+    {
+        SettingsService.Platform = (Platform)value;
+        await SettingsService.Save();
+    }
+
+    private async Task CardDelayFrameChanged(int? value)
+    {
+        SettingsService.DelayFrames = value;
+        await SettingsService.Save();
+    }
+
+    private async Task BeepIntervalChanged(int value)
+    {
+        SettingsService.BeepInterval = value;
+        await SettingsService.Save();
+    }
+
+    private async Task BeepSoundChanged(int value)
+    {
+        SettingsService.BeepSound = (BeepSound)value;
+        await SettingsService.Save();
+    }
+
+    private async Task NoOfBeepsChanged(int value)
+    {
+        SettingsService.BeepCount = value;
+        await SettingsService.Save();
+    }
+
+    private async Task BeepOffsetFramesChanged(int value)
+    {
+        SettingsService.BeepOffsetFrames = value;
+        await SettingsService.Save();
+    }
+
 }
+
+<Offcanvas @ref="_offcanvas" Title="Settings">
+    <BodyTemplate>
+        <div class="row align-items-center mb-5 text-center">
+            <div class="col-12">
+                <span class="fw-light fst-italic">All changes are saved automatically</span>
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>Platform:</span>
+            </div>
+            <div class="col-6">
+                <EnumInput TEnum="Platform" Value="(int)SettingsService.Platform" ValueChanged="PlatformChanged" />
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>Custom Card Delay Frames:</span>
+            </div>
+            <div class="col-6">
+                <NumberInput TValue="int?" Value="SettingsService.DelayFrames" ValueChanged="CardDelayFrameChanged" Placeholder="None, use default" ValueExpression="() => SettingsService.DelayFrames" />
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>Beep Interval (ms):</span>
+            </div>
+            <div class="col-6">
+                <NumberInput TValue="int" Value="SettingsService.BeepInterval" ValueChanged="BeepIntervalChanged" ValueExpression="() => SettingsService.BeepInterval" />
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>Beep Sound:</span>
+            </div>
+            <div class="col-6">
+                <EnumInput TEnum="BeepSound" Value="(int)SettingsService.BeepSound" ValueChanged="BeepSoundChanged" />
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>No. of beeps:</span>
+            </div>
+            <div class="col-6">
+                <NumberInput TValue="int" Value="SettingsService.BeepCount" ValueChanged="NoOfBeepsChanged" ValueExpression="() => SettingsService.BeepCount" Min="2"/>
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>Beep Offset Frames</span>
+            </div>
+            <div class="col-6">
+                <NumberInput TValue="int" Value="SettingsService.BeepOffsetFrames" ValueChanged="BeepOffsetFramesChanged" ValueExpression="() => SettingsService.BeepOffsetFrames"/>
+            </div>
+        </div>
+    </BodyTemplate>
+</Offcanvas>
+
+
 <div class="top-row px-3 py-2 bg-primary">    
     <Button Color="ButtonColor.Secondary" @onclick="GoHome" Size="ButtonSize.Large">&lt; Back</Button>
     <span class="fs-5 position-absolute start-50 translate-middle-x">@WebService.Title</span>
+    <Button Color="ButtonColor.Secondary" @onclick="ShowSettings" Size="ButtonSize.Large" Class="position-absolute end-0 translate-middle-x">Settings</Button>
 </div>
 <div class="page">
     <main>

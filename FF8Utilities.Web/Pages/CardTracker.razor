@@ -28,7 +28,6 @@
     {
         string baseUrl = Navigation.BaseUri + "res";
         await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, baseUrl);
-        await Settings.Initialise();
         _model = new CardTrackerModel(Settings);
 
         _model.EarlyQuistisPattern = CardTrackerState.SelectedEarlyQuistisPattern;

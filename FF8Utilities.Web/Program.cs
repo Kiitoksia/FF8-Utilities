@@ -19,7 +19,9 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazorBootstrap();
 
 
+var app = builder.Build();
+var settings = app.Services.GetRequiredService<SettingsService>();
+await settings.Initialise();
 
-
-await builder.Build().RunAsync();
+await app.RunAsync();
 

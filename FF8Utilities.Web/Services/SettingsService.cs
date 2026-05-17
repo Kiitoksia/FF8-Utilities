@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using FF8Utilities.Common;
 
@@ -30,24 +31,27 @@ namespace FF8Utilities.Web.Services
             return defaultVal;
         }
 
+        private bool _isInitialised;
 
         public async Task Initialise()
         {
+            if (_isInitialised) return;
             CountdownTimer = await GetSetting(nameof(CountdownTimer), 3);
             BeepInterval = await GetSetting(nameof(BeepInterval), 400);
             BeepCount = await GetSetting(nameof(BeepCount), 4);
             BeepOffsetFrames = await GetSetting(nameof(BeepOffsetFrames), 0);
-            BeepSound = await GetSetting<BeepSound>(nameof(BeepOffsetFrames), BeepSound.Click);
+            BeepSound = await GetSetting<BeepSound>(nameof(BeepSound), BeepSound.Click);
 
             Platform = await GetSetting(nameof(Platform), Platform.PC);
             DelayFrames = await GetSetting<int?>(nameof(DelayFrames), null);
             DidGetRedSoldierEncounter = await GetSetting<bool>(nameof(DidGetRedSoldierEncounter), false);
             DidGetSecondBridgeEncounter = await GetSetting<bool>(nameof(DidGetSecondBridgeEncounter), false);
             IfritsCavernEncounterType = await GetSetting<IfritEncounterType>(nameof(IfritsCavernEncounterType), IfritEncounterType.RedBat);
+            _isInitialised = true;
         }
 
         public async Task Save()
-        {
+        {            
             await _storage.SetItemAsync(nameof(CountdownTimer), CountdownTimer);
             await _storage.SetItemAsync(nameof(BeepInterval), BeepInterval);
             await _storage.SetItemAsync(nameof(BeepCount), BeepCount);
