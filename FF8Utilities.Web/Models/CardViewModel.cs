@@ -8,12 +8,13 @@ namespace FF8Utilities.Web.Models
 {
     public class CardViewModel
     {
-        public CardViewModel(int index, string cardsToUse, List<byte[]> headerCards, params CardPosition[] positions)
+        public CardViewModel(int index, string cardsToUse, uint rngResult, List<byte[]> headerCards, params CardPosition[] positions)
         {
             Index = index;
             CardsToUse = cardsToUse;
             HeaderCards = headerCards;
             Positions = positions;
+            RNGResult = rngResult;
         }
 
         public string CardsToUse { get; }
@@ -24,6 +25,8 @@ namespace FF8Utilities.Web.Models
 
         public int Index { get; }
 
+        public uint RNGResult { get; }
+
         public static List<CardViewModel> EarlyQuistisModels()
         {
             List<CardViewModel> models = new List<CardViewModel>();
@@ -31,11 +34,12 @@ namespace FF8Utilities.Web.Models
             EarlyQuistisPattern[] patterns = EarlyQuistisPattern.OptionsExcludeLate;
             for (int i = 0; i < patterns.Length; i++)
             {
-                EarlyQuistisPattern patern = patterns[i];
+                EarlyQuistisPattern pattern = patterns[i];
                 models.Add(new CardViewModel(i + 1,
                     "Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit",
-                    patern.HeaderCards.Select(t => GameScenario.GetCardImage(t)).ToList(),
-                    patern.GetCardPositionForQuistisPattern()
+                    pattern.Result,
+                    pattern.HeaderCards.Select(t => GameScenario.GetCardImage(t)).ToList(),
+                    pattern.GetCardPositionForQuistisPattern()
                     ));
             }
 

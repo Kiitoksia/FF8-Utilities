@@ -17,8 +17,11 @@
 
     private async Task Submit()
     {
-        
+        await FrameSubmitted.InvokeAsync(SelectedModel.RNGResult);
     }
+
+    [Parameter]
+    public EventCallback<uint> FrameSubmitted { get; set; }
 }
 
 <div class="row">
@@ -26,7 +29,7 @@
         <div class="row">
             @foreach (CardViewModel model in Strategies)
             {
-                <div class="col-6 mb-2">
+                <div class="col-12 mb-2">
                     <button @onclick="async () => await CardClicked(model)"
                             class="card-header p-0 @(model == SelectedModel ? "border border-2 border-white" : string.Empty)">
                         <div class="row g-0">

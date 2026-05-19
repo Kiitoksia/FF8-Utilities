@@ -64,13 +64,11 @@
         }
     }
 
-    private async Task LaunchCardTracker(EarlyQuistisPattern pattern)
+    private async Task LaunchCardTracker(uint result)
     {
         await HideModals();
-        // TODO Add Non tracking option for 2nd try Zell
-        CardTrackerState.SelectedEarlyQuistisPattern = pattern;
+        CardTrackerState.SelectedEarlyQuistisPattern = EarlyQuistisPattern.OptionsExcludeLate.Single(t => t.Result == result);
         await _confirmTrackingModal.ShowAsync();
-        //NavigationManager.NavigateTo($"card-tracker");
     }
 
     public async ValueTask DisposeAsync()
@@ -99,30 +97,7 @@
 
 <Modal @ref="_cardModal">
     <BodyTemplate>
-        <BoardStrategiesControl Strategies="CardViewModel.EarlyQuistisModels()" />
-
-        @* <Accordion>
-            @foreach (var pattern in EarlyQuistisPattern.OptionsExcludeLate)
-            {
-                <AccordionItem Title="@pattern.Description">
-                    <Content>
-                        @if (EarlyQuistisPattern.WinnableFrames.Contains(pattern))
-                        {
-                            <div class="row">
-                                <CardBoardControl Modal="@pattern.GetCardPositionForQuistisPattern().ToList()" />                                
-                            </div>
-                            <div class="row">
-                                <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="async () => await LaunchCardTracker(pattern)">SUBMIT</Button>
-                            </div>
-                        }
-                        else
-                        {
-                            <span>Frame is not winnable, sorry.  Let us know if you do win!</span>
-                        }
-                    </Content>
-                </AccordionItem>
-            }
-        </Accordion> *@
+        <BoardStrategiesControl Strategies="CardViewModel.EarlyQuistisModels()" FrameSubmitted="LaunchCardTracker" />
     </BodyTemplate>
 </Modal>
 
