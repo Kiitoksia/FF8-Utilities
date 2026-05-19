@@ -75,6 +75,12 @@ body {
     min-height: 0;
 }
 
+.card-header {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(3, calc((60vh - 80px) / 3 * 93 / 120));

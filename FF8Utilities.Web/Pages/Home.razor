@@ -99,7 +99,9 @@
 
 <Modal @ref="_cardModal">
     <BodyTemplate>
-        <Accordion>
+        <BoardStrategiesControl Strategies="CardViewModel.EarlyQuistisModels()" />
+
+        @* <Accordion>
             @foreach (var pattern in EarlyQuistisPattern.OptionsExcludeLate)
             {
                 <AccordionItem Title="@pattern.Description">
@@ -120,7 +122,7 @@
                     </Content>
                 </AccordionItem>
             }
-        </Accordion>
+        </Accordion> *@
     </BodyTemplate>
 </Modal>
 
