@@ -18,6 +18,7 @@
             if (Model == null) return "Zell Card Patterns";
             string title = $"Zell Card Patterns (Quistis Outcome: {Model.State.ToString("X")}";
             if (Model.Count > 0) title += $" - RNG Index: {Model.Count}";
+            title += ")";
             return title;
         }
     }

@@ -26,10 +26,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string baseUrl = Navigation.BaseUri + "res";
-        await BaseZellCardTrackerModel.InitializeLateQuistisAsync(Http, baseUrl);
         _model = new CardTrackerModel(Settings);
-
         _model.EarlyQuistisPattern = CardTrackerState.SelectedEarlyQuistisPattern;
         _model.StartLateQuistisPattern += async (model) =>
         {

@@ -14,7 +14,8 @@
 
     private Modal _cardModal;
     private Modal _cardStrategyModal;
-    private ConfirmDialog _cardConfirmDialog;
+    private Modal _confirmTrackingModal;
+    private ZellCardManipulationControl _zellControl;
 
     public override string PageTitle => "FF8 Utilities";
 
@@ -52,6 +53,15 @@
         {
             // Already hidden, or something else, ignore
         }
+
+        try
+        {
+            await _confirmTrackingModal.HideAsync();
+        }
+        catch
+        {
+            // Already hidden, or something else, ignore
+        }
     }
 
     private async Task LaunchCardTracker(EarlyQuistisPattern pattern)
@@ -59,14 +69,33 @@
         await HideModals();
         // TODO Add Non tracking option for 2nd try Zell
         CardTrackerState.SelectedEarlyQuistisPattern = pattern;
-        NavigationManager.NavigateTo($"card-tracker");
+        await _confirmTrackingModal.ShowAsync();
+        //NavigationManager.NavigateTo($"card-tracker");
     }
 
     public async ValueTask DisposeAsync()
     {
         await HideModals();
     }
+
+    private async Task ProcessEarlyQuistisTrackingStrategy(bool useTracking)
+    {
+        await HideModals();
+        if (useTracking) NavigationManager.NavigateTo($"card-tracker");
+        else
+        {
+            CardTrackerModel model = new CardTrackerModel(SettingsService);            
+            _zellControl.Model = (CardManipulationModel)model.CreateCardManipModel(CardTrackerModel.CardManip, CardTrackerState.SelectedEarlyQuistisPattern.Result, "fc01", null);
+            await InvokeAsync(async () =>
+            {
+                await _zellControl.ShowAsync();
+            });
+        }
+    }
 }
+
+
+<ZellCardManipulationControl @ref="_zellControl"/>
 
 <Modal @ref="_cardModal">
     <BodyTemplate>
@@ -95,16 +124,49 @@
     </BodyTemplate>
 </Modal>
 
+<Modal @ref="_confirmTrackingModal" Title="Select Tracking Strategy" UseStaticBackdrop="true">
+    <BodyTemplate>
+        <div class="container text-center">
+            <civ class="row">
+                <div class="col-6">
+                    <Card>
+                        <CardTitle>Launch Tracker</CardTitle>
+                        <CardBody>Track actions in battle to get zell card first try</CardBody>
+                        <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await ProcessEarlyQuistisTrackingStrategy(true)">Submit</Button>
+                    </Card>
+                </div>
+                <div class="col-6">
+                    <Card>
+                        <CardTitle>2nd try Zell</CardTitle>
+                        <CardBody>Simple approach to get Zell Card on the 2nd game</CardBody>
+                        <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await ProcessEarlyQuistisTrackingStrategy(false)">Submit</Button>
+                    </Card>
+                </div>
+            </civ>
+        </div>
+    </BodyTemplate>
+</Modal>
+
 <Modal @ref="_cardStrategyModal" Title="Select Quistis Strategy">
     <BodyTemplate>
-        <div class="row">
-            <div class="col-6">
-                <Button Block="true" @onclick="async () => await CardManipulationClicked(false)">Early</Button>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-6">
+                    <Card>
+                        <CardTitle>Early</CardTitle>
+                        <CardBody>Get Quistis Card before Ifrits Cavern</CardBody>
+                        <Button Block="true" Color="ButtonColor.Primary" @onclick="async () => await CardManipulationClicked(false)">Early</Button>
+                    </Card>
+                </div>
+                <div class="col-6">
+                    <Card>
+                        <CardTitle>Late</CardTitle>
+                        <CardBody>Get Quistis Card after returning to Garden</CardBody>
+                        <Button Block="true" Color="ButtonColor.Primary" @onclick="async () => await CardManipulationClicked(true)">Late</Button>
+                    </Card>
+                </div>
             </div>
-            <div class="col-6">
-                <Button Block="true" @onclick="async () => await CardManipulationClicked(true)">Late</Button>
-            </div>
-        </div>
+        </div>        
     </BodyTemplate>
 </Modal>
 
