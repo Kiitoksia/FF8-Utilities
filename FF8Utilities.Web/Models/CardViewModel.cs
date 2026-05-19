@@ -10,6 +10,7 @@ namespace FF8Utilities.Web.Models
     {
         public CardViewModel(int index, string cardsToUse, List<byte[]> headerCards, params CardPosition[] positions)
         {
+            Index = index;
             CardsToUse = cardsToUse;
             HeaderCards = headerCards;
             Positions = positions;

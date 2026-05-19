@@ -28,12 +28,12 @@
             {
                 <div class="col-6 mb-2">
                     <button @onclick="async () => await CardClicked(model)"
-                            class="card-header w-100 @(model == SelectedModel ? "border border-2 border-white" : string.Empty)">
-                        <div class="row">
+                            class="card-header p-0 @(model == SelectedModel ? "border border-2 border-white" : string.Empty)">
+                        <div class="row g-0">
                             @foreach (var image in model.HeaderCards)
                             {
-                                <div class="col-6">
-                                    <Image Src="@WebHelper.GetDataImageSource(image)" IsResponsive="true" />
+                                <div class="col-6" style="line-height:0;">
+                                    <img src="@WebHelper.GetDataImageSource(image)" style="width:100%;height:auto;display:block;" />
                                 </div>
                             }
                         </div>

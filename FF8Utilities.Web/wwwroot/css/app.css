@@ -76,9 +76,10 @@ body {
 }
 
 .card-header {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 0;
 }
 
 .card-grid {
