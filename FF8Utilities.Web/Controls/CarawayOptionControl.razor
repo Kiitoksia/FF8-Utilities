@@ -1,0 +1,77 @@
+﻿
+
+@code {
+    [Parameter, EditorRequired]
+    public CarawayOption Model { get; set; }
+
+    [Inject]
+    private SettingsService SettingsService { get; set; }
+}
+
+<div>
+    <div class="row">
+        <div class="col-4">
+
+        </div>
+        <div class="col-4">
+            <div class="d-flex align-items-stretch">
+                <span class="btn btn-primary btn-lg border-2 border-white rounded-0 fw-bold bg-primary">@Model.Code</span>
+            </div>
+        </div>
+        <div class="col-4">
+            <span>@Model.Input</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <span>Backup</span>
+        </div>
+        <div class="col-4">
+            <div class="d-flex align-items-stretch">
+                <span class="btn btn-primary btn-lg border-2 border-white rounded-0 fw-bold bg-secondary">@Model.BackupCode</span>
+            </div>
+        </div>
+        <div class="col-4">
+            <span>@Model.BackupInput</span>
+        </div>
+    </div>
+
+    @if (SettingsService.CarawayShowNPCMovement)
+    {
+        <div class="row">
+            <span>NPC Details</span>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <span>Station</span>
+            </div>
+            <div class="col-4">
+                <span>@Model.Station</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <span>Escalator</span>
+            </div>
+            <div class="col-4">
+                <span>@Model.Escalator</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <span>Street</span>
+            </div>
+            <div class="col-4">
+                <span>@Model.Street</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <span>Bus</span>
+            </div>
+            <div class="col-4">
+                <span>@Model.Bus</span>
+            </div>
+        </div>
+    }
+</div>          

@@ -1,0 +1,119 @@
+﻿
+@code {
+    private List<PoleModel> poles = PoleModel.Poles.ToList();
+    private Modal _modal;
+
+    [Inject]
+    private SettingsService SettingsService { get; set; }
+
+    public async Task ShowAsync()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private async Task Submit()
+    {
+        Results = CarawayCode.CarawayCode.CalculateCode(PoleModel.ConvertTo(poles), SettingsService.CarawayHideUnlikelyResults);
+    }
+
+    private async Task Reset()
+    {
+        foreach (var pole in poles)
+        {
+            pole.Count = null;
+        }
+        Results = Array.Empty<CarawayCodeOutput>();
+    }
+
+    private CarawayCodeOutput[] Results { get; set; } = Array.Empty<CarawayCodeOutput>();
+
+    private async Task HideUnlikelyResultsToggled(bool value)
+    {
+        SettingsService.CarawayHideUnlikelyResults = value;
+        await SettingsService.Save();
+    }
+
+    private async Task ShowNPCMovementToggled(bool value)
+    {
+        SettingsService.CarawayShowNPCMovement = value;
+        await SettingsService.Save();
+    }
+
+    private void Increment(PoleModel pole, bool isAdding)
+    {
+        if (pole.Count == null) pole.Count = 0;
+        if (isAdding) pole.Count++;
+        else pole.Count--;
+    }
+
+}
+
+<Modal @ref="_modal" Size="ModalSize.Large" Title="Caraway Code">
+    <BodyTemplate>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="row">
+                        @foreach (PoleModel pole in poles)
+                        {
+                            <div class="d-flex align-items-center justify-content-between px-3 py-2 border-top border-secondary">
+                                <span class="fw-bold text-center">@pole.Description</span>
+                                <div class="input-group mb-0" style="width: auto;">
+                                    <NumberInput EnableMinMax="true" Min="0" Max="15" TValue="int?" @bind-Value="@pole.Count" />
+                                    <button class="input-group-text" type="button" @onclick="() => Increment(pole, true)">▲</button>
+                                    <button class="input-group-text" type="button" @onclick="() => Increment(pole, false)">▼</button>
+                                    <button class="input-group-text" type="button" @onclick="() => pole.Count = null">X</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        <Button Block="true" Color="ButtonColor.Primary" @onclick="Submit">Submit</Button>
+                    </div>
+                    <div class="row">
+                        <Button Block="true" Color="ButtonColor.Secondary" @onclick="Reset">Reset</Button>
+                    </div>
+                    <div class="row">
+                        <Switch ValueExpression="() => SettingsService.CarawayHideUnlikelyResults" Label="Hide Unlikely Results" ValueChanged="HideUnlikelyResultsToggled" />
+                    </div>
+                    <div class="row">
+                        <Switch ValueExpression="() => SettingsService.CarawayShowNPCMovement" Label="Show NPC Movement" ValueChanged="ShowNPCMovementToggled" />
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-7">
+                    <div class="row">
+                        @if (Results.Length == 0)
+                        {
+                            <span>No results found</span>
+                        }
+                        else
+                        {
+                            @foreach (CarawayCodeOutput result in Results)
+                            {
+                                <div class="border border-secondary rounded">
+                                    <div class="row">
+                                        <div class="d-flex align-items-center px-3 py-2 bg-primary">
+                                            <h4 class="fw-bold mb-0">@result.SubscriptDisplay</h4>
+                                        </div>
+                                        <div class="row">
+                                            <span>Last Series Complete</span>
+                                        </div>
+                                        <div class="row">
+                                            <CarawayOptionControl Model="@result.CompleteOption" />
+                                        </div>
+                                        <div class="row">
+                                            <span>Last Series Incomplete</span>
+                                        </div>
+                                        <div class="row">
+                                            <CarawayOptionControl Model="@result.IncompleteOption" />
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </BodyTemplate>
+</Modal>

@@ -25,6 +25,10 @@ namespace FF8Utilities.Web.Services
         public IfritEncounterType IfritsCavernEncounterType { get; set; }
         public BeepSound BeepSound { get; set; }
 
+        public bool CarawayShowNPCMovement { get; set; }
+
+        public bool CarawayHideUnlikelyResults { get; set; }
+
         private async Task<T> GetSetting<T>(string key, T defaultVal = default)
         {
             if (await _storage.ContainKeyAsync(key)) return await _storage.GetItemAsync<T>(key);
@@ -47,6 +51,9 @@ namespace FF8Utilities.Web.Services
             DidGetRedSoldierEncounter = await GetSetting<bool>(nameof(DidGetRedSoldierEncounter), false);
             DidGetSecondBridgeEncounter = await GetSetting<bool>(nameof(DidGetSecondBridgeEncounter), false);
             IfritsCavernEncounterType = await GetSetting<IfritEncounterType>(nameof(IfritsCavernEncounterType), IfritEncounterType.RedBat);
+
+            CarawayShowNPCMovement = await GetSetting<bool>(nameof(CarawayShowNPCMovement), true);
+            CarawayHideUnlikelyResults = await GetSetting<bool>(nameof(CarawayHideUnlikelyResults), true);
             _isInitialised = true;
         }
 
@@ -62,6 +69,9 @@ namespace FF8Utilities.Web.Services
             await _storage.SetItemAsync(nameof(DidGetRedSoldierEncounter), DidGetRedSoldierEncounter);
             await _storage.SetItemAsync(nameof(DidGetSecondBridgeEncounter), DidGetSecondBridgeEncounter);
             await _storage.SetItemAsync(nameof(IfritsCavernEncounterType), IfritsCavernEncounterType);
+
+            await _storage.SetItemAsync(nameof(CarawayShowNPCMovement), CarawayShowNPCMovement);
+            await _storage.SetItemAsync(nameof(CarawayHideUnlikelyResults), CarawayHideUnlikelyResults);
         }
     }
 }
