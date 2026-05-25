@@ -10,6 +10,7 @@
     private NavigationManager NavigationManager { get; set; }
 
 
+    private InputText _recoveryBoxInput;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,7 +40,15 @@
     {
         if (args.Key == "Enter" || args.Key == "NumpadEnter")
         {
+            // Get the current value from the element, as it only writes back on focus lost
+            if (_recoveryBoxInput.Element != null)
+            {
+                var currentValue = await JS.InvokeAsync<string>("eval", $"document.activeElement.value");
+                if (currentValue != null) Model.RecoveryPattern = currentValue;
+            }
+
             Model.SubmitCommand.Execute(null);
+            if (_recoveryBoxInput.Element != null) await _recoveryBoxInput.Element.Value.FocusAsync();
             OnRedraw();
         }
     }
@@ -135,7 +144,7 @@
                 }
             </div>
             <div class="row">
-                <InputText @bind-Value="@Model.RecoveryPattern" Placeholder="Enter cards for recovery or 1st try search" />
+                <InputText @bind-Value="@Model.RecoveryPattern" @ref="_recoveryBoxInput" Placeholder="Enter cards for recovery or 1st try search" />
             </div>
             @if (!string.IsNullOrWhiteSpace(Model.FoundCards))
             {
