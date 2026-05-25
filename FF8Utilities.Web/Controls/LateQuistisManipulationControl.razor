@@ -6,25 +6,14 @@
 
     private Modal _modal;
     private LateQuistisPattern _pattern;
-    private LateQuistisStrategy _selectedStrategy;
     private string _activeTab;
 
 
     public async Task ShowAsync(LateQuistisPattern pattern)
     {
         _pattern = pattern;
-        _selectedStrategy = null;
-
         StateHasChanged();
         await _modal.ShowAsync();
-    }
-
-    private async Task ConfirmStrategy()
-    {
-        if (_selectedStrategy is null) return;
-        var result = uint.Parse(_selectedStrategy.ResultHex, System.Globalization.NumberStyles.HexNumber);
-        await _modal.HideAsync();
-        await OnCompleted.InvokeAsync(result);
     }
 
     private async Task Cancel()
@@ -43,52 +32,20 @@
 
     private string ModalTitle => _pattern is null ? "Quistis Card Pattern" : $"Quistis Card Pattern (RNG Index: {_pattern.RNGIndex})";
 
-    private async void SubmitFrame(LateQuistisStrategy frame)
+    private async Task SubmitFrame(uint result)
     {
-        _selectedStrategy = frame;
-        await ConfirmStrategy();
+        await _modal.HideAsync();
+        await OnCompleted.InvokeAsync(result);
     }
 }
 
 <Modal @ref="_modal" Title="@ModalTitle" UseStaticBackdrop="true" Size="ModalSize.ExtraLarge">
     <BodyTemplate>
-        <div class="d-flex flex-column h-100 gap-3 p-2">
-            <div class="row h-100">
-                <Tabs NavStyle="NavStyle.Vertical" OnShown="OnTabShown">
-                    @foreach (var frame in _pattern.Strategies.OrderBy(t => t.OpponentDeckOrderer))
-                    {
-                        <Tab Name="@frame.Frame.ToString()">
-                            <TitleTemplate>
-                                <div class="row @(_activeTab == frame.Frame.ToString() ? " border border-2 border-white" : string.Empty)">
-                                    @foreach (var image in frame.OpponentCards)
-                                    {
-                                        <div class="col-6">
-                                            <Image Src="@WebHelper.GetDataImageSource(image)" IsResponsive="true" />
-                                        </div>
-                                    }
-                                </div>
-                            </TitleTemplate>
-                            <Content>
-                                <div class="d-flex flex-column h-100 align-items-center">
-                                    <div class="border border-secondary rounded mb-2 text-center">
-                                        <div class="bg-primary d-flex align-items-center py-2 px-2 text-center">
-                                            <h4 class="fw-bold mb-0 text-break text-center">(Frame @frame.Frame) Cards to use</h4>
-                                        </div>
-                                        <div class="px-2 text-center">
-                                            <span>Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column card-grid-responsive-header">
-                                        <CardBoardControl Modal="frame.Positions"/>
-                                        <button class="btn btn-primary btn-lg mt-2 border border-secondary border-3" @onclick="() => SubmitFrame(frame)">SUBMIT</button>
-                                    </div>
-                                </div>
-                            </Content>
-                        </Tab>
-                    }
-                </Tabs>
+        <div class="container">
+            <div class="row">
+                <BoardStrategiesControl Strategies="_pattern.Strategies.Select(t => t.ToCardViewModel()).ToList()" FrameSubmitted="SubmitFrame" />
             </div>
-            <div class="d-flex flex-column gap-3 p-2">
+            <div class="row gap-3 p-2">
                 <CardTimerControl Model="@Model" />
             </div>
         </div>

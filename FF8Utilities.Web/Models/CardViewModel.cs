@@ -26,7 +26,11 @@ namespace FF8Utilities.Web.Models
         public int Index { get; }
 
         public uint RNGResult { get; }
+        
+    }
 
+    public static class CardViewModelExtensionMethods
+    {
         public static List<CardViewModel> EarlyQuistisModels()
         {
             List<CardViewModel> models = new List<CardViewModel>();
@@ -44,6 +48,16 @@ namespace FF8Utilities.Web.Models
             }
 
             return models;
+        }
+
+        public static CardViewModel ToCardViewModel(this LateQuistisStrategy strategy)
+        {
+            var result = uint.Parse(strategy.ResultHex, System.Globalization.NumberStyles.HexNumber);
+            return new CardViewModel(strategy.Frame,
+                "Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit",
+                result,
+                strategy.OpponentCards,
+                strategy.Positions.ToArray());
         }
     }
 }

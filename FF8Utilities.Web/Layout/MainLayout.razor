@@ -11,7 +11,7 @@
     private SettingsService SettingsService { get; set; }
 
     private Offcanvas _offcanvas;
-
+    private bool IsHomePage => NavigationManager.BaseUri == NavigationManager.Uri;
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +25,7 @@
     }
 
     private void GoHome()
-    {
+    {        
         NavigationManager.NavigateTo("");
     }
 
@@ -140,7 +140,10 @@
 
 
 <div class="top-row px-3 py-2 bg-primary">    
-    <Button Color="ButtonColor.Secondary" @onclick="GoHome" Size="ButtonSize.Large">&lt; Back</Button>
+    @if (!IsHomePage)
+    {
+        <Button Color="ButtonColor.Secondary" @onclick="GoHome" Size="ButtonSize.Large">&lt; Back</Button>        
+    }
     <span class="fs-5 position-absolute start-50 translate-middle-x">@WebService.Title</span>
     <Button Color="ButtonColor.Secondary" @onclick="ShowSettings" Size="ButtonSize.Large" Class="position-absolute end-0 translate-middle-x">Settings</Button>
 </div>
