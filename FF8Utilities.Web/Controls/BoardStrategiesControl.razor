@@ -36,7 +36,7 @@
                             @foreach (var image in model.HeaderCards)
                             {
                                 <div class="col-6">
-                                    <Image Src="@WebHelper.GetDataImageSource(image)" IsResponsive="true"/>
+                                    <Image Src="@WebHelper.GetDataImageSource(image)" IsResponsive="true" Style="max-height: 80px; object-fit: contain;" />
                                 </div>
                             }
                         </div>

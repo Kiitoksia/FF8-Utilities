@@ -81,7 +81,7 @@
     private async Task ProcessEarlyQuistisTrackingStrategy(bool useTracking)
     {
         await HideModals();
-        if (useTracking) NavigationManager.NavigateTo($"card-tracker");
+        if (useTracking) NavigationManager.NavigateTo("card-tracker");
         else
         {
             CardTrackerModel model = new CardTrackerModel(SettingsService);            
