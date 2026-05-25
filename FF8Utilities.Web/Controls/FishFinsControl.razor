@@ -1,0 +1,82 @@
+﻿
+@code {
+    private Modal _modal;
+
+    private async Task FilterChanged(string filter)
+    {
+        Filter = filter?.Trim().Replace(" ", string.Empty);
+        if (string.IsNullOrWhiteSpace(Filter))
+        {
+            FilteredPatterns = new List<FishPatternModel>();
+        }
+        else
+        {
+            FilteredPatterns = WebHelper.AllFishPatterns.Where(t => t.SearchablePattern.StartsWith(Filter, StringComparison.CurrentCultureIgnoreCase)).ToList();
+        }
+    }
+
+    public async Task ShowAsync()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private List<FishPatternModel> FilteredPatterns { get; set; } = new List<FishPatternModel>();
+
+    private string Filter { get; set; }
+}
+
+<Modal @ref="_modal" Title="Fish Fin Manipulation" Size="ModalSize.Large">
+    <BodyTemplate>
+        <div class="d-flex flex-column h-100 gap-3 p-2">
+            <div class="row h-100">
+                <input type="text" @oninput="e => FilterChanged(e.Value?.ToString())" placeholder="Enter scenario to filter" class="form-control" />
+            </div>
+            <div class="row">
+                <Grid TItem="FishPatternModel" Data="FilteredPatterns" Class="table table-hover table-bordered table-striped">
+                    <GridColumns>
+                        <GridColumn TItem="FishPatternModel" HeaderText="Index" PropertyName="Index">
+                            @context.Index
+                        </GridColumn>
+                        <GridColumn TItem="FishPatternModel" HeaderText="Pattern" PropertyName="Pattern">
+                            @context.Pattern
+                        </GridColumn>
+                        <GridColumn TItem="FishPatternModel" HeaderText="ATB Refreshes" PropertyName="ATBRefreshes">
+                            @context.ATBRefreshes
+                        </GridColumn>
+                        <GridColumn TItem="FishPatternModel" HeaderText="Drops" PropertyName="DropCount">
+                            @context.DropCount
+                        </GridColumn>
+                        <GridColumn TItem="FishPatternModel" HeaderText="Notes">
+                            <div class="container">
+                                @if (context.GeneralCommentsVisible)
+                                {
+                                    <div class="row">
+                                        <span class="fishpattern fishpattern-general">@context.GeneralComment</span>
+                                    </div>
+                                }
+                                @if (context.Phase1CommentsVisible)
+                                {
+                                    <div class="row">
+                                        <span class="fishpattern fishpattern-phase1">@context.Phase1Comment</span>
+                                    </div>
+                                }
+                                @if (context.Phase2CommentsVisible)
+                                {
+                                    <div class="row">
+                                        <span class="fishpattern fishpattern-phase2">@context.Phase2Comment</span>
+                                    </div>
+                                }
+                                @if (context.Phase3CommentsVisible)
+                                {
+                                    <div class="row">
+                                        <span class="fishpattern fishpattern-phase3">@context.Phase3Comment</span>
+                                    </div>
+                                }
+                            </div>                            
+                        </GridColumn>
+                    </GridColumns>
+                </Grid>
+            </div>
+        </div>
+    </BodyTemplate>
+</Modal>

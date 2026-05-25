@@ -16,6 +16,7 @@
     private Modal _cardStrategyModal;
     private Modal _confirmTrackingModal;
     private ZellCardManipulationControl _zellControl;
+    private FishFinsControl _fishFinsControl;
 
     public override string PageTitle => "FF8 Utilities";
 
@@ -94,6 +95,7 @@
 
 
 <ZellCardManipulationControl @ref="_zellControl"/>
+<FishFinsControl @ref="_fishFinsControl"/>
 
 <Modal @ref="_cardModal">
     <BodyTemplate>
@@ -169,7 +171,7 @@
                 <CardBody>
                     <CardTitle>Fish Fins</CardTitle>
                     <CardBody>Currently supports Quezacotl fish fin manipulation</CardBody>
-                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Launch</Button>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await _fishFinsControl.ShowAsync()">Launch</Button>
                 </CardBody>
             </Card>
         </div>

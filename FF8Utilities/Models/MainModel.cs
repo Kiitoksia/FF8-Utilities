@@ -21,6 +21,7 @@ using CardManipulation;
 using FF8Utilities.Common;
 using FF8Utilities.Common.Caraway;
 using FF8Utilities.Common.Cards;
+using FF8Utilities.Common.Models;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Entities;
 using MahApps.Metro.Controls;

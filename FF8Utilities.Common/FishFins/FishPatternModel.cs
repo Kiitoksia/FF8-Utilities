@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FF8Utilities.Models
+namespace FF8Utilities.Common.Models
 {
     public class FishPatternModel
     {

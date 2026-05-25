@@ -27,7 +27,9 @@ var settings = app.Services.GetRequiredService<SettingsService>();
 await settings.Initialise();
 
 var http = app.Services.GetRequiredService<HttpClient>();
-await BaseZellCardTrackerModel.InitializeLateQuistisAsync(http, builder.HostEnvironment.BaseAddress + "res");
+string resourceUrl = builder.HostEnvironment.BaseAddress + "res";
+await BaseZellCardTrackerModel.InitializeLateQuistisAsync(http, resourceUrl);
+await WebHelper.LoadFishPatterns(http, resourceUrl);
 
 await app.RunAsync();
 

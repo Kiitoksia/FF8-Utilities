@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using FF8Utilities.Common.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FF8Utilities.Web
@@ -32,6 +35,20 @@ namespace FF8Utilities.Web
             return Task.CompletedTask;
         }
 
+        public static List<FishPatternModel> AllFishPatterns { get; private set; }
+
+        public static async Task LoadFishPatterns(HttpClient client, string baseUrl)
+        {
+            string url = $"{baseUrl.TrimEnd('/')}/fins.json";
+            string json = await client.GetStringAsync(url);
+            dynamic jObj = JsonConvert.DeserializeObject(json);
+
+            AllFishPatterns = new List<FishPatternModel>();
+            foreach (var pattern in jObj)
+            {
+                AllFishPatterns.Add(new FishPatternModel(pattern));
+            }
+        }
         
     }
 }
