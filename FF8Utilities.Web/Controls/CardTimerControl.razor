@@ -1,4 +1,5 @@
-﻿@code {
+﻿@implements IDisposable
+@code {
     [Parameter, EditorRequired]
     public CardManipulationModel Model { get; set; }
 
@@ -31,6 +32,24 @@
         };
 
         Model.Redraw += OnRedraw;
+        WebHelper.KeyPressed += KeyPressed;
+    }
+
+    private async void KeyPressed(object sender, KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" || args.Key == "NumpadEnter")
+        {
+            Model.SubmitCommand.Execute(null);
+            OnRedraw();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("JsFunctions.addKeyboardListenerEvent");
+        }
     }
 
     private void OnRedraw()
@@ -41,7 +60,10 @@
     public void Dispose()
     {
         Model.Redraw -= OnRedraw;
-    }        
+        WebHelper.KeyPressed -= KeyPressed;
+    }      
+    
+    // JSFunctions from https://stackoverflow.com/questions/71242841/listen-to-keyboard-input-in-the-whole-blazor-page
 }
 
 <HeadContent>
@@ -69,6 +91,30 @@
             },
             pauseBeeps: function () {
                 this._cancelled = true;
+            }
+        };
+
+        window.JsFunctions = {
+            addKeyboardListenerEvent: function (foo) {
+                let serializeEvent = function (e) {
+                    if (e) {
+                        return {
+                            key: e.key,
+                            code: e.keyCode.toString(),
+                            location: e.location,
+                            repeat: e.repeat,
+                            ctrlKey: e.ctrlKey,
+                            shiftKey: e.shiftKey,
+                            altKey: e.altKey,
+                            metaKey: e.metaKey,
+                            type: e.type
+                        };
+                    }
+                };
+
+                window.document.addEventListener('keydown', function (e) {
+                    DotNet.invokeMethodAsync('FF8Utilities.Web', 'JsKeyDown', serializeEvent(e))
+                });
             }
         };
     </script>

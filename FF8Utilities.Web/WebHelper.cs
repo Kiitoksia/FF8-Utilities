@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace FF8Utilities.Web
 {
@@ -18,5 +22,16 @@ namespace FF8Utilities.Web
             CachedDataImageSources[imageData] = dataImageSource;
             return dataImageSource;
         }
+
+        public static event EventHandler<KeyboardEventArgs> KeyPressed;
+
+        [JSInvokable]
+        public static Task JsKeyDown(KeyboardEventArgs args)
+        {
+            KeyPressed?.Invoke(null, args);
+            return Task.CompletedTask;
+        }
+
+        
     }
 }
