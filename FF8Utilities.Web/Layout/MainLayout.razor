@@ -36,36 +36,44 @@
 
     private async Task PlatformChanged(int value)
     {
-        SettingsService.Platform = (Platform)value;
+        Platform platform = (Platform)value;
+        if (SettingsService.Platform == platform) return;
+        SettingsService.Platform = platform;
         await SettingsService.Save();
     }
 
     private async Task CardDelayFrameChanged(int? value)
     {
+        if (SettingsService.DelayFrames == value) return;
         SettingsService.DelayFrames = value;
         await SettingsService.Save();
     }
 
     private async Task BeepIntervalChanged(int value)
     {
+        if (SettingsService.BeepInterval == value) return;
         SettingsService.BeepInterval = value;
         await SettingsService.Save();
     }
 
     private async Task BeepSoundChanged(int value)
     {
-        SettingsService.BeepSound = (BeepSound)value;
+        BeepSound sound = (BeepSound)value;
+        if (SettingsService.BeepSound == sound) return;
+        SettingsService.BeepSound = sound;
         await SettingsService.Save();
     }
 
     private async Task NoOfBeepsChanged(int value)
     {
+        if (SettingsService.BeepCount == value) return;
         SettingsService.BeepCount = value;
         await SettingsService.Save();
     }
 
     private async Task BeepOffsetFramesChanged(int value)
     {
+        if (SettingsService.BeepOffsetFrames == value) return;
         SettingsService.BeepOffsetFrames = value;
         await SettingsService.Save();
     }

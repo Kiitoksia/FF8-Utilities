@@ -53,7 +53,7 @@
     @if (Model.ShowToggleOption)
     {
         <div class="px-3 py-2 border-top border-secondary">
-            <Switch ValueExpression="() => Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
+            <Switch ValueExpression="() => Model.IsToggled" Value="Model.IsToggled" Label="@Model.ToggleOptionDescription" ValueChanged="SwitchChanged" />
         </div>
     }
 

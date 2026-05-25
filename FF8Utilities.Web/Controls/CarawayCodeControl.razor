@@ -2,9 +2,17 @@
 @code {
     private List<PoleModel> poles = PoleModel.Poles.ToList();
     private Modal _modal;
+    private bool _hideUnlikelyResults;
+    private bool _showNPCMovement;
 
     [Inject]
     private SettingsService SettingsService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _hideUnlikelyResults = SettingsService.CarawayHideUnlikelyResults;
+        _showNPCMovement = SettingsService.CarawayShowNPCMovement;
+    }
 
     public async Task ShowAsync()
     {
@@ -29,12 +37,16 @@
 
     private async Task HideUnlikelyResultsToggled(bool value)
     {
+        if (value == _hideUnlikelyResults) return;
+        _hideUnlikelyResults = value;
         SettingsService.CarawayHideUnlikelyResults = value;
         await SettingsService.Save();
     }
 
     private async Task ShowNPCMovementToggled(bool value)
     {
+        if (value == _showNPCMovement) return;
+        _showNPCMovement = value;
         SettingsService.CarawayShowNPCMovement = value;
         await SettingsService.Save();
     }
@@ -59,9 +71,7 @@
                             <div class="d-flex align-items-center justify-content-between px-3 py-2 border-top border-secondary">
                                 <span class="fw-bold text-center">@pole.Description</span>
                                 <div class="input-group mb-0" style="width: auto;">
-                                    <NumberInput EnableMinMax="true" Min="0" Max="15" TValue="int?" @bind-Value="@pole.Count" />
-                                    <button class="input-group-text" type="button" @onclick="() => Increment(pole, true)">▲</button>
-                                    <button class="input-group-text" type="button" @onclick="() => Increment(pole, false)">▼</button>
+                                    <NumberInput EnableMinMax="true" Min="0" Max="15" TValue="int?" @bind-Value="@pole.Count" TextAlignment="Alignment.End" />
                                     <button class="input-group-text" type="button" @onclick="() => pole.Count = null">X</button>
                                 </div>
                             </div>
@@ -74,10 +84,10 @@
                         <Button Block="true" Color="ButtonColor.Secondary" @onclick="Reset">Reset</Button>
                     </div>
                     <div class="row">
-                        <Switch ValueExpression="() => SettingsService.CarawayHideUnlikelyResults" Label="Hide Unlikely Results" ValueChanged="HideUnlikelyResultsToggled" />
+                        <Switch ValueExpression="() => _hideUnlikelyResults" Value="_hideUnlikelyResults" Label="Hide Unlikely Results" ValueChanged="HideUnlikelyResultsToggled" />
                     </div>
                     <div class="row">
-                        <Switch ValueExpression="() => SettingsService.CarawayShowNPCMovement" Label="Show NPC Movement" ValueChanged="ShowNPCMovementToggled" />
+                        <Switch ValueExpression="() => _showNPCMovement" Value="_showNPCMovement" Label="Show NPC Movement" ValueChanged="ShowNPCMovementToggled" />
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-7">
