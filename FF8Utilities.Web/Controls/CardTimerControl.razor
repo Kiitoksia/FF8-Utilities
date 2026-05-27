@@ -10,7 +10,8 @@
     private NavigationManager NavigationManager { get; set; }
 
 
-    private InputText _recoveryBoxInput;
+    private ElementReference _recoveryBoxInput;
+    private bool _inputFocused;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,19 +37,31 @@
         WebHelper.KeyPressed += KeyPressed;
     }
 
-    private async void KeyPressed(object sender, KeyboardEventArgs args)
+    private async Task HandleInputKeyDown(KeyboardEventArgs args)
     {
         if (args.Key == "Enter" || args.Key == "NumpadEnter")
         {
-            // Get the current value from the element, as it only writes back on focus lost
-            if (_recoveryBoxInput.Element != null)
-            {
-                var currentValue = await JS.InvokeAsync<string>("eval", $"document.activeElement.value");
-                if (currentValue != null) Model.RecoveryPattern = currentValue;
-            }
+            var currentValue = await JS.InvokeAsync<string>("eval", "document.activeElement.value");
+            if (currentValue != null) Model.RecoveryPattern = currentValue;
 
             Model.SubmitCommand.Execute(null);
-            if (_recoveryBoxInput.Element != null) await _recoveryBoxInput.Element.Value.FocusAsync();
+            await _recoveryBoxInput.FocusAsync();
+            OnRedraw();
+        }
+    }
+
+    private async void KeyPressed(object sender, KeyboardEventArgs args)
+    {
+        if (_inputFocused) return; // Already focused, ignore
+        if (args.Key == "Enter" || args.Key == "NumpadEnter")
+        {
+            
+            // Get the current value from the element, as it only writes back on focus lost
+            var currentValue = await JS.InvokeAsync<string>("eval", $"document.activeElement.value");
+            if (currentValue != null) Model.RecoveryPattern = currentValue;
+
+            Model.SubmitCommand.Execute(null);
+            await _recoveryBoxInput.FocusAsync();
             OnRedraw();
         }
     }
@@ -144,7 +157,15 @@
                 }
             </div>
             <div class="row">
-                <InputText @bind-Value="@Model.RecoveryPattern" @ref="_recoveryBoxInput" Placeholder="Enter cards for recovery or 1st try search" />
+                <input type="text"
+                       @ref="_recoveryBoxInput"
+                       value="@Model.RecoveryPattern"
+                       @oninput="e => Model.RecoveryPattern = e.Value?.ToString()"
+                       @onkeydown="HandleInputKeyDown"
+                       @onfocus="() => _inputFocused = true"
+                       @onblur="() => _inputFocused = false"
+                       class="form-control"
+                       placeholder="Enter cards for recovery or 1st try search" />
             </div>
             @if (!string.IsNullOrWhiteSpace(Model.FoundCards))
             {
