@@ -135,7 +135,7 @@ else
                     </div>
                 
                     <div class="row mb-3 justify-content-center">
-                        <div class="col-md-6 col-sm-12 col-lg-4">
+                        <div class="col-md-4 col-sm-12">
                             <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-primary">
                                 <h4 class="fw-bold mb-0">World Map Encounters</h4>
                             </div>
@@ -145,7 +145,7 @@ else
                                         @context.FormationDisplay
                                     </GridColumn>
                                     <GridColumn TItem="WorldMapEncounter" HeaderText="QUANTITY" PropertyName="Quantity">
-                                        <div class="input-group mb-0" style="width: auto;">
+                                        <div class="input-group mb-0" style="width: 100%;">
                                             <span class="input-group-text flex-fill">@context.Quantity</span>
                                             <button class="input-group-text" type="button" @onclick="() => context.Quantity++">▲</button>
                                             <button class="input-group-text" type="button" @onclick="() => context.Quantity--">▼</button>
@@ -154,7 +154,7 @@ else
                                 </GridColumns>
                             </Grid>
                         </div>
-                        <div class="col-md-6 col-sm-12 col-lg-4">
+                        <div class="col-md-6 col-sm-12 col-lg-6">
                             <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-primary">
                                 <h4 class="fw-bold mb-0">Fish Fin Encounters</h4>
                             </div>
