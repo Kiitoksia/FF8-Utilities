@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
     <TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-maccatalyst</TargetFrameworks>
+    <!--<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-maccatalyst</TargetFrameworks>-->
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
@@ -43,8 +43,8 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-	  <ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>8</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.8</ApplicationDisplayVersion>
+	  <ApplicationVersion>9</ApplicationVersion>
 	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
@@ -54,19 +54,9 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-	  <ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>8</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.8</ApplicationDisplayVersion>
+	  <ApplicationVersion>9</ApplicationVersion>
 	</PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
-    <PublishTrimmed>True</PublishTrimmed>
-    <TrimMode>partial</TrimMode>
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
-    <ApplicationVersion>7</ApplicationVersion>
-    <!-- For Mac App Store, both architectures are required -->
-    <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
-  </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='DebugTrimming'">
 	  <PublishTrimmed>True</PublishTrimmed>
@@ -174,6 +164,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\LoadOverlayControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Controls\NumericUpDownControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\CarawayCodePage.xaml">

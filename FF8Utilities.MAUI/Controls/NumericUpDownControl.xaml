@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:controls="clr-namespace:FF8Utilities.MAUI.Controls"
+             xmlns:utilites="clr-namespace:FF8Utilities.MAUI"             
+             x:DataType="controls:NumericUpDownControl"             
+             x:Name="this"
+             x:Class="FF8Utilities.MAUI.Controls.NumericUpDownControl">
+    <Border Stroke="White">
+        <Grid BindingContext="{x:Reference this}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Text="{Binding Value}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" FontSize="Large" FontAttributes="Bold"/>
+            <ImageButton Grid.Column="1" Command="{Binding PlusCommand}" Margin="2" Padding="2">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilites:FontAwesome.Plus}" FontFamily="FontAwesome" Size="64" Color="White"/>
+                </ImageButton.Source>
+            </ImageButton>
+            <ImageButton Grid.Column="2" Command="{Binding MinusCommand}" Margin="2" Padding="2">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{x:Static utilites:FontAwesome.Minus}" FontFamily="FontAwesome" Size="64" Color="White"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </Grid>
+    </Border>
+    
+</ContentView>

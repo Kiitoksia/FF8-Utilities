@@ -100,6 +100,7 @@
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition/>
                                                         <RowDefinition/>
+                                                        <RowDefinition Height="Auto"/>
                                                     </Grid.RowDefinitions>
                                                     <Label Text="World Map Encs" FontSize="Large" HorizontalTextAlignment="Center" Margin="0,5" TextColor="White"/>
                                                     <CollectionView ItemsSource="{Binding WorldMapEncounters, Mode=OneTime}" Grid.Row="1">
@@ -209,6 +210,15 @@
                                                         <buttons:SfButton Command="{Binding AddNewEncounterCommand, Mode=OneWay}" Text="Add Regular Encounter" CornerRadius="0" Style="{StaticResource BaseSfButton}"/>
                                                         <buttons:SfButton Command="{Binding AddNewHalfEncounterCommand, Mode=OneWay}" Text="Add Single Fish" Grid.Column="1" Background="DarkSlateGray" CornerRadius="0"  Style="{StaticResource BaseSfButton}"/>
                                                     </Grid>
+
+                                                    <Grid Grid.Row="6" Margin="0,10,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Text="Custom Offset" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                        <c:NumericUpDownControl Value="{Binding QuistisCustomAddition, Mode=TwoWay}" Grid.Column="1"/>
+                                                    </Grid>
                                                 </Grid>
                                             </ScrollView>
                                         </tabView:SfTabItem.Content>
@@ -315,13 +325,23 @@
                                     </tabView:SfTabItem>
                                     <tabView:SfTabItem Header="X-ATM092">
                                         <tabView:SfTabItem.Content>
-                                            <VerticalStackLayout>
-                                                <c:EncounterControl BindingContext="{Binding SpiderTankEncounter, Mode=OneTime}"/>
-                                                <HorizontalStackLayout Margin="10,0">
-                                                    <Label Text="Include Red Soldier Encounter" VerticalOptions="Center"/>
-                                                    <Switch IsToggled="{Binding DidGetRedSoldierEncounter}" Margin="5,0"/>
-                                                </HorizontalStackLayout>
-                                            </VerticalStackLayout>
+                                            <ScrollView>
+                                                <VerticalStackLayout>
+                                                    <c:EncounterControl BindingContext="{Binding SpiderTankEncounter, Mode=OneTime}"/>
+                                                    <HorizontalStackLayout Margin="10,0">
+                                                        <Label Text="Include Red Soldier Encounter" VerticalOptions="Center" TextColor="White"/>
+                                                        <Switch IsToggled="{Binding DidGetRedSoldierEncounter}" Margin="5,0"/>
+                                                    </HorizontalStackLayout>
+                                                    <Grid Margin="0,10,10,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Text="Custom Offset" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                        <c:NumericUpDownControl Value="{Binding ZellCustomAddition, Mode=TwoWay}" Grid.Column="1"/>
+                                                    </Grid>
+                                                </VerticalStackLayout>
+                                            </ScrollView>
                                         </tabView:SfTabItem.Content>
                                     </tabView:SfTabItem>
                                     <tabView:SfTabItem Header="Red Soldier" x:Name="RedSoldierTab">
