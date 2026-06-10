@@ -84,7 +84,7 @@
                             <TextBlock Text="Beep Sound"/>
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>
-                            <ComboBox ItemsSource="{Binding Source={extensions:Enum {x:Type ff8utilities:BeepSound}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding BeepSound}" SelectionChanged="ComboBox_SelectionChanged"/>
+                            <ComboBox ItemsSource="{Binding Source={extensions:Enum {x:Type data:BeepSound}}}" DisplayMemberPath="Description" SelectedValuePath="Value" SelectedValue="{Binding BeepSound}" SelectionChanged="ComboBox_SelectionChanged"/>
                         </controls:SettingsInputControl.InputContent>
                     </controls:SettingsInputControl>
 

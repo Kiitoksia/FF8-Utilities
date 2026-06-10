@@ -35,8 +35,27 @@
                 <TextBlock
                     DockPanel.Dock="Left"
                     FontSize="14"
-                    FontWeight="Bold"
+                    FontWeight="Bold" 
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center"
                     Text="CARD TIMER" />
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="*Initial audio cue not available as too soon*">
+    <Controls:VisibilityHelper.IsVisible>
+        <MultiBinding>
+            <MultiBinding.Converter>
+                <c:BooleanAndConverter />
+            </MultiBinding.Converter>
+            <Binding Path="WillBeepsPlay">
+                <Binding.Converter>
+                    <c:InverseBooleanConverter />
+                </Binding.Converter>
+            </Binding>
+            <Binding Path="ShowInstantMashText" />
+        </MultiBinding>
+    </Controls:VisibilityHelper.IsVisible>
+                </TextBlock>
+
             </DockPanel>
 
         </GroupBox.Header>
@@ -59,21 +78,6 @@
                     HorizontalAlignment="Center"
                     FontSize="18"
                     Text="{Binding Explanation}" />
-                <TextBlock HorizontalAlignment="Center" Text="*Initial audio cue not available as too soon*">
-                    <Controls:VisibilityHelper.IsVisible>
-                        <MultiBinding>
-                            <MultiBinding.Converter>
-                                <c:BooleanAndConverter />
-                            </MultiBinding.Converter>
-                            <Binding Path="WillBeepsPlay">
-                                <Binding.Converter>
-                                    <c:InverseBooleanConverter />
-                                </Binding.Converter>
-                            </Binding>
-                            <Binding Path="ShowInstantMashText" />
-                        </MultiBinding>
-                    </Controls:VisibilityHelper.IsVisible>
-                </TextBlock>
                 <TextBlock Text="{Binding ErrorText}" />
                 <local:SnakeRenderer
                     x:Name="SnakeControl"

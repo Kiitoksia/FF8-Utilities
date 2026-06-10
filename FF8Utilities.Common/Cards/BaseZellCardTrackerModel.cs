@@ -295,6 +295,18 @@ namespace FF8Utilities.Common.Cards
                     FishFinEncounters.Add(enc);
                 }
             }
+
+            string customQuistisAddition = xml.Attribute(nameof(QuistisCustomAddition))?.Value;
+            if (int.TryParse(customQuistisAddition, out int quistisAddition))
+            {
+                QuistisCustomAddition = quistisAddition;
+            }
+
+            string customZellAddition = xml.Attribute(nameof(ZellCustomAddition))?.Value;
+            if (int.TryParse(customZellAddition, out int zellAddition))
+            {
+                ZellCustomAddition = zellAddition;
+            }
         }
 
         public void SaveEncounterDetails()
@@ -323,6 +335,9 @@ namespace FF8Utilities.Common.Cards
             }
 
             xml.Add(fishFinXml);
+
+            if (QuistisCustomAddition != null) xml.Add(new XAttribute(nameof(QuistisCustomAddition), QuistisCustomAddition));
+            if (ZellCustomAddition != null) xml.Add(new XAttribute(nameof(ZellCustomAddition), ZellCustomAddition));
 
             File.WriteAllText(Path.Combine(Const.PackagesFolder, TrackingSettingsFilename), xml.ToString());
         }

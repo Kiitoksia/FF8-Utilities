@@ -51,7 +51,6 @@ namespace KaivelFins
                 {
                     KaivelIndex index = new KaivelIndex();
                     index.Fish1Sequence = patternModel.Option1.Manip;
-                    index.Fish
                 }
             }
 

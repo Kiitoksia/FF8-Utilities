@@ -354,7 +354,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Custom Offset" VerticalAlignment="Center"/>
+                            <TextBlock Text="Custom Offset" VerticalAlignment="Center" FontSize="14"/>
                             <controls:NumericUpDown Value="{Binding QuistisCustomAddition}" Grid.Column="1" Margin="10,0,0,0" Width="100" ParsingNumberStyle="Integer"/>
                         </Grid>
                     </StackPanel>
@@ -465,7 +465,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="Custom Offset" VerticalAlignment="Center"/>
+                                <TextBlock Text="Custom Offset" VerticalAlignment="Center" FontSize="14"/>
                                 <controls:NumericUpDown Value="{Binding ZellCustomAddition}" Grid.Column="1" Margin="10,0,0,0" Width="100" ParsingNumberStyle="Integer"/>
                             </Grid>
                         </StackPanel>

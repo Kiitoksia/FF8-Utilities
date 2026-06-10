@@ -135,16 +135,10 @@ namespace FF8Utilities.Models
             _ = CheckForUpdates();          
 
 
-            foreach (string quistisFile in LateQuistis.RequiredFiles)
-            {
-                if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
-                {
-                    // Download missing Quistis files quietly
-                    _ = Settings.DownloadLateQuistis(false);
-                    break;
-                }
-            }           
-            
+
+            // Download missing Quistis files quietly
+            _ = Settings.DownloadLateQuistis(false);
+
             Instance = this;
             CardManipulation = new CardManip();
 

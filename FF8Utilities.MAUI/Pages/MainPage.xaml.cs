@@ -48,25 +48,12 @@ public partial class MainPage : ContentPage
 
     private async Task<bool> DownloadRequiredFilesIfNeccessary()
     {
-        bool neccessaryFilesDownloaded = true;
-        foreach (string quistisFile in LateQuistis.RequiredFiles)
+        ShowLoadingBar = true;
+        DownloadResult result = await App.DriveManager.DownloadLateQuistisCSRFiles();
+        if (result == DownloadResult.Error)
         {
-            if (!File.Exists(Path.Combine(Const.PackagesFolder, quistisFile)))
-            {
-                neccessaryFilesDownloaded = false;
-                break;
-            }
-        }        
-
-        if (!neccessaryFilesDownloaded)
-        {
-            ShowLoadingBar = true;
-            DownloadResult result = await App.DriveManager.DownloadLateQuistisCSRFiles();
-            if (result == DownloadResult.Error)
-            {
-                await DisplayAlertAsync("Error", "Could not download required tracker files, cannot launch tracker", "OK");
-                return false;
-            }
+            await DisplayAlertAsync("Error", "Could not download required tracker files, cannot launch tracker", "OK");
+            return false;
         }
 
         return true;

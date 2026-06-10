@@ -1,8 +1,7 @@
 ﻿using CardManipulation;
 using CardManipulation.Models;
+using FF8Utilities.Common.Cards;
 using FF8Utilities.Models;
-using LateQuistisManipulation;
-using LateQuistisManipulation.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

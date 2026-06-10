@@ -275,13 +275,24 @@ namespace FF8Utilities.Common
                 FilesResource.ListRequest request = service.Files.List();
 
                 request.Q = $"'{LateQuistisCSVFolder}' in parents and trashed = false";
-                request.Fields = "files(id, name, size, fileExtension)";
+                request.Fields = "files(id, name, size, fileExtension, modifiedTime)";
 
                 FileList result = await request.ExecuteAsync().ConfigureAwait(false);
 
                 List<DownloadResult> results = new List<DownloadResult>();
                 foreach (File file in result.Files)
                 {
+                    string filename = file.Name;
+                    if (System.IO.File.Exists(Path.Combine(Const.PackagesFolder, filename)))
+                    {
+                        DateTime lastModified = System.IO.File.GetLastWriteTime(Path.Combine(Const.PackagesFolder, filename));
+                        if (lastModified >= file.ModifiedTimeDateTimeOffset)
+                        {
+                            // Local file matches or is greater than whats available, ignore
+                            continue;
+                        }
+                    }
+
                     results.Add(await DownloadFile(file, null, Path.GetFileNameWithoutExtension(file.Name), false));
                 }
 
