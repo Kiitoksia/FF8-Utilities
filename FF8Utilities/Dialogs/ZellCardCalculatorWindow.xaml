@@ -127,7 +127,7 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </mah:MetroAnimatedSingleRowTabControl.Resources>
-                <TabItem Header="Fish Fins">
+                <TabItem Header="Balamb">
                     <StackPanel>
                         <StackPanel>
                             <Grid>
@@ -172,22 +172,7 @@
                                     controls:VisibilityHelper.IsVisible="{Binding DataContext.BuelEncounterVisible, RelativeSource={RelativeSource AncestorType=Window}}"
                                     DataContext="{Binding BuelEncounter}" />
                             </StackPanel>
-
-                            <Grid HorizontalAlignment="Center">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-
-
-                            </Grid>
-
-
-
+                            
                         </StackPanel>
                         <Grid Margin="10,10,10,0">
                             <Grid.ColumnDefinitions>
@@ -363,6 +348,15 @@
                                 </StackPanel>
                             </GroupBox>
                         </Grid>
+                        <Grid Margin="10,10,10,0" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Custom Offset" VerticalAlignment="Center"/>
+                            <controls:NumericUpDown Value="{Binding QuistisCustomAddition}" Grid.Column="1" Margin="10,0,0,0" Width="100" ParsingNumberStyle="Integer"/>
+                        </Grid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Dollet">
@@ -465,6 +459,15 @@
                                     Text="Include Red Soldier Encounter" />
                             </DockPanel>
                             <controls1:EncounterControl controls:VisibilityHelper.IsVisible="{Binding DataContext.DidGetRedSoldierEncounter, RelativeSource={RelativeSource AncestorType=Window}}" DataContext="{Binding RedSoldierEncounter}" />
+                            <Grid Margin="10,10,10,0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="Custom Offset" VerticalAlignment="Center"/>
+                                <controls:NumericUpDown Value="{Binding ZellCustomAddition}" Grid.Column="1" Margin="10,0,0,0" Width="100" ParsingNumberStyle="Integer"/>
+                            </Grid>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>

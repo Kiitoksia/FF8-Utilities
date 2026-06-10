@@ -51,6 +51,9 @@ namespace FF8Utilities.Common.Cards
         private Color _zellMashTextBackgroundColor;
         private Color _quistisMashTextBackgroundColor;
         private string _quistisPatternResult;
+        private int? _quistisCustomAddition;
+        private int? _zellCustomAddition;
+
 
 
         private const string TrackingSettingsFilename = "TrackingSettings.xml";
@@ -676,6 +679,7 @@ namespace FF8Utilities.Common.Cards
                 output += SpiderTankEncounter.Output;
 
                 if (DidGetRedSoldierEncounter) output += RedSoldierEncounter.Output;
+                if (ZellCustomAddition != null) output += ZellCustomAddition.Value;
 
                 if (_previouslyCalculatedOutput != output)
                 {
@@ -726,6 +730,8 @@ namespace FF8Utilities.Common.Cards
                 output += 11; // Bomb encounter
                 output += WorldMapEncounters.Sum(s => s.RngAddition);
                 output += FishFinEncounters.Sum(s => s.RngAddition);
+
+                if (QuistisCustomAddition != null) output += QuistisCustomAddition.Value;
 
                 if (_currentPattern != null && _currentPattern.RNGIndex != output)
                 {
@@ -892,5 +898,39 @@ namespace FF8Utilities.Common.Cards
         }
 
         public EarlyQuistisPattern EarlyQuistisPattern { get; set; }
+
+        public int? QuistisCustomAddition
+        {
+            get
+            {
+                return _quistisCustomAddition;
+            }
+            set
+            {
+                if (_quistisCustomAddition == value)
+                    return;
+                _quistisCustomAddition = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(LateQuistisOutput));
+                OnPropertyChanged(nameof(Output));
+            }
+        }
+
+        public int? ZellCustomAddition
+        {
+            get
+            {
+                return _zellCustomAddition;
+            }
+            set
+            {
+                if (_zellCustomAddition == value)
+                    return;
+                _zellCustomAddition = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(LateQuistisOutput));
+                OnPropertyChanged(nameof(Output));
+            }
+        }
     }
 }

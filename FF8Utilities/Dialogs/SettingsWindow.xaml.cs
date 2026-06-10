@@ -1,4 +1,5 @@
-﻿using FF8Utilities.Models;
+﻿using FF8Utilities.Common;
+using FF8Utilities.Models;
 using FlowTimer;
 using MahApps.Metro.Controls;
 using System;
