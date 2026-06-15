@@ -23,6 +23,7 @@
     protected override void OnInitialized()
     {
         CardTrackerState.Reset();
+        base.OnInitialized();
     }
 
     private async Task CardManipulationClicked(bool isLate)
