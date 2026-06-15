@@ -19,7 +19,7 @@
     private void Cancel()
     {
         CardTrackerState.LateQuistisResult = null;
-        NavigationManager.NavigateTo("/card-tracker");
+        NavigationManager.NavigateTo("card-tracker");
     }
 
 
@@ -28,7 +28,7 @@
     private void SubmitFrame(uint result)
     {
         CardTrackerState.LateQuistisResult = result;
-        NavigationManager.NavigateTo("/card-tracker");
+        NavigationManager.NavigateTo("card-tracker");
     }
 }
 
