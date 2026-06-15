@@ -33,12 +33,12 @@
         {
             CardTrackerState.ManipModel = model;
             CardTrackerState.SelectedLateQuistisPattern = _model.CurrentLateQuistisPattern;
-            Navigation.NavigateTo("/quistis-card");
+            Navigation.NavigateTo("quistis-card");
         };
         _model.StartZellPatterns += (model) =>
         {            
             CardTrackerState.ManipModel = model;
-            Navigation.NavigateTo("/zell-card");
+            Navigation.NavigateTo("zell-card");
         };
     }
 
