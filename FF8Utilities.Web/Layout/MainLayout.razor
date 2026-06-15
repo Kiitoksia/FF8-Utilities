@@ -10,6 +10,9 @@
     [Inject]
     private SettingsService SettingsService { get; set; }
 
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
     private Offcanvas _offcanvas;
     private bool IsHomePage => NavigationManager.BaseUri == NavigationManager.Uri;
 
@@ -24,9 +27,9 @@
         WebService.OnTitleChanged -= StateHasChanged;
     }
 
-    private void GoHome()
-    {        
-        NavigationManager.NavigateTo("");
+    private async Task GoBack()
+    {
+        await JS.InvokeVoidAsync("history.back");
     }
 
     private async Task ShowSettings()
@@ -142,7 +145,7 @@
 <div class="top-row px-3 py-2 bg-primary">    
     @if (!IsHomePage)
     {
-        <Button Color="ButtonColor.Secondary" @onclick="GoHome" Size="ButtonSize.Large">&lt; Back</Button>        
+        <Button Color="ButtonColor.Secondary" @onclick="GoBack" Size="ButtonSize.Large">&lt; Back</Button>        
     }
     <span class="fs-5 position-absolute start-50 translate-middle-x">@WebService.Title</span>
     <Button Color="ButtonColor.Secondary" @onclick="ShowSettings" Size="ButtonSize.Large" Class="position-absolute end-0 translate-middle-x">Settings</Button>

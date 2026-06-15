@@ -15,11 +15,15 @@
     private Modal _cardModal;
     private Modal _cardStrategyModal;
     private Modal _confirmTrackingModal;
-    private ZellCardManipulationControl _zellControl;
     private FishFinsControl _fishFinsControl;
     private CarawayCodeControl _carawayCodeControl;
 
     public override string PageTitle => "FF8 Utilities";
+
+    protected override void OnInitialized()
+    {
+        CardTrackerState.Reset();
+    }
 
     private async Task CardManipulationClicked(bool isLate)
     {
@@ -84,18 +88,14 @@
         if (useTracking) NavigationManager.NavigateTo("card-tracker");
         else
         {
-            CardTrackerModel model = new CardTrackerModel(SettingsService);            
-            _zellControl.Model = (CardManipulationModel)model.CreateCardManipModel(CardTrackerModel.CardManip, CardTrackerState.SelectedEarlyQuistisPattern.Result, "fc01", null);
-            await InvokeAsync(async () =>
-            {
-                await _zellControl.ShowAsync();
-            });
+            CardTrackerModel model = new CardTrackerModel(SettingsService);     
+            CardTrackerState.ManipModel = (CardManipulationModel)model.CreateCardManipModel(CardTrackerModel.CardManip, CardTrackerState.SelectedEarlyQuistisPattern.Result, "fc01", null);
+            NavigationManager.NavigateTo("zell-card");
         }
     }
 }
 
 
-<ZellCardManipulationControl @ref="_zellControl"/>
 <FishFinsControl @ref="_fishFinsControl"/>
 <CarawayCodeControl @ref="_carawayCodeControl"/>
 

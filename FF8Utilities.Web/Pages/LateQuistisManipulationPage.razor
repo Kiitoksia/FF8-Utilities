@@ -1,0 +1,41 @@
+﻿@page "/quistis-card"
+@inherits BasePage
+
+@code {
+    [Inject]
+    public CardTrackerStateService CardTrackerState { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    private LateQuistisPattern _pattern;
+
+    protected override void OnInitialized()
+    {
+        _pattern = CardTrackerState.SelectedLateQuistisPattern;
+    }
+
+    private void Cancel()
+    {
+        CardTrackerState.LateQuistisResult = null;
+        NavigationManager.NavigateTo("/card-tracker");
+    }
+
+
+    public override string PageTitle => _pattern is null ? "Quistis Card Pattern" : $"Quistis Card Pattern (RNG Index: {_pattern.RNGIndex})";
+
+    private void SubmitFrame(uint result)
+    {
+        CardTrackerState.LateQuistisResult = result;
+        NavigationManager.NavigateTo("/card-tracker");
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <BoardStrategiesControl Strategies="_pattern.Strategies.Select(t => t.ToCardViewModel()).ToList()" FrameSubmitted="SubmitFrame" />
+    </div>
+    <div class="row gap-3 p-2">
+        <CardTimerControl Model="@CardTrackerState.ManipModel" />
+    </div>
+</div>

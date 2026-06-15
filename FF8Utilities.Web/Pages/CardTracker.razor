@@ -5,8 +5,6 @@
 @code {
     private CardTrackerModel _model;
     private string _focusedTab;
-    private LateQuistisManipulationControl _quistisControl;
-    private ZellCardManipulationControl _zellControl;
 
 
     [Inject] 
@@ -28,26 +26,39 @@
     {
         _model = new CardTrackerModel(Settings);
         _model.EarlyQuistisPattern = CardTrackerState.SelectedEarlyQuistisPattern;
-        _model.StartLateQuistisPattern += async (model) =>
+        _model.QuistisCardResult = CardTrackerState.LateQuistisResult;
+        _model.QuistisCardObtained = CardTrackerState.LateQuistisResult != null;
+        _model.QuistisPatternResult = CardTrackerState.SelectedEarlyQuistisPattern?.Result.ToString("x8") ?? CardTrackerState.LateQuistisResult?.ToString("x8");
+        _model.StartLateQuistisPattern += (model) =>
         {
-            await InvokeAsync(async () =>
-            {
-                StateHasChanged();
-                _quistisControl.Model = model;
-                await _quistisControl.ShowAsync(_model.CurrentLateQuistisPattern);
-            });
+            CardTrackerState.ManipModel = model;
+            CardTrackerState.SelectedLateQuistisPattern = _model.CurrentLateQuistisPattern;
+            Navigation.NavigateTo("/quistis-card");
         };
-        _model.StartZellPatterns += async (model) =>
-        {
-            await InvokeAsync(async () =>
-            {
-                StateHasChanged();
-                _zellControl.Model = model;
-                await _zellControl.ShowAsync();
-            });
+        _model.StartZellPatterns += (model) =>
+        {            
+            CardTrackerState.ManipModel = model;
+            Navigation.NavigateTo("/zell-card");
         };
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (CardTrackerState.LateQuistisResult != null)
+            {
+                _toastMessages.Add(new ToastMessage
+                {
+                    Type = ToastType.Success,
+                    Title = "Quistis Pattern Submitted",
+                    Message = "Continue with tracking for zell card"
+                });
+
+                await _tabs.ShowTabByIndexAsync(1);
+            }
+        }        
+    }
 
     private void OnTabShown(TabsEventArgs args) => _focusedTab = args.ActiveTabTitle;
 
@@ -72,22 +83,6 @@
 
     private string GetFishFinRowClass(FishFinsEncounter enc) => enc.SingleFishKilled ? "table-success" : string.Empty;
 
-    private async void QuistisSubmitted(uint? result)
-    {
-        if (result.HasValue)
-        {
-            _model.SubmitQuistisResult(result.Value);
-            _toastMessages.Add(new ToastMessage
-            {
-                Type = ToastType.Success,
-                Title = "Quistis Pattern Submitted",
-                Message = "Continue with tracking for zell card"
-            });
-
-            await _tabs.ShowTabByIndexAsync(1);
-        }
-    }
-
 }
 
 @if (_model is null)
@@ -97,8 +92,6 @@
 else
 {
     <div class="container">
-        <LateQuistisManipulationControl @ref="_quistisControl" OnCompleted="QuistisSubmitted" />
-        <ZellCardManipulationControl @ref="_zellControl" />
         <Toasts Messages="_toastMessages" Placement="ToastsPlacement.TopRight" AutoHide="true" />
         <Tabs EnableFadeEffect="true" @ref="_tabs" OnShowing="@(args => OnTabShown(args))">
             <Tab Title="Balamb" Active="true">
