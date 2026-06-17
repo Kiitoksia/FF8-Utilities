@@ -24,6 +24,8 @@ namespace FF8Utilities.Models
             _didGetSecondBridgeEncounter = SettingsModel.Instance.Get2ndBridgeEncounter;
             _didGetRedSoldierEncounter = SettingsModel.Instance.GetRedSoldierEncounter;
             _ifritsCavernEncounterType = SettingsModel.Instance.IfritEncounterType;
+
+            EarlyQuistisPattern = MainModel.Instance.Pattern;
             _initialised = true;
         }
 
