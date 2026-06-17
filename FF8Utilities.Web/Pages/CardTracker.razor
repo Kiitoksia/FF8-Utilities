@@ -18,6 +18,7 @@
 
     private List<ToastMessage> _toastMessages = new List<ToastMessage>();
     private Tabs _tabs;
+    private FishFinsControl _fishFinsControl;
 
     public override string PageTitle => "Card Tracker";
 
@@ -93,6 +94,7 @@ else
 {
     <div class="container">
         <Toasts Messages="_toastMessages" Placement="ToastsPlacement.TopRight" AutoHide="true" />
+        <FishFinsControl @ref="_fishFinsControl"/>
         <Tabs EnableFadeEffect="true" @ref="_tabs" OnShowing="@(args => OnTabShown(args))">
             <Tab Title="Balamb" Active="true">
                 <Content>
@@ -150,6 +152,7 @@ else
                         <div class="col-md-6 col-sm-12 col-lg-6">
                             <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-primary">
                                 <h4 class="fw-bold mb-0">Fish Fin Encounters</h4>
+                                <Button @onclick="async () => await _fishFinsControl.ShowAsync()">Launch Manip</Button>
                             </div>
                             <Grid TItem="FishFinsEncounter" Data="@_model.FishFinEncounters.ToList()"
                                   Class="table table-hover table-bordered table-striped mb-0" RowClass="GetFishFinRowClass">
