@@ -89,6 +89,25 @@
                     <div class="row">
                         <Switch ValueExpression="() => _showNPCMovement" Value="_showNPCMovement" Label="Show NPC Movement" ValueChanged="ShowNPCMovementToggled" />
                     </div>
+                    <div class="row">
+                        <div class="border border-secondary rounded container">
+                            <div class="row">
+                                <div class="px-3 py-2 bg-primary">
+                                    <span>Legend</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="caraway-legend caraway-unlikely-result ms-1 me-2"></div>
+                                CSR Only (or you recently hard reset)
+                            </div>
+                            <div class="row">
+                                <div class="caraway-legend bg-primary ms-1 me-2"></div>
+                                Regular
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
                 </div>
                 <div class="col-sm-12 col-md-7">
                     <div class="row">
@@ -102,17 +121,17 @@
                             {
                                 <div class="border border-secondary rounded">
                                     <div class="row">
-                                        <div class="d-flex align-items-center px-3 py-2 bg-primary">
+                                        <div class="d-flex align-items-center px-3 py-2 @(result.LikelyCSR ? "caraway-unlikely-result" : "bg-primary")">
                                             <h4 class="fw-bold mb-0">@result.SubscriptDisplay</h4>
                                         </div>
-                                        <div class="row">
-                                            <span>Last Series Complete</span>
+                                        <div class="row align-items-center my-2">
+                                            <span class="text-center fs-4">Last Series Complete</span>
                                         </div>
                                         <div class="row">
                                             <CarawayOptionControl Model="@result.CompleteOption" />
                                         </div>
-                                        <div class="row">
-                                            <span>Last Series Incomplete</span>
+                                        <div class="row align-items-center my-2">
+                                            <span class="text-center fs-4">Last Series Incomplete</span>
                                         </div>
                                         <div class="row">
                                             <CarawayOptionControl Model="@result.IncompleteOption" />

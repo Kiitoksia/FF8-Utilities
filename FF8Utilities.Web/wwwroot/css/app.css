@@ -189,3 +189,11 @@ code {
     background-color: darkorange;
 }
 
+.caraway-unlikely-result {
+    background-color: saddlebrown;
+}
+
+.caraway-legend {
+    width: 30px;
+    height: 30px;
+}

@@ -9,37 +9,33 @@
 }
 
 <div>
-    <div class="row">
+    <div class="row align-items-center">
         <div class="col-4">
 
         </div>
-        <div class="col-4">
-            <div class="d-flex align-items-stretch">
-                <span class="btn btn-primary btn-lg border-2 border-white rounded-0 fw-bold bg-primary">@Model.Code</span>
-            </div>
+        <div class="col-4 align-items-stretch">
+            <span class="btn btn-primary btn-lg border-2 border-white rounded-0 fw-bold bg-primary w-100">@Model.Code</span>
         </div>
         <div class="col-4">
-            <span>@Model.Input</span>
+            <span class="fw-bold">@Model.Input</span>
         </div>
     </div>
-    <div class="row">
+    <div class="row align-items-center">
         <div class="col-4">
             <span>Backup</span>
         </div>
-        <div class="col-4">
-            <div class="d-flex align-items-stretch">
-                <span class="btn btn-primary btn-lg border-start-2 border-end-2 border-bottom-2 border-top-0 border-white rounded-0 fw-bold bg-secondary">@Model.BackupCode</span>
-            </div>
+        <div class="col-4 align-items-stretch">
+            <span class="btn btn-primary btn-lg border-start-2 border-end-2 border-bottom-2 border-top-0 border-white rounded-0 fw-bold bg-secondary w-100">@Model.BackupCode</span>
         </div>
         <div class="col-4">
-            <span>@Model.BackupInput</span>
+            <span class="fw-bold">@Model.BackupInput</span>
         </div>
     </div>
 
     @if (SettingsService.CarawayShowNPCMovement)
     {
         <div class="row">
-            <span>NPC Details</span>
+            <span class="fw-semibold">NPC Details</span>
         </div>
         <div class="row">
             <div class="col-4">
