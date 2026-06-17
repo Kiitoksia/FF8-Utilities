@@ -45,6 +45,14 @@
         await SettingsService.Save();
     }
 
+    private async Task GameLanguageChanged(int value)
+    {
+        UltimeciaManipLanguage language = (UltimeciaManipLanguage)value;
+        if (SettingsService.GameLanguage == language) return;
+        SettingsService.GameLanguage = language;
+        await SettingsService.Save();
+    }
+
     private async Task CardDelayFrameChanged(int? value)
     {
         if (SettingsService.DelayFrames == value) return;
@@ -98,6 +106,14 @@
             </div>
             <div class="col-6">
                 <EnumInput TEnum="Platform" Value="(int)SettingsService.Platform" ValueChanged="PlatformChanged" />
+            </div>
+        </div>
+        <div class="row align-items-center flex-nowrap mb-1">
+            <div class="col-6">
+                <span>Game Language:</span>
+            </div>
+            <div class="col-6">
+                <EnumInput TEnum="UltimeciaManipLanguage" Value="(int)SettingsService.GameLanguage" ValueChanged="GameLanguageChanged" />
             </div>
         </div>
         <div class="row align-items-center flex-nowrap mb-1">

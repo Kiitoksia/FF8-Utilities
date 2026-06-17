@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using FF8Utilities.Common;
+using UltimeciaManip;
 
 namespace FF8Utilities.Web.Services
 {
@@ -9,6 +10,7 @@ namespace FF8Utilities.Web.Services
     public class SettingsService
     {
         private ILocalStorageService _storage;
+
         public SettingsService(ILocalStorageService storage)
         {
             _storage = storage;
@@ -28,6 +30,8 @@ namespace FF8Utilities.Web.Services
         public bool CarawayShowNPCMovement { get; set; }
 
         public bool CarawayHideUnlikelyResults { get; set; }
+
+        public UltimeciaManipLanguage GameLanguage { get; set; }
 
         private async Task<T> GetSetting<T>(string key, T defaultVal = default)
         {
@@ -54,6 +58,7 @@ namespace FF8Utilities.Web.Services
 
             CarawayShowNPCMovement = await GetSetting<bool>(nameof(CarawayShowNPCMovement), true);
             CarawayHideUnlikelyResults = await GetSetting<bool>(nameof(CarawayHideUnlikelyResults), true);
+            GameLanguage = await GetSetting<UltimeciaManipLanguage>(nameof(GameLanguage), UltimeciaManipLanguage.English);
             _isInitialised = true;
         }
 
@@ -72,6 +77,7 @@ namespace FF8Utilities.Web.Services
 
             await _storage.SetItemAsync(nameof(CarawayShowNPCMovement), CarawayShowNPCMovement);
             await _storage.SetItemAsync(nameof(CarawayHideUnlikelyResults), CarawayHideUnlikelyResults);
+            await _storage.SetItemAsync(nameof(GameLanguage), GameLanguage);
         }
     }
 }

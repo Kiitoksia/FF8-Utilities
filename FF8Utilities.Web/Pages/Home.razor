@@ -17,6 +17,7 @@
     private Modal _confirmTrackingModal;
     private FishFinsControl _fishFinsControl;
     private CarawayCodeControl _carawayCodeControl;
+    private UltimeciaControl _ultimeciaControl;
 
     public override string PageTitle => "FF8 Utilities";
 
@@ -99,6 +100,7 @@
 
 <FishFinsControl @ref="_fishFinsControl"/>
 <CarawayCodeControl @ref="_carawayCodeControl"/>
+<UltimeciaControl @ref="_ultimeciaControl" />
 
 <Modal @ref="_cardModal">
     <BodyTemplate>
@@ -194,7 +196,7 @@
                 <CardBody>
                     <CardTitle>Ultimecia Party</CardTitle>
                     <CardBody>Ensure Irvine is in your starting party for the Ultimecia battle</CardBody>
-                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge">Launch</Button>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await _ultimeciaControl.ShowAsync()">Launch</Button>
                 </CardBody>
             </Card>
         </div>
