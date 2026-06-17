@@ -6,6 +6,18 @@
 
     [Inject]
     private SettingsService SettingsService { get; set; }
+
+    private static MarkupString FormatInput(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return (MarkupString)string.Empty;
+
+        var result = input
+            .Replace("-", "<i class=\"fa-solid fa-minus\"></i>")
+            .Replace("↑", "<i class=\"fa-solid fa-arrow-up\"></i>")
+            .Replace("↓", "<i class=\"fa-solid fa-arrow-down\"></i>");
+
+        return (MarkupString)result;
+    }
 }
 
 <div>
@@ -17,7 +29,7 @@
             <span class="btn btn-primary btn-lg border-2 border-white rounded-0 fw-bold bg-primary w-100">@Model.Code</span>
         </div>
         <div class="col-4">
-            <span class="fw-bold">@Model.Input</span>
+            <span class="fw-bold">@FormatInput(Model.Input)</span>
         </div>
     </div>
     <div class="row align-items-center">
@@ -28,7 +40,7 @@
             <span class="btn btn-primary btn-lg border-start-2 border-end-2 border-bottom-2 border-top-0 border-white rounded-0 fw-bold bg-secondary w-100">@Model.BackupCode</span>
         </div>
         <div class="col-4">
-            <span class="fw-bold">@Model.BackupInput</span>
+            <span class="fw-bold">@FormatInput(Model.BackupInput)</span>
         </div>
     </div>
 
