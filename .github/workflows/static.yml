@@ -6,6 +6,10 @@ on:
   push:
     paths:
       - FF8Utilities.Web/**
+      - FF8Utilities.Common/**
+      - CardManipulation/**
+      - CarawayCode/**
+      - UltimeciaManip/**
     branches:
       - master
 
