@@ -102,68 +102,38 @@
 <Preload LoadingText="Calculating..." />
 <KeyboardListener OnKeyDown="OnKeyPressed" />
 
-<div class="container">
-    <div class="border border-secondary rounded">
+<div class="container-fluid h-100">
+    <div class="border border-secondary rounded h-50 d-flex flex-column">
+        <div class="d-flex align-items-center px-3 py-2">
+            <h4 class="fw-bold mb-0">Inputs (@Directions.Count / 12)</h4>
+        </div>
+        <span class="fst-italic">Enter inputs by tapping directions, or entering 8462/WASD/arrow keys on your keyboard</span>
         <div class="row">
             <div class="d-flex align-items-center px-3 py-2">
-                <h4 class="fw-bold mb-0">Inputs (@Directions.Count / 12)</h4>
-            </div>
-            <span class="fst-italic">Enter inputs by tapping directions, or entering 8462/WASD/arrow keys on your keyboard</span>
-            <div class="row">
-                <div class="d-flex align-items-center px-3 py-2">
-                    @foreach (Direction direction in Directions)
-                    {
-                        @GetGlyph(direction)
-                    }
-                </div>                
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-4">
-
-                        </div>
-                        <div class="col-4">
-                            <Button @onclick="async () => await AddDirection(Direction.Up)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Up)</Button>
-                        </div>
-                        <div class="col-4">
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <Button @onclick="async () => await AddDirection(Direction.Left)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Left)</Button>
-                        </div>
-                        <div class="col-4">
-                            <Button @onclick="async () => await AddDirection(Direction.Unknown)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Unknown)</Button>
-                        </div>
-                        <div class="col-4">
-                            <Button @onclick="async () => await AddDirection(Direction.Right)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Right)</Button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-
-                        </div>
-                        <div class="col-4">
-                            <Button @onclick="async () => await AddDirection(Direction.Down)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Down)</Button>
-                        </div>
-                        <div class="col-4">
-                            <Button @onclick="RemoveLastDirection" Outline="true" Color="ButtonColor.Danger">
-                                <i class="fa-solid fa-circle-xmark"></i>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                @foreach (Direction direction in Directions)
+                {
+                    @GetGlyph(direction)
+                }
             </div>
         </div>
+        <div class="flex-fill p-1 dpad-grid">
+            <div></div>
+            <Button @onclick="async () => await AddDirection(Direction.Up)" Outline="true" Color="ButtonColor.Info" Class="w-100 h-100">@GetGlyph(Direction.Up)</Button>
+            <div></div>
+            <Button @onclick="async () => await AddDirection(Direction.Left)" Outline="true" Color="ButtonColor.Info" Class="w-100 h-100">@GetGlyph(Direction.Left)</Button>
+            <Button @onclick="async () => await AddDirection(Direction.Unknown)" Outline="true" Color="ButtonColor.Info" Class="w-100 h-100">@GetGlyph(Direction.Unknown)</Button>
+            <Button @onclick="async () => await AddDirection(Direction.Right)" Outline="true" Color="ButtonColor.Info" Class="w-100 h-100">@GetGlyph(Direction.Right)</Button>
+            <div></div>
+            <Button @onclick="async () => await AddDirection(Direction.Down)" Outline="true" Color="ButtonColor.Info" Class="w-100 h-100">@GetGlyph(Direction.Down)</Button>
+            <Button @onclick="RemoveLastDirection" Outline="true" Color="ButtonColor.Danger" Class="w-100 h-100">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </Button>
+        </div>
     </div>
-    <div class="border border-primary rounded mb-2">
-        <div class="row">
-            <div class="bg-primary px-3 py-2">
-                <span>Output</span>
-            </div>
-        </div>        
+    <div class="border border-primary rounded mb-2 h-50">
+        <div class="bg-primary px-3 py-2">
+            <span>Output</span>
+        </div>
         @if (Formations != null)
         {
             @foreach (PartyFormation formation in Formations)
@@ -200,8 +170,6 @@
                     </div>
                 </div>
             }
-        }        
+        }
     </div>
 </div>
-
-

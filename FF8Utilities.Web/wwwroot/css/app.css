@@ -197,3 +197,10 @@ code {
     width: 30px;
     height: 30px;
 }
+
+.dpad-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 4px;
+}
