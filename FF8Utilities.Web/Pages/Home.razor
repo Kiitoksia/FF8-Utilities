@@ -95,6 +95,11 @@
             NavigationManager.NavigateTo("zell-card");
         }
     }
+
+    private void LaunchUltimecia()
+    {
+        NavigationManager.NavigateTo("/ultimecia-party");
+    }
 }
 
 
@@ -196,7 +201,7 @@
                 <CardBody>
                     <CardTitle>Ultimecia Party</CardTitle>
                     <CardBody>Ensure Irvine is in your starting party for the Ultimecia battle</CardBody>
-                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="async () => await _ultimeciaControl.ShowAsync()">Launch</Button>
+                    <Button Block="true" Color="ButtonColor.Primary" Size="ButtonSize.ExtraLarge" @onclick="LaunchUltimecia">Launch</Button>
                 </CardBody>
             </Card>
         </div>

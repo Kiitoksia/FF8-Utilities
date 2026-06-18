@@ -43,16 +43,165 @@
             default: throw new NotImplementedException();
         }
 
-        return (MarkupString)$"<i class=\"fa-solid {glyph}\"><i>";
+        return (MarkupString)$"<i class=\"fa-solid {glyph}\"></i>";
+    }
+
+    private async Task AddDirection(Direction direction)
+    {
+        if (Directions.Count >= 12) Directions.RemoveAt(0);
+        Directions.Add(direction);
+        await CalculateOutput();
+    }
+
+    private void RemoveLastDirection()
+    {
+        if (Directions.Count > 0)
+        {
+            Directions.RemoveAt(Directions.Count - 1);
+        }
     }
 
     private async Task OnKeyPressed(KeyboardEventArgs args)
     {
-        
+        switch (args.Key.ToLower())
+        {
+            case "arrowleft":
+            case "a":
+            case "4":
+                await AddDirection(Direction.Left);
+                break;
+            case "arrowright":
+            case "d":
+            case "6":
+                await AddDirection(Direction.Right);
+                break;
+            case "arrowup":
+            case "w":
+            case "8":
+                await AddDirection(Direction.Up);
+                break;
+            case "arrowdown":
+            case "s":
+            case "2":
+                await AddDirection(Direction.Down);
+                break;
+            case "backspace":
+            case "delete":
+                RemoveLastDirection();
+                break;
+            default:
+                if (!string.IsNullOrWhiteSpace(args.Key))
+                {
+                    await AddDirection(Direction.Unknown);
+                }
+                break;
+        }
     }
 }
 
 <Preload LoadingText="Calculating..." />
 <KeyboardListener OnKeyDown="OnKeyPressed" />
+
+<div class="container">
+    <div class="border border-secondary rounded">
+        <div class="row">
+            <div class="d-flex align-items-center px-3 py-2">
+                <h4 class="fw-bold mb-0">Inputs (@Directions.Count / 12)</h4>
+            </div>
+            <span class="fst-italic">Enter inputs by tapping directions, or entering 8462/WASD/arrow keys on your keyboard</span>
+            <div class="row">
+                <div class="d-flex align-items-center px-3 py-2">
+                    @foreach (Direction direction in Directions)
+                    {
+                        @GetGlyph(direction)
+                    }
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-4">
+                            <Button @onclick="async () => await AddDirection(Direction.Up)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Up)</Button>
+                        </div>
+                        <div class="col-4">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <Button @onclick="async () => await AddDirection(Direction.Left)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Left)</Button>
+                        </div>
+                        <div class="col-4">
+                            <Button @onclick="async () => await AddDirection(Direction.Unknown)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Unknown)</Button>
+                        </div>
+                        <div class="col-4">
+                            <Button @onclick="async () => await AddDirection(Direction.Right)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Right)</Button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+
+                        </div>
+                        <div class="col-4">
+                            <Button @onclick="async () => await AddDirection(Direction.Down)" Outline="true" Color="ButtonColor.Secondary">@GetGlyph(Direction.Down)</Button>
+                        </div>
+                        <div class="col-4">
+                            <Button @onclick="RemoveLastDirection" Outline="true" Color="ButtonColor.Danger">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="border border-primary rounded mb-2">
+        <div class="row">
+            <div class="bg-primary px-3 py-2">
+                <span>Output</span>
+            </div>
+        </div>        
+        @if (Formations != null)
+        {
+            @foreach (PartyFormation formation in Formations)
+            {
+                <div class="border border-primary rounded mb-2">
+                    <div class="d-flex align-items-center px-3 py-2 bg-primary">
+                        @foreach (Direction direction in formation.Movements)
+                        {
+                            @GetGlyph(direction)
+                        }
+                    </div>
+                    <div class="container">
+                        <div class="row row-cols-3 g-3">
+                            @for (int i = 0; i < formation.TargetOffsetTbl.Count; i++)
+                            {
+                                bool isFirst = i == 0;
+                                TargetOffset frame = formation.TargetOffsetTbl.OrderBy(t => t.Offset).Skip(i).First();
+                                <div class="col">
+                                    <div class="h-100 w-100 @(isFirst ? "bg-success" : "bg-primary")">
+                                        <div class="row align-items-center">
+                                            <div class="col-8">
+                                                <p>@frame.Party[0].ToString()</p>
+                                                <p>@frame.Party[1].ToString()</p>
+                                                <p>@frame.Party[2].ToString()</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <span class="fw-bold fs-4">@frame.Offset</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }        
+    </div>
+</div>
 
 
