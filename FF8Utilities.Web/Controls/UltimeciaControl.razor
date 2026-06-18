@@ -6,6 +6,9 @@
     [Inject]
     private SettingsService SettingsService { get; set; }
 
+    [Inject]
+    private PreloadService PreloadService { get; set; }
+
     public async Task ShowAsync()
     {
         _isValid = UltimeciaManip.Manipulation.GetSupportedLanguages(SettingsService.Platform).Contains(SettingsService.GameLanguage);        
@@ -19,7 +22,7 @@
 
     private PartyFormation[] Formations { get; set; }
 
-    private void CalculateOutput()
+    private async Task CalculateOutput()
     {
         if (Input == null || Input.Length < 12) return;
         List<Direction> directions = new List<Direction>();
@@ -31,7 +34,16 @@
 
         directions = directions.Skip(Math.Max(0, directions.Count - 12)).ToList(); // Get last 12 movements
 
-        Formations = UltimeciaManip.Manipulation.GetUltimeciaFormations(directions.ToArray(), SettingsService.Platform, SettingsService.GameLanguage);
+        try
+        {
+            PreloadService.Show();
+            Formations = await Task.Run(() => UltimeciaManip.Manipulation.GetUltimeciaFormations(directions.ToArray(), SettingsService.Platform, SettingsService.GameLanguage));
+        }
+        finally
+        {
+            PreloadService.Hide();
+        }
+
     }
 
     private MarkupString GetGlyph(Direction direction)
@@ -50,7 +62,6 @@
         return (MarkupString)$"<i class=\"fa-solid {glyph}\"><i>";
     }
 }
-
 
 <Modal @ref="_modal" Size="ModalSize.Large" Title="Ultimecia Party">
     <BodyTemplate>
@@ -85,7 +96,7 @@
                                     @for (int i = 0; i < formation.TargetOffsetTbl.Count; i++)
                                     {
                                         bool isFirst = i == 0;
-                                        TargetOffset frame = formation.TargetOffsetTbl[i];
+                                        TargetOffset frame = formation.TargetOffsetTbl.OrderBy(t => t.Offset).Skip(i).First();
                                         <div class="col">
                                             <div class="h-100 w-100 @(isFirst ? "bg-success" : "bg-primary" )">
                                                 <div class="row align-items-center">

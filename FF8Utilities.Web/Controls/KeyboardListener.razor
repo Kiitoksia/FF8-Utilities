@@ -1,0 +1,40 @@
+﻿@implements IAsyncDisposable
+
+@code {
+    [Parameter, EditorRequired]
+    public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
+    private DotNetObjectReference<KeyboardListener> _netRef;
+    private IJSObjectReference _module;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _netRef = DotNetObjectReference.Create(this);
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./lib/common.js");
+            await _module.InvokeVoidAsync("addKeyboardListener", _netRef);
+        }
+    }
+
+    [JSInvokable]
+    public async Task HandleKeyDown(KeyboardEventArgs args) => await OnKeyDown.InvokeAsync(args);
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module != null)
+        {
+            await _module.InvokeVoidAsync("removeKeyboardListener");
+            await _module.DisposeAsync();
+            _module = null;
+        }
+        _netRef?.Dispose();
+        _netRef = null;
+    }
+
+    // JSFunctions from https://stackoverflow.com/questions/71242841/listen-to-keyboard-input-in-the-whole-blazor-page
+
+}

@@ -33,6 +33,7 @@ namespace FF8Utilities.Web.Services
 
         public UltimeciaManipLanguage GameLanguage { get; set; }
 
+
         private async Task<T> GetSetting<T>(string key, T defaultVal = default)
         {
             if (await _storage.ContainKeyAsync(key)) return await _storage.GetItemAsync<T>(key);

@@ -1,0 +1,58 @@
+﻿@page "/ultimecia-party"
+@inherits BasePage
+
+@code {
+
+    [Inject]
+    private PreloadService PreloadService { get; set; }
+
+    public override string PageTitle => "Ultimecia Party";
+
+    [Inject]
+    private SettingsService SettingsService { get; set; }
+
+    private List<Direction> Directions = new List<Direction>();
+
+    private PartyFormation[] Formations { get; set; }
+
+    private async Task CalculateOutput()
+    {
+        if (Directions.Count < 12) return;
+
+        try
+        {
+            PreloadService.Show();
+            Formations = await Task.Run(() => UltimeciaManip.Manipulation.GetUltimeciaFormations(Directions.ToArray(), SettingsService.Platform, SettingsService.GameLanguage));
+        }
+        finally
+        {
+            PreloadService.Hide();
+        }
+    }
+
+    private MarkupString GetGlyph(Direction direction)
+    {
+        string glyph;
+        switch (direction)
+        {
+            case Direction.Up: glyph = "fa-arrow-up"; break;
+            case Direction.Down: glyph = "fa-arrow-down"; break;
+            case Direction.Left: glyph = "fa-arrow-left"; break;
+            case Direction.Right: glyph = "fa-arrow-right"; break;
+            case Direction.Unknown: glyph = "fa-question"; break;
+            default: throw new NotImplementedException();
+        }
+
+        return (MarkupString)$"<i class=\"fa-solid {glyph}\"><i>";
+    }
+
+    private async Task OnKeyPressed(KeyboardEventArgs args)
+    {
+        
+    }
+}
+
+<Preload LoadingText="Calculating..." />
+<KeyboardListener OnKeyDown="OnKeyPressed" />
+
+

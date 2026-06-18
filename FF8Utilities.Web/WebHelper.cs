@@ -26,15 +26,6 @@ namespace FF8Utilities.Web
             return dataImageSource;
         }
 
-        public static event EventHandler<KeyboardEventArgs> KeyPressed;
-
-        [JSInvokable]
-        public static Task JsKeyDown(KeyboardEventArgs args)
-        {
-            KeyPressed?.Invoke(null, args);
-            return Task.CompletedTask;
-        }
-
         public static List<FishPatternModel> AllFishPatterns { get; private set; }
 
         public static async Task LoadFishPatterns(HttpClient client, string baseUrl)

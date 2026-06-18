@@ -34,7 +34,6 @@
         };
 
         Model.Redraw += OnRedraw;
-        WebHelper.KeyPressed += KeyPressed;
     }
 
     private async Task HandleInputKeyDown(KeyboardEventArgs args)
@@ -50,30 +49,6 @@
         }
     }
 
-    private async void KeyPressed(object sender, KeyboardEventArgs args)
-    {
-        if (_inputFocused) return; // Already focused, ignore
-        if (args.Key == "Enter" || args.Key == "NumpadEnter")
-        {
-            
-            // Get the current value from the element, as it only writes back on focus lost
-            var currentValue = await JS.InvokeAsync<string>("eval", $"document.activeElement.value");
-            if (currentValue != null) Model.RecoveryPattern = currentValue;
-
-            Model.SubmitCommand.Execute(null);
-            await _recoveryBoxInput.FocusAsync();
-            OnRedraw();
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("JsFunctions.addKeyboardListenerEvent");
-        }
-    }
-
     private void OnRedraw()
     {
         InvokeAsync(StateHasChanged);
@@ -82,10 +57,9 @@
     public void Dispose()
     {
         Model.Redraw -= OnRedraw;
-        WebHelper.KeyPressed -= KeyPressed;
     }      
     
-    // JSFunctions from https://stackoverflow.com/questions/71242841/listen-to-keyboard-input-in-the-whole-blazor-page
+
 }
 
 <HeadContent>
@@ -114,33 +88,11 @@
             pauseBeeps: function () {
                 this._cancelled = true;
             }
-        };
-
-        window.JsFunctions = {
-            addKeyboardListenerEvent: function (foo) {
-                let serializeEvent = function (e) {
-                    if (e) {
-                        return {
-                            key: e.key,
-                            code: e.keyCode.toString(),
-                            location: e.location,
-                            repeat: e.repeat,
-                            ctrlKey: e.ctrlKey,
-                            shiftKey: e.shiftKey,
-                            altKey: e.altKey,
-                            metaKey: e.metaKey,
-                            type: e.type
-                        };
-                    }
-                };
-
-                window.document.addEventListener('keydown', function (e) {
-                    DotNet.invokeMethodAsync('FF8Utilities.Web', 'JsKeyDown', serializeEvent(e))
-                });
-            }
-        };
+        };        
     </script>
 </HeadContent>
+
+<KeyboardListener OnKeyDown="HandleInputKeyDown" />
 
 
 <div class="container-fluid border border-secondary rounded">
