@@ -40,6 +40,9 @@ jobs:
         uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d # v5.0.0
         with:
           dotnet-version: '10.0.x'
+          
+      - name: Install wasm-tools workload
+        run: dotnet workload install wasm-tools
 
       - name: Publish app
         run: dotnet publish FF8Utilities.Web -c Release
