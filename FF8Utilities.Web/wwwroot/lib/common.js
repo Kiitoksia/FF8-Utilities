@@ -23,3 +23,10 @@ export function removeKeyboardListener() {
     document.removeEventListener('keydown', handler);
     handler = null;
 }
+
+export function initAutoplayVideos() {
+    document.querySelectorAll('video[autoplay]').forEach(v => {
+        v.muted = true;
+        v.play().catch(() => { });
+    });
+}

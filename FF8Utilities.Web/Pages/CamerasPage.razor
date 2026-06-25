@@ -1,0 +1,56 @@
+﻿@page "/cameras"
+@inherits BasePage
+
+@code {
+
+    public override string PageTitle => "Cameras";
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // This is required over adding the muted property, as Blazor will strip it out
+        if (firstRender)
+        {
+            var module = await JS.InvokeAsync<IJSObjectReference>("import", "./lib/common.js");
+            await module.InvokeVoidAsync("initAutoplayVideos");
+        }
+        
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
+
+<div class="container">
+    <Callout>These are all known camera angles and their associated output below</Callout>
+    <Tabs EnableFadeEffect="true">
+        <Tab Title="One to one" Active="true">
+            <Content>
+                <div class="row row-cols-4 g-5">
+                    @for (int i = 0; i < 8; i++)
+                    {
+                        string video = $"{i + 1}.mp4";
+                        <div class="col">
+                            <Card TextAlignment="Alignment.Center" Color="CardColor.Secondary">
+                                <video class="card-img-top" autoplay loop>
+                                    <source src="/res/cameras/@video" type="video/mp4">
+                                </video>
+                            </Card>
+                        </div>
+                    }
+
+                </div>
+            </Content>
+        </Tab>
+        <Tab Title="Three Characters">
+            <Content>
+                TODO
+            </Content>
+        </Tab>
+        <Tab Title="Single Character">
+            <Content>
+                TODO
+            </Content>
+        </Tab>
+    </Tabs>    
+</div>
