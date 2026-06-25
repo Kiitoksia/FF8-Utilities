@@ -16,15 +16,36 @@
     private NavigationManager NavigationManager { get; set; }
 
     private IJSObjectReference _module;
+    private Modal _cameraModal;
+
+    private string _lastFocusedCamera;
+    private bool _showModal;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (FocusedCamera != _lastFocusedCamera)
+        {
+            _lastFocusedCamera = FocusedCamera;
+            _showModal = !string.IsNullOrWhiteSpace(FocusedCamera);
+        }
+
+        await base.OnParametersSetAsync();
+    }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
+    {        
         // This is required over adding the muted property, as Blazor will strip it out
         if (firstRender)
         {
             _module = await JS.InvokeAsync<IJSObjectReference>("import", "./lib/common.js");
             await _module.InvokeVoidAsync("initAutoplayVideos");
+        }
+
+        if (_showModal && _cameraModal != null)
+        {
+            _showModal = false;
+            await _cameraModal.ShowAsync();
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -38,6 +59,36 @@
     }
 }
 
+@if (!string.IsNullOrWhiteSpace(FocusedCamera))
+{
+    string[] parts = FocusedCamera.Split('/');
+    if (parts.Length >= 2)
+    {
+        string folder = parts[0];
+        string displayText = folder.ToLower() switch
+        {
+            "1to1" => "One To One",
+            "three" => "Three Characters",
+            "special" => "Other",
+            "single" => "Single Character",
+            _ => "Other"
+        };
+        <Modal @ref="_cameraModal" IsVerticallyCentered="true" Title="@displayText">
+            <BodyTemplate>
+                <Card>
+                    <video class="card-image-top" autoplay loop>
+                        <source src="res/cameras/@(FocusedCamera).mp4" type="video/mp4">
+                    </video>
+                    <CardFooter>
+                        <span class="text-center">This link can be shared</span>
+                    </CardFooter>
+                </Card>
+            </BodyTemplate>
+        </Modal>
+    }
+    
+    
+}
 
 
 <div class="container">

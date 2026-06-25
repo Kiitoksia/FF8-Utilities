@@ -27,9 +27,9 @@
         WebService.OnTitleChanged -= StateHasChanged;
     }
 
-    private async Task GoBack()
+    private void GoBack()
     {
-        await JS.InvokeVoidAsync("history.back");
+        NavigationManager.NavigateTo("");
     }
 
     private async Task ShowSettings()
