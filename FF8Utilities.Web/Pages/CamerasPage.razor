@@ -73,15 +73,15 @@
             "single" => "Single Character",
             _ => "Other"
         };
-        <Modal @ref="_cameraModal" IsVerticallyCentered="true" Title="@displayText">
+        <Modal @ref="_cameraModal" IsVerticallyCentered="true">
+            <HeaderTemplate>
+                <span class="d-block w-100 text-center">@displayText</span>
+            </HeaderTemplate>
             <BodyTemplate>
-                <Card>
+                <Card>                    
                     <video class="card-image-top" autoplay loop>
                         <source src="res/cameras/@(FocusedCamera).mp4" type="video/mp4">
                     </video>
-                    <CardFooter>
-                        <span class="text-center">This link can be shared</span>
-                    </CardFooter>
                 </Card>
             </BodyTemplate>
         </Modal>
@@ -92,7 +92,9 @@
 
 
 <div class="container">
-    <Callout>These are all known camera angles and their associated output below</Callout>
+    <Callout>
+        Click on a video to create a sharable link
+    </Callout>
     <Tabs EnableFadeEffect="true">
         <Tab Title="One to one" Active="true">
             <Content>
