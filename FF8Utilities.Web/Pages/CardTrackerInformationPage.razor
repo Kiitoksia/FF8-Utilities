@@ -34,19 +34,20 @@
 }
 
 <div class="container">
-<div class="row row-cols-3">
+<div class="row row-cols-3 g-3">
     @foreach (BaseEncounterModel encounter in Encounters)
     {
         <div class="col">
-            <Card>
+            <Card TextAlignment="Alignment.Center">
                 <CardBody>
                         <CardTitle>@encounter.Description</CardTitle>
+                        <span>Base: @encounter.Base</span>
                 </CardBody>
-                    <Grid TItem="EncounterAbilityModel" Data="@encounter.Abilities">
+                    <Grid TItem="EncounterAbilityModel" Data="@encounter.Abilities" Class="table table-hover table-bordered table-striped">
                         <GridColumn TItem="EncounterAbilityModel" HeaderText="Ability" PropertyName="Description">
                             @context.Description
                         </GridColumn>
-                        <GridColumn TItem="EncounterAbilityModel" HeaderText="Addition" PropertyName="Addition">
+                        <GridColumn TItem="EncounterAbilityModel" HeaderText="Addition" PropertyName="Addition" TextAlignment="Alignment.End" HeaderTextAlignment="Alignment.End">
                             @context.Addition
                         </GridColumn>
                     </Grid>
