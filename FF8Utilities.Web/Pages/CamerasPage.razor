@@ -34,7 +34,7 @@
     {
         string absoluteUrl = NavigationManager.ToAbsoluteUri($"cameras/{url}").ToString();
         await _module.InvokeVoidAsync("copyToClipboard", absoluteUrl);
-        NavigationManager.NavigateTo($"/cameras/{url}");
+        NavigationManager.NavigateTo($"cameras/{url}");
     }
 }
 
