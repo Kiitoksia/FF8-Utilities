@@ -1,55 +1,66 @@
 ﻿@page "/cameras"
+@page "/cameras/{*FocusedCamera}"
 @inherits BasePage
 
 @code {
 
     public override string PageTitle => "Cameras";
 
+    [Parameter]
+    public string FocusedCamera { get; set; }
+
     [Inject]
     private IJSRuntime JS { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private IJSObjectReference _module;
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         // This is required over adding the muted property, as Blazor will strip it out
         if (firstRender)
         {
-            var module = await JS.InvokeAsync<IJSObjectReference>("import", "./lib/common.js");
-            await module.InvokeVoidAsync("initAutoplayVideos");
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./lib/common.js");
+            await _module.InvokeVoidAsync("initAutoplayVideos");
         }
-        
+
         await base.OnAfterRenderAsync(firstRender);
+    }    
+
+    private async Task ShareVideo(string url)
+    {
+        string absoluteUrl = NavigationManager.ToAbsoluteUri($"cameras/{url}").ToString();
+        await _module.InvokeVoidAsync("copyToClipboard", absoluteUrl);
+        NavigationManager.NavigateTo($"/cameras/{url}");
     }
 }
+
+
 
 <div class="container">
     <Callout>These are all known camera angles and their associated output below</Callout>
     <Tabs EnableFadeEffect="true">
         <Tab Title="One to one" Active="true">
             <Content>
-                <div class="row row-cols-4 g-5">
-                    @for (int i = 0; i < 8; i++)
-                    {
-                        string video = $"{i + 1}.mp4";
-                        <div class="col">
-                            <Card TextAlignment="Alignment.Center" Color="CardColor.Secondary">
-                                <video class="card-img-top" autoplay loop>
-                                    <source src="res/cameras/@video" type="video/mp4">
-                                </video>
-                            </Card>
-                        </div>
-                    }
-
-                </div>
+                <CamerasTabControl Videos="CameraData.OneToOne" ActiveVideo="@FocusedCamera" Folder="1to1" ShareVideo="ShareVideo"/>                
             </Content>
         </Tab>
         <Tab Title="Three Characters">
             <Content>
-                TODO
+                <CamerasTabControl Videos="CameraData.ThreeCharacters" ActiveVideo="@FocusedCamera" Folder="three" ShareVideo="ShareVideo" />
             </Content>
         </Tab>
         <Tab Title="Single Character">
             <Content>
-                TODO
+                <CamerasTabControl Videos="CameraData.SingleCharacter" ActiveVideo="@FocusedCamera" Folder="single" ShareVideo="ShareVideo" />
+            </Content>
+        </Tab>
+        <Tab Title="Special">
+            <Content>
+                <CamerasTabControl Videos="CameraData.Special" ActiveVideo="@FocusedCamera" Folder="special" ShareVideo="ShareVideo" />
             </Content>
         </Tab>
     </Tabs>    

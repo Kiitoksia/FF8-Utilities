@@ -1,0 +1,34 @@
+﻿
+@code {
+
+    [Parameter, EditorRequired]
+    public string[] Videos { get; set; }
+
+    [Parameter, EditorRequired]
+    public string ActiveVideo { get; set; }
+
+    [Parameter, EditorRequired]
+    public string Folder { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<string> ShareVideo { get; set; }
+}
+
+<div class="row row-cols-4 g-5">
+    @foreach (string video in Videos)
+    {
+        string url = $"{Folder}/{video}";
+        string urlNoExtension = System.IO.Path.ChangeExtension(url, null);
+        bool emphasised = urlNoExtension == $"{ActiveVideo}";
+        
+        <div class="col">
+            <Card TextAlignment="Alignment.Center" Color="emphasised ? CardColor.Primary : CardColor.Secondary">
+                <video class="card-img-top" autoplay loop>
+                    <source src="res/cameras/@url" type="video/mp4">
+                </video>
+                <Button @onclick="() => ShareVideo.InvokeAsync(urlNoExtension)">Share</Button>
+            </Card>
+        </div>
+    }
+</div>
+

@@ -30,3 +30,7 @@ export function initAutoplayVideos() {
         v.play().catch(() => { });
     });
 }
+
+export async function copyToClipboard(text) {
+    await navigator.clipboard.writeText(text);
+}
