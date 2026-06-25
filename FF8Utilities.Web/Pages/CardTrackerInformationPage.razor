@@ -1,0 +1,58 @@
+﻿@page "/card-info"
+@inherits BasePage
+@code {
+
+    private List<BaseEncounterModel> Encounters;
+
+    protected override void OnInitialized()
+    {
+        Encounters = new List<BaseEncounterModel>();
+        foreach (Type type in typeof(BaseEncounterModel).Assembly.GetTypes().Where(t => !t.IsAbstract && typeof(BaseEncounterModel).IsAssignableFrom(t)))
+        {
+            var constructor = type.GetConstructors().First();
+            List<object> constructorArgs = new List<object>();
+            foreach (var parameter in constructor.GetParameters())
+            {
+                if (parameter.HasDefaultValue)
+                {
+                    constructorArgs.Add(parameter.DefaultValue);
+                }
+                else
+                {
+                    constructorArgs.Add(Activator.CreateInstance(parameter.ParameterType));
+                }
+            }
+
+            Encounters.Add((BaseEncounterModel)constructor.Invoke(constructorArgs.ToArray()));
+
+        }
+
+        base.OnInitialized();
+    }
+
+    public override string PageTitle => "Card Tracking Information";
+}
+
+<div class="container">
+<div class="row row-cols-3">
+    @foreach (BaseEncounterModel encounter in Encounters)
+    {
+        <div class="col">
+            <Card>
+                <CardBody>
+                        <CardTitle>@encounter.Description</CardTitle>
+                </CardBody>
+                    <Grid TItem="EncounterAbilityModel" Data="@encounter.Abilities">
+                        <GridColumn TItem="EncounterAbilityModel" HeaderText="Ability" PropertyName="Description">
+                            @context.Description
+                        </GridColumn>
+                        <GridColumn TItem="EncounterAbilityModel" HeaderText="Addition" PropertyName="Addition">
+                            @context.Addition
+                        </GridColumn>
+                    </Grid>
+            </Card>
+        </div>
+    }
+    </div>
+</div>
+

@@ -12,9 +12,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddSingleton<SettingsService>();
-builder.Services.AddSingleton<CardTrackerStateService>();
-builder.Services.AddSingleton<WebService>();
+builder.Services.AddScoped<SettingsService>();
+builder.Services.AddScoped<CardTrackerStateService>();
+builder.Services.AddScoped<WebService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazorBootstrap();
 
