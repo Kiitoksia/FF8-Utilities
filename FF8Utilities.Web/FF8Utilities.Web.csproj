@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\res\cameras\single\" />
+    <Folder Include="wwwroot\res\cameras\1to1\" />
     <Folder Include="wwwroot\res\cameras\three\" />
   </ItemGroup>
 
