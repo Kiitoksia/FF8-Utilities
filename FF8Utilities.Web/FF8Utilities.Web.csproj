@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\res\cameras\special\" />
     <Folder Include="wwwroot\res\cameras\single\" />
     <Folder Include="wwwroot\res\cameras\three\" />
   </ItemGroup>
@@ -34,13 +33,11 @@
       <OneToOneCameras Include="wwwroot/res/cameras/1to1/*.mp4" />
       <ThreePersonCameras Include="wwwroot/res/cameras/three/*.mp4" />
       <SinglePersonCameras Include="wwwroot/res/cameras/single/*.mp4" />
-      <SpecialCameras Include="wwwroot/res/cameras/special/*.mp4" />
     </ItemGroup>
     <PropertyGroup>
       <OneToOneList>@(OneToOneCameras     -> '"%(Filename)%(Extension)"', ', ')</OneToOneList>
       <ThreeList>@(ThreePersonCameras  -> '"%(Filename)%(Extension)"', ', ')</ThreeList>
       <SingleList>@(SinglePersonCameras -> '"%(Filename)%(Extension)"', ', ')</SingleList>
-      <SpecialList>@(SpecialCameras     -> '"%(Filename)%(Extension)"', ', ')</SpecialList>
     </PropertyGroup>
     <ItemGroup>
       <_Lines Include="// &lt;auto-generated/&gt;" />
@@ -50,7 +47,6 @@
       <_Lines Include="    public static readonly string[] OneToOne        = [$(OneToOneList)]%3B" />
       <_Lines Include="    public static readonly string[] ThreeCharacters = [$(ThreeList)]%3B" />
       <_Lines Include="    public static readonly string[] SingleCharacter  = [$(SingleList)]%3B" />
-      <_Lines Include="    public static readonly string[] Special          = [$(SpecialList)]%3B" />
       <_Lines Include="}" />
     </ItemGroup>
     <WriteLinesToFile File="$(IntermediateOutputPath)CameraData.g.cs" Lines="@(_Lines)" Overwrite="true" />
