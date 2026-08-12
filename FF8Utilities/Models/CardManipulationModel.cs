@@ -57,6 +57,7 @@ namespace FF8Utilities.Models
 
         protected override void PlayBeeps(BeepSchedule schedule)
         {
+            if (!SettingsModel.Instance.BeepsEnabled) return;
             if (_loadedBeepSound != SettingsModel.Instance.BeepSound)
             {
                 _audioContext?.Destroy();

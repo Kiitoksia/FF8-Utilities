@@ -1,4 +1,5 @@
-﻿using FF8Utilities.Common;
+﻿using CardManipulation.Models;
+using FF8Utilities.Common;
 using FF8Utilities.Dialogs;
 using FF8Utilities.Models;
 using MahApps.Metro.Controls;
@@ -16,6 +17,7 @@ using System.Windows;
 using System.Windows.Controls;
 using UltimeciaManip;
 using UltimeciaManip.Entities;
+using static System.Windows.Forms.AxHost;
 
 namespace FF8Utilities
 {
@@ -38,7 +40,7 @@ namespace FF8Utilities
             ConfigureAttackButtons(SecondSquallButton, SecondSquallCrossButton, SecondQuistisButton, SecondQuistisCrossButton, SecondDamageRoll, 1);
             ConfigureAttackButtons(ThirdSquallButton, ThirdSquallCrossButton, ThirdQuistisButton, ThirdQuistisCrossButton, ThirdDamageRoll, 2);
 
-            FlowTimer.Extensions.Init(Const.PackagesFolder);
+            FlowTimer.Extensions.Init(Const.PackagesFolder);            
         }
 
         private MainModel Model => (MainModel)DataContext;

@@ -43,7 +43,7 @@ namespace FF8Utilities.Common
         public static readonly EarlyQuistisPattern Frame5 = new EarlyQuistisPattern("[Frame 5] - Malboro (Grand Mantis) *Unwinnable*", 5, Card.Malboro, Card.GrandMantis);
         public static readonly EarlyQuistisPattern Frame6 = new EarlyQuistisPattern("[Frame 6] - Grand Mantis (Elastoid) *Unwinnable*", 6, Card.GrandMantis, Card.Elastoid);
         public static readonly EarlyQuistisPattern Frame7 = new EarlyQuistisPattern("[Frame 7] - Glacial Eye (Grand Mantis)", 0x832b19d2, Card.GlacialEye, Card.GrandMantis);
-        public static readonly EarlyQuistisPattern Frame8 = new EarlyQuistisPattern("[Frame 8] - Anacondaur (GIM47N) *Unwinnable*", 8, Card.Anacondaur, Card.Gim47N);
+        public static readonly EarlyQuistisPattern Frame8 = new EarlyQuistisPattern("[Frame 8] - Anacondaur (GIM47N)", 0x22EF4044, Card.Anacondaur, Card.Gim47N);
         public static readonly EarlyQuistisPattern Frame9 = new EarlyQuistisPattern("[Frame 9] - Jellyeye (Biggs & Wedge)", 0xad8f1b2f, Card.Jelleye, Card.BiggsWedge);
         public static readonly EarlyQuistisPattern Frame10 = new EarlyQuistisPattern("[Frame 10] - Chimera (Thrustaevis)", 0xf99a05ef, Card.Chimera, Card.Thrustaevis);
         public static readonly EarlyQuistisPattern LateQuistis = new EarlyQuistisPattern("Late Quistis", 0);
@@ -84,6 +84,7 @@ namespace FF8Utilities.Common
             Frame3,
             Frame4,
             Frame7,
+            Frame8,
             Frame9,
             Frame10,
         };
@@ -99,6 +100,7 @@ namespace FF8Utilities.Common
             if (pattern == EarlyQuistisPattern.Frame3) return CardPosition.EarlyQuistisFrame3;
             if (pattern == EarlyQuistisPattern.Frame4) return CardPosition.EarlyQuistisFrame4;
             if (pattern == EarlyQuistisPattern.Frame7) return CardPosition.EarlyQuistisFrame7;
+            if (pattern == EarlyQuistisPattern.Frame8) return CardPosition.EarlyQuistisFrame8;
             if (pattern == EarlyQuistisPattern.Frame9) return CardPosition.EarlyQuistisFrame9;
             if (pattern == EarlyQuistisPattern.Frame10) return CardPosition.EarlyQuistisFrame10;
             return null; // Not winnable

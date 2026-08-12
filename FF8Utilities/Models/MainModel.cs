@@ -426,6 +426,13 @@ namespace FF8Utilities.Models
                 CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.BottomRight));
                 CardNotes.Add(new CardNotesModel(Card.Fastitocalon, CardPosition.TopCentre));
             }
+            else if (Pattern == EarlyQuistisPattern.Frame8)
+            {
+                CardNotes.Add(new CardNotesModel(Card.Gayla, CardPosition.Centre));
+                CardNotes.Add(new CardNotesModel(Card.Caterchipillar, CardPosition.CentreLeft));
+                CardNotes.Add(new CardNotesModel(Card.Geezard, CardPosition.TopRight));
+                CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.BottomCentre));
+            }
             else if (Pattern == EarlyQuistisPattern.Frame9)
             {
                 CardNotes.Add(new CardNotesModel(Card.Funguar, CardPosition.Centre));

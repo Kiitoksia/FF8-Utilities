@@ -104,6 +104,7 @@ namespace FF8Utilities.Models
             TryGetXmlValue<int>(xml, nameof(BeepOffsetFrames), t => BeepOffsetFrames = t);
             TryGetXmlValue<UpdateBranch>(xml, nameof(UpdateBranch), t => UpdateBranch = t);
             TryGetXmlValue<UltimeciaManipLanguage>(xml, nameof(UltimeciaManipLanguage), t => UltimeciaManipLanguage = t);
+            TryGetXmlValue<bool>(xml, nameof(BeepsEnabled), t => BeepsEnabled = t);
 
 
 
@@ -145,6 +146,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(BeepOffsetFrames), BeepOffsetFrames.ToString()));
             xml.Add(new XElement(nameof(UpdateBranch), UpdateBranch.ToString()));
             xml.Add(new XElement(nameof(UltimeciaManipLanguage), UltimeciaManipLanguage.ToString()));
+            xml.Add(new XElement(nameof(BeepsEnabled), BeepsEnabled.ToString()));
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
 
@@ -739,6 +741,8 @@ namespace FF8Utilities.Models
         public UpdateBranch UpdateBranch { get; set; } = UpdateBranch.Stable;
 
         public UltimeciaManipLanguage UltimeciaManipLanguage { get; set; } = UltimeciaManipLanguage.English;
+
+        public bool BeepsEnabled { get; set; } = true;
 
         public Task<bool> IsCSRUpdateAvailable()
         {

@@ -69,7 +69,6 @@ namespace FF8Utilities.Web.Models
 
         protected override void PlayBeeps(BeepSchedule schedule)
         {
-            
             PlayAudio?.Invoke(schedule, _settings.BeepSound);
         }
 

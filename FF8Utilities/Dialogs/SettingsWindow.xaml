@@ -72,6 +72,15 @@
 
                     <controls:SettingsInputControl>
                         <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Beeps Enabled"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:ToggleSwitch IsOn="{Binding BeepsEnabled}" OnContent="Yes" OffContent="No"/>
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl>
+                        <controls:SettingsInputControl.LabelContent>
                             <TextBlock Text="Beep Interval (ms)"/>
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>

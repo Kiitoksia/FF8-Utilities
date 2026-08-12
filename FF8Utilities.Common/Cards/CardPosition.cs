@@ -22,7 +22,7 @@ namespace FF8Utilities.Common.Cards
         public CardPosition(int position, bool isPlayerTurn, int turn, Card card, string customTopInfo = null, string customRightInfo = null, string customBotInfo = null, string customLeftInfo = null)
             :this(position, isPlayerTurn, turn, GameScenario.GetCardImage(card), customTopInfo, customRightInfo, customBotInfo, customLeftInfo)
         {
-
+            CardEnum = card;
         }
 
         public int Position { get; }
@@ -38,6 +38,11 @@ namespace FF8Utilities.Common.Cards
         public string CustomRightInfo { get; }
         public string CustomBotInfo { get; }
         public string CustomLeftInfo { get; }
+
+        /// <summary>
+        /// Can be null if the card is "Empty"
+        /// </summary>
+        public Card? CardEnum { get; }
 
         public bool ShowTurnNumber => Turn != 0;
 
@@ -143,6 +148,19 @@ namespace FF8Utilities.Common.Cards
             new CardPosition(7, false, 1, Common.Card.Quistis),
             new CardPosition(8, false, 3, Common.Card.GrandMantis),
             new CardPosition(9, true, 3, Common.Card.Caterchipallar)
+        };
+
+        public static readonly CardPosition[] EarlyQuistisFrame8 = new[]
+        {
+            new CardPosition(1, true, 4, Common.Card.Caterchipallar),
+            new CardPosition(2, false, 3, Common.Card.Anacondaur),
+            new CardPosition(3, true, 6, Common.Card.Geezard),
+            new CardPosition(4, false, 1, Common.Card.IronGiant),
+            new CardPosition(5, true, 2, Common.Card.Gayla),
+            new CardPosition(6, false, 5, Common.Card.Gim47N),
+            new CardPosition(7, false, 9, Common.Card.RubyDragon),
+            new CardPosition(8, true, 8, Common.Card.Fungar),
+            new CardPosition(9, false, 7, Common.Card.Quistis)
         };
 
         public static readonly CardPosition[] EarlyQuistisFrame9 = new[]

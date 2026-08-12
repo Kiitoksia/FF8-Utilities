@@ -50,22 +50,22 @@ namespace FF8Utilities
     public enum CardPosition
     {
         [Description("Top Left")]
-        TopLeft,
+        TopLeft = 1,
         [Description("Top Centre")]
-        TopCentre,
+        TopCentre = 2,
         [Description("Top Right")]
-        TopRight,
+        TopRight = 3,
         [Description("Centre Left")]
-        CentreLeft,        
-        Centre,
+        CentreLeft = 4,        
+        Centre = 5,
         [Description("Centre Right")]
-        CentreRight,
+        CentreRight = 6,
         [Description("Bottom Left")]
-        BottomLeft,
+        BottomLeft = 7,
         [Description("Bottom Centre")]
-        BottomCentre,
+        BottomCentre = 8,
         [Description("Bottom Right")]
-        BottomRight
+        BottomRight = 9
     }   
 
     public enum Card
