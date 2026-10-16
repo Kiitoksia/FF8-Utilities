@@ -40,6 +40,7 @@ namespace FF8Utilities.Dialogs
 
             CardManipControl.DataContext = _manipModel;
             CardManipControl.RecoveryTextBox.Focus();
+            CardManipControl.RefocusRecoveryBoxOnTabChange(Tabs);
             _strategies = pattern.Strategies;
             SubmitCommand = new Command<LateQuistisStrategy>(() => true, (s, e) =>
             {

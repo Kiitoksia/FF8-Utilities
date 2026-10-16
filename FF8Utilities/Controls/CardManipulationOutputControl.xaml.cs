@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace FF8Utilities.Controls
 {
@@ -24,9 +25,63 @@ namespace FF8Utilities.Controls
         public CardManipulationOutputControl()
         {
             InitializeComponent();
+            Loaded += CardManipulationOutputControl_Loaded;
+            Unloaded += CardManipulationOutputControl_Unloaded;
         }
 
         private CardManipulationModel Model => (CardManipulationModel)DataContext;
+
+        private IDisposable _globalHotkeySubscription;
+
+        /// <summary>
+        /// Refocuses the recovery box whenever the given tab control changes tab (e.g. switching starts/frames).
+        /// Refocuses after the event as the clicked tab takes focus once the selection has changed.
+        /// </summary>
+        public void RefocusRecoveryBoxOnTabChange(TabControl tabControl)
+        {
+            tabControl.SelectionChanged += (s, e) =>
+            {
+                // SelectionChanged bubbles up from any selector inside the tabs, only react to the tab control itself
+                if (e.OriginalSource != tabControl) return;
+
+                Dispatcher.BeginInvoke(new Action(() => RecoveryTextBox.Focus()), DispatcherPriority.Input);
+            };
+        }
+
+        private void CardManipulationOutputControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (SettingsModel.Instance.GlobalHotkeysEnabled && _globalHotkeySubscription == null)
+            {
+                _globalHotkeySubscription = GlobalKeyboardHook.Subscribe(OnGlobalKey);
+            }
+        }
+
+        private void CardManipulationOutputControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _globalHotkeySubscription?.Dispose();
+            _globalHotkeySubscription = null;
+        }
+
+        /// <summary>
+        /// Only raised whilst another application (i.e. FF8) has focus
+        /// </summary>
+        private void OnGlobalKey(GlobalKey key, char? digit)
+        {
+            if (!(DataContext is CardManipulationModel)) return;
+
+            switch (key)
+            {
+                case GlobalKey.Digit:
+                    if (RecoveryTextBox.IsEnabled && digit.HasValue) InsertDigit(RecoveryTextBox, digit.Value);
+                    break;
+                case GlobalKey.Backspace:
+                    if (RecoveryTextBox.IsEnabled) DeleteDigit(RecoveryTextBox, forward: false);
+                    break;
+                case GlobalKey.Enter:
+                    Model.SubmitCommand.Execute(null);
+                    break;
+            }
+        }
 
         private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -83,16 +138,9 @@ namespace FF8Utilities.Controls
 
             if (!e.Handled)
             {
-                int caretIndex = textBox.CaretIndex;
-                string unformatted = GetDigitsOnly(textBox.Text);
-                if (unformatted.Length >= 20) return;
+                if (GetDigitsOnly(textBox.Text).Length >= 20) return;
 
-                // Insert the new character at the correct location
-                int insertIndex = GetDigitInsertIndex(textBox.Text, caretIndex);
-                unformatted = unformatted.Insert(insertIndex, e.Text);
-
-                textBox.Text = FormatOutput(unformatted);
-                textBox.CaretIndex = GetNextCaretIndex(textBox.Text, insertIndex + 1);
+                InsertDigit(textBox, e.Text[0]);
                 e.Handled = true;
             }
         }
@@ -104,25 +152,50 @@ namespace FF8Utilities.Controls
 
             if (e.Key == Key.Back || e.Key == Key.Delete)
             {
-                int caretIndex = textBox.CaretIndex;
-                string digits = GetDigitsOnly(textBox.Text);
-                int digitIndex = GetDigitInsertIndex(textBox.Text, caretIndex);
-
-                if (digitIndex > 0 && e.Key == Key.Back)
+                if (DeleteDigit(textBox, forward: e.Key == Key.Delete))
                 {
-                    digits = digits.Remove(digitIndex - 1, 1);
-                    textBox.Text = FormatOutput(digits);
-                    textBox.CaretIndex = GetNextCaretIndex(textBox.Text, digitIndex - 1);
-                    e.Handled = true;
-                }
-                else if (digitIndex < digits.Length && e.Key == Key.Delete)
-                {
-                    digits = digits.Remove(digitIndex, 1);
-                    textBox.Text = FormatOutput(digits);
-                    textBox.CaretIndex = GetNextCaretIndex(textBox.Text, digitIndex);
                     e.Handled = true;
                 }
             }
+        }
+
+        private void InsertDigit(TextBox textBox, char digit)
+        {
+            string unformatted = GetDigitsOnly(textBox.Text);
+            if (unformatted.Length >= 20) return;
+
+            // Insert the new character at the correct location
+            int insertIndex = GetDigitInsertIndex(textBox.Text, textBox.CaretIndex);
+            unformatted = unformatted.Insert(insertIndex, digit.ToString());
+
+            textBox.Text = FormatOutput(unformatted);
+            textBox.CaretIndex = GetNextCaretIndex(textBox.Text, insertIndex + 1);
+        }
+
+        /// <summary>
+        /// Removes the digit before (backspace) or after (delete) the caret.  Returns false if there was nothing to remove.
+        /// </summary>
+        private bool DeleteDigit(TextBox textBox, bool forward)
+        {
+            string digits = GetDigitsOnly(textBox.Text);
+            int digitIndex = GetDigitInsertIndex(textBox.Text, textBox.CaretIndex);
+
+            if (digitIndex > 0 && !forward)
+            {
+                digits = digits.Remove(digitIndex - 1, 1);
+                textBox.Text = FormatOutput(digits);
+                textBox.CaretIndex = GetNextCaretIndex(textBox.Text, digitIndex - 1);
+                return true;
+            }
+            else if (digitIndex < digits.Length && forward)
+            {
+                digits = digits.Remove(digitIndex, 1);
+                textBox.Text = FormatOutput(digits);
+                textBox.CaretIndex = GetNextCaretIndex(textBox.Text, digitIndex);
+                return true;
+            }
+
+            return false;
         }
     }
 }

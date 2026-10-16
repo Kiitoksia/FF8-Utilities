@@ -33,11 +33,17 @@ namespace FF8Utilities.Dialogs
             CardControl.DataContext = manip;
 
             CardControl.RecoveryTextBox.Focus();
+            CardControl.RefocusRecoveryBoxOnTabChange(Tabs);
 
             // Hardcoded positions
             PlayerFormation.ItemsSource = CardPattern.ZellPlayerFirstPositions;
             MomFormation.ItemsSource = CardPattern.ZellMomFirstPositionsWeak;
             MomFormation2.ItemsSource = CardPattern.ZellMomFirstPositionsStrong;
+
+            Closed += (s, e) =>
+            {
+                manip.Dispose();
+            };
         }
     }
 }

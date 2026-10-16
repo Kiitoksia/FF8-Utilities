@@ -17,7 +17,7 @@
         xmlns:controls="clr-namespace:FF8Utilities.Controls"
         xmlns:ff8utilities="clr-namespace:FF8Utilities"
         d:DataContext="{d:DesignInstance models:SettingsModel}"
-        Title="Settings" Height="520" Width="400">
+        Title="Settings" Height="570" Width="400">
     <DockPanel LastChildFill="True" Margin="10,0,10,5">
         <Grid Height="50" DockPanel.Dock="Bottom">
             <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Height="50" Grid.Row="7" Grid.Column="1" Command="{Binding SaveSettingsCommand}" Click="Button_Click">
@@ -112,6 +112,15 @@
                         </controls:SettingsInputControl.LabelContent>
                         <controls:SettingsInputControl.InputContent>
                             <Controls:NumericUpDown Minimum="0" Maximum="10" Value="{Binding BeepOffsetFrames}" />
+                        </controls:SettingsInputControl.InputContent>
+                    </controls:SettingsInputControl>
+
+                    <controls:SettingsInputControl ToolTip="Whilst a card pattern window is open, numpad digits, backspace and enter are picked up even when FF8 has focus. Keys are still passed through to the game.">
+                        <controls:SettingsInputControl.LabelContent>
+                            <TextBlock Text="Global Hotkeys (Card Manip)" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        </controls:SettingsInputControl.LabelContent>
+                        <controls:SettingsInputControl.InputContent>
+                            <Controls:ToggleSwitch IsOn="{Binding GlobalHotkeysEnabled}" OnContent="Yes" OffContent="No"/>
                         </controls:SettingsInputControl.InputContent>
                     </controls:SettingsInputControl>
                 </StackPanel>

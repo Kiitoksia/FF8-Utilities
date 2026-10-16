@@ -20,7 +20,7 @@
             <TextBlock FontSize="14" Text="Geezard, Red Bat, Gayla, Quistis, Ifrit" HorizontalAlignment="Center"/>
         </GroupBox>
         <controls:CardManipulationOutputControl x:Name="CardControl" DockPanel.Dock="Bottom" Margin="0,10,0,0"/>
-        <Controls:MetroAnimatedTabControl>
+        <Controls:MetroAnimatedTabControl x:Name="Tabs">
             <Controls:MetroAnimatedTabControl.Resources>
                 <Style TargetType="{x:Type TabPanel}">
                     <Setter Property="HorizontalAlignment" Value="Center"/>

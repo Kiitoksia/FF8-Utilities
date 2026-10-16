@@ -105,6 +105,7 @@ namespace FF8Utilities.Models
             TryGetXmlValue<UpdateBranch>(xml, nameof(UpdateBranch), t => UpdateBranch = t);
             TryGetXmlValue<UltimeciaManipLanguage>(xml, nameof(UltimeciaManipLanguage), t => UltimeciaManipLanguage = t);
             TryGetXmlValue<bool>(xml, nameof(BeepsEnabled), t => BeepsEnabled = t);
+            TryGetXmlValue<bool>(xml, nameof(GlobalHotkeysEnabled), t => GlobalHotkeysEnabled = t);
 
 
 
@@ -147,6 +148,7 @@ namespace FF8Utilities.Models
             xml.Add(new XElement(nameof(UpdateBranch), UpdateBranch.ToString()));
             xml.Add(new XElement(nameof(UltimeciaManipLanguage), UltimeciaManipLanguage.ToString()));
             xml.Add(new XElement(nameof(BeepsEnabled), BeepsEnabled.ToString()));
+            xml.Add(new XElement(nameof(GlobalHotkeysEnabled), GlobalHotkeysEnabled.ToString()));
             Version currentVersion = typeof(MainModel).Assembly.GetName().Version;
             xml.Add(new XElement("LastLaunchedVersion", currentVersion.ToString()));
 
@@ -743,6 +745,8 @@ namespace FF8Utilities.Models
         public UltimeciaManipLanguage UltimeciaManipLanguage { get; set; } = UltimeciaManipLanguage.English;
 
         public bool BeepsEnabled { get; set; } = true;
+
+        public bool GlobalHotkeysEnabled { get; set; } = false;
 
         public Task<bool> IsCSRUpdateAvailable()
         {
