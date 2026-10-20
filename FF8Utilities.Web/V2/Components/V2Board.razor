@@ -1,0 +1,40 @@
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<CardPosition> Positions { get; set; }
+}
+
+<div class="v-board">
+    @foreach (CardPosition position in Positions)
+    {
+        <div class="v-tile">
+            @if (position.Card != null)
+            {
+                <img src="@WebHelper.GetDataImageSource(position.Card)" alt="@(position.CardEnum?.ToString() ?? "Card")" />
+            }
+            @if (!position.IsPlayerTurn)
+            {
+                <div class="sh"></div>
+            }
+            @if (position.ShowTurnNumber)
+            {
+                <span class="tn @(position.IsPlayerTurn ? "p" : "e")">@position.Turn</span>
+            }
+            @if (!string.IsNullOrEmpty(position.CustomTopInfo))
+            {
+                <span class="ci t">@position.CustomTopInfo</span>
+            }
+            @if (!string.IsNullOrEmpty(position.CustomLeftInfo))
+            {
+                <span class="ci l">@position.CustomLeftInfo</span>
+            }
+            @if (!string.IsNullOrEmpty(position.CustomRightInfo))
+            {
+                <span class="ci r">@position.CustomRightInfo</span>
+            }
+            @if (!string.IsNullOrEmpty(position.CustomBotInfo))
+            {
+                <span class="ci b">@position.CustomBotInfo</span>
+            }
+        </div>
+    }
+</div>

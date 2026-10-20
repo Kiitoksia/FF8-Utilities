@@ -1,0 +1,24 @@
+@page "/v2/early-quistis"
+@inject NavigationManager Navigation
+@inject CardTrackerStateService CardState
+@code {
+    private List<CardViewModel> _strategies;
+
+    protected override void OnInitialized()
+    {
+        _strategies = CardViewModelExtensionMethods.EarlyQuistisModels();
+    }
+
+    private void Submit(uint result)
+    {
+        CardState.SelectedEarlyQuistisPattern = EarlyQuistisPattern.OptionsExcludeLate.Single(t => t.Result == result);
+        Navigation.NavigateTo("v2");
+    }
+}
+
+<PageTitle>Early Quistis Pattern</PageTitle>
+
+<div class="v-page">
+    <V2Header Title="Early Quistis Pattern" Subtitle="Pick the opponent hand you got" />
+    <V2PatternPicker Strategies="_strategies" OnSubmit="Submit" />
+</div>

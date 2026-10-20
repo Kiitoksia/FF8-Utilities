@@ -1,0 +1,31 @@
+@code {
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool Wide { get; set; }
+}
+
+@if (Open)
+{
+    <div class="v-dlg-bd" @onclick="OnClose">
+        <div class="v-dlg @(Wide ? "wide" : null)" role="dialog" aria-modal="true" aria-label="@Title" @onclick:stopPropagation="true">
+            <header class="v-bar">
+                <div class="v-bar-title" style="padding-left: 10px"><h1>@Title</h1></div>
+                <button type="button" class="v-ib" aria-label="Close" @onclick="OnClose"><V2Icon Name="close" /></button>
+            </header>
+            <div class="v-dlg-body">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+}

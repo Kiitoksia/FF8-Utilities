@@ -1,0 +1,79 @@
+@inject V2UiService Ui
+@inject SettingsService Settings
+@inject NavigationManager Navigation
+@code {
+    /// <summary>Page title (shown on sub pages, and on phone for tool tabs)</summary>
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Subtitle { get; set; }
+
+    /// <summary>True for the top level tools (Cards / Fish Fins / Caraway / Ultimecia) which share the tab bar on desktop</summary>
+    [Parameter]
+    public bool Main { get; set; }
+
+    /// <summary>True for the home page (no back button on phone)</summary>
+    [Parameter]
+    public bool IsHome { get; set; }
+
+    [Parameter]
+    public string BackHref { get; set; } = "v2";
+
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+
+    /// <summary>Extra content shown at the right of the bar (pills, buttons)</summary>
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private async Task Back()
+    {
+        if (OnBack.HasDelegate) await OnBack.InvokeAsync();
+        else Navigation.NavigateTo(BackHref);
+    }
+}
+
+<header class="v-bar">
+    @if (Main)
+    {
+        <div class="v-brand @(IsHome ? null : "v-desk-only")">
+            <span class="v-logo" aria-hidden="true">8</span>
+            <span>FF8 Utilities</span>
+            <span class="v-pill v-desk-only">@Settings.Platform · @Settings.GameLanguage</span>
+        </div>
+        @if (!IsHome)
+        {
+            <button type="button" class="v-ib v-phone-only" aria-label="Back" @onclick="Back"><V2Icon Name="back" /></button>
+            <div class="v-bar-title v-phone-only">
+                <h1>@Title</h1>
+                @if (!string.IsNullOrEmpty(Subtitle))
+                {
+                    <small>@Subtitle</small>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <button type="button" class="v-ib" aria-label="Back" @onclick="Back"><V2Icon Name="back" /></button>
+        <div class="v-bar-title">
+            <h1>@Title</h1>
+            @if (!string.IsNullOrEmpty(Subtitle))
+            {
+                <small>@Subtitle</small>
+            }
+        </div>
+    }
+    @ChildContent
+    <button type="button" class="v-ib" aria-label="Settings" @onclick="Ui.OpenSettings"><V2Icon Name="settings" /></button>
+</header>
+@if (Main)
+{
+    <nav class="v-tabs v-desk-only" aria-label="Tools">
+        <NavLink href="v2" Match="NavLinkMatch.All">Cards</NavLink>
+        <NavLink href="v2/fish-fins">Fish Fins</NavLink>
+        <NavLink href="v2/caraway">Caraway Code</NavLink>
+        <NavLink href="v2/ultimecia">Ultimecia</NavLink>
+    </nav>
+}

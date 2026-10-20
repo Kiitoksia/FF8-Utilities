@@ -1,0 +1,143 @@
+@page "/v2"
+@inject NavigationManager Navigation
+@inject SettingsService Settings
+@inject CardTrackerStateService CardState
+@inject V2UiService Ui
+@code {
+    private static readonly bool[] EarlyLateOptions = { true, false };
+    private static readonly bool[] ZellOptions = { true, false };
+
+    private EarlyQuistisPattern Pattern => CardState.SelectedEarlyQuistisPattern;
+
+    private int PatternFrame => Array.IndexOf(EarlyQuistisPattern.OptionsExcludeLate, Pattern) + 1;
+
+    private bool CanStart => !Ui.EarlyQuistis || Pattern != null;
+
+    private string StartText => Ui.EarlyQuistis && !Ui.TrackZell ? "Open Zell board" : "Start Card Tracker";
+
+    protected override void OnInitialized()
+    {
+        // Leaving the card flow resets everything except the chosen early pattern
+        CardState.SelectedLateQuistisPattern = null;
+        CardState.LateQuistisResult = null;
+        CardState.ManipModel = null;
+        Ui.ClearTracker();
+    }
+
+    private void Start()
+    {
+        if (!CanStart) return;
+
+        if (!Ui.EarlyQuistis)
+        {
+            Ui.StartTracker(null);
+            Navigation.NavigateTo("v2/card-tracker");
+        }
+        else if (Ui.TrackZell)
+        {
+            Ui.StartTracker(Pattern);
+            Navigation.NavigateTo("v2/card-tracker");
+        }
+        else
+        {
+            CardTrackerModel model = new CardTrackerModel(Settings);
+            CardState.ManipModel = (CardManipulationModel)model.CreateCardManipModel(CardTrackerModel.CardManip, Pattern.Result, "fc01", null);
+            Navigation.NavigateTo("v2/zell-card");
+        }
+    }
+}
+
+<PageTitle>FF8 Utilities</PageTitle>
+
+<div class="v-page">
+    <V2Header Main="true" IsHome="true" Title="Cards" />
+    <div class="v-scroll">
+        <div class="v-content">
+            <section class="v-card">
+                <div class="v-card-h">
+                    <span style="display: flex; align-items: center; gap: 10px"><V2Icon Name="cards" Size="20" />Card manipulation</span>
+                </div>
+                <div class="v-form-row">
+                    <span class="muted">Quistis</span>
+                    <V2Segmented TValue="bool" Options="EarlyLateOptions" Value="Ui.EarlyQuistis" ValueChanged="v => Ui.EarlyQuistis = v"
+                                 Text="@(v => v ? "Early · before Ifrit" : "Late · after Garden")" Label="Quistis timing" />
+                </div>
+                @if (Ui.EarlyQuistis)
+                {
+                    <div class="v-form-row">
+                        <span class="muted">Pattern</span>
+                        <div class="v-pattern">
+                            @if (Pattern != null)
+                            {
+                                @foreach (FF8Utilities.Common.Card card in Pattern.HeaderCards)
+                                {
+                                    <img src="@WebHelper.GetDataImageSource(GameScenario.GetCardImage(card))" alt="@card" />
+                                }
+                                <span style="font-weight: 600; flex: 1">Frame @PatternFrame</span>
+                                <a class="v-btn sm" href="v2/early-quistis">Change…</a>
+                            }
+                            else
+                            {
+                                <span class="muted" style="flex: 1">Not chosen</span>
+                                <a class="v-btn sm primary" href="v2/early-quistis">Choose pattern…</a>
+                            }
+                        </div>
+                    </div>
+                    <div class="v-form-row">
+                        <span class="muted">Zell</span>
+                        <V2Segmented TValue="bool" Options="ZellOptions" Value="Ui.TrackZell" ValueChanged="v => Ui.TrackZell = v"
+                                     Text="@(v => v ? "Track battles · 1st try" : "2nd try")" Label="Zell strategy" />
+                    </div>
+                }
+                <div class="v-card-foot">
+                    <span class="muted" style="font-size: 13px">
+                        @if (!Ui.EarlyQuistis)
+                        {
+                            <span>Track Balamb battles for the Quistis pattern, then on to Zell</span>
+                        }
+                        else if (Ui.TrackZell)
+                        {
+                            <span>Track actions in battle to get Zell's card first try</span>
+                        }
+                        else
+                        {
+                            <span>Simple approach: Zell's card on the 2nd game</span>
+                        }
+                    </span>
+                    <button type="button" class="v-btn primary" style="min-width: 200px" disabled="@(!CanStart)" @onclick="Start">@StartText</button>
+                </div>
+            </section>
+
+            <section class="v-card">
+                <div class="v-card-h">Cards to select</div>
+                <div class="v-kv"><span style="font-weight: 600">Early Quistis</span><span>Geezard, Funguar, Gayla, Fastitocalon-F, Caterchipallar</span></div>
+                <div class="v-kv"><span style="font-weight: 600">Late Quistis</span><span>Funguar, Red Bat, Fastitocalon-F, Caterchipallar, Ifrit</span></div>
+                <div class="v-kv"><span style="font-weight: 600">Zell Card</span><span>Geezard, Red Bat, Gayla, Quistis, Ifrit</span></div>
+            </section>
+
+            <nav class="v-card v-tools v-phone-only" aria-label="Other tools">
+                <a href="v2/fish-fins">
+                    <span class="ico"><V2Icon Name="fish" /></span>
+                    <span style="flex: 1"><b style="display: block">Fish Fins</b><span class="muted" style="font-size: 14px">Quezacotl fish fin manipulation</span></span>
+                    <V2Icon Name="chevron" Size="20" />
+                </a>
+                <a href="v2/caraway">
+                    <span class="ico"><V2Icon Name="key" /></span>
+                    <span style="flex: 1"><b style="display: block">Caraway Code</b><span class="muted" style="font-size: 14px">Enter the mansion early with pole counting</span></span>
+                    <V2Icon Name="chevron" Size="20" />
+                </a>
+                <a href="v2/ultimecia">
+                    <span class="ico"><V2Icon Name="party" /></span>
+                    <span style="flex: 1"><b style="display: block">Ultimecia Party</b><span class="muted" style="font-size: 14px">Get Irvine in your starting party</span></span>
+                    <V2Icon Name="chevron" Size="20" />
+                </a>
+            </nav>
+
+            <div class="v-foot-links">
+                <a href="card-info">Card tracking reference</a>
+                <a href="">Classic UI</a>
+                <span class="muted">Beta · some tools untested</span>
+            </div>
+        </div>
+    </div>
+</div>

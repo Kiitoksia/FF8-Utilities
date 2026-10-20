@@ -1,0 +1,76 @@
+@page "/v2/zell-card"
+@inject NavigationManager Navigation
+@inject CardTrackerStateService CardState
+@inject V2UiService Ui
+@code {
+    private static readonly bool[] StartOptions = { true, false };
+    private static readonly int[] MomOptions = { 1, 2 };
+
+    private CardManipulationModel _model;
+    private bool _playerStarts = true;
+    private int _momOption = 1;
+
+    protected override void OnInitialized()
+    {
+        _model = CardState.ManipModel;
+        if (_model == null)
+        {
+            // Opened directly (e.g. page refresh) - nothing to show
+            Navigation.NavigateTo("v2", replace: true);
+        }
+    }
+
+    private string Subtitle
+    {
+        get
+        {
+            string subtitle = $"Quistis outcome {_model.State:X}";
+            if (_model.Count > 0) subtitle += $" · RNG index {_model.Count}";
+            return subtitle;
+        }
+    }
+
+    private void Back() => Navigation.NavigateTo(Ui.Tracker != null ? "v2/card-tracker" : "v2");
+}
+
+<PageTitle>Zell Card Patterns</PageTitle>
+
+@if (_model != null)
+{
+    <div class="v-page">
+        <V2Header Title="Zell Card Patterns" Subtitle="@Subtitle" OnBack="Back" />
+        <div class="v-strip"><span class="muted">Cards to use:</span> <b>Geezard, Red Bat, Gayla, Quistis, Ifrit</b></div>
+        <div class="v-scroll">
+            <div class="v-content">
+                <div class="v-subtabs">
+                    <V2Segmented TValue="bool" Options="StartOptions" Value="_playerStarts" ValueChanged="v => _playerStarts = v" Text="@(v => v ? "Player starts" : "Mom starts")" Label="Who starts" />
+                </div>
+                @if (_playerStarts)
+                {
+                    <div class="v-single-board">
+                        <V2Board Positions="CardPosition.ZellPlayerFirstPositions" />
+                    </div>
+                }
+                else
+                {
+                    <div class="v-subtabs v-phone-only">
+                        <V2Segmented TValue="int" Options="MomOptions" Value="_momOption" ValueChanged="v => _momOption = v" Text="@(v => $"Option {v}")" Label="Mom starts option" />
+                    </div>
+                    <div class="v-mom">
+                        <div class="@(_momOption == 1 ? null : "v-hide-phone")">
+                            <h3 class="v-desk-only">Option 1</h3>
+                            <V2Board Positions="CardPosition.ZellMomFirstPositionsWeak" />
+                        </div>
+                        <div class="@(_momOption == 2 ? null : "v-hide-phone")">
+                            <h3 class="v-desk-only">Option 2</h3>
+                            <V2Board Positions="CardPosition.ZellMomFirstPositionsStrong" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="v-dock">
+            <V2CardTimer Model="_model" />
+        </div>
+    </div>
+}

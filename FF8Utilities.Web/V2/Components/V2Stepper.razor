@@ -1,0 +1,35 @@
+@code {
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public int Min { get; set; } = int.MinValue;
+
+    [Parameter]
+    public int Max { get; set; } = int.MaxValue;
+
+    [Parameter]
+    public int Step { get; set; } = 1;
+
+    [Parameter]
+    public string Label { get; set; }
+
+    private bool CanDecrease => (long)Value - Step >= Min;
+    private bool CanIncrease => (long)Value + Step <= Max;
+
+    private async Task Change(int delta)
+    {
+        long next = (long)Value + delta;
+        if (next < Min || next > Max) return;
+        await ValueChanged.InvokeAsync((int)next);
+    }
+}
+
+<div class="v-step" role="group" aria-label="@Label">
+    <button type="button" aria-label="Decrease @Label" disabled="@(!CanDecrease)" @onclick="() => Change(-Step)">−</button>
+    <span aria-live="polite">@Value</span>
+    <button type="button" aria-label="Increase @Label" disabled="@(!CanIncrease)" @onclick="() => Change(Step)">+</button>
+</div>

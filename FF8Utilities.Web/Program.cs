@@ -15,6 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<SettingsService>();
 builder.Services.AddScoped<CardTrackerStateService>();
 builder.Services.AddScoped<WebService>();
+builder.Services.AddScoped<FF8Utilities.Web.V2.V2UiService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazorBootstrap();
 

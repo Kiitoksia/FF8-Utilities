@@ -1,0 +1,71 @@
+@page "/v2/quistis-card"
+@inject NavigationManager Navigation
+@inject CardTrackerStateService CardState
+@inject SettingsService Settings
+@inject V2UiService Ui
+@code {
+    private static readonly QuistisPatternsOrderBy[] OrderOptions = { QuistisPatternsOrderBy.Frame, QuistisPatternsOrderBy.Alphabetical };
+
+    private LateQuistisPattern _pattern;
+    private List<CardViewModel> _byFrame;
+    private List<CardViewModel> _alphabetical;
+
+    private bool IsAlphabetical => Settings.QuistisPatternsOrderBy == QuistisPatternsOrderBy.Alphabetical;
+
+    protected override void OnInitialized()
+    {
+        _pattern = CardState.SelectedLateQuistisPattern;
+        if (_pattern == null || CardState.ManipModel == null || Ui.Tracker == null)
+        {
+            // Opened directly (e.g. page refresh) - nothing to show
+            Navigation.NavigateTo("v2", replace: true);
+            return;
+        }
+
+        // Same view model instances in both orders so the selected option survives re-ordering
+        var strategies = _pattern.Strategies.Select(s => (Strategy: s, Model: s.ToCardViewModel())).ToList();
+        _byFrame = strategies.OrderBy(t => t.Strategy.Frame).Select(t => t.Model).ToList();
+        _alphabetical = strategies.OrderBy(t => t.Strategy.OpponentDeckOrderer).Select(t => t.Model).ToList();
+    }
+
+    private async Task SetOrder(QuistisPatternsOrderBy order)
+    {
+        if (Settings.QuistisPatternsOrderBy == order) return;
+        Settings.QuistisPatternsOrderBy = order;
+        await Settings.Save();
+    }
+
+    private void Cancel()
+    {
+        Ui.Tracker?.SubmitQuistisResult(null);
+        CardState.LateQuistisResult = null;
+        Navigation.NavigateTo("v2/card-tracker");
+    }
+
+    private void Submit(uint result)
+    {
+        CardState.LateQuistisResult = result;
+        Ui.Tracker?.SubmitQuistisResult(result);
+        Ui.TrackerTab = 1;
+        Ui.TrackerMessage = "Quistis pattern submitted. Continue tracking for Zell's card";
+        Navigation.NavigateTo("v2/card-tracker");
+    }
+}
+
+<PageTitle>Quistis Card Pattern</PageTitle>
+
+@if (_byFrame != null)
+{
+    <div class="v-page">
+        <V2Header Title="Quistis Card Pattern" Subtitle="@($"RNG index {_pattern.RNGIndex}")" OnBack="Cancel" />
+        <V2PatternPicker Strategies="IsAlphabetical ? _alphabetical : _byFrame" ShowFrameNumbers="!IsAlphabetical" OnSubmit="Submit">
+            <Toolbar>
+                <V2Segmented TValue="QuistisPatternsOrderBy" Options="OrderOptions" Value="Settings.QuistisPatternsOrderBy" ValueChanged="SetOrder"
+                             Text="@(o => o == QuistisPatternsOrderBy.Frame ? "Frame" : "A–Z")" Label="Order patterns" />
+            </Toolbar>
+        </V2PatternPicker>
+        <div class="v-dock">
+            <V2CardTimer Model="CardState.ManipModel" />
+        </div>
+    </div>
+}

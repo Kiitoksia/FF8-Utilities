@@ -1,0 +1,315 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@code {
+    [Parameter, EditorRequired]
+    public CardManipulationModel Model { get; set; }
+
+    // Approach lane: frames shown either side of NOW (60 frames = 1 second)
+    private const int PastFrames = 30;
+    private const int LookAheadFrames = 120;
+    private const int SpanFrames = PastFrames + LookAheadFrames;
+    private const int SoonFrames = 10;
+
+    private CardManipulationModel _subscribed;
+    private IJSObjectReference _js;
+    private ElementReference _input;
+
+    // Rare/not rare per absolute frame (RareTimerResult.Incr + index), so frames that have passed can still be drawn
+    private readonly Dictionary<int, bool> _history = new Dictionary<int, bool>();
+    private int _lastIncr = -1;
+
+    // Snapshot of the lane taken the moment the timer is stopped
+    private bool[] _frozenLane;
+    private string _frozenLabel;
+
+    private record LaneWindow(string Left, string Width, bool Passed);
+
+    protected override void OnParametersSet()
+    {
+        if (ReferenceEquals(_subscribed, Model)) return;
+        Unsubscribe();
+        _history.Clear();
+        _lastIncr = -1;
+        _frozenLane = null;
+        _subscribed = Model;
+        if (_subscribed == null) return;
+        _subscribed.PlayAudio += OnPlayAudio;
+        _subscribed.PauseAudio += OnPauseAudio;
+        _subscribed.Redraw += OnRedraw;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _js = await JS.InvokeAsync<IJSObjectReference>("import", "./js/v2.js");
+        }
+    }
+
+    private async void OnPlayAudio(BeepSchedule schedule, BeepSound sound)
+    {
+        string fileName = sound switch
+        {
+            BeepSound.Ping1 => "ping1.wav",
+            BeepSound.Ping2 => "ping2.wav",
+            BeepSound.Click => "click1.wav",
+            BeepSound.Clack => "clack.wav",
+            _ => "click1.wav"
+        };
+
+        try
+        {
+            if (_js != null)
+            {
+                await _js.InvokeVoidAsync("playBeep", $"{Navigation.BaseUri}res/{fileName}", schedule.Count, schedule.IntervalMs, schedule.InitialDelayMs);
+            }
+            schedule.OnCompleted?.Invoke();
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+
+    private async void OnPauseAudio()
+    {
+        try
+        {
+            if (_js != null) await _js.InvokeVoidAsync("pauseBeeps");
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+    }
+
+    private void OnRedraw() => InvokeAsync(StateHasChanged);
+
+    private void Submit()
+    {
+        bool wasRunning = Model.IsTimerRunning;
+        if (!wasRunning) _frozenLane = null;
+
+        // Snapshot before stopping so the lane shows exactly where STOP was pressed
+        bool[] lane = wasRunning ? BuildLane() : null;
+
+        Model.SubmitCommand.Execute(null);
+
+        if (wasRunning && !Model.IsTimerRunning)
+        {
+            _frozenLane = lane;
+            _frozenLabel = DescribeStop(lane);
+        }
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key != "Enter" && args.Key != "NumpadEnter") return;
+        if (_js == null) return;
+
+        // null = some other control has focus (Enter belongs to it)
+        string recovery = await _js.InvokeAsync<string>("timerEnterTarget");
+        if (recovery == null) return;
+        if (recovery.Length > 0) Model.RecoveryPattern = recovery;
+
+        Submit();
+        await _input.FocusAsync();
+        StateHasChanged();
+    }
+
+    // ---------- Lane ----------
+
+    private void Record(CardManipulation.Models.RareTimerResult result)
+    {
+        if (result?.RareTable == null) return;
+
+        // A new run (or recovery) restarts the frame count
+        if (result.Incr < _lastIncr) _history.Clear();
+        _lastIncr = result.Incr;
+
+        int count = Math.Min(result.RareTable.Count, LookAheadFrames + 1);
+        for (int i = 0; i < count; i++)
+        {
+            _history[result.Incr + i] = result.RareTable[i];
+        }
+
+        if (_history.Count > SpanFrames * 4)
+        {
+            int oldest = result.Incr - PastFrames - 1;
+            foreach (int key in _history.Keys.Where(k => k < oldest).ToList())
+            {
+                _history.Remove(key);
+            }
+        }
+    }
+
+    private bool[] BuildLane()
+    {
+        Record(Model.CurrentResult);
+        bool[] lane = new bool[SpanFrames];
+        int start = _lastIncr - PastFrames;
+        for (int x = 0; x < SpanFrames; x++)
+        {
+            lane[x] = _history.TryGetValue(start + x, out bool rare) && rare;
+        }
+        return lane;
+    }
+
+    private static string Pos(double frames) => (frames / SpanFrames * 100).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) + "%";
+
+    private static List<LaneWindow> Windows(bool[] lane)
+    {
+        List<LaneWindow> windows = new List<LaneWindow>();
+        int run = -1;
+        for (int x = 0; x <= lane.Length; x++)
+        {
+            bool on = x < lane.Length && lane[x];
+            if (on && run < 0) run = x;
+            if (!on && run >= 0)
+            {
+                windows.Add(new LaneWindow(Pos(run), Pos(x - run), x <= PastFrames));
+                run = -1;
+            }
+        }
+        return windows;
+    }
+
+    /// <summary>"11 in · 11 left", "6f before window" or "4f after window" for the frozen lane</summary>
+    private static string DescribeStop(bool[] lane)
+    {
+        if (lane == null) return null;
+        int now = PastFrames;
+        if (lane[now])
+        {
+            int before = 0;
+            while (now - before - 1 >= 0 && lane[now - before - 1]) before++;
+            int after = 0;
+            while (now + after + 1 < lane.Length && lane[now + after + 1]) after++;
+            return $"{before + 1} in · {after} left";
+        }
+
+        int early = Array.IndexOf(lane, true, now);
+        int late = Array.LastIndexOf(lane, true, now);
+        int earlyBy = early < 0 ? int.MaxValue : early - now;
+        int lateBy = late < 0 ? int.MaxValue : now - late;
+        if (earlyBy == int.MaxValue && lateBy == int.MaxValue) return "no window nearby";
+        return earlyBy <= lateBy ? $"{earlyBy}f before window" : $"{lateBy}f after window";
+    }
+
+    private (string Label, string Big, string Sub, string Css) LiveState()
+    {
+        List<bool> table = Model.CurrentResult?.RareTable;
+        if (table == null || table.Count == 0) return ("WAIT", "—", null, null);
+
+        if (table[0])
+        {
+            int before = 0;
+            while (_history.TryGetValue(_lastIncr - before - 1, out bool rare) && rare) before++;
+            int after = 0;
+            while (after + 1 < table.Count && table[after + 1]) after++;
+            int into = before + 1, length = before + 1 + after;
+            return ("PRESS", $"{length - into}f left", $"frame {into} of {length}", "now");
+        }
+
+        int next = table.IndexOf(true);
+        if (next < 0) return ("WAIT", "—", "no window ahead", null);
+        int end = next;
+        while (end < table.Count && table[end]) end++;
+        bool soon = next <= SoonFrames;
+        return (soon ? "GET READY" : "WAIT", (next / 60.0).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + "s", $"{end - next}-frame window", soon ? "soon" : null);
+    }
+
+    private string ButtonText => Model.IsTimerRunning ? "STOP" : string.IsNullOrWhiteSpace(Model.RecoveryPattern) ? "START" : "SEARCH";
+
+    private void Unsubscribe()
+    {
+        if (_subscribed == null) return;
+        _subscribed.PlayAudio -= OnPlayAudio;
+        _subscribed.PauseAudio -= OnPauseAudio;
+        _subscribed.Redraw -= OnRedraw;
+        _subscribed = null;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Unsubscribe();
+        if (_js != null)
+        {
+            try { await _js.DisposeAsync(); } catch (JSDisconnectedException) { }
+        }
+    }
+}
+
+@{
+    bool frozen = _frozenLane != null && !Model.IsTimerRunning;
+    bool[] lane = frozen ? _frozenLane : BuildLane();
+    (string Label, string Big, string Sub, string Css) state = frozen ? ("STOPPED", "—", "lane frozen", null) : LiveState();
+    string nowPos = Pos(PastFrames);
+}
+
+<KeyboardListener OnKeyDown="HandleKeyDown" />
+
+<section class="v-timer" aria-label="Card timer">
+    <div class="v-timer-status">
+        <span class="v-label">Card timer</span>
+        <span>@(Model.IsTimerRunning ? "Running · press STOP on the same frame as the in-game confirm" : Model.Explanation)</span>
+    </div>
+
+    <div class="v-timer-top">
+        <div class="v-timer-state @state.Css" aria-live="polite">
+            <span class="l">@state.Label</span>
+            <span class="b">@state.Big</span>
+            @if (!string.IsNullOrEmpty(state.Sub))
+            {
+                <span class="s">@state.Sub</span>
+            }
+        </div>
+        <div class="v-lane-wrap">
+            <div class="v-lane" role="img" aria-label="Upcoming rare card windows">
+                @for (int x = 0; x <= SpanFrames; x += 10)
+                {
+                    <div class="tick" style="left: @Pos(x)"></div>
+                }
+                @foreach (LaneWindow window in Windows(lane))
+                {
+                    <div class="win @(window.Passed ? "passed" : null)" style="left: @window.Left; width: @window.Width"></div>
+                }
+                <div class="past" style="width: @nowPos"></div>
+                @if (frozen)
+                {
+                    <div class="pin" style="left: @nowPos"></div>
+                    <span class="pinlbl" style="left: @nowPos">@_frozenLabel</span>
+                }
+                else
+                {
+                    <div class="now" style="left: @nowPos"></div>
+                }
+            </div>
+            <div class="v-lane-scale">
+                <span style="left: 0">−0.5s</span>
+                <span style="left: @nowPos; transform: translateX(-50%)" class="n">NOW</span>
+                <span style="left: @Pos(PastFrames + 60); transform: translateX(-50%)">+1.0s</span>
+                <span style="right: 0">+2.0s</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="v-timer-bottom">
+        <input @ref="_input"
+               class="v-input v-timer-input"
+               value="@Model.RecoveryPattern"
+               @oninput="e => Model.RecoveryPattern = e.Value?.ToString()"
+               placeholder="Enter to start/stop, or type cards for recovery / search"
+               aria-label="Recovery or first try search"
+               autocomplete="off" />
+        @* Idle: the button takes the instant mash warning colour. Running: a distinct light STOP button *@
+        <button type="button" class="v-timer-go @(Model.IsTimerRunning ? "running" : V2Helpers.MashClass(Model.InstantMashBackgroundColor))" @onclick="Submit">
+            <b>@ButtonText</b>
+            @if (Model.ShowInstantMashText)
+            {
+                <span class="mash">Mash @Model.FirstFrameAvailableFramesDisplay@(Model.ShowInstantMashFramesAvailableText ? $" · {Model.InstantMashFramesAvailable}f" : "")</span>
+            }
+        </button>
+    </div>
+
+    <div class="v-timer-found">@if (!string.IsNullOrWhiteSpace(Model.ErrorText)) {<span class="err">@Model.ErrorText</span> }@Model.FoundCards</div>
+</section>

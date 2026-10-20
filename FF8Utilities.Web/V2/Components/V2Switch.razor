@@ -1,0 +1,15 @@
+@code {
+    [Parameter]
+    public bool Value { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+}
+
+<label class="v-switch">
+    <span>@Label</span>
+    <input type="checkbox" role="switch" checked="@Value" @onchange="e => ValueChanged.InvokeAsync(e.Value is bool b && b)" />
+</label>

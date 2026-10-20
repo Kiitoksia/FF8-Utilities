@@ -1,0 +1,87 @@
+@code {
+    private const int MaxResults = 100;
+
+    private string _filter;
+    private List<FishPatternModel> _results = new List<FishPatternModel>();
+
+    private void FilterChanged(string filter)
+    {
+        _filter = filter?.Trim().Replace(" ", string.Empty);
+        _results = string.IsNullOrWhiteSpace(_filter)
+            ? new List<FishPatternModel>()
+            : WebHelper.AllFishPatterns.Where(t => t.SearchablePattern.StartsWith(_filter, StringComparison.CurrentCultureIgnoreCase)).ToList();
+    }
+
+    private static bool HasNotes(FishPatternModel p) =>
+        p.GeneralCommentsVisible || p.Phase1CommentsVisible || p.Phase2CommentsVisible || p.Phase3CommentsVisible;
+}
+
+<div class="v-search">
+    <V2Icon Name="search" Size="20" />
+    <input class="v-input" placeholder="Enter scenario, e.g. qq26 sq27" aria-label="Fish fin scenario filter" autocomplete="off"
+           @oninput="e => FilterChanged(e.Value?.ToString())" />
+</div>
+<div class="muted" style="font-size: 13px">
+    @if (string.IsNullOrWhiteSpace(_filter))
+    {
+        <span>Type the start of the pattern to filter</span>
+    }
+    else if (_results.Count > MaxResults)
+    {
+        <span>Showing first @MaxResults of @_results.Count matching patterns</span>
+    }
+    else
+    {
+        <span>@_results.Count matching pattern@(_results.Count == 1 ? "" : "s")</span>
+    }
+</div>
+@if (_results.Count > 0)
+{
+    <div class="v-fishtable" role="table" aria-label="Fish fin patterns">
+        <div class="v-fish-th" role="row">
+            <span role="columnheader">Index</span>
+            <span role="columnheader">Pattern</span>
+            <span role="columnheader" class="c">ATB refreshes</span>
+            <span role="columnheader" class="c">Drops</span>
+            <span role="columnheader">Notes</span>
+        </div>
+        @foreach (FishPatternModel pattern in _results.Take(MaxResults))
+        {
+            <div class="v-fish-tr" role="row">
+                <span role="cell" class="idx mono">#@pattern.Index</span>
+                <span role="cell" class="pat mono">@pattern.Pattern</span>
+                <span role="cell" class="stat atb"><small>ATB refreshes</small><b>@pattern.ATBRefreshes</b></span>
+                <span role="cell" class="stat drops"><small>Drops</small><b>@pattern.DropCount</b></span>
+                <div role="cell" class="notes">
+                    @if (pattern.GeneralCommentsVisible)
+                    {
+                        <span class="v-fnote general">@pattern.GeneralComment</span>
+                    }
+                    @if (pattern.Phase1CommentsVisible)
+                    {
+                        <span class="v-fnote p1">@pattern.Phase1Comment</span>
+                    }
+                    @if (pattern.Phase2CommentsVisible)
+                    {
+                        <span class="v-fnote p2">@pattern.Phase2Comment</span>
+                    }
+                    @if (pattern.Phase3CommentsVisible)
+                    {
+                        <span class="v-fnote p3">@pattern.Phase3Comment</span>
+                    }
+                    @if (!HasNotes(pattern))
+                    {
+                        <span class="muted v-desk-only">—</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="muted" style="font-size: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+        Notes:
+        <span class="v-fnote general">General</span>
+        <span class="v-fnote p1">Phase 1</span>
+        <span class="v-fnote p2">Phase 2</span>
+        <span class="v-fnote p3">Phase 3</span>
+    </div>
+}

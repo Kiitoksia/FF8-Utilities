@@ -1,0 +1,257 @@
+@page "/v2/card-tracker"
+@implements IDisposable
+@inject V2UiService Ui
+@inject CardTrackerStateService CardState
+@code {
+    private static readonly string[] Regions = { "Balamb", "Dollet", "Anacondaur", "Elvoret + X-ATM" };
+
+    private CardTrackerModel _model;
+    private int _tab;
+    private bool _fishOpen;
+    private string _toast;
+    private bool _toastError;
+    private int _toastId;
+    private bool _disposed;
+
+    protected override void OnInitialized()
+    {
+        _model = Ui.Tracker ?? Ui.StartTracker(CardState.SelectedEarlyQuistisPattern);
+        _tab = Ui.TrackerTab;
+
+        if (Ui.TrackerMessage != null)
+        {
+            ShowToast(Ui.TrackerMessage, false);
+            Ui.TrackerMessage = null;
+        }
+    }
+
+    private bool IsEarly => _model.EarlyQuistisPattern != null;
+
+    private bool QuistisDone => IsEarly || _model.QuistisCardObtained;
+
+    /// <summary>The Quistis pattern bar is shown on the Balamb tab until a Quistis pattern is known</summary>
+    private bool ShowQuistisBar => _tab == 0 && !QuistisDone;
+
+    private string Subtitle
+    {
+        get
+        {
+            if (IsEarly) return $"Early Quistis · Frame {Array.IndexOf(EarlyQuistisPattern.OptionsExcludeLate, _model.EarlyQuistisPattern) + 1}";
+            return _model.QuistisCardObtained ? "Late Quistis · pattern submitted" : "Late Quistis";
+        }
+    }
+
+    private void SetTab(int index)
+    {
+        _tab = index;
+        Ui.TrackerTab = index;
+    }
+
+    private void Changed() { }
+
+    /// <summary>Throws away all tracked encounters and starts again with the same Quistis choice</summary>
+    private void NewRun()
+    {
+        _model = Ui.StartTracker(_model.EarlyQuistisPattern);
+        _tab = 0;
+        ShowToast("New run started, all counts cleared", false);
+    }
+
+    private void LaunchQuistis() => _model.LaunchQuistisPatternsCommand.Execute(null);
+
+    private void LaunchZell()
+    {
+        if (_model.EarlyQuistisPattern == null && !_model.QuistisCardObtained)
+        {
+            ShowToast("No Quistis pattern selected, cannot launch Zell tracking", true);
+            return;
+        }
+        _model.LaunchZellCommand.Execute(null);
+    }
+
+    private void SetIfritType(IfritEncounterType type) => _model.IfritsCavernEncounterType = type;
+
+    private void SetCamera(FishFinsEncounter encounter, ChangeEventArgs e)
+    {
+        encounter.Camera = FanfareCamera.TwoPersonCameras.FirstOrDefault(t => t.Description == e.Value?.ToString());
+    }
+
+    private void RemoveFish(FishFinsEncounter encounter) => _model.RemoveFishFinEncounterCommand.Execute(encounter);
+
+    private void ShowToast(string message, bool error)
+    {
+        _toast = message;
+        _toastError = error;
+        _ = HideToastLater(++_toastId);
+    }
+
+    private async Task HideToastLater(int id)
+    {
+        await Task.Delay(4000);
+        if (_disposed || id != _toastId) return;
+        _toast = null;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => _disposed = true;
+}
+
+<PageTitle>Card Tracker</PageTitle>
+
+<div class="v-page">
+    <V2Header Title="Card Tracker" Subtitle="@Subtitle">
+        <button type="button" class="v-btn sm" @onclick="NewRun">New run</button>
+        <a class="v-btn sm v-desk-only" href="card-info">Reference</a>
+    </V2Header>
+
+    <nav class="v-regions" aria-label="Regions">
+        @for (int i = 0; i < Regions.Length; i++)
+        {
+            int index = i;
+            bool done = index == 0 && QuistisDone && _tab != 0;
+            <button type="button" class="@(index == _tab ? "on" : null) @(done ? "done" : null)" aria-current="@(index == _tab ? "page" : null)" @onclick="() => SetTab(index)">
+                <span class="n">@(done ? "✓" : (index + 1).ToString())</span>@Regions[index]
+            </button>
+        }
+    </nav>
+
+    <div class="v-scroll">
+        <div class="v-content">
+            @switch (_tab)
+            {
+                case 0:
+                    <div class="v-grid-2">
+                        <div class="v-stack">
+                            <V2Encounter Model="_model.TwoBatsEncounter" Changed="Changed" />
+                            <V2Encounter Model="_model.IfritEncounter" Changed="Changed" />
+                            @if (_model.IfritsCavernEncounterType == IfritEncounterType.Buel)
+                            {
+                                <V2Encounter Model="_model.BuelEncounter" Changed="Changed" Title="After Ifrit">
+                                    <HeaderContent>
+                                        <V2Segmented TValue="IfritEncounterType" Options="Enum.GetValues<IfritEncounterType>()" Value="_model.IfritsCavernEncounterType" ValueChanged="SetIfritType" Text="t => t.GetDescription()" Label="Post Ifrit encounter" />
+                                    </HeaderContent>
+                                </V2Encounter>
+                            }
+                            else
+                            {
+                                <V2Encounter Model="_model.SecondBatsEncounter" Changed="Changed" Title="After Ifrit">
+                                    <HeaderContent>
+                                        <V2Segmented TValue="IfritEncounterType" Options="Enum.GetValues<IfritEncounterType>()" Value="_model.IfritsCavernEncounterType" ValueChanged="SetIfritType" Text="t => t.GetDescription()" Label="Post Ifrit encounter" />
+                                    </HeaderContent>
+                                </V2Encounter>
+                            }
+                        </div>
+                        <section class="v-card">
+                            <div class="v-card-h">World Map<span class="v-pill">@_model.WorldMapEncounters.Sum(t => t.Quantity) battles</span></div>
+                            @foreach (WorldMapEncounter encounter in _model.WorldMapEncounters)
+                            {
+                                <div class="v-row">
+                                    <span>@encounter.FormationDisplay</span>
+                                    <V2Stepper Value="encounter.Quantity" Min="0" ValueChanged="v => encounter.Quantity = v" Label="@encounter.FormationDisplay" />
+                                </div>
+                            }
+                        </section>
+                    </div>
+
+                    <section class="v-card">
+                        <div class="v-card-h">Fish Fins<button type="button" class="v-btn sm" @onclick="() => _fishOpen = true">Open fin manip</button></div>
+                        <div class="v-fish-head"><span></span><span>CAMERA</span><span>SQUALL PHYSICALS</span><span>LIMITS</span></div>
+                        @foreach (FishFinsEncounter encounter in _model.FishFinEncounters.ToList())
+                        {
+                            <div class="v-fish-row @(encounter.SingleFishKilled ? "single" : null)">
+                                <button type="button" class="x" aria-label="Remove encounter" @onclick="() => RemoveFish(encounter)"><V2Icon Name="close" Size="16" /></button>
+                                <select class="v-input" aria-label="Camera" value="@encounter.Camera?.Description" @onchange="e => SetCamera(encounter, e)">
+                                    @foreach (FanfareCamera camera in FanfareCamera.TwoPersonCameras)
+                                    {
+                                        <option value="@camera.Description">@camera.Description</option>
+                                    }
+                                </select>
+                                <div class="lab phys"><span>Squall physicals</span><V2Stepper Value="encounter.SquallPhysicals" Min="0" ValueChanged="v => encounter.SquallPhysicals = v" Label="Squall physicals" /></div>
+                                <div class="lab lim"><span>Limits</span><V2Stepper Value="encounter.Limits" Min="0" ValueChanged="v => encounter.Limits = v" Label="Limits" /></div>
+                            </div>
+                        }
+                        <div class="v-card-foot" style="flex-wrap: nowrap">
+                            <button type="button" class="v-btn sm" style="flex: 1" @onclick="() => _model.AddNewEncounterCommand.Execute(null)">+ Regular encounter</button>
+                            <button type="button" class="v-btn sm good" style="flex: 1" @onclick="() => _model.AddNewHalfEncounterCommand.Execute(null)">+ Single fish</button>
+                        </div>
+                    </section>
+                    break;
+
+                case 1:
+                    <div class="v-grid-2">
+                        <V2Encounter Model="_model.FirstDolletEncounter" Changed="Changed" />
+                        <V2Encounter Model="_model.SecondDolletEncounter" Changed="Changed" />
+                        <V2Encounter Model="_model.ThirdDolletEncounter" Changed="Changed" />
+                        <V2Encounter Model="_model.FourthDolletEncounter" Changed="Changed" />
+                    </div>
+                    break;
+
+                case 2:
+                    <section class="v-card">
+                        <V2Switch Label="2nd bridge encounter" Value="_model.DidGetSecondBridgeEncounter" ValueChanged="v => _model.DidGetSecondBridgeEncounter = v" />
+                    </section>
+                    <div class="v-grid-2">
+                        <V2Encounter Model="_model.BridgeEncounter" Changed="Changed" />
+                        @if (_model.DidGetSecondBridgeEncounter)
+                        {
+                            <V2Encounter Model="_model.SecondBridgeEncounter" Changed="Changed" />
+                        }
+                        <V2Encounter Model="_model.AnacondaurEncounter" Changed="Changed" />
+                        @if (!_model.DidGetSecondBridgeEncounter)
+                        {
+                            <V2Encounter Model="_model.PostAnacondaurEncounter" Changed="Changed" />
+                        }
+                    </div>
+                    break;
+
+                case 3:
+                    <div class="v-grid-2">
+                        <V2Encounter Model="_model.ElvoretEncounter" Changed="Changed" />
+                        <V2Encounter Model="_model.SpiderTankEncounter" Changed="Changed" />
+                    </div>
+                    <section class="v-card">
+                        <V2Switch Label="Include Red Soldier encounter" Value="_model.DidGetRedSoldierEncounter" ValueChanged="v => _model.DidGetRedSoldierEncounter = v" />
+                    </section>
+                    @if (_model.DidGetRedSoldierEncounter)
+                    {
+                        <div class="v-grid-2">
+                            <V2Encounter Model="_model.RedSoldierEncounter" Changed="Changed" />
+                        </div>
+                    }
+                    break;
+            }
+        </div>
+    </div>
+
+    <div class="v-dock">
+        <div class="v-resbar">
+            @if (ShowQuistisBar)
+            {
+                int quistisIndex = _model.LateQuistisOutput;
+                <div class="v-offset">Offset <V2Stepper Value="_model.QuistisCustomAddition ?? 0" ValueChanged="v => _model.QuistisCustomAddition = v" Label="Quistis offset" /></div>
+                <div class="v-launch">
+                    <button type="button" class="v-btn primary" @onclick="LaunchQuistis">Get Quistis Patterns ·&nbsp;<span class="mono">@quistisIndex</span></button>
+                    <div class="v-mash @V2Helpers.MashClass(_model.QuistisMashTextBackgroundColor)"><small>Instant Mash</small><span class="mono">@_model.QuistisPatternMashDisplay</span></div>
+                </div>
+            }
+            else
+            {
+                int zellIndex = _model.Output;
+                <div class="v-offset">Offset <V2Stepper Value="_model.ZellCustomAddition ?? 0" ValueChanged="v => _model.ZellCustomAddition = v" Label="Zell offset" /></div>
+                <div class="v-launch">
+                    <button type="button" class="v-btn primary" @onclick="LaunchZell">Launch Zell ·&nbsp;<span class="mono">@zellIndex</span></button>
+                    <div class="v-mash @V2Helpers.MashClass(_model.ZellMashTextBackgroundColor)"><small>Instant Mash</small><span class="mono">@_model.ZellPatternMashDisplay</span></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<V2Dialog Open="_fishOpen" OnClose="() => _fishOpen = false" Title="Fish Fin Manipulation" Wide="true">
+    <V2FishFinsPanel />
+</V2Dialog>
+
+@if (_toast != null)
+{
+    <div class="v-toast @(_toastError ? "error" : null)" role="status">@_toast</div>
+}

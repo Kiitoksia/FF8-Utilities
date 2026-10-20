@@ -1,0 +1,71 @@
+@code {
+    [Parameter, EditorRequired]
+    public BaseEncounterModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback Changed { get; set; }
+
+    /// <summary>Overrides the encounter's description in the header</summary>
+    [Parameter]
+    public string Title { get; set; }
+
+    /// <summary>Extra header content (e.g. a type selector)</summary>
+    [Parameter]
+    public RenderFragment HeaderContent { get; set; }
+
+    private async Task SetCount(EncounterAbilityModel ability, int value)
+    {
+        ability.Count = Math.Max(0, value);
+        await Changed.InvokeAsync();
+    }
+
+    private async Task IncrementAll()
+    {
+        foreach (EncounterAbilityModel ability in Model.Abilities)
+        {
+            ability.Count++;
+        }
+        await Changed.InvokeAsync();
+    }
+
+    private async Task SetToggled(bool value)
+    {
+        Model.IsToggled = value;
+        await Changed.InvokeAsync();
+    }
+
+    private async Task SetCamera(FanfareCamera camera)
+    {
+        Model.Fanfare = camera;
+        await Changed.InvokeAsync();
+    }
+}
+
+<section class="v-card">
+    <div class="v-card-h">
+        <span>@(Title ?? Model.Description)</span>
+        @HeaderContent
+        @if (Model.ShowPlusOneToAllButton)
+        {
+            <button type="button" class="v-btn sm" @onclick="IncrementAll">+1 to all</button>
+        }
+    </div>
+    @foreach (EncounterAbilityModel ability in Model.Abilities)
+    {
+        <div class="v-row">
+            <span>@ability.Description</span>
+            <V2Stepper Value="ability.Count" Min="0" ValueChanged="value => SetCount(ability, value)" Label="@ability.Description" />
+        </div>
+    }
+    @if (Model.ShowToggleOption)
+    {
+        <V2Switch Label="@Model.ToggleOptionDescription" Value="Model.IsToggled" ValueChanged="SetToggled" />
+    }
+    @if (Model.FanfareVisible)
+    {
+        <div class="v-row v-col">
+            <span class="v-label">Camera</span>
+            <V2Segmented TValue="FanfareCamera" Options="Model.FanfareList" Value="Model.Fanfare" ValueChanged="SetCamera" Text="c => c.Description" Label="Camera" />
+        </div>
+    }
+</section>

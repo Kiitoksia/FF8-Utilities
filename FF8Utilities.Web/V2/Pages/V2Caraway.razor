@@ -1,0 +1,191 @@
+@page "/v2/caraway"
+@inject SettingsService Settings
+@code {
+    private const int MaxPoles = 15;
+
+    private readonly List<PoleModel> _poles = PoleModel.Poles.ToList();
+    private CarawayCodeOutput[] _results;
+
+    private bool AnyPoles => _poles.Any(t => t.Count != null);
+
+    /// <summary>"(4,6,3) · Calculate" like the MAUI app - stops at the first empty series</summary>
+    private string SubmitText
+    {
+        get
+        {
+            List<string> counts = new List<string>();
+            foreach (PoleModel pole in _poles)
+            {
+                if (pole.Count == null) break;
+                counts.Add(pole.Count.ToString());
+            }
+            return counts.Count == 0 ? "Select poles before calculating" : $"({string.Join(",", counts)}) · Calculate";
+        }
+    }
+
+    private void Change(PoleModel pole, int delta)
+    {
+        if (pole.Count == null)
+        {
+            if (delta > 0) pole.Count = 0;
+            return;
+        }
+
+        int next = pole.Count.Value + delta;
+        if (next < 0) pole.Count = null; // decrementing past 0 clears the series
+        else if (next <= MaxPoles) pole.Count = next;
+    }
+
+    private void Submit()
+    {
+        if (!AnyPoles) return;
+        _results = CarawayCode.CarawayCode.CalculateCode(PoleModel.ConvertTo(_poles), Settings.CarawayHideUnlikelyResults);
+        if (Settings.CarawayHideUnlikelyResults && _results.Length == 0)
+        {
+            // Nothing likely found, show everything instead
+            _results = CarawayCode.CarawayCode.CalculateCode(PoleModel.ConvertTo(_poles), false);
+        }
+    }
+
+    private void Reset()
+    {
+        foreach (PoleModel pole in _poles)
+        {
+            pole.Count = null;
+        }
+        _results = null;
+    }
+
+    private async Task ToggleHideUnlikely()
+    {
+        Settings.CarawayHideUnlikelyResults = !Settings.CarawayHideUnlikelyResults;
+        await Settings.Save();
+        if (_results != null) Submit();
+    }
+
+    private async Task ToggleNpcMovement()
+    {
+        Settings.CarawayShowNPCMovement = !Settings.CarawayShowNPCMovement;
+        await Settings.Save();
+    }
+
+    private static string FormatInput(string input)
+    {
+        return string.IsNullOrEmpty(input) ? string.Empty : input.Replace("-", "–");
+    }
+}
+
+<PageTitle>Caraway Code</PageTitle>
+
+<div class="v-page">
+    <V2Header Main="true" Title="Caraway Code">
+        <button type="button" class="v-ib" aria-label="Reset poles" @onclick="Reset"><V2Icon Name="reset" Size="20" /></button>
+    </V2Header>
+    <div class="v-caraway">
+        <section class="v-car-input" aria-label="Input">
+            @* Phone: scroll wheels like the MAUI app *@
+            <div class="v-card v-phone-only">
+                <div class="v-card-h" style="justify-content: center">Enter pole series</div>
+                <div class="v-wheels">
+                    @for (int i = 0; i < _poles.Count; i++)
+                    {
+                        PoleModel pole = _poles[i];
+                        <div class="col">
+                            <span class="h">@(i + 1)</span>
+                            <V2Wheel Value="pole.Count" ValueChanged="v => pole.Count = v" Max="MaxPoles" Label="@pole.Description" />
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* Desktop: list of series like the WPF app *@
+            <div class="v-card v-desk-only">
+                <div class="v-card-h">Input</div>
+                <p class="muted" style="font-size: 13px; padding: 8px 14px; text-align: center">Only input complete sequences.<br />Subscripts are listed in most likely order.</p>
+                @foreach (PoleModel pole in _poles)
+                {
+                    <div class="v-row">
+                        <span>@pole.Description</span>
+                        <div style="display: flex; align-items: center; gap: 4px">
+                            <div class="v-step" role="group" aria-label="@pole.Description">
+                                <button type="button" aria-label="Decrease @pole.Description" disabled="@(pole.Count == null)" @onclick="() => Change(pole, -1)">−</button>
+                                <span aria-live="polite">@(pole.Count?.ToString() ?? "–")</span>
+                                <button type="button" aria-label="Increase @pole.Description" disabled="@(pole.Count >= MaxPoles)" @onclick="() => Change(pole, 1)">+</button>
+                            </div>
+                            <button type="button" class="v-ib" style="width: 36px; height: 36px" aria-label="Clear @pole.Description" @onclick="() => pole.Count = null"><V2Icon Name="close" Size="16" /></button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button type="button" class="v-btn primary block" disabled="@(!AnyPoles)" @onclick="Submit">@SubmitText</button>
+            <button type="button" class="v-btn block v-desk-only" @onclick="Reset">Reset</button>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <button type="button" class="v-chip @(Settings.CarawayHideUnlikelyResults ? "on" : null)" aria-pressed="@(Settings.CarawayHideUnlikelyResults ? "true" : "false")" @onclick="ToggleHideUnlikely">
+                    @if (Settings.CarawayHideUnlikelyResults) { <V2Icon Name="check" Size="14" Stroke="2.4" /> }Hide unlikely
+                </button>
+                <button type="button" class="v-chip @(Settings.CarawayShowNPCMovement ? "on" : null)" aria-pressed="@(Settings.CarawayShowNPCMovement ? "true" : "false")" @onclick="ToggleNpcMovement">
+                    @if (Settings.CarawayShowNPCMovement) { <V2Icon Name="check" Size="14" Stroke="2.4" /> }NPC movement
+                </button>
+            </div>
+            <div class="muted" style="font-size: 12px; display: flex; flex-direction: column; gap: 6px">
+                <span><span class="v-badge">Regular</span></span>
+                <span><span class="v-badge csr">CSR only</span> (or you recently hard reset)</span>
+            </div>
+        </section>
+
+        <section class="v-car-output" aria-label="Output">
+            @if (_results == null)
+            {
+                <div class="v-card muted" style="padding: 14px; text-align: center">Enter the poles and calculate to see codes.</div>
+            }
+            else if (_results.Length == 0)
+            {
+                <div class="v-card" style="padding: 14px">No results found for input poles.</div>
+            }
+            else
+            {
+                @foreach (CarawayCodeOutput result in _results)
+                {
+                    @if (!result.IsValid)
+                    {
+                        <div class="v-card" style="padding: 14px; color: var(--bad)">@result.ErrorText</div>
+                        continue;
+                    }
+                    <section class="v-card">
+                        <div class="v-card-h @(result.LikelyCSR ? "v-csr" : null)">
+                            <span>Subscript <span class="mono">@result.Subscript</span></span>
+                            <span class="v-badge @(result.LikelyCSR ? "csr" : null)">@(result.LikelyCSR ? "CSR only" : "Regular")</span>
+                        </div>
+                        <div style="padding: 4px 14px 12px">
+                            @foreach ((string heading, CarawayOption option) in new[] { ("Last series complete", result.CompleteOption), ("Last series incomplete", result.IncompleteOption) })
+                            {
+                                <div class="v-label" style="padding-top: 10px">@heading</div>
+                                <div class="v-code">
+                                    <span class="muted" style="font-size: 13px">Code</span>
+                                    <span class="c">@option.Code</span>
+                                    <span class="in">@FormatInput(option.Input)</span>
+                                </div>
+                                <div class="v-code bk">
+                                    <span class="muted" style="font-size: 13px">Backup</span>
+                                    <span class="c">@option.BackupCode</span>
+                                    <span class="in muted">@FormatInput(option.BackupInput)</span>
+                                </div>
+                                @if (Settings.CarawayShowNPCMovement)
+                                {
+                                    <div class="v-npc">
+                                        <div><small>Station</small><b>@option.Station</b></div>
+                                        <div><small>Escalator</small><b>@option.Escalator</b></div>
+                                        <div><small>Street</small><b>@option.Street</b></div>
+                                        <div><small>Bus</small><b>@option.Bus</b></div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </section>
+                }
+            }
+        </section>
+    </div>
+</div>

@@ -1,0 +1,210 @@
+@page "/v2/ultimecia"
+@implements IAsyncDisposable
+@inject SettingsService Settings
+@inject IJSRuntime JS
+@code {
+    private const int InputCount = 12;
+
+    private readonly List<Direction> _directions = new List<Direction>();
+    private List<Result> _results;
+    private bool _showResults;
+    private bool _calculating;
+    private bool _copied;
+    private IJSObjectReference _js;
+
+    private record Party(string[] Members, int Offset, bool IsFastest);
+
+    private record Result(int Index, string Movements, List<Party> Parties);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _js = await JS.InvokeAsync<IJSObjectReference>("import", "./js/v2.js");
+        }
+    }
+
+    private string Glyphs => string.Join(" ", _directions.Select(V2Helpers.Glyph));
+
+    private async Task Add(Direction direction)
+    {
+        bool wasComplete = _directions.Count >= InputCount;
+        if (wasComplete) _directions.RemoveAt(0);
+        _directions.Add(direction);
+        _copied = false;
+
+        if (_directions.Count < InputCount) return;
+
+        if (!wasComplete && _js != null)
+        {
+            await _js.InvokeVoidAsync("vibrate", new[] { 80, 60, 80 });
+        }
+        _showResults = true;
+        await Calculate();
+    }
+
+    private void RemoveLast()
+    {
+        if (_directions.Count > 0) _directions.RemoveAt(_directions.Count - 1);
+        _results = null;
+        _copied = false;
+    }
+
+    private void Clear()
+    {
+        _directions.Clear();
+        _results = null;
+        _showResults = false;
+        _copied = false;
+    }
+
+    private async Task Calculate()
+    {
+        _calculating = true;
+        StateHasChanged();
+        try
+        {
+            Direction[] directions = _directions.ToArray();
+            PartyFormation[] formations = await Task.Run(() => Manipulation.GetUltimeciaFormations(directions, Settings.Platform, Settings.GameLanguage));
+            _results = formations.Select(ToResult).ToList();
+        }
+        finally
+        {
+            _calculating = false;
+        }
+    }
+
+    private Result ToResult(PartyFormation formation)
+    {
+        List<Party> parties = new List<Party>();
+        foreach (TargetOffset offset in formation.TargetOffsetTbl.OrderBy(t => t.Offset))
+        {
+            if (!Settings.UltimeciaIncludeRinoaParties && offset.Party.Any(p => p == PartyMember.Rinoa)) continue;
+            parties.Add(new Party(offset.Party.Select(p => p.ToString()).ToArray(), offset.Offset, parties.Count == 0));
+        }
+        return new Result(formation.Index, string.Join(" ", formation.Movements.Select(V2Helpers.Glyph)), parties);
+    }
+
+    private async Task ShowResults()
+    {
+        _showResults = true;
+        if (_results == null && _directions.Count == InputCount) await Calculate();
+    }
+
+    private async Task Copy()
+    {
+        if (_js == null || _directions.Count == 0) return;
+        _copied = await _js.InvokeAsync<bool>("copyText", string.Concat(_directions.Select(V2Helpers.Glyph)));
+    }
+
+    private async Task OnKeyPressed(KeyboardEventArgs args)
+    {
+        switch (args.Key?.ToLowerInvariant())
+        {
+            case "arrowleft": case "a": case "4": await Add(Direction.Left); break;
+            case "arrowright": case "d": case "6": await Add(Direction.Right); break;
+            case "arrowup": case "w": case "8": await Add(Direction.Up); break;
+            case "arrowdown": case "s": case "2": await Add(Direction.Down); break;
+            case "backspace": case "delete": RemoveLast(); break;
+            default:
+                // Any other printable character is a wildcard
+                if (args.Key?.Length == 1 && !string.IsNullOrWhiteSpace(args.Key) && !args.CtrlKey && !args.AltKey && !args.MetaKey)
+                {
+                    await Add(Direction.Unknown);
+                }
+                break;
+        }
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_js != null)
+        {
+            try { await _js.DisposeAsync(); } catch (JSDisconnectedException) { }
+        }
+    }
+}
+
+<PageTitle>Ultimecia Party</PageTitle>
+<KeyboardListener OnKeyDown="OnKeyPressed" />
+
+<div class="v-page">
+    <V2Header Main="true" Title="Ultimecia">
+        <button type="button" class="v-ib" aria-label="Clear inputs" @onclick="Clear"><V2Icon Name="reset" Size="20" /></button>
+    </V2Header>
+
+    <button type="button" class="v-ulti-strip" aria-label="Inputs, tap to copy" @onclick="Copy">
+        <span class="g">@(_directions.Count == 0 ? " " : Glyphs)</span>
+        <span class="n">@_directions.Count / @InputCount</span>
+        @if (_copied)
+        {
+            <small>Copied</small>
+        }
+        else if (_showResults)
+        {
+            <small>(Tap to copy)</small>
+        }
+        else if (_directions.Count == 0)
+        {
+            <small class="v-desk-only">Tap directions, or use arrow keys / WASD / 8462 · Backspace to undo</small>
+        }
+    </button>
+
+    @if (!_showResults)
+    {
+        <div class="v-pad">
+            <span></span>
+            <button type="button" aria-label="Up" @onclick="() => Add(Direction.Up)"><V2Icon Name="up" Size="64" Stroke="2.4" /></button>
+            <span></span>
+            <button type="button" aria-label="Left" @onclick="() => Add(Direction.Left)"><V2Icon Name="left" Size="64" Stroke="2.4" /></button>
+            <button type="button" aria-label="Unknown direction" @onclick="() => Add(Direction.Unknown)"><span class="q">?</span></button>
+            <button type="button" aria-label="Right" @onclick="() => Add(Direction.Right)"><V2Icon Name="right" Size="64" Stroke="2.4" /></button>
+            <button type="button" aria-label="Show results" @onclick="ShowResults"><V2Icon Name="list" Size="52" Stroke="2.2" /></button>
+            <button type="button" aria-label="Down" @onclick="() => Add(Direction.Down)"><V2Icon Name="down" Size="64" Stroke="2.4" /></button>
+            <button type="button" class="rm" aria-label="Remove last input" @onclick="RemoveLast"><V2Icon Name="remove" Size="60" Stroke="2.2" /></button>
+        </div>
+    }
+    else
+    {
+        <div class="v-scroll">
+            <div class="v-content">
+                <h2 style="text-align: center; font-size: 18px; font-weight: 600">Output</h2>
+                @if (_calculating)
+                {
+                    <div class="v-card" style="padding: 14px; text-align: center">Calculating…</div>
+                }
+                else if (_results == null)
+                {
+                    <div class="v-card" style="padding: 14px; text-align: center">Enter all @InputCount inputs to see the formations.</div>
+                }
+                else if (_results.Count == 0)
+                {
+                    <div class="v-card" style="padding: 14px">No formations found for inputs, double check directions and re-submit.</div>
+                }
+                else
+                {
+                    @foreach (Result result in _results)
+                    {
+                        <section class="v-ulti-res">
+                            <div class="h"><span>Index: <b class="mono">@result.Index</b></span><span class="mono" style="font-weight: 700; letter-spacing: .2em">@result.Movements</span></div>
+                            <div class="fmt">
+                                @foreach (Party party in result.Parties)
+                                {
+                                    <div class="v-pty @(party.IsFastest ? "best" : null)">
+                                        <span>@foreach (string member in party.Members) { @member<br /> }</span>
+                                        <b>@party.Offset</b>
+                                    </div>
+                                }
+                            </div>
+                        </section>
+                    }
+                }
+            </div>
+        </div>
+        <footer class="v-ulti-foot">
+            <button type="button" class="v-ib" style="justify-self: center; width: 52px; height: 52px; border: 1px solid #232D3A; background: #121820" aria-label="Back to keypad" @onclick="() => _showResults = false"><V2Icon Name="move" Size="26" Stroke="2" /></button>
+            <span style="text-align: center; font-size: 18px; font-weight: 700">@(_results?.Count ?? 0) results found</span>
+        </footer>
+    }
+</div>

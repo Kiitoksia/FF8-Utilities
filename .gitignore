@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 client_secret.json
 /.github
+/.claude

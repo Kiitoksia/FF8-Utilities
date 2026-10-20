@@ -1,0 +1,94 @@
+@code {
+    [Parameter, EditorRequired]
+    public List<CardViewModel> Strategies { get; set; }
+
+    [Parameter]
+    public EventCallback<uint> OnSubmit { get; set; }
+
+    /// <summary>Show the "Frame X" overlay on each option (hidden when ordered alphabetically)</summary>
+    [Parameter]
+    public bool ShowFrameNumbers { get; set; } = true;
+
+    /// <summary>Optional controls shown above the options (e.g. ordering)</summary>
+    [Parameter]
+    public RenderFragment Toolbar { get; set; }
+
+    private CardViewModel _selected;
+    private bool _sheetOpen;
+
+    protected override void OnParametersSet()
+    {
+        if (_selected == null || !Strategies.Contains(_selected))
+        {
+            _selected = Strategies?.FirstOrDefault();
+        }
+    }
+
+    private static bool IsWinnable(CardViewModel model) => model.Positions != null && model.Positions.Length > 0;
+
+    private void Pick(CardViewModel model)
+    {
+        _selected = model;
+        _sheetOpen = true;
+    }
+
+    private void CloseSheet() => _sheetOpen = false;
+
+    private async Task Submit()
+    {
+        if (_selected == null || !IsWinnable(_selected)) return;
+        await OnSubmit.InvokeAsync(_selected.RNGResult);
+    }
+}
+
+<div class="v-picker">
+    <div class="v-frames">
+        <div class="v-frames-head">
+            <div class="v-label">Opponent hand</div>
+            @Toolbar
+        </div>
+        @foreach (CardViewModel model in Strategies)
+        {
+            bool winnable = IsWinnable(model);
+            string overlay = ShowFrameNumbers ? $"Frame {model.Index}" : null;
+            if (!winnable) overlay = overlay == null ? "No win" : $"{overlay} · No win";
+            <button type="button" class="v-frame @(model == _selected ? "on" : null) @(winnable ? null : "nowin")"
+                    aria-pressed="@(model == _selected ? "true" : "false")" aria-label="Frame @model.Index" @onclick="() => Pick(model)">
+                @foreach (byte[] image in model.HeaderCards)
+                {
+                    <img src="@WebHelper.GetDataImageSource(image)" alt="" />
+                }
+                @if (overlay != null)
+                {
+                    <span class="ov">@overlay</span>
+                }
+            </button>
+        }
+    </div>
+
+    <button type="button" class="v-backdrop @(_sheetOpen ? "open" : null)" aria-label="Close frame" tabindex="-1" @onclick="CloseSheet"></button>
+
+    @if (_selected != null)
+    {
+        bool winnable = IsWinnable(_selected);
+        <div class="v-detail @(_sheetOpen ? "open" : null)" role="region" aria-label="Frame @_selected.Index">
+            <div class="v-sheet-head v-phone-only">
+                <h2 class="mono">Frame @_selected.Index</h2>
+                <button type="button" class="v-ib" aria-label="Close" @onclick="CloseSheet"><V2Icon Name="close" Size="20" /></button>
+            </div>
+            @if (winnable)
+            {
+                <button type="button" class="v-btn primary block" style="height: 50px; font-size: 16px" @onclick="Submit">SUBMIT FRAME @_selected.Index</button>
+            }
+            <div class="v-cards-use"><span class="muted">Cards to use:</span> <b>@_selected.CardsToUse</b></div>
+            @if (winnable)
+            {
+                <V2Board Positions="_selected.Positions" />
+            }
+            else
+            {
+                <p class="v-cards-use">Frame is not winnable, sorry. Let us know if you do win!</p>
+            }
+        </div>
+    }
+</div>

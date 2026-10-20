@@ -6,6 +6,11 @@ using UltimeciaManip;
 
 namespace FF8Utilities.Web.Services
 {
+    public enum QuistisPatternsOrderBy
+    {
+        Frame,
+        Alphabetical
+    }
 
     public class SettingsService
     {
@@ -32,6 +37,10 @@ namespace FF8Utilities.Web.Services
         public bool CarawayHideUnlikelyResults { get; set; }
 
         public UltimeciaManipLanguage GameLanguage { get; set; }
+
+        public bool UltimeciaIncludeRinoaParties { get; set; }
+
+        public QuistisPatternsOrderBy QuistisPatternsOrderBy { get; set; }
 
 
         private async Task<T> GetSetting<T>(string key, T defaultVal = default)
@@ -60,6 +69,8 @@ namespace FF8Utilities.Web.Services
             CarawayShowNPCMovement = await GetSetting<bool>(nameof(CarawayShowNPCMovement), true);
             CarawayHideUnlikelyResults = await GetSetting<bool>(nameof(CarawayHideUnlikelyResults), true);
             GameLanguage = await GetSetting<UltimeciaManipLanguage>(nameof(GameLanguage), UltimeciaManipLanguage.English);
+            UltimeciaIncludeRinoaParties = await GetSetting<bool>(nameof(UltimeciaIncludeRinoaParties), true);
+            QuistisPatternsOrderBy = await GetSetting<QuistisPatternsOrderBy>(nameof(QuistisPatternsOrderBy), QuistisPatternsOrderBy.Frame);
             _isInitialised = true;
         }
 
@@ -79,6 +90,8 @@ namespace FF8Utilities.Web.Services
             await _storage.SetItemAsync(nameof(CarawayShowNPCMovement), CarawayShowNPCMovement);
             await _storage.SetItemAsync(nameof(CarawayHideUnlikelyResults), CarawayHideUnlikelyResults);
             await _storage.SetItemAsync(nameof(GameLanguage), GameLanguage);
+            await _storage.SetItemAsync(nameof(UltimeciaIncludeRinoaParties), UltimeciaIncludeRinoaParties);
+            await _storage.SetItemAsync(nameof(QuistisPatternsOrderBy), QuistisPatternsOrderBy);
         }
     }
 }
