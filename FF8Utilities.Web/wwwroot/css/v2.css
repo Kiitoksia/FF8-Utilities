@@ -261,10 +261,14 @@
 .v2 .v-subtabs .v-seg { width: 100%; max-width: 380px; }
 .v2 .v-mom { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .v2 .v-mom h3 { text-align: center; font-size: 15px; margin-bottom: 6px; }
-.v2 .v-single-board { width: 100%; max-width: 380px; margin: 0 auto; }
+/* Boards are sized by height as well as width so the whole board fits above the docked card timer.
+   Board height ≈ 1.29 × width; the subtracted px is everything else on the page (header, strip, tabs, timer, padding). */
+.v2 .v-single-board { width: 100%; max-width: clamp(140px, calc((100dvh - 384px) / 1.29), 380px); margin: 0 auto; }
+.v2 .v-mom .v-board { max-width: clamp(130px, calc((100dvh - 440px) / 1.29), 380px); margin: 0 auto; }
 @media (min-width: 720px) {
     .v2 .v-mom { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .v2 .v-mom > .v-hide-phone { display: block !important; }
+    .v2 .v-mom .v-board { max-width: clamp(130px, calc((100dvh - 414px) / 1.29), 380px); }
 }
 @media (max-width: 719.98px) { .v2 .v-mom > .v-hide-phone { display: none; } }
 .v2 .v-strip { flex: none; padding: 8px 16px; text-align: center; background: var(--surface); border-bottom: 1px solid var(--line); font-size: 14px; }
