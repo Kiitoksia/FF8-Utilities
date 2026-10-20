@@ -97,6 +97,9 @@
 .v2 .v-step button { width: 38px; height: 38px; border: 0; border-radius: 8px; background: #1A2230; font-size: 19px; line-height: 1; color: var(--text); }
 .v2 .v-step button:hover:not(:disabled) { background: #24304A; }
 .v2 .v-step button:disabled { opacity: .35; cursor: default; }
+.v2 .v-step .v-step-input { width: 44px; height: 38px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--text); text-align: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 700; font-size: 16px; padding: 0; }
+.v2 .v-step .v-step-input:focus { outline: none; border-color: var(--accent); background: #0B1420; }
+.v2 .v-step .v-step-input::placeholder { color: #6B7787; }
 .v2 .v-step span { min-width: 38px; text-align: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 700; font-size: 16px; }
 
 /* ---------- Segmented ---------- */

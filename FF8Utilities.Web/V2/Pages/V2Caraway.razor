@@ -47,13 +47,41 @@
         }
     }
 
-    private void Reset()
+    private async Task Reset()
     {
         foreach (PoleModel pole in _poles)
         {
             pole.Count = null;
         }
         _results = null;
+        await FocusFirstInput();
+    }
+
+    // ---------- Typed input (desktop) ----------
+
+    private ElementReference _firstInput;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Lets PC users type straight away: 15 Tab 10 Tab 3 Enter. Hidden on phone, where focusing does nothing.
+        if (firstRender) await FocusFirstInput();
+    }
+
+    private async Task FocusFirstInput()
+    {
+        try { await _firstInput.FocusAsync(); } catch (JSException) { }
+    }
+
+    private static void SetTyped(PoleModel pole, string text)
+    {
+        text = text?.Trim();
+        if (string.IsNullOrEmpty(text)) pole.Count = null;
+        else if (int.TryParse(text, out int value)) pole.Count = Math.Clamp(value, 0, MaxPoles);
+    }
+
+    private void OnInputKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" || e.Key == "NumpadEnter") Submit();
     }
 
     private async Task ToggleHideUnlikely()
@@ -102,17 +130,29 @@
             <div class="v-card v-desk-only">
                 <div class="v-card-h">Input</div>
                 <p class="muted" style="font-size: 13px; padding: 8px 14px; text-align: center">Only input complete sequences.<br />Subscripts are listed in most likely order.</p>
-                @foreach (PoleModel pole in _poles)
+                @for (int i = 0; i < _poles.Count; i++)
                 {
+                    PoleModel pole = _poles[i];
+                    bool first = i == 0;
+                    @* Only the text boxes are in the tab order, so Tab goes Series 1 → 6 → Calculate *@
                     <div class="v-row">
-                        <span>@pole.Description</span>
+                        <label for="v2-pole-@i">@pole.Description</label>
                         <div style="display: flex; align-items: center; gap: 4px">
                             <div class="v-step" role="group" aria-label="@pole.Description">
-                                <button type="button" aria-label="Decrease @pole.Description" disabled="@(pole.Count == null)" @onclick="() => Change(pole, -1)">−</button>
-                                <span aria-live="polite">@(pole.Count?.ToString() ?? "–")</span>
-                                <button type="button" aria-label="Increase @pole.Description" disabled="@(pole.Count >= MaxPoles)" @onclick="() => Change(pole, 1)">+</button>
+                                <button type="button" tabindex="-1" aria-label="Decrease @pole.Description" disabled="@(pole.Count == null)" @onclick="() => Change(pole, -1)">−</button>
+                                @if (first)
+                                {
+                                    <input id="v2-pole-@i" class="v-step-input" @ref="_firstInput" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="–" onfocus="this.select()"
+                                           value="@pole.Count" @oninput="e => SetTyped(pole, e.Value?.ToString())" @onkeydown="OnInputKeyDown" />
+                                }
+                                else
+                                {
+                                    <input id="v2-pole-@i" class="v-step-input" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="–" onfocus="this.select()"
+                                           value="@pole.Count" @oninput="e => SetTyped(pole, e.Value?.ToString())" @onkeydown="OnInputKeyDown" />
+                                }
+                                <button type="button" tabindex="-1" aria-label="Increase @pole.Description" disabled="@(pole.Count >= MaxPoles)" @onclick="() => Change(pole, 1)">+</button>
                             </div>
-                            <button type="button" class="v-ib" style="width: 36px; height: 36px" aria-label="Clear @pole.Description" @onclick="() => pole.Count = null"><V2Icon Name="close" Size="16" /></button>
+                            <button type="button" tabindex="-1" class="v-ib" style="width: 36px; height: 36px" aria-label="Clear @pole.Description" @onclick="() => pole.Count = null"><V2Icon Name="close" Size="16" /></button>
                         </div>
                     </div>
                 }
